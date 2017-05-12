@@ -3,7 +3,9 @@ package nl.tudelft.b_b_w.Controllers;
 import android.content.Context;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import nl.tudelft.b_b_w.Models.Block;
 import nl.tudelft.b_b_w.Models.DatabaseHandler;
@@ -58,18 +60,14 @@ public class BlockController {
      */
     public List<Block> getBlocks() {
         List<Block> blocks = databaseHandler.getAllBlocks();
-        List<Block> res = new ArrayList<>();
+        Map<Integer,Block> res = new HashMap<>();
         for (Block block : blocks) {
-            if(block.isRevoked()) {
-                //if a block is revoked you dont want the revoked block
-                // and the original in your list.
-                res.remove(new Block(block.getOwner(), block.getSequence_number(), block.getPrevious_hash(), block.getPublic_key(), block.isRevoked()));
-                res.remove(block);
-            } else {
-                res.add(block);
-            }
+            if (block.isRevoked())
+                res.remove(block.getSequence_number());
+            else
+                res.put(block.getSequence_number(), block);
         }
-        return res;
+        return new ArrayList<Block>(res.values());
     }
 
     /**

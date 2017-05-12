@@ -13,14 +13,14 @@ import static org.junit.Assert.assertNotEquals;
  */
 public class UserUnitTest {
 
+    User user1;
+
     /**
-     * Testing the get User method.
+     * Testingt the get User method.
      */
     @Test
     public void getUserTest(){
-        User user = User.getUser();
-        User user2 = User.getUser();
+        user1 = User.getUser();
 
-        assertEquals(user, user2);
     }
 }

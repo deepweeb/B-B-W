@@ -230,7 +230,7 @@ public class DatabaseHandlerUnitTest {
     }
 
     /**
-     *
+     * Closes database connection after test
      */
     @After
     public void tearDown() {

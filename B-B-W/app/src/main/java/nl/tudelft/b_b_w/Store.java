@@ -19,40 +19,43 @@ public class Store {
 
     public Store() {
         keys = new HashSet<String>();
+    }
 
-        if (new File("keys.txt").exists()) {
-            try {
-                Scanner sc = new Scanner("keys.txt");
-                while (sc.hasNext()) {
-                    String key = sc.next();
-                    addKey(key);
-                }
-                sc.close();
-            } catch (Exception e) {
-                Toast.makeText(MainActivity.self, "Could not load private keys", Toast.LENGTH_LONG);
+    public void read() {
+        try {
+            Scanner sc = new Scanner(new File("keys.txt"));
+            while (sc.hasNext()) {
+                String key = sc.next();
+                addKey(key);
             }
+            sc.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Could not load private keys");
+//            Toast.makeText(MainActivity.self, "Could not load private keys", Toast.LENGTH_LONG);
         }
     }
 
     public void save() {
         try {
             FileWriter writer = new FileWriter("keys.txt");
+            for (String s: keys) {
+                writer.write(s);
+            }
+
+            writer.flush();
+            writer.close();
         } catch (IOException e) {
-            Toast.makeText(MainActivity.self, "Could not store private keys", Toast.LENGTH_LONG);
+            throw new RuntimeException("Could not store private keys");
+//            Toast.makeText(MainActivity.self, "Could not store private keys", Toast.LENGTH_LONG);
         }
+    }
+
+    public Set<String> getKeys() {
+        return keys;
     }
 
 
     public void addKey(String key) {
         keys.add(key);
-    }
-
-    // singleton nice
-    private static Store store;
-
-    public static Store getStore() {
-        if (store == null)
-            store = new Store();
-        return store;
     }
 }

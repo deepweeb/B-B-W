@@ -5,6 +5,7 @@ import org.junit.Test;
 import nl.tudelft.b_b_w.Models.User;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -18,9 +19,8 @@ public class UserUnitTest {
      */
     @Test
     public void getUserTest(){
-        User user = User.getUser();
-        User user2 = User.getUser();
+        User user = new User();
 
-        assertEquals(user, user2);
+        assertNotNull(user);
     }
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.tudelft.b_b_w.Models.Block;
+import nl.tudelft.b_b_w.Models.BlockFactory;
 import nl.tudelft.b_b_w.Models.DatabaseHandler;
 import nl.tudelft.b_b_w.Models.User;
 
@@ -26,8 +27,8 @@ public class BlockController {
      */
     public BlockController(Context _context) {
         this.context = _context;
-        this.user = User.getUser();
-        this.databaseHandler = DatabaseHandler.getInstance(this.context);
+        this.user = new User();
+        this.databaseHandler = new DatabaseHandler(this.context);
     }
 
     /**
@@ -35,10 +36,10 @@ public class BlockController {
      * @param block Block you want to add
      * @return returns the block you added
      */
-    public Block addBlock(Block block) {
+    public List<Block> addBlock(Block block) {
         // Check if the block already exists
-
-        Block latest = databaseHandler.getLatestBlock(block.getOwner(), block.getPublic_key());
+        String owner = block.getOwner();
+        Block latest = databaseHandler.getLatestBlock(owner);
 
         if (latest == null) {
             databaseHandler.addBlock(block);
@@ -49,22 +50,19 @@ public class BlockController {
             else throw new RuntimeException("Error - Block already exists");
         }
 
-        return block;
+        return getBlocks(owner);
     }
 
     /**
      * Get all blocks that are not revoked
      * @return List of all the blocks
      */
-    public List<Block> getBlocks() {
-        List<Block> blocks = databaseHandler.getAllBlocks();
+    public List<Block> getBlocks(String owner) {
+        List<Block> blocks = databaseHandler.getAllBlocks(owner);
         List<Block> res = new ArrayList<>();
-        for (Block block : blocks) {
-            if(block.isRevoked()) {
-                //if a block is revoked you dont want the revoked block
-                // and the original in your list.
-                res.remove(new Block(block.getOwner(), block.getSequence_number(), block.getPrevious_hash(), block.getPublic_key(), block.isRevoked()));
-                res.remove(block);
+        for(Block block : blocks) {
+            if (block.isRevoked()) {
+                res = removeBlock(res, block);
             } else {
                 res.add(block);
             }
@@ -78,9 +76,29 @@ public class BlockController {
      * @param block The block you want to revoke
      * @return the revoked block
      */
-    public Block revokeBlock(Block block) {
-        return addBlock(new Block(block.getOwner(), block.getSequence_number(),
-                block.getPrevious_hash(), block.getPublic_key(), true));
+    public List<Block> revokeBlock(Block block) {
+        String owner = block.getOwner();
+        Block newBlock = BlockFactory.getBlock("REVOKE", block.getOwner(), block.getSequenceNumber(),
+                block.getOwnHash(), block.getPreviousHashChain(), block.getPreviousHashSender(),
+                block.getPublicKey());
+        addBlock(newBlock);
+        return getBlocks(owner);
+    }
+
+    /**
+     * Method for removing a certain block from a given list
+     * @param list The list of all the blocks
+     * @param block The revoke block
+     * @return List without the revoked block
+     */
+    public List<Block> removeBlock(List<Block> list, Block block) {
+        List<Block> res = new ArrayList<>();
+        for (Block blc : list) {
+            if (!(blc.getOwner().equals(block.getOwner()) && blc.getPublicKey().equals(block.getPublicKey()))){
+                res.add(blc);
+            }
+        }
+        return res;
     }
 
 }

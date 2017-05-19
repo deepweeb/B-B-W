@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="nl.tudelft.b_b_w.MainActivity"
+    tools:layout_editor_absoluteY="73dp"
+    tools:layout_editor_absoluteX="0dp">
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="356dp"
+        android:layout_height="74dp"
+        android:text="Generate Key"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="38dp" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="180dp"
+        android:layout_height="165dp"
+        android:text="Contacts"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="332dp" />
+
+    <Button
+        android:id="@+id/button6"
+        android:layout_width="288dp"
+        android:layout_height="119dp"
+        android:text="Revoke a Key"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="174dp" />
+
+</android.support.constraint.ConstraintLayout>

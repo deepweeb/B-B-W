@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/deepweeb/B-B-W/badge.svg?branch=master)](https://coveralls.io/github/deepweeb/B-B-W?branch=master)
+
 Bears, Bulls and Wolves
 =====================
 

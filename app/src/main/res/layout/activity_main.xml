@@ -22,24 +22,31 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.58"
             android:onClick="onAddBlock"
-            android:text="Add block" />
+            android:text="Contacts" />
 
         <Button
             android:id="@+id/button8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="onRevokeBlock"
-            android:text="Revoke block" />
+            android:onClick="onFriendPage"
+            android:text="Friend" />
     </LinearLayout>
 
     <Button
         android:id="@+id/button5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="onDisplayChain"
-        android:text="Display chain"
+        android:onClick="onPairPage"
+        android:text="Pair"
         tools:layout_editor_absoluteX="100dp"
         tools:layout_editor_absoluteY="400dp" />
+
+    <Button
+        android:id="@+id/button13"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClearDatabase"
+        android:text="Clear database" />
 
 </android.widget.LinearLayout>

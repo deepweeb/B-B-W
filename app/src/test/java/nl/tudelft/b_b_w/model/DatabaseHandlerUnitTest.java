@@ -14,10 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.tudelft.b_b_w.BuildConfig;
-import nl.tudelft.b_b_w.model.Block;
-import nl.tudelft.b_b_w.model.BlockFactory;
-import nl.tudelft.b_b_w.model.DatabaseHandler;
-import nl.tudelft.b_b_w.model.TrustValues;
 
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
@@ -35,7 +31,8 @@ import static org.junit.Assert.assertTrue;
 public class DatabaseHandlerUnitTest {
 
     private DatabaseHandler databaseHandler;
-    private final String blockType = "BLOCK";
+    private final String TYPE_BLOCK = "BLOCK";
+    private final String TYPE_REVOKE = "REVOKE";
     private final String owner = "owner";
     private final int sequenceNumber = 1;
     private final String ownHash = "ownHash";
@@ -43,6 +40,7 @@ public class DatabaseHandlerUnitTest {
     private final String previousHashSender = "previousHashSender";
     private final String iban = "iban";
     private final String publicKey = "publicKey";
+    private final int trustValue = 0;
     private Block _block;
 
     /**
@@ -53,8 +51,8 @@ public class DatabaseHandlerUnitTest {
     @Before
     public void setUp() {
         this.databaseHandler = new DatabaseHandler(RuntimeEnvironment.application);
-       _block =  BlockFactory.getBlock(blockType, owner, ownHash,
-                previousHashChain, previousHashSender, publicKey, iban);
+       _block =  BlockFactory.getBlock(TYPE_BLOCK, owner, ownHash,
+                previousHashChain, previousHashSender, publicKey, iban, trustValue);
 
 }
 
@@ -74,8 +72,8 @@ public class DatabaseHandlerUnitTest {
      */
     @Test
     public void addBlock2() {
-        final Block newBlock = BlockFactory.getBlock("REVOKE", owner, ownHash,
-                previousHashChain, previousHashSender, publicKey, iban);
+        final Block newBlock = BlockFactory.getBlock("BLOCK", owner, ownHash,
+                previousHashChain, previousHashSender, publicKey, iban, trustValue);
         databaseHandler.addBlock(_block);
         databaseHandler.addBlock(newBlock);
         List<Block> list = new ArrayList<>();
@@ -131,13 +129,33 @@ public class DatabaseHandlerUnitTest {
     @Test
     public void getLatestSeqNum() {
 
-        final Block block2 = BlockFactory.getBlock(blockType, owner, ownHash,
-                previousHashChain, previousHashSender, publicKey, iban);
+        final Block block2 = BlockFactory.getBlock(TYPE_BLOCK, owner, ownHash,
+                previousHashChain, previousHashSender, publicKey, iban, trustValue);
         databaseHandler.addBlock(_block);
         databaseHandler.addBlock(block2);
         assertEquals(2, databaseHandler.getLatestSeqNum(owner, publicKey));
 
     }
+
+
+
+    /**
+     * getOwnerName test
+     * Test getting the owner name given hash key.
+     */
+    @Test
+    public void getContactName() {
+        final String hash = "ownHash2";
+        final String randomSenderHash = "Hash44324";
+        final Block block2 = BlockFactory.getBlock(TYPE_BLOCK, owner, hash,
+                ownHash, "randomSenderHash", publicKey, iban, trustValue);
+        databaseHandler.addBlock(block2);
+        databaseHandler.addBlock(_block);
+        assertEquals(owner+"'s friend", databaseHandler.getContactName(hash));
+
+    }
+
+
 
     /**
      * getLatestBlock test
@@ -145,12 +163,12 @@ public class DatabaseHandlerUnitTest {
      */
     @Test
     public void getLatestBlock() {
-        final Block block2 = BlockFactory.getBlock(blockType, "owner2", ownHash,
-                previousHashChain, previousHashSender, publicKey, iban);
+        final Block block2 = BlockFactory.getBlock(TYPE_BLOCK, "owner2", ownHash,
+                previousHashChain, previousHashSender, publicKey, iban, trustValue);
         databaseHandler.addBlock(_block);
         databaseHandler.addBlock(block2);
-        final Block expectBlock = BlockFactory.getBlock(blockType, "owner2", ownHash,
-                previousHashChain, previousHashSender, publicKey, iban);
+        final Block expectBlock = BlockFactory.getBlock(TYPE_BLOCK, "owner2", ownHash,
+                previousHashChain, previousHashSender, publicKey, iban, trustValue);
         assertEquals(expectBlock, databaseHandler.getLatestBlock("owner2"));
     }
 
@@ -160,12 +178,12 @@ public class DatabaseHandlerUnitTest {
      */
     @Test
     public void getBlockAfter() {
-        final Block block2 = BlockFactory.getBlock(blockType, owner, ownHash,
-                previousHashChain, previousHashSender, publicKey, iban);
+        final Block block2 = BlockFactory.getBlock(TYPE_BLOCK, owner, ownHash,
+                previousHashChain, previousHashSender, publicKey, iban, trustValue);
         databaseHandler.addBlock(_block);
         databaseHandler.addBlock(block2);
-        final Block expectBlock = BlockFactory.getBlock(blockType, owner, ownHash,
-                previousHashChain, previousHashSender, publicKey, iban);
+        final Block expectBlock = BlockFactory.getBlock(TYPE_BLOCK, owner, ownHash,
+                previousHashChain, previousHashSender, publicKey, iban, trustValue);
         assertEquals(expectBlock, databaseHandler.getBlockAfter(owner, sequenceNumber));
     }
 
@@ -175,8 +193,8 @@ public class DatabaseHandlerUnitTest {
      */
     @Test
     public void getBlockBefore() {
-        final Block block2 = BlockFactory.getBlock(blockType, owner, ownHash,
-                previousHashChain, previousHashSender, publicKey, iban);
+        final Block block2 = BlockFactory.getBlock(TYPE_BLOCK, owner, ownHash,
+                previousHashChain, previousHashSender, publicKey, iban, trustValue);
         databaseHandler.addBlock(_block);
         databaseHandler.addBlock(block2);
         assertEquals(databaseHandler.getBlockBefore(owner, 2), _block);
@@ -189,8 +207,8 @@ public class DatabaseHandlerUnitTest {
     @Test
     public void getAllBlocks() {
         final String owner2 = "owner2";
-        final Block block2 = BlockFactory.getBlock(blockType, owner2, ownHash,
-                previousHashChain, previousHashSender, publicKey, iban);
+        final Block block2 = BlockFactory.getBlock(TYPE_BLOCK, owner2, ownHash,
+                previousHashChain, previousHashSender, publicKey, iban, trustValue);
         databaseHandler.addBlock(_block);
         databaseHandler.addBlock(block2);
         List<Block> result = new ArrayList<>();
@@ -204,8 +222,8 @@ public class DatabaseHandlerUnitTest {
      */
     @Test
     public void updateBlockTest() {
-        final Block block2 = new Block(owner, sequenceNumber, ownHash, previousHashChain,
-                previousHashSender, publicKey, iban, isRevoked);
+        final Block block2 = BlockFactory.getBlock(TYPE_BLOCK, owner, ownHash,
+                previousHashChain, previousHashSender, publicKey, iban, trustValue);
         _block.setTrustValue(TrustValues.SUCCESFUL_TRANSACTION.getValue());
         databaseHandler.updateBlock(_block);
         assertNotEquals(databaseHandler.getBlock(owner, publicKey, sequenceNumber), block2);

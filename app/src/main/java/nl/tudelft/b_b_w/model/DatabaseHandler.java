@@ -78,6 +78,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_BLOCKS_TABLE);
     }
 
+    public void clearAllBlocks() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        onUpgrade(db, 0, 9999);
+    }
+
     /**
      * Called when the database needs to be upgraded. The implementation
      * should use this method to drop tables, add tables, or do anything else it
@@ -106,6 +111,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // TODO: check if the db version is lower than the latest
 
         db.execSQL(upgrade_script);
+        onCreate(db);
     }
 
     /**
@@ -163,6 +169,47 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
     /**
+     * Function to backtrace the contact name given the hash that refer to their block
+     * @param hash hash of the block which owner name we want to find from
+     * @return name of owner
+     */
+    public String getContactName(String hash)
+    {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME,
+                _columns,
+                KEY_OWN_HASH + " = ? ",
+                new String[]{
+                        hash
+                }, null, null, null, null);
+
+        //When returning an exception the whole program crashes,
+        //but we want to preserve the state.
+        if (cursor.getCount() < 1) return null;
+
+        cursor.moveToFirst();
+
+        final String blockType = (cursor.getInt(7) > 0) ?  "REVOKE" : "BLOCK";
+        Block block = BlockFactory.getBlock(
+                blockType,cursor.getString(0),
+                cursor.getString(2),
+                cursor.getString(3),
+                cursor.getString(4),
+                cursor.getString(5),
+                cursor.getString(6),
+                cursor.getInt(7));
+        db.close();
+        cursor.close();
+
+
+        return (block.getPreviousHashSender()== "root") ? block.getOwner() : block.getOwner()+"'s friend";
+
+    }
+
+
+
+    /**
      * Method to get a specific block
      *
      * @param owner          The owner of the block you want
@@ -172,7 +219,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     public Block getBlock(String owner, String publicKey, int sequenceNumber) {
         SQLiteDatabase db = this.getReadableDatabase();
-
         Cursor cursor = db.query(TABLE_NAME,
                 _columns,
                 KEY_OWNER + " = ? AND " + KEY_PUBLIC_KEY + " = ? AND " + KEY_SEQ_NO + " = ?",
@@ -270,6 +316,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public Block getLatestBlock(String owner) {
         int maxSeqNum = this.lastSeqNumberOfChain(owner);
         SQLiteDatabase db = this.getReadableDatabase();
+
+        if (maxSeqNum == 0){return null;}
 
         Cursor cursor = db.query(TABLE_NAME,
                 _columns,

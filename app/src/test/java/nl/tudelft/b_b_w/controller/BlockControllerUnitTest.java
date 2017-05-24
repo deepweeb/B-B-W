@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.tudelft.b_b_w.BuildConfig;
-import nl.tudelft.b_b_w.controller.BlockController;
 import nl.tudelft.b_b_w.model.Block;
 import nl.tudelft.b_b_w.model.BlockFactory;
 import nl.tudelft.b_b_w.model.TrustValues;
@@ -38,8 +37,8 @@ public class BlockControllerUnitTest {
     private final String owner = "owner";
     private final int sequenceNumber = 1;
     private final String ownHash = "ownHash";
-    private final String previousHashChain = "previousHashChain";
-    private final String previousHashSender = "previousHashSender";
+    private final String previousHashChain = "root";
+    private final String previousHashSender = "root";
     private final String iban = "iban";
     private final String publicKey = "publicKey";
     private Block _block;
@@ -68,6 +67,25 @@ public class BlockControllerUnitTest {
         List<Block> list = new ArrayList<>();
         list.add(_block);
         assertEquals(bc.getBlocks(owner), list);
+    }
+
+
+
+
+    /**
+     * getOwnerName test
+     * Test getting the owner name given hash key.
+     */
+    @Test
+    public void getContactName() {
+        final String hash = "ownHash2";
+        final String randomSenderHash = "Hash44324";
+        final Block block2 = BlockFactory.getBlock(TYPE_BLOCK, owner, hash,
+                ownHash, "randomSenderHash", publicKey, iban, trustValue);
+        bc.addBlock(block2);
+        bc.addBlock(_block);
+        assertEquals(owner+"'s friend", bc.getContactName(hash));
+
     }
 
 

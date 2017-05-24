@@ -31,4 +31,11 @@ public class BlockFactory {
                 throw new IllegalArgumentException("Invalid type of block: " + type);
         }
     }
+
+    public static Block getBlock(User owner, User user, String previousHashChain,
+                                 String previousHashSender, String publicKey,
+                                 boolean revoke) {
+        return new Block(owner.getName(), "ownHash", previousHashChain,
+                previousHashSender, publicKey, user.getIban(), 0, revoke);
+    }
 }

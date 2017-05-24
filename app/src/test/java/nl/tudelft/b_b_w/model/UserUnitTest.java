@@ -1,9 +1,7 @@
 package nl.tudelft.b_b_w.model;
 
 import org.junit.Test;
-import nl.tudelft.b_b_w.model.User;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+
 import static org.junit.Assert.assertNotNull;
 
 /**
@@ -18,7 +16,7 @@ public class UserUnitTest {
      */
     @Test
     public void getUserTest(){
-        User user = new User();
+        User user = new User(0, "Algen", "NL81INGB0000000000");
 
         assertNotNull(user);
     }

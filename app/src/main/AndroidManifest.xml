@@ -18,7 +18,22 @@
         </activity>
         <activity android:name=".view.AddBlockActivity" />
         <activity android:name=".view.RevokeBlockActivity" />
-        <activity android:name=".view.DisplayChainActivity"></activity>
+        <activity android:name=".view.DisplayChainActivity" />
+        <activity
+            android:name=".view.FriendsPageActivity"
+            android:label="@string/title_activity_friends_page" />
+        <activity
+            android:name=".view.TestSubjects.TestSubject1"
+            android:label="@string/title_activity_test_subject1" />
+        <activity
+            android:name=".view.TestSubjects.TestSubject2"
+            android:label="@string/title_activity_test_subject2" />
+        <activity
+            android:name=".view.TestSubjects.TestSubject3"
+            android:label="@string/title_activity_test_subject3" />
+        <activity
+            android:name=".view.PairActivity"
+            android:label="@string/title_activity_pair"></activity>
     </application>
 
 </manifest>

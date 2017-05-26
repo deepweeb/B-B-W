@@ -251,7 +251,7 @@ public class DatabaseHandlerUnitTest {
     @Test
     public void checkDatabaseEmpty() {
         DatabaseHandler databaseHandler = new DatabaseHandler(RuntimeEnvironment.application);
-        assertFalse(databaseHandler.isDatabaseEmpty());
+        assertTrue(databaseHandler.isDatabaseEmpty());
     }
 
     /** blockExists call for a regular block */

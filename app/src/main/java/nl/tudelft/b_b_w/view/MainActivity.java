@@ -37,7 +37,6 @@ public class MainActivity extends Activity {
 
         if (blockController.isDatabaseEmpty()) {
             askUserName();
-            addGenesis();
         }
     }
 
@@ -61,10 +60,12 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ownerName = input.getText().toString();
+                addGenesis();
             }
         });
 
         builder.show();
+
     }
 
     /**

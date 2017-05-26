@@ -16,7 +16,7 @@ import nl.tudelft.b_b_w.model.BlockFactory;
 import static android.R.attr.id;
 
 /**
- * This activity
+ * Pair activity lets you pair with a fixed number of preprogrammed contacts, for demo purposes.
  */
 public class PairActivity extends Activity {
     /**
@@ -30,18 +30,10 @@ public class PairActivity extends Activity {
     private Block block1;
 
     /**
-     * a block.
+     * Preprogrammed blocks for now, later Bluetooth will be used.
      */
     private Block block2;
-
-    /**
-     * a block.
-     */
     private Block block3;
-
-    /**
-     * a block.
-     */
     private Block block4;
 
 

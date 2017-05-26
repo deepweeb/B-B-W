@@ -78,9 +78,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_BLOCKS_TABLE);
     }
 
+    /** Clear all blocks from the database */
     public void clearAllBlocks() {
         SQLiteDatabase db = this.getWritableDatabase();
-        onUpgrade(db, 0, 9999);
+        final String script = "DELETE FROM " + TABLE_NAME + ";";
+        db.execSQL(script);
     }
 
     /**

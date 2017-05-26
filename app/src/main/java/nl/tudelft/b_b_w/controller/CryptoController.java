@@ -35,7 +35,7 @@ public class CryptoController {
      * @return encryption of data
      * @throws GeneralSecurityException if string is larger than 256 bit
      */
-    public String encryptString(String data) {
+    public final String encryptString(String data) {
         try {
             return textEncryptor.encrypt(data);
         } catch (GeneralSecurityException e) {
@@ -49,7 +49,7 @@ public class CryptoController {
      * @return decrypted data
      * @throws GeneralSecurityException if string is larger than 256 bit
      */
-    public String decryptString(String data) {
+    public final String decryptString(String data) {
         try {
             return textEncryptor.decrypt(data);
         } catch (GeneralSecurityException e) {

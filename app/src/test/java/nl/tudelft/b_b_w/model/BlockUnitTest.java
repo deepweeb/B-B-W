@@ -6,6 +6,7 @@ import org.junit.Test;
 import nl.tudelft.b_b_w.model.Block;
 import nl.tudelft.b_b_w.model.BlockFactory;
 
+import static org.cyberneko.html.HTMLElements.HEAD;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -18,9 +19,10 @@ import static org.junit.Assert.assertTrue;
 public class BlockUnitTest {
 
     private Block _block;
-    private final String blockType = "BLOCK";
+    private final String TYPE_BLOCK = "BLOCK";
+    private final String TYPE_REVOKE = "REVOKE";
     private final String owner = "owner";
-    private final int sequenceNumber = 0;
+    private final int sequenceNumber = 1;
     private final String ownHash = "ownHash";
     private final String previousHashChain = "previousHashChain";
     private final String previousHashSender = "previousHashSender";
@@ -28,8 +30,6 @@ public class BlockUnitTest {
     private final boolean isRevoked = false;
     private final String iban = "iban";
     private final int trustValue = 0;
-
-
     /**
      * This method runs before each test to initialize the test object
      * @throws Exception Catches error when the MessageDigest
@@ -37,9 +37,10 @@ public class BlockUnitTest {
      */
     @Before
     public void makeNewBlock() throws Exception {
-        _block = BlockFactory.getBlock(blockType, owner, ownHash,
+        _block = BlockFactory.getBlock(TYPE_BLOCK, owner, ownHash,
                 previousHashChain, previousHashSender, publicKey, iban, trustValue);
     }
+
 
     /**
      * Test to check whether the getOwner() method returns the owner name
@@ -93,7 +94,7 @@ public class BlockUnitTest {
      */
     @Test
     public void getSequenceNumberTest() throws Exception {
-        final int check = 0;
+        final int check = 1;
         assertEquals(check, _block.getSequenceNumber());
     }
 
@@ -170,7 +171,7 @@ public class BlockUnitTest {
      */
     @Test
     public void equalsTest() throws Exception {
-        final Block check = BlockFactory.getBlock(blockType, owner, ownHash,
+        final Block check = BlockFactory.getBlock(TYPE_BLOCK, owner, ownHash,
                 previousHashChain, previousHashSender, publicKey, iban, trustValue);
         assertTrue(_block.equals(check));
     }
@@ -184,7 +185,7 @@ public class BlockUnitTest {
     @Test
     public void equalsFalseTest() throws Exception {
         final String _owner = "NOTOWNER";
-        final Block check = BlockFactory.getBlock(blockType, _owner, ownHash,
+        final Block check = BlockFactory.getBlock(TYPE_REVOKE, _owner, ownHash,
                 previousHashChain, previousHashSender, publicKey, iban, trustValue);
         assertFalse(_block.equals(check));
     }
@@ -214,8 +215,10 @@ public class BlockUnitTest {
      */
     @Test
     public void testHashCode() {
-        final Block x = new Block("owner2", ownHash, previousHashChain, previousHashSender, "pub2", iban,trustValue, false);
-        final Block y = new Block("owner2", ownHash, previousHashChain, previousHashSender, "pub2", iban,trustValue, false);
+        final Block x  = BlockFactory.getBlock(TYPE_BLOCK, "owner2", ownHash,
+                previousHashChain, previousHashSender, "pub2", iban, trustValue);
+        final Block y = BlockFactory.getBlock(TYPE_BLOCK, "owner2", ownHash,
+                previousHashChain, previousHashSender, "pub2", iban, trustValue);
         assertTrue(x.equals(y) && y.equals(x));
         assertTrue(x.hashCode() == y.hashCode());
     }

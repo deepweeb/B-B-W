@@ -9,16 +9,16 @@ import nl.tudelft.b_b_w.model.Block;
 import nl.tudelft.b_b_w.model.BlockFactory;
 import nl.tudelft.b_b_w.model.DatabaseHandler;
 import nl.tudelft.b_b_w.model.TrustValues;
-import nl.tudelft.b_b_w.model.User;
 
 /**
- * Performs the actions of the blockchain
+ * Performs the actions on the blockchain
  */
 
 public class BlockController {
-
+    /** Context of the block database */
     private Context context;
-    private User user;
+
+    /** Databasehandler to use */
     private DatabaseHandler databaseHandler;
 
     /**
@@ -28,9 +28,20 @@ public class BlockController {
      */
     public BlockController(Context _context) {
         this.context = _context;
-        this.user = new User();
         this.databaseHandler = new DatabaseHandler(this.context);
     }
+
+    /**
+     * Check if a block already exists in the database
+     * @param owner owner of the block
+     * @param key public key in the block
+     * @param revoked whether the block is revoked
+     * @return if the block already exists
+     */
+    public final boolean blockExists(String owner, String key, boolean revoked) {
+        return databaseHandler.blockExists(owner, key, revoked);
+    }
+
 
     /**
      * adding a block to the blockchain
@@ -38,7 +49,7 @@ public class BlockController {
      * @param block Block you want to add
      * @return returns the block you added
      */
-    public List<Block> addBlock(Block block) {
+    public final List<Block> addBlockToChain(Block block) {
         // Check if the block already exists
         String owner = block.getOwner();
         Block latest = databaseHandler.getLatestBlock(owner);
@@ -53,20 +64,46 @@ public class BlockController {
                 databaseHandler.updateBlock(latest);
                 databaseHandler.addBlock(block);
             }
-            else throw new RuntimeException("Error - Block already exists");
+            else {
+                throw new RuntimeException("Error - Block already exists");
+            }
         }
 
         return getBlocks(owner);
     }
 
+
     /**
-     * Get all blocks that are not revoked
+     * Add a block to the database with checking if the (owner,pubkey) pair
+     * is already added to the database
+     *
+     * @param block Block you want to add
+     */
+    public final void addBlock(Block block) {
+
+        if (blockExists(block.getOwner(), block.getPublicKey(), block.isRevoked()))
+            throw new RuntimeException("block already exists");
+
+        databaseHandler.addBlock(block);
+    }
+
+    /**
+     * Clears all blocks from the database
+     */
+    public final void clearAllBlocks() {
+        databaseHandler.clearAllBlocks();
+    }
+
+    /**
+     * Get all blocks that are not revoked in sorted order
      *
      * @return List of all the blocks
      */
-    public List<Block> getBlocks(String owner) {
+    public final List<Block> getBlocks(String owner) {
+        // retrieve all blocks in the database and then sort it in order of sequence number
         List<Block> blocks = databaseHandler.getAllBlocks(owner);
-        List<Block> res = new ArrayList<>();
+        List < Block > res = new ArrayList<>();
+
         for (Block block : blocks) {
             if (block.isRevoked()) {
                 res = removeBlock(res, block);
@@ -77,12 +114,22 @@ public class BlockController {
         return res;
     }
 
+
+    /**
+     * Function to backtrace the contact name given the hash that refer to their block
+     * @param hash hash of the block which owner name we want to find from
+     * @return name of owner
+     */
+    public final String getContactName(String hash) {
+        return databaseHandler.getContactName(hash);
+    }
+
     /**
      * Get the latest block of a specific owner
      *
      * @return a Block object, which is the newest block of the owner
      */
-    public Block getLatestBlock(String owner) {
+    public final Block getLatestBlock(String owner) {
         return databaseHandler.getLatestBlock(owner);
     }
 
@@ -91,7 +138,7 @@ public class BlockController {
      *
      * @return an integer which is the latest sequence number of the chain
      */
-    public int getLatestSeqNumber(String owner) {
+    public final int getLatestSeqNumber(String owner) {
         return databaseHandler.lastSeqNumberOfChain(owner);
     }
 
@@ -103,7 +150,7 @@ public class BlockController {
      * @param block The block you want to revoke
      * @return the revoked block
      */
-    public List<Block> revokeBlock(Block block) {
+    public final List<Block> revokeBlock(Block block) {
         String owner = block.getOwner();
         Block newBlock = BlockFactory.getBlock("REVOKE", block.getOwner(),
                 block.getOwnHash(), block.getPreviousHashChain(), block.getPreviousHashSender(),
@@ -119,7 +166,7 @@ public class BlockController {
      * @param block The revoke block
      * @return List without the revoked block
      */
-    public List<Block> removeBlock(List<Block> list, Block block) {
+    public final List<Block> removeBlock(List<Block> list, Block block) {
         List<Block> res = new ArrayList<>();
         for (Block blc : list) {
             if (!(blc.getOwner().equals(block.getOwner()) && blc.getPublicKey().equals(block.getPublicKey()))) {
@@ -135,7 +182,7 @@ public class BlockController {
      * @param block given block to update
      * @return block that is updated
      */
-    public Block verifyIBAN(Block block) {
+    public final Block verifyIBAN(Block block) {
         block.setTrustValue(TrustValues.VERIFIED.getValue());
         return block;
     }
@@ -146,7 +193,7 @@ public class BlockController {
      * @param block given block to update
      * @return block that is updated
      */
-    public Block successfulTransaction(Block block) {
+    public final Block successfulTransaction(Block block) {
         block.setTrustValue(block.getTrustValue() + TrustValues.SUCCESFUL_TRANSACTION.getValue());
         return block;
     }
@@ -157,7 +204,7 @@ public class BlockController {
      * @param block given block to update
      * @return block that is updated
      */
-    public Block failedTransaction(Block block) {
+    public final Block failedTransaction(Block block) {
         block.setTrustValue(block.getTrustValue() + TrustValues.FAILED_TRANSACTION.getValue());
         return block;
     }
@@ -168,11 +215,17 @@ public class BlockController {
      * @param block given block to update
      * @return block that is updated
      */
-    public Block revokedTrustValue(Block block) {
+    public final Block revokedTrustValue(Block block) {
         block.setTrustValue(TrustValues.REVOKED.getValue());
         return block;
     }
 
-
+    /**
+     * Check if the database is empty.
+     * @return if the database is empty
+     */
+    public final boolean isDatabaseEmpty() {
+        return databaseHandler.isDatabaseEmpty();
+    }
 
 }

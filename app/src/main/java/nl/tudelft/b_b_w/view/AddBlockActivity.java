@@ -40,7 +40,7 @@ public class AddBlockActivity extends Activity {
      * @param savedInstanceState unused, meant for serialisation
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addblock);
         blockController = new BlockController(this);
@@ -56,8 +56,7 @@ public class AddBlockActivity extends Activity {
      *
      * @param view current view (AddBlockActivity)
      */
-    public void onAddBlock(View view) {
-
+    public final void onAddBlock(View view) {
         try {
             // extract information
             EditText senderHashText = (EditText) findViewById(R.id.addSenderHash);
@@ -73,7 +72,7 @@ public class AddBlockActivity extends Activity {
             // create and add the block
             Block previous = blockController.getLatestBlock(ownerName);
             int blockSeqNumber = previous.getSequenceNumber()+ 1;
-            ConversionController conversionController = new ConversionController(ownerName, blockSeqNumber, senderPublicKey, previous.getOwnHash(), senderHash, senderIban);
+            ConversionController conversionController = new ConversionController(ownerName, senderPublicKey, previous.getOwnHash(), senderHash, senderIban);
             String ownHash = conversionController.hashKey();
 
 

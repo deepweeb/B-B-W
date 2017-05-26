@@ -88,6 +88,13 @@ public class ApiUnitTest {
         expectedA.add("pka");
         assertEquals(expectedA, keysA);
 
+    }
+
+    /**
+     * Check that no keys of another user are added.    
+     */
+    @Test
+    public void filterOtherKey() {
         // does it really filter
         List<String> keysB = api.getUserKeys(userB, userB);
         assertTrue(keysB.isEmpty());

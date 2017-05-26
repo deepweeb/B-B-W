@@ -554,12 +554,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.query(TABLE_NAME,
                 _columns,
-                KEY_OWN_HASH + " = ? ",
+                KEY_PREV_HASH_CHAIN + " = ? ",
                 new String[]{
-                        "GENESIS"
+                        "N/A"
                 }, null, null, null, null);
 
-        boolean empty = c.getCount() > 0;
+        boolean empty = c.getCount() <= 0;
 
         c.close();
         return empty;

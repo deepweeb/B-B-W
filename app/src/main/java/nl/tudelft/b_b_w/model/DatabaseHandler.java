@@ -486,7 +486,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 KEY_OWNER + " = ?",
                 new String[]{
                         owner
-                }, null, null, null, null);
+                }, null, null, KEY_SEQ_NO, null);
 
 
         if (cursor.getCount() > 0) {

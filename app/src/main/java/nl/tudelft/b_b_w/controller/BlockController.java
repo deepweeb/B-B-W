@@ -3,8 +3,6 @@ package nl.tudelft.b_b_w.controller;
 import android.content.Context;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import nl.tudelft.b_b_w.model.Block;
@@ -102,13 +100,6 @@ public class BlockController {
     public List<Block> getBlocks(String owner) {
         // retrieve all blocks in the database and then sort it in order of sequence number
         List<Block> blocks = databaseHandler.getAllBlocks(owner);
-        Collections.sort(blocks, new Comparator<Block>() {
-                    @Override
-                    public int compare(Block o1, Block o2) {
-                        return Integer.compare(o1.getSequenceNumber(), o2.getSequenceNumber());
-                    }
-                }
-        );
         List < Block > res = new ArrayList<>();
 
         for (Block block : blocks) {

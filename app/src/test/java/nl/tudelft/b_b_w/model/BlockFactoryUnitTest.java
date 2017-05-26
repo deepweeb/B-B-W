@@ -18,7 +18,6 @@ public class BlockFactoryUnitTest {
 
     private Block _block;
     private final String TYPE_BLOCK = "BLOCK";
-    private final String TYPE_REVOKE = "REVOKE";
     private final String owner = "owner";
     private final String ownHash = "ownHash";
     private final String previousHashChain = "previousHashChain";

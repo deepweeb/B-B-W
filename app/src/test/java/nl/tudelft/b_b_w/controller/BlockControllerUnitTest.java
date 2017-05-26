@@ -38,8 +38,8 @@ public class BlockControllerUnitTest {
     private final String owner = "owner";
     private final int sequenceNumber = 1;
     private final String ownHash = "ownHash";
-    private final String previousHashChain = "root";
-    private final String previousHashSender = "root";
+    private final String previousHashChain = "previousHashChain";
+    private final String previousHashSender = "previousHashSender";
     private final String iban = "iban";
     private final String publicKey = "publicKey";
     private Block _block;

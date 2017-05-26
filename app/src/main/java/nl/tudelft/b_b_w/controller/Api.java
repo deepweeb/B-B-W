@@ -61,47 +61,56 @@ public class Api {
      * @param owner The owner of the chain we want to add to
      * @param user The user who possesses the key
      * @param key The public key we want to add
+     * @throws Exception when hash function is not available
      */
-    public void addKey(String owner, String user, String key) {
+    public void addKey(String owner, String user, String key, String iban) throws Exception {
         // find blocks to connect to
         List<Block> senderBlocks = blockController.getBlocks(user);
         Block genesisSender = senderBlocks.get(0);
         Block latest = blockController.getLatestBlock(owner);
 
         // create our block
-        String hash = "hash@" + user + "@" + key;
         String prevHashSelf = latest.getOwnHash();
         String prevHashOther = genesisSender.getOwnHash();
-        if (owner == user)
+        if (owner.equals(user))
             prevHashOther = "N/A";
 
-        Block fresh = BlockFactory.getBlock("BLOCK", owner, hash, prevHashSelf, prevHashOther, key, "NL81...", 0);
+        // get hash
+        ConversionController conversionController = new ConversionController(owner,
+                key, prevHashSelf, prevHashOther, iban);
+        String hash = conversionController.hashKey();
+
+        Block fresh = BlockFactory.getBlock("BLOCK", owner, hash, prevHashSelf, prevHashOther, key, iban, 0);
 
         // add to database
         blockController.addBlock(fresh);
     }
 
     /**
-     * Revoke a user-key binding and append the revokal to the chain.
-     * @param owner The owner of the chain we want to revoke from
-     * @param user The user who possessed the key
-     * @param key The public key we want to revoke
+     * Revoke a user-key binding to a chain.
+     * @param owner The owner of the chain we want to add to
+     * @param user The user who possesses the key
+     * @param key The public key we want to add
+     * @throws Exception when hash function is not available
      */
-    public void revokeKey(String owner, String user, String key) {
+    public void revokeKey(String owner, String user, String key, String iban) throws Exception {
         // find blocks to connect to
         List<Block> senderBlocks = blockController.getBlocks(user);
         Block genesisSender = senderBlocks.get(0);
         Block latest = blockController.getLatestBlock(owner);
 
         // create our block
-        String hash = "hash@" + user + "@" + key;
         String prevHashSelf = latest.getOwnHash();
         String prevHashOther = genesisSender.getOwnHash();
-        if (owner == user)
+        if (owner.equals(user))
             prevHashOther = "N/A";
 
-        // create revoke block
-        Block fresh = BlockFactory.getBlock("REVOKE", user, hash, prevHashSelf, prevHashOther, key, "NL81...", 0);
+        // get hash
+        ConversionController conversionController = new ConversionController(owner,
+                key, prevHashSelf, prevHashOther, iban);
+        String hash = conversionController.hashKey();
+
+        Block fresh = BlockFactory.getBlock("REVOKE", owner, hash, prevHashSelf, prevHashOther, key, iban, 0);
 
         // add to database
         blockController.addBlock(fresh);

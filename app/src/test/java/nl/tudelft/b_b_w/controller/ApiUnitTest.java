@@ -109,11 +109,15 @@ public class ApiUnitTest {
      */
     @Test
     public void addOwnKey() {
-        api.addKey(userC, userC, "pkc");
-        List<String> keys = api.getUserKeys(userC, userC);
-        List<String> expected = new ArrayList<String>();
-        expected.add("pkc");
-        assertEquals(expected, keys);
+        try {
+            api.addKey(userC, userC, "pkc", "ibanc");
+            List<String> keys = api.getUserKeys(userC, userC);
+            List<String> expected = new ArrayList<String>();
+            expected.add("pkc");
+            assertEquals(expected, keys);
+        } catch (Exception e) {
+            assertTrue(false);
+        }
     }
 
     /**
@@ -121,11 +125,15 @@ public class ApiUnitTest {
      */
     @Test
     public void addOtherKey() {
-        api.addKey(userC, userA, "pka");
-        List<String> keys = api.getUserKeys(userC, userA);
-        List<String> expected = new ArrayList<String>();
-        expected.add("pka");
-        assertEquals(expected, keys);
+        try {
+            api.addKey(userC, userA, "pka", "ibana");
+            List<String> keys = api.getUserKeys(userC, userA);
+            List<String> expected = new ArrayList<String>();
+            expected.add("pka");
+            assertEquals(expected, keys);
+        } catch (Exception e) {
+            assertTrue(false);
+        }
     }
 
 }

@@ -1,9 +1,13 @@
 package nl.tudelft.b_b_w.view;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import nl.tudelft.b_b_w.R;
@@ -16,8 +20,9 @@ import nl.tudelft.b_b_w.model.BlockFactory;
  */
 public class MainActivity extends Activity {
     private BlockController blockController;
+
+    /** The name of this app user */
     private String ownerName;
-    private String publicKey;
 
     /**
      * This method sets up the page.
@@ -28,29 +33,63 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         blockController = new BlockController(this);
-        ownerName = "GENESIS";
-        publicKey = "demokey";
+
+        if (blockController.isDatabaseEmpty()) {
+            askUserName();
+            addGenesis();
+        }
     }
 
     /**
-     * Add a genesis block so that the database is not empty
+     * Show a simple display asking the user what its name is and returns it.
+     * This dialog is modal so the rest of the application will pause.
+     * The username will be stored in the field ownerName..
+     */
+    private void askUserName() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("What is your name?");
+
+        // Set up the input
+        final EditText input = new EditText(this);
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ownerName = input.getText().toString();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    /**
+     * Add a genesis block so that the database is not empty.
+     * The genesis block has as previous chain hash "GENESIS" since it has no previous,
+     * and as sender hash "N/A" as is usual with blocks without sender.
      */
     private void addGenesis() {
         try {
-            if (blockController.getBlocks(ownerName).isEmpty()) {
-
-                Block block = BlockFactory.getBlock(
-                        "BLOCK",
-                        ownerName,
-                        "ownHash",
-                        "previoushash",
-                        "senderhash",
-                        "senderpubkey",
-                        "senderIban",
-                        0
-                );
-                blockController.addBlock(block);
-            }
+            Block block = BlockFactory.getBlock(
+                    "BLOCK",
+                    ownerName,
+                    "ownHash",
+                    "GENESIS",
+                    "N/A",
+                    "senderpubkey",
+                    "senderIban",
+                    0
+            );
+            blockController.addBlock(block);
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -63,34 +102,6 @@ public class MainActivity extends Activity {
     public void onClearDatabase(View view) {
         blockController.clearAllBlocks();
     }
-
-
-
-    /**
-     * Callback for when user clicks on 'add block'. Switch to AddBlockActivity.
-     *
-     * @param view current view, which is always MainActivity
-     */
-    public void onAddBlock(View view) {
-        Intent intent = new Intent(this, AddBlockActivity.class);
-        intent.putExtra("ownerName", ownerName);
-        intent.putExtra("publicKey", publicKey);
-        startActivity(intent);
-    }
-
-
-    /**
-     * Callback for when user clicks on 'delete block'. Switch to RevokeBlockActivity.
-     *
-     * @param view current view, which is always MainActivity
-     */
-    public void onRevokeBlock(View view) {
-        Intent intent = new Intent(this, RevokeBlockActivity.class);
-        intent.putExtra("ownerName", ownerName);
-        intent.putExtra("publicKey", publicKey);
-        startActivity(intent);
-    }
-
 
     /**
      * When you want to visit the PairActivity page.

@@ -50,12 +50,10 @@ public class DatabaseHandlerUnitTest {
     @Before
     public void setUp() {
         this.databaseHandler = new DatabaseHandler(RuntimeEnvironment.application);
-       _block =  BlockFactory.getBlock(TYPE_BLOCK, owner, ownHash,
+        _block =  BlockFactory.getBlock(TYPE_BLOCK, owner, ownHash,
                 previousHashChain, previousHashSender, publicKey, iban, trustValue);
         _block.setSeqNumberTo(sequenceNumber);
-
-
-}
+    }
 
     /**
      * onAddBlock test
@@ -249,6 +247,13 @@ public class DatabaseHandlerUnitTest {
         assertEquals(databaseHandler.getReadableDatabase(), database);
     }
 
+    /** Test for if the database is empty. Should not be empty since we add blocks.
+    @Test
+    public void checkDatabaseEmpty() {
+        DatabaseHandler databaseHandler = new DatabaseHandler(RuntimeEnvironment.application);
+        assertFalse(databaseHandler.isDatabaseEmpty());
+    }
+
     /**
      * Closes database connection after test
      */
@@ -256,6 +261,5 @@ public class DatabaseHandlerUnitTest {
     public void tearDown() {
         databaseHandler.clearAllBlocks();
         databaseHandler.close();
-
     }
 }

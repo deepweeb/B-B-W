@@ -90,7 +90,6 @@ public class ApiUnitTest {
 
         // does it really filter
         List<String> keysB = api.getUserKeys(userB, userB);
-        List<String> expectedB = new ArrayList<String>();
         assertTrue(keysB.isEmpty());
     }
 

@@ -228,6 +228,12 @@ public class BlockController {
         return block;
     }
 
-
+    /**
+     * Check if the database is empty.
+     * @return if the database is empty
+     */
+    public boolean isDatabaseEmpty() {
+        return databaseHandler.isDatabaseEmpty();
+    }
 
 }

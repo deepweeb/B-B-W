@@ -517,4 +517,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (result == -1) throw new RuntimeException("Block cannot be updated - " + block.toString());
         db.close(); // Closing database connection
     }
+
+    /**
+     * Check if the database is empty.
+     * @return if the database is empty
+     */
+    public boolean isDatabaseEmpty() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.query(TABLE_NAME,
+                _columns,
+                KEY_OWN_HASH + " = ? ",
+                new String[]{
+                        "GENESIS"
+                }, null, null, null, null);
+
+        boolean empty = c.getCount() > 0;
+
+        c.close();
+        return empty;
+    }
 }

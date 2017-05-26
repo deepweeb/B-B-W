@@ -40,7 +40,7 @@ public class AddBlockActivity extends Activity {
      * @param savedInstanceState unused, meant for serialisation
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addblock);
         blockController = new BlockController(this);
@@ -56,8 +56,7 @@ public class AddBlockActivity extends Activity {
      *
      * @param view current view (AddBlockActivity)
      */
-    public void onAddBlock(View view) {
-
+    public final void onAddBlock(View view) {
         try {
             // extract information
             EditText senderHashText = (EditText) findViewById(R.id.addSenderHash);

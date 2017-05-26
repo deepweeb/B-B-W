@@ -30,7 +30,7 @@ public class MainActivity extends Activity {
      * @param savedInstanceState    passes in the old variables.
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         blockController = new BlockController(this);
@@ -97,7 +97,7 @@ public class MainActivity extends Activity {
      * This method clears the database since a limited amount of data can be viewed.
      * @param view  The view of the program.
      */
-    public void onClearDatabase(View view) {
+    public final void onClearDatabase(View view) {
         blockController.clearAllBlocks();
     }
 
@@ -105,7 +105,7 @@ public class MainActivity extends Activity {
      * When you want to visit the PairActivity page.
      * @param view  The view
      */
-    public void onPairPage(View view) {
+    public final void onPairPage(View view) {
         Intent intent = new Intent(this, PairActivity.class);
         startActivity(intent);
     }
@@ -114,7 +114,7 @@ public class MainActivity extends Activity {
      * When you want to visit the FriendsPageActivity page.
      * @param view The view
      */
-    public void onFriendPage(View view) {
+    public final void onFriendPage(View view) {
         Intent intent = new Intent(this, FriendsPageActivity.class);
         startActivity(intent);
     }

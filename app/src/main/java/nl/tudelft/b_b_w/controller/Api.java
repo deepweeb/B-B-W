@@ -13,7 +13,7 @@ import nl.tudelft.b_b_w.model.BlockFactory;
  * the blockchain and database.
  */
 public class Api {
-    private Context context;
+    /** BlockController for access to the blocks */
     private BlockController blockController;
 
     /**
@@ -21,7 +21,6 @@ public class Api {
      * @param context A context object, needed for the database
      */
     public Api(Context context) {
-        this.context = context;
         blockController = new BlockController(context);
     }
 
@@ -31,7 +30,7 @@ public class Api {
      * @param user the user of whom to retrieve non-revoked public keys
      * @return a list of public keys in string form
      */
-    public List<String> getUserKeys(String owner, String user) {
+    public final List<String> getUserKeys(String owner, String user) {
         List<Block> blocks = blockController.getBlocks(owner);
         List<String> keys = new ArrayList<String>();
 
@@ -63,7 +62,7 @@ public class Api {
      * @param key The public key we want to add
      * @throws Exception when hash function is not available
      */
-    public void addKey(String owner, String user, String key, String iban) throws Exception {
+    public final void addKey(String owner, String user, String key, String iban) throws Exception {
         // find blocks to connect to
         List<Block> senderBlocks = blockController.getBlocks(user);
         Block genesisSender = senderBlocks.get(0);
@@ -93,7 +92,7 @@ public class Api {
      * @param key The public key we want to add
      * @throws Exception when hash function is not available
      */
-    public void revokeKey(String owner, String user, String key, String iban) throws Exception {
+    public final void revokeKey(String owner, String user, String key, String iban) throws Exception {
         // find blocks to connect to
         List<Block> senderBlocks = blockController.getBlocks(user);
         Block genesisSender = senderBlocks.get(0);

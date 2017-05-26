@@ -20,6 +20,14 @@ import static android.R.attr.id;
  */
 public class PairActivity extends Activity {
     /**
+     * Some constants for list indexing.
+     */
+    private static final int ONE = 1;
+    private static final int TWO = 2;
+    private static final int THREE = 3;
+    private static final int FOUR = 4;
+
+    /**
      * The block controller.
      */
     private BlockController blockController;
@@ -48,7 +56,7 @@ public class PairActivity extends Activity {
      * @param savedInstanceState brings the variables.
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pair);
     }
@@ -58,7 +66,7 @@ public class PairActivity extends Activity {
      * This method create the first test subject.We do this in order to simulate a transaction.
      * @param view The view of the program.
      */
-    public void onTestSubject1(View view) {
+    public final void onTestSubject1(View view) {
         ownerName = "TestSubject1";
         blockController = new BlockController(this);
         block1 = BlockFactory.getBlock("BLOCK", ownerName, "HASH1","N/A","N/A","TestSubject_PUBKEY","IBANTestSubject1",0);
@@ -74,9 +82,9 @@ public class PairActivity extends Activity {
         List<Block> list = blockController.getBlocks(ownerName);
 
         Toast.makeText(this, list.get(0).getPublicKey() + ", " +
-                list.get(1).getPublicKey() + ", " +
-                list.get(2).getPublicKey() + ", " +
-                list.get(3).getPublicKey(), Toast.LENGTH_SHORT).show();
+                list.get(ONE).getPublicKey() + ", " +
+                list.get(TWO).getPublicKey() + ", " +
+                list.get(THREE).getPublicKey(), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, FriendsPageActivity.class);
         intent.getExtras().putInt("userID", id);
         startActivity(intent);
@@ -87,7 +95,7 @@ public class PairActivity extends Activity {
      * We do this to simulate a transaction.
      * @param view The view of the program.
      */
-    public void onTestSubject2(View view) {
+    public final void onTestSubject2(View view) {
 
         Block block5;
 
@@ -109,10 +117,10 @@ public class PairActivity extends Activity {
         List<Block> list = blockController.getBlocks(ownerName);
 
         Toast.makeText(this, list.get(0).getPublicKey() + ", " +
-                list.get(1).getPublicKey() + ", " +
-                list.get(2).getPublicKey() + ", " +
-                list.get(3).getPublicKey() + ", " +
-                list.get(4).getPublicKey(), Toast.LENGTH_SHORT).show();
+                list.get(ONE).getPublicKey() + ", " +
+                list.get(TWO).getPublicKey() + ", " +
+                list.get(THREE).getPublicKey() + ", " +
+                list.get(FOUR).getPublicKey(), Toast.LENGTH_SHORT).show();
 
         startActivity(new Intent(this, FriendsPageActivity.class));
     }
@@ -122,7 +130,7 @@ public class PairActivity extends Activity {
      * We do this to simulate a transaction.
      * @param view  The view of the program.
      */
-    public void onTestSubject3(View view) {
+    public final void onTestSubject3(View view) {
         ownerName = "TestSubject2";
         blockController = new BlockController(this);
         block1 = BlockFactory.getBlock("BLOCK", ownerName, "HASH1","N/A","N/A","sub3KeyA","IBANTestSubject1",0);

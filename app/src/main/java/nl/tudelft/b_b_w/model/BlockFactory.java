@@ -21,7 +21,7 @@ public class BlockFactory {
      * @return Returns a new block
      * @throws IllegalArgumentException when the input string type is invalid
      */
-    public static Block getBlock(String type, String _owner, String _ownHash, String _previousHashChain, String _previousHashSender, String _publicKey, String _iban, int _trustValue) throws IllegalArgumentException {
+    public static final Block getBlock(String type, String _owner, String _ownHash, String _previousHashChain, String _previousHashSender, String _publicKey, String _iban, int _trustValue) throws IllegalArgumentException {
         switch (type) {
             case "BLOCK":
                 return new Block(_owner, _ownHash, _previousHashChain, _previousHashSender, _publicKey, _iban, _trustValue, !TYPE_REVOKE);

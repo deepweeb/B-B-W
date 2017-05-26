@@ -247,11 +247,49 @@ public class DatabaseHandlerUnitTest {
         assertEquals(databaseHandler.getReadableDatabase(), database);
     }
 
-    /** Test for if the database is empty. Should not be empty since we add blocks.
+    /** Test for if the database is empty. Should not be empty since we add blocks. */
     @Test
     public void checkDatabaseEmpty() {
         DatabaseHandler databaseHandler = new DatabaseHandler(RuntimeEnvironment.application);
         assertFalse(databaseHandler.isDatabaseEmpty());
+    }
+
+    /** blockExists call for a regular block */
+    @Test
+    public void checkExistsRegular() {
+        Block b = BlockFactory.getBlock("BLOCK", "Barry", "ownHash", "prevHashChain", "prevHashSender", "pubKey", "IBAN", 0);
+        databaseHandler.addBlock(b);
+        boolean exists = databaseHandler.blockExists("Barry", "pubKey", false);
+        assertTrue(exists);
+    }
+
+    /** blockExists call for a revoked block */
+    @Test
+    public void checkExistsRevoked() {
+        Block b = BlockFactory.getBlock("BLOCK", "Barry", "ownHash", "prevHashChain", "prevHashSender", "pubKey", "IBAN", 0);
+        databaseHandler.addBlock(b);
+        boolean exists = databaseHandler.blockExists("Barry", "pubKey", true);
+        assertFalse(exists);
+    }
+
+    /** Add, revoke, then add is not possible. */
+    @Test
+    public void checkExistsAgain() {
+        Block b1 = BlockFactory.getBlock("BLOCK", "Barry", "ownHash", "prevHashChain", "prevHashSender", "pubKey", "IBAN", 0);
+        Block b2 = BlockFactory.getBlock("REVOKE", "Barry", "ownHash", "prevHashChain", "prevHashSender", "pubKey", "IBAN", 0);
+        databaseHandler.addBlock(b1);
+        databaseHandler.addBlock(b2);
+        boolean exists = databaseHandler.blockExists("Barry", "pubKey", false);
+        assertTrue(exists);
+    }
+
+    /** Add different key should not hit exist. */
+    @Test
+    public void checkExistsOtherKey() {
+        Block b1 = BlockFactory.getBlock("BLOCK", "Barry", "ownHash", "prevHashChain", "prevHashSender", "pubKey1", "IBAN", 0);
+        databaseHandler.addBlock(b1);
+        boolean exists = databaseHandler.blockExists("Barry", "pubKey2", false);
+        assertFalse(exists);
     }
 
     /**

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 import nl.tudelft.b_b_w.model.Block;
 import nl.tudelft.b_b_w.model.BlockFactory;
@@ -14,13 +13,14 @@ import nl.tudelft.b_b_w.model.DatabaseHandler;
 import nl.tudelft.b_b_w.model.TrustValues;
 
 /**
-
- * Performs the actions of the blockchain
+ * Performs the actions on the blockchain
  */
 
 public class BlockController {
-
+    /** Context of the block database */
     private Context context;
+
+    /** Databasehandler to use */
     private DatabaseHandler databaseHandler;
 
     /**
@@ -33,16 +33,15 @@ public class BlockController {
         this.databaseHandler = new DatabaseHandler(this.context);
     }
 
+    /**
+     * Check if a block already exists in the database
+     * @param owner owner of the block
+     * @param key public key in the block
+     * @param revoked whether the block is revoked
+     * @return if the block already exists
+     */
     public boolean blockExists(String owner, String key, boolean revoked) {
-        List<Block> blocks = databaseHandler.getAllBlocks(owner);
-
-        for (Block block : blocks) {
-            if (Objects.equals(block.getOwner(), owner) && Objects.equals(block.getPublicKey(), key)
-                && block.isRevoked() == revoked)
-                return true;
-        }
-
-        return false;
+        return databaseHandler.blockExists(owner, key, revoked);
     }
 
 

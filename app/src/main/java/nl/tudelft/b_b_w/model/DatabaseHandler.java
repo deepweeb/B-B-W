@@ -398,6 +398,34 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
+     * Check if a block already exists in the database.
+     * It is not possible to add a revoked key again.
+     * @param owner owner of the block
+     * @param key public key in the block
+     * @param revoked whether the block is revoked
+     * @return if the block already exists
+     */
+    public boolean blockExists(String owner, String key, boolean revoked) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_NAME,
+                _columns,
+                KEY_OWNER + " = ? AND " + KEY_PUBLIC_KEY + " = ? AND " + KEY_REVOKE + " = ?",
+                new String[]{
+                        owner,
+                        key,
+                        String.valueOf(revoked ? 1 : 0)
+                }, null, null, null, null);
+
+        boolean exists = cursor.getCount() > 0;
+
+        // Close cursor
+        cursor.close();
+
+        return exists;
+    }
+
+    /**
      * Method to get the block before a specified block
      *
      * @param owner          the owner of the block after

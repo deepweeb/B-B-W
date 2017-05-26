@@ -528,7 +528,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 _columns,
                 KEY_PREV_HASH_CHAIN + " = ? ",
                 new String[]{
-                        "GENESIS"
+                        "N/A"
                 }, null, null, null, null);
 
         boolean empty = c.getCount() <= 0;

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.controller.BlockController;
+import nl.tudelft.b_b_w.controller.ConversionController;
 import nl.tudelft.b_b_w.model.Block;
 import nl.tudelft.b_b_w.model.BlockFactory;
 
@@ -72,15 +73,17 @@ public class MainActivity extends Activity {
      * and as sender hash "N/A" as is usual with blocks without sender.
      */
     private void addGenesis() {
+
+        ConversionController cvc = new ConversionController(ownerName, "pubkey", "N/A", "N/A", "Iban");
         try {
             Block block = BlockFactory.getBlock(
                     "BLOCK",
                     ownerName,
-                    "ownHash",
-                    "GENESIS",
+                    cvc.hashKey(),
                     "N/A",
-                    "senderpubkey",
-                    "senderIban",
+                    "N/A",
+                    "pubkey",
+                    "Iban",
                     0
             );
             blockController.addBlock(block);

@@ -62,7 +62,7 @@ public class ContactsActivity extends Activity {
             ibanItemText.setText(bc.getBlocks("GENESIS").get(position).getIban()); //change to IBAN
 
             ImageView pic = (ImageView)view.findViewById(R.id.trust_image);
-z            int trust = bc.getBlocks("GENESIS").get(position).getTrustValue();
+            int trust = bc.getBlocks("GENESIS").get(position).getTrustValue();
 
             switch (trust) {
                 case 100: pic.setImageResource(images[0]);

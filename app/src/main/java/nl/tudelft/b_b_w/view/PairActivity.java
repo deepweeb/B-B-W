@@ -14,7 +14,7 @@ import nl.tudelft.b_b_w.model.Block;
 import nl.tudelft.b_b_w.model.BlockFactory;
 
 /**
- * This activity
+ * This activity 
  */
 public class PairActivity extends Activity {
     /**

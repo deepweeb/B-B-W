@@ -18,6 +18,7 @@ import nl.tudelft.b_b_w.model.Block;
 import nl.tudelft.b_b_w.model.BlockFactory;
 import nl.tudelft.b_b_w.model.TrustValues;
 
+import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
 //import android.test.mock.MockContext;
@@ -47,6 +48,11 @@ public class BlockControllerUnitTest {
     private final String TYPE_BLOCK = "BLOCK";
     private final String TYPE_REVOKE = "REVOKE";
 
+    private Block genesisA;
+    private Block genesisB;
+    private Block blockA_A1;
+    private Block blockA_B1;
+
     /**
      * Initialize BlockController before every test
      * And initialize a dummy block _block
@@ -57,6 +63,15 @@ public class BlockControllerUnitTest {
         this._block = BlockFactory.getBlock(TYPE_BLOCK, owner, ownHash,
                 previousHashChain, previousHashSender, publicKey, iban, trustValue);
         _block.setSeqNumberTo(sequenceNumber);
+
+        try {
+            genesisA = bc.createGenesis("A");
+            genesisB = bc.createGenesis("B");
+            blockA_A1 = bc.createKeyBlock("A", "A", "ka", "ibanA");
+            blockA_B1 = bc.createKeyBlock("A", "B", "kb", "ibanB");
+        } catch (Exception e) {
+            // we will check this in later tests
+        }
     }
 
     /**
@@ -244,6 +259,65 @@ public class BlockControllerUnitTest {
         assertEquals(TrustValues.REVOKED.getValue(), _block.getTrustValue());
     }
 
+    /** Check that the genesis block is created */
+    @Test
+    public void verifyGenesisCreation() {
+        assertNotNull(genesisA);
+    }
+
+    /** Check that genesis has the correct index */
+    @Test
+    public void verifyGenesisIndex() {
+        assertEquals(1, genesisA.getSequenceNumber());
+    }
+
+    /** Verify genesis owner A */
+    @Test
+    public void verifyGenesisOwner() {
+        assertEquals("A", genesisA.getOwner());
+    }
+
+    /** Hash of genesis block */
+    @Test
+    public void verifyGenesisHashA() {
+        ConversionController conversionController = new ConversionController("A", "N/A", "N/A", "N/A", "N/A");
+        try {
+            String hash = conversionController.hashKey();
+            assertEquals(genesisA.getOwnHash(), hash);
+        } catch (Exception e) {
+            assertNotNull(e.getMessage(), null);
+        }
+    }
+
+    /** Verify the block A-A1 was created */
+    @Test
+    public void verifyBlockA_A1Creation() {
+        assertNotNull(blockA_A1);
+    }
+
+    /** Verify the block A-B1 was created */
+    @Test
+    public void verifyBlockA_B1Creation() {
+        assertNotNull(blockA_B1);
+    }
+
+    /** Blocks without sender should not have a sender hash */
+    @Test
+    public void verifyBlockChainHash() {
+        assertEquals("N/A", blockA_A1.getPreviousHashSender());
+    }
+
+    /** Verify block hash */
+    @Test
+    public void verifySenderHash() {
+        try {
+            ConversionController conversionController = new ConversionController("A", "kb", blockA_A1.getOwnHash(), genesisB.getOwnHash(), "ibanB");
+            String hash = conversionController.hashKey();
+            assertEquals(hash, blockA_B1.getOwnHash());
+        } catch (Exception e) {
+            assertNotNull(null);
+        }
+    }
 
     /**
      * Closes database connection after test

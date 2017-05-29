@@ -24,9 +24,9 @@ public class BlockFactory {
     public static final Block getBlock(String type, String _owner, String _ownHash, String _previousHashChain, String _previousHashSender, String _publicKey, String _iban, int _trustValue) throws IllegalArgumentException {
         switch (type) {
             case "BLOCK":
-                return new Block(_owner, _ownHash, _previousHashChain, _previousHashSender, _publicKey, _iban, _trustValue, !TYPE_REVOKE);
+                return new Block(1, _owner, _ownHash, _previousHashChain, _previousHashSender, _publicKey, _iban, _trustValue, !TYPE_REVOKE);
             case "REVOKE":
-                return new Block(_owner, _ownHash, _previousHashChain, _previousHashSender, _publicKey, _iban, _trustValue, TYPE_REVOKE);
+                return new Block(1, _owner, _ownHash, _previousHashChain, _previousHashSender, _publicKey, _iban, _trustValue, TYPE_REVOKE);
             default:
                 throw new IllegalArgumentException("Invalid type of block: " + type);
         }

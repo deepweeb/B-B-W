@@ -88,17 +88,6 @@ public class BlockUnitTest {
     }
 
     /**
-     * Test to check whether the getSequence_number() returns the right sequence number of the block
-     * @throws Exception Catches error when the MessageDigest
-     * gets an error.
-     */
-    @Test
-    public void getSequenceNumberTest() throws Exception {
-        final int check = 1;
-        assertEquals(check, _block.getSequenceNumber());
-    }
-
-    /**
      * Test to check whether the getPublic_key() function returns the right public key of the contact of the block
      * @throws Exception Catches error when the MessageDigest
      * gets an error.

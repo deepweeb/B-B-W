@@ -228,4 +228,46 @@ public class BlockController {
         return databaseHandler.isDatabaseEmpty();
     }
 
+    /**
+     * Create genesis block for an owner
+     * @param owner the new owner of the block
+     * @return the freshly created block
+     * @throws Exception when the key hashing method does not work
+     */
+    public Block createGenesis(String owner) throws Exception {
+        String chainHash = "N/A";
+        String senderHash = "N/A";
+        String publicKey = "N/A";
+        String iban = "N/A";
+        ConversionController conversionController = new ConversionController(owner, publicKey, chainHash, senderHash, iban);
+        String hash = conversionController.hashKey();
+        Block block = new Block(1, owner, hash, chainHash, senderHash, publicKey, iban, 0, false);
+        addBlock(block);
+        return block;
+    }
+
+    /**
+     * Create a block which adds a key for a certain user and weaves it into the blockchain.
+     * The initial trust value is zero.
+     */
+    public Block createKeyBlock(String owner, String contact, String publicKey, String iban) throws Exception {
+        Block latest = getLatestBlock(owner);
+        String previousBlockHash = latest.getOwnHash();
+
+        // always link to genesis of contact blocks
+        String contactBlockHash;
+        if (owner.equals(contact))
+            contactBlockHash = "N/A";
+        else
+            contactBlockHash = getBlocks(contact).get(0).getOwnHash();
+        int index = latest.getSequenceNumber() + 1;
+
+        ConversionController conversionController = new ConversionController(
+                owner, publicKey, previousBlockHash, contactBlockHash, iban
+        );
+        String hash = conversionController.hashKey();
+        Block block = new Block(index, owner, hash, previousBlockHash, contactBlockHash, publicKey, iban, 0, false);
+        addBlock(block);
+        return block;
+    }
 }

@@ -30,11 +30,9 @@ public class Block {
      * @param _trustvalue         the trust value of the contact
      * @param _isRevoked          boolean to check whether a block is revoked or not
      */
-    public Block(String _owner, String _ownHash, String _previousHashChain, String _previousHashSender, String _publicKey, String _iban, int _trustvalue, boolean _isRevoked) {
+    public Block(String _owner, int _sequenceNumber, String _ownHash, String _previousHashChain, String _previousHashSender, String _publicKey, String _iban, int _trustvalue, boolean _isRevoked) {
         this.owner = _owner;
-
-        //starting index 1, no longer 0, the mutable thing will be fixed, this is a quick fix
-        this.sequenceNumber = 1;
+        this.sequenceNumber = _sequenceNumber;
         this.ownHash = _ownHash;
         this.previousHashChain = _previousHashChain;
         this.previousHashSender = _previousHashSender;
@@ -97,18 +95,6 @@ public class Block {
     public final int getSequenceNumber() {
         return sequenceNumber;
     }
-
-
-    /**
-     * Default initializar for sequence number
-     *
-     * @return the sequence number of the block after initialization
-     */
-    public final int setSeqNumberTo(int _sequenceNumber) {
-        sequenceNumber = _sequenceNumber;
-        return sequenceNumber;
-    }
-
 
     /**
      * Default getter for sequence number

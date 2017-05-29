@@ -69,14 +69,53 @@ public class PairActivity extends Activity {
     public final void onTestSubject1(View view) {
         ownerName = "TestSubject1";
         blockController = new BlockController(this);
-        block1 = BlockFactory.getBlock("BLOCK", ownerName, "HASH1","N/A","N/A","TestSubject_PUBKEY","IBANTestSubject1",0);
-        block2 = BlockFactory.getBlock("BLOCK", ownerName, "HASH2","HASH1","HASHfromContact1","Contact1_PUBKEY","IBANContact1",0);
-        block3 = BlockFactory.getBlock("BLOCK", ownerName, "HASH3","HASH2","HASHfromContact2","Contact2_PUBKEY","IBANContact2",0);
-        block4 = BlockFactory.getBlock("BLOCK", ownerName, "HASH4","HASH3","HASHfromContact3","Contact3_PUBKEY","IBANContact3",0);
-
+        block1 = BlockFactory.getBlock(
+                "BLOCK",
+                ownerName,
+                blockController.getLatestSeqNumber(ownerName) + 1,
+                "HASH1",
+                "N/A",
+                "N/A",
+                "TestSubject_PUBKEY",
+                "IBANTestSubject1",
+                0
+        );
         blockController.addBlock(block1);
+        block2 = BlockFactory.getBlock(
+                "BLOCK",
+                ownerName,
+                blockController.getLatestSeqNumber(ownerName) + 1,
+                "HASH2",
+                "HASH1",
+                "HASHfromContact1",
+                "Contact1_PUBKEY",
+                "IBANContact1",
+                0
+        );
         blockController.addBlock(block2);
+        block3 = BlockFactory.getBlock(
+                "BLOCK",
+                ownerName,
+                blockController.getLatestSeqNumber(ownerName) + 1,
+                "HASH3",
+                "HASH2",
+                "HASHfromContact2",
+                "Contact2_PUBKEY",
+                "IBANContact2",
+                0
+        );
         blockController.addBlock(block3);
+        block4 = BlockFactory.getBlock(
+                "BLOCK",
+                ownerName,
+                blockController.getLatestSeqNumber(ownerName) + 1,
+                "HASH4",
+                "HASH3",
+                "HASHfromContact3",
+                "Contact3_PUBKEY",
+                "IBANContact3",
+                0
+        );
         blockController.addBlock(block4);
 
         List<Block> list = blockController.getBlocks(ownerName);
@@ -101,17 +140,65 @@ public class PairActivity extends Activity {
 
         ownerName = "TestSubject2";
         blockController = new BlockController(this);
-        block1 = BlockFactory.getBlock("BLOCK", ownerName, "HASH1","N/A","N/A","a","IBANTestSubject1",0);
-        block2 = BlockFactory.getBlock("BLOCK", ownerName, "HASH2","HASH1","HASHfromContact1","b","IBANContact1",0);
-        block3 = BlockFactory.getBlock("BLOCK", ownerName, "HASH3","HASH2","HASHfromContact2","c","IBANContact2",0);
-        block4 = BlockFactory.getBlock("BLOCK", ownerName, "HASH4","HASH3","HASHfromContact3","d","IBANContact3",0);
-        block5 = BlockFactory.getBlock("BLOCK", ownerName, "HASH5","Hash4","HASHfromContact4","e","IBANContact4",0);
-
-
+        block1 = BlockFactory.getBlock(
+                "BLOCK",
+                ownerName,
+                blockController.getLatestSeqNumber(ownerName) + 1,
+                "HASH1",
+                "N/A",
+                "N/A",
+                "a",
+                "IBANTestSubject1",
+                0
+        );
         blockController.addBlock(block1);
+        block2 = BlockFactory.getBlock(
+                "BLOCK",
+                ownerName,
+                blockController.getLatestSeqNumber(ownerName) + 1,
+                "HASH2",
+                "HASH1",
+                "HASHfromContact1",
+                "b",
+                "IBANContact2",
+                0
+        );
         blockController.addBlock(block2);
+        block3 = BlockFactory.getBlock(
+                "BLOCK",
+                ownerName,
+                blockController.getLatestSeqNumber(ownerName) + 1,
+                "HASH3",
+                "HASH2",
+                "HASHfromContact2",
+                "b",
+                "IBANContact3",
+                0
+        );
         blockController.addBlock(block3);
+        block4 = BlockFactory.getBlock(
+                "BLOCK",
+                ownerName,
+                blockController.getLatestSeqNumber(ownerName) + 1,
+                "HASH4",
+                "HASH3",
+                "HASHfromContact3",
+                "b",
+                "IBANContact4",
+                0
+        );
         blockController.addBlock(block4);
+        block5 = BlockFactory.getBlock(
+                "BLOCK",
+                ownerName,
+                blockController.getLatestSeqNumber(ownerName) + 1,
+                "HASH5",
+                "HASH4",
+                "HASHfromContact4",
+                "b",
+                "IBANContact5",
+                0
+        );
         blockController.addBlock(block5);
 
         List<Block> list = blockController.getBlocks(ownerName);
@@ -133,13 +220,30 @@ public class PairActivity extends Activity {
     public final void onTestSubject3(View view) {
         ownerName = "TestSubject2";
         blockController = new BlockController(this);
-        block1 = BlockFactory.getBlock("BLOCK", ownerName, "HASH1","N/A","N/A","sub3KeyA","IBANTestSubject1",0);
-        block2 = BlockFactory.getBlock("BLOCK", ownerName, "HASH2","HASH1","HASHfromContact1","sub3KeyB","IBANContact1",0);
-
-
+        block1 = BlockFactory.getBlock(
+                "BLOCK",
+                ownerName,
+                blockController.getLatestSeqNumber(ownerName) + 1,
+                "HASH1",
+                "N/A",
+                "N/A",
+                "sub3KeyA",
+                "IBANTestSubject1",
+                0
+        );
         blockController.addBlock(block1);
+        block2 = BlockFactory.getBlock(
+                "BLOCK",
+                ownerName,
+                blockController.getLatestSeqNumber(ownerName) + 1,
+                "HASH2",
+                "HASH1",
+                "HASHfromContact1",
+                "sub3KeyB",
+                "IBANContact1",
+                0
+        );
         blockController.addBlock(block2);
-
 
         List<Block> list = blockController.getBlocks(ownerName);
 

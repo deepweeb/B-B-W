@@ -144,10 +144,16 @@ public class BlockController implements BlockControllerInterface {
     @Override
     public final List<Block> revokeBlock(Block block) {
         String owner = block.getOwner();
-        Block newBlock = BlockFactory.getBlock("REVOKE", block.getOwner(),
-                block.getOwnHash(), block.getPreviousHashChain(), block.getPreviousHashSender(),
-                block.getPublicKey(), block.getIban(), block.getTrustValue());
-        addBlock(newBlock);
+        addBlock(BlockFactory.getBlock(
+                "REVOKE",
+                owner,
+                getLatestSeqNumber(owner) + 1,
+                block.getOwnHash(),
+                block.getPreviousHashChain(),
+                block.getPreviousHashSender(),
+                block.getPublicKey(),
+                block.getIban(),
+                block.getTrustValue()));
         return getBlocks(owner);
     }
 

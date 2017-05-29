@@ -77,7 +77,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         cursor.close();
 
 
-        return (block.getSequenceNumber()==1) ? block.getOwner() : block.getOwner()+"'s friend #" + (block.getSequenceNumber() - 1);
+        return (block.getSequenceNumber()==1) ? block.getOwner() : block.getOwner()+"'s friend #" + block.getSequenceNumber();
 
     }
 
@@ -178,16 +178,16 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      */
     private Block extractBlock(Cursor cursor) {
         final String blockType = (cursor.getInt(INDEX_REVOKE) > 0) ? "REVOKE" : "BLOCK";
-        Block block = BlockFactory.getBlock(
-                blockType,cursor.getString(INDEX_OWNER),
+        return BlockFactory.getBlock(
+                blockType,
+                cursor.getString(INDEX_OWNER),
+                cursor.getInt(INDEX_SEQ_NO),
                 cursor.getString(INDEX_OWN_HASH),
                 cursor.getString(INDEX_PREV_HASH_CHAIN),
                 cursor.getString(INDEX_PREV_HASH_SENDER),
                 cursor.getString(INDEX_PUBLIC_KEY),
                 cursor.getString(INDEX_IBAN_KEY),
                 cursor.getInt(INDEX_TRUST_VALUE));
-        block.setSeqNumberTo(cursor.getInt(INDEX_SEQ_NO));
-        return block;
     }
 
     /**

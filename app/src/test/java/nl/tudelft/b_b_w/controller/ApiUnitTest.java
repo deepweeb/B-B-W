@@ -49,20 +49,20 @@ public class ApiUnitTest {
         api = new Api(RuntimeEnvironment.application);
 
         // A: add A
-        bc.addBlock(BlockFactory.getBlock("BLOCK", "Antro", "roothashA", "prevhashchain", "root", "pkroot", "NL81...", 0));
-        bc.addBlock(BlockFactory.getBlock("BLOCK", "Antro", "hashA", "roothash", "N/A", "pka", "NL81...", 0));
+        bc.addBlock(BlockFactory.getBlock("BLOCK","Antro", bc.getLatestSeqNumber("Antro") + 1, "roothashA", "prevhashchain", "root", "pkroot", "NL81...", 0));
+        bc.addBlock(BlockFactory.getBlock("BLOCK", "Antro", bc.getLatestSeqNumber("Antro") + 1, "hashA", "roothash", "N/A", "pka", "NL81...", 0));
 
         // B: add A
-        bc.addBlock(BlockFactory.getBlock("BLOCK", "Besse", "roothashB", "prevhashchain", "root", "pkroot", "NL81...", 0));
-        bc.addBlock(BlockFactory.getBlock("BLOCK", "Besse", "hashB", "roothashB", "roothashA", "pka", "NL81...", 0));
+        bc.addBlock(BlockFactory.getBlock("BLOCK", "Besse", bc.getLatestSeqNumber("Besse") + 1, "roothashB", "prevhashchain", "root", "pkroot", "NL81...", 0));
+        bc.addBlock(BlockFactory.getBlock("BLOCK", "Besse", bc.getLatestSeqNumber("Besse") + 1, "hashB", "roothashB", "roothashA", "pka", "NL81...", 0));
 
         // C
-        bc.addBlock(BlockFactory.getBlock("BLOCK", "Cacao", "roothashC", "prevhashchain", "root", "pkroot", "NL81...", 0));
+        bc.addBlock(BlockFactory.getBlock("BLOCK", "Cacao", bc.getLatestSeqNumber("Cacao") + 1, "roothashC", "prevhashchain", "root", "pkroot", "NL81...", 0));
 
         // E: add A, revoke A
-        bc.addBlock(BlockFactory.getBlock("BLOCK", "Erwti", "roothashE", "prevhashchain", "root", "pkroot", "NL81...", 0));
-        bc.addBlock(BlockFactory.getBlock("BLOCK", "Erwti", "hashE1", "roothashE", "roothashA", "pka", "NL81...", 0));
-        bc.addBlock(BlockFactory.getBlock("REVOKE", "Erwti", "hashE2", "hashE1", "roothashA", "pka", "NL81...", 0));
+        bc.addBlock(BlockFactory.getBlock("BLOCK", "Erwti", bc.getLatestSeqNumber("Erwti") + 1, "roothashE", "prevhashchain", "root", "pkroot", "NL81...", 0));
+        bc.addBlock(BlockFactory.getBlock("BLOCK", "Erwti", bc.getLatestSeqNumber("Erwti") + 1, "hashE1", "roothashE", "roothashA", "pka", "NL81...", 0));
+        bc.addBlock(BlockFactory.getBlock("REVOKE", "Erwti", bc.getLatestSeqNumber("Erwti") + 1, "hashE2", "hashE1", "roothashA", "pka", "NL81...", 0));
     }
 
 

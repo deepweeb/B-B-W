@@ -8,7 +8,6 @@ import java.security.MessageDigest;
 public class ConversionController {
     // Variables which we need to create a hashed key
     private String blockOwner;
-    private int     seqNumber;
     private String senderPublicKey;
     private String previousBlockHash;
     private String contactBlockHash;
@@ -16,16 +15,15 @@ public class ConversionController {
 
     /**
      * Instantiating the necessary variables
-     * @param senderPublicKey PublicKey of the block
-     * @param owner Owner of the block
+     * @param _senderPublicKey PublicKey of the block
+     * @param _owner Owner of the block
      */
-    public ConversionController(String owner, int sn, String senderPublicKey, String previousBlockHash, String contactBlockHash, String contactIban) {
-        this.blockOwner = owner;
-        this.seqNumber =sn;
-        this.senderPublicKey = senderPublicKey;
-        this.previousBlockHash = previousBlockHash;
-        this.contactBlockHash = contactBlockHash;
-        this.contactIban = contactIban;
+    public ConversionController(String _owner,  String _senderPublicKey, String _previousBlockHash, String _contactBlockHash, String _contactIban) {
+        blockOwner = _owner;
+        senderPublicKey = _senderPublicKey;
+        previousBlockHash = _previousBlockHash;
+        contactBlockHash = _contactBlockHash;
+        contactIban = _contactIban;
     }
 
     /**
@@ -33,9 +31,9 @@ public class ConversionController {
      * with a SHA-256 conversion
      * @return the Hashed Key
      */
-    public String hashKey() throws Exception {
+    public final String hashKey() throws Exception {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
-        String text = blockOwner + String.valueOf(seqNumber) + senderPublicKey + previousBlockHash + contactBlockHash + contactIban;
+        String text = blockOwner  + senderPublicKey + previousBlockHash + contactBlockHash + contactIban;
         md.update(text.getBytes("UTF-8"));
         byte[] digest = md.digest();
         String hash = String.format("%064x", new java.math.BigInteger(1, digest));

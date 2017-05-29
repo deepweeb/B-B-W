@@ -9,19 +9,21 @@ import nl.tudelft.b_b_w.model.Block;
 import nl.tudelft.b_b_w.model.BlockFactory;
 import nl.tudelft.b_b_w.model.DatabaseHandler;
 import nl.tudelft.b_b_w.model.TrustValues;
-import nl.tudelft.b_b_w.model.User;
 
 /**
- * Performs the actions of the blockchain
+ * Performs the actions on the blockchain
  */
 
 public class BlockController implements BlockControllerInterface {
 
     /**
-     * Class attributes
+     * Context of the block database
      */
     private Context context;
-    private User user;
+
+    /**
+     *  Databasehandler to use
+     */
     private DatabaseHandler databaseHandler;
 
     /**
@@ -31,7 +33,6 @@ public class BlockController implements BlockControllerInterface {
      */
     public BlockController(Context _context) {
         this.context = _context;
-        this.user = new User();
         this.databaseHandler = new DatabaseHandler(this.context);
     }
 
@@ -39,7 +40,15 @@ public class BlockController implements BlockControllerInterface {
      * @inheritDoc
      */
     @Override
-    public List<Block> addBlock(Block block) {
+    public final boolean blockExists(String owner, String key, boolean revoked) {
+        return databaseHandler.blockExists(owner, key, revoked);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public final List<Block> addBlockToChain(Block block) {
         // Check if the block already exists
         String owner = block.getOwner();
         Block latest = databaseHandler.getLatestBlock(owner);
@@ -54,19 +63,44 @@ public class BlockController implements BlockControllerInterface {
                 databaseHandler.updateBlock(latest);
                 databaseHandler.addBlock(block);
             }
-            else throw new RuntimeException("Error - Block already exists");
+            else {
+                throw new RuntimeException("Error - Block already exists");
+            }
         }
 
         return getBlocks(owner);
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public final void addBlock(Block block) {
+
+        if (blockExists(block.getOwner(), block.getPublicKey(), block.isRevoked()))
+            throw new RuntimeException("block already exists");
+
+        databaseHandler.addBlock(block);
     }
 
     /**
      * @inheritDoc
      */
     @Override
-    public List<Block> getBlocks(String owner) {
+    public final void clearAllBlocks() {
+        databaseHandler.clearAllBlocks();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public final List<Block> getBlocks(String owner) {
+        // retrieve all blocks in the database and then sort it in order of sequence number
         List<Block> blocks = databaseHandler.getAllBlocks(owner);
-        List<Block> res = new ArrayList<>();
+        List < Block > res = new ArrayList<>();
+
         for (Block block : blocks) {
             if (block.isRevoked()) {
                 res = removeBlock(res, block);
@@ -81,7 +115,15 @@ public class BlockController implements BlockControllerInterface {
      * @inheritDoc
      */
     @Override
-    public Block getLatestBlock(String owner) {
+    public final String getContactName(String hash) {
+        return databaseHandler.getContactName(hash);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public final Block getLatestBlock(String owner) {
         return databaseHandler.getLatestBlock(owner);
     }
 
@@ -89,7 +131,7 @@ public class BlockController implements BlockControllerInterface {
      * @inheritDoc
      */
     @Override
-    public int getLatestSeqNumber(String owner) {
+    public final int getLatestSeqNumber(String owner) {
         return databaseHandler.lastSeqNumberOfChain(owner);
     }
 
@@ -97,7 +139,7 @@ public class BlockController implements BlockControllerInterface {
      * @inheritDoc
      */
     @Override
-    public List<Block> revokeBlock(Block block) {
+    public final List<Block> revokeBlock(Block block) {
         String owner = block.getOwner();
         Block newBlock = BlockFactory.getBlock("REVOKE", block.getOwner(),
                 block.getOwnHash(), block.getPreviousHashChain(), block.getPreviousHashSender(),
@@ -110,7 +152,7 @@ public class BlockController implements BlockControllerInterface {
      * @inheritDoc
      */
     @Override
-    public List<Block> removeBlock(List<Block> list, Block block) {
+    public final List<Block> removeBlock(List<Block> list, Block block) {
         List<Block> res = new ArrayList<>();
         for (Block blc : list) {
             if (!(blc.getOwner().equals(block.getOwner()) && blc.getPublicKey().equals(block.getPublicKey()))) {
@@ -124,7 +166,7 @@ public class BlockController implements BlockControllerInterface {
      * @inheritDoc
      */
     @Override
-    public Block verifyIBAN(Block block) {
+    public final Block verifyIBAN(Block block) {
         block.setTrustValue(TrustValues.VERIFIED.getValue());
         return block;
     }
@@ -133,7 +175,7 @@ public class BlockController implements BlockControllerInterface {
      * @inheritDoc
      */
     @Override
-    public Block successfulTransaction(Block block) {
+    public final Block successfulTransaction(Block block) {
         block.setTrustValue(block.getTrustValue() + TrustValues.SUCCESFUL_TRANSACTION.getValue());
         return block;
     }
@@ -142,7 +184,7 @@ public class BlockController implements BlockControllerInterface {
      * @inheritDoc
      */
     @Override
-    public Block failedTransaction(Block block) {
+    public final Block failedTransaction(Block block) {
         block.setTrustValue(block.getTrustValue() + TrustValues.FAILED_TRANSACTION.getValue());
         return block;
     }
@@ -151,11 +193,17 @@ public class BlockController implements BlockControllerInterface {
      * @inheritDoc
      */
     @Override
-    public Block revokedTrustValue(Block block) {
+    public final Block revokedTrustValue(Block block) {
         block.setTrustValue(TrustValues.REVOKED.getValue());
         return block;
     }
 
-
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public final boolean isDatabaseEmpty() {
+        return databaseHandler.isDatabaseEmpty();
+    }
 
 }

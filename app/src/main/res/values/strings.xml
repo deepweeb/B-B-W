@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">B-B-W</string>
+    <string name="title_activity_friends_page">FriendsPageActivity</string>
+    <string name="title_activity_test_subject1">TestSubject1</string>
+    <string name="title_activity_test_subject2">TestSubject2</string>
+    <string name="title_activity_test_subject3">TestSubject3</string>
+    <string name="title_activity_pair">PairActivity</string>
 </resources>

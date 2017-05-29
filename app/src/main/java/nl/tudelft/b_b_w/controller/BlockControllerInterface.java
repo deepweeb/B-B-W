@@ -10,19 +10,48 @@ import nl.tudelft.b_b_w.model.Block;
 interface BlockControllerInterface {
 
     /**
+     * Check if a block already exists in the database
+     * @param owner owner of the block
+     * @param key public key in the block
+     * @param revoked whether the block is revoked
+     * @return if the block already exists
+     */
+    boolean blockExists(String owner, String key, boolean revoked);
+
+    /**
      * Adding a block to the blockchain
      *
      * @param block Block you want to add
      * @return returns the block you added
      */
-    List<Block> addBlock(Block block);
+    List<Block> addBlockToChain(Block block);
 
     /**
-     * Get all blocks that are not revoked
+     * Add a block to the database with checking if the (owner,pubkey) pair
+     * is already added to the database
+     *
+     * @param block Block you want to add
+     */
+    void addBlock(Block block);
+
+    /**
+     * Clears all blocks from the database
+     */
+    void clearAllBlocks();
+
+    /**
+     * Get all blocks that are not revoked in sorted order
      *
      * @return List of all the blocks
      */
     List<Block> getBlocks(String owner);
+
+    /**
+     * Function to backtrace the contact name given the hash that refer to their block
+     * @param hash hash of the block which owner name we want to find from
+     * @return name of owner
+     */
+    String getContactName(String hash);
 
     /**
      * Get the latest block of a specific owner
@@ -39,7 +68,6 @@ interface BlockControllerInterface {
     int getLatestSeqNumber(String owner);
 
     /**
-     *
      * Revoke a block from the blockchain by adding the same
      * block but setting revoked on true
      *
@@ -88,4 +116,10 @@ interface BlockControllerInterface {
      * @return block that is updated
      */
     Block revokedTrustValue(Block block);
+
+    /**
+     * Check if the database is empty.
+     * @return if the database is empty
+     */
+    boolean isDatabaseEmpty();
 }

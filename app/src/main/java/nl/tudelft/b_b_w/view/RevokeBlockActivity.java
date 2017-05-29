@@ -38,7 +38,7 @@ public class RevokeBlockActivity extends Activity {
      * @param savedInstanceState unused, meant for serialisation
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_revokeblock);
         blockController = new BlockController(this);
@@ -54,7 +54,7 @@ public class RevokeBlockActivity extends Activity {
      *
      * @param view current view (RevokeBlockActivity)
      */
-    public void onRevokeBlock(View view) {
+    public final void onRevokeBlock(View view) {
         try {
             // extract information
             EditText senderHashText = (EditText) findViewById(R.id.revokeSenderHash);
@@ -68,7 +68,7 @@ public class RevokeBlockActivity extends Activity {
             // create and add the block
             final Block previous = blockController.getLatestBlock(ownerName);
             final int blockSeqNumber = previous.getSequenceNumber()+ 1;
-            ConversionController conversionController = new ConversionController(ownerName,blockSeqNumber, senderPublicKey, previous.getOwnHash(), senderHash,senderIban);
+            ConversionController conversionController = new ConversionController(ownerName, senderPublicKey, previous.getOwnHash(), senderHash,senderIban);
             String ownHash = conversionController.hashKey();
 
             Block block =  BlockFactory.getBlock(

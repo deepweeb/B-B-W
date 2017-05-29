@@ -32,18 +32,8 @@ public class MutateDatabaseHandler extends AbstractDatabaseHandler {
      */
     public void addBlock(Block block) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        String owner = block.getOwner();
-        values.put(KEY_OWNER, owner);
-        values.put(KEY_SEQ_NO, lastSeqNumberOfChain(owner) + 1);
-        values.put(KEY_OWN_HASH, block.getOwnHash());
-        values.put(KEY_PREV_HASH_CHAIN, block.getPreviousHashChain());
-        values.put(KEY_PREV_HASH_SENDER, block.getPreviousHashSender());
-        values.put(KEY_IBAN_KEY, block.getIban());
-        values.put(KEY_PUBLIC_KEY, block.getPublicKey());
-        values.put(KEY_TRUST_VALUE, block.getTrustValue());
-        values.put(KEY_REVOKE, block.isRevoked());
+        ContentValues values = blockToContentValues(block);
+        values.put(KEY_SEQ_NO, lastSeqNumberOfChain(block.getOwner())+1);
 
         // Inserting Row
         long res = db.insert(TABLE_NAME, null, values);
@@ -60,16 +50,7 @@ public class MutateDatabaseHandler extends AbstractDatabaseHandler {
     public void updateBlock(Block block) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(KEY_OWNER, block.getOwner());
-        values.put(KEY_SEQ_NO, block.getSequenceNumber());
-        values.put(KEY_OWN_HASH, block.getOwnHash());
-        values.put(KEY_PREV_HASH_CHAIN, block.getPreviousHashChain());
-        values.put(KEY_PREV_HASH_SENDER, block.getPreviousHashSender());
-        values.put(KEY_IBAN_KEY, block.getIban());
-        values.put(KEY_PUBLIC_KEY, block.getPublicKey());
-        values.put(KEY_REVOKE, block.isRevoked());
-        values.put(KEY_TRUST_VALUE, block.getTrustValue());
+        ContentValues values = blockToContentValues(block);
 
         // updating row
         int result = db.update(TABLE_NAME,
@@ -82,5 +63,33 @@ public class MutateDatabaseHandler extends AbstractDatabaseHandler {
                 });
         if (result == -1) throw new RuntimeException("Block cannot be updated - " + block.toString());
         db.close(); // Closing database connection
+    }
+
+    /**
+     * blockToContentValues function
+     * Converts a block to ContentValues
+     * @param block given block to convert
+     * @return ContentValues converted from block
+     */
+    private ContentValues blockToContentValues(Block block) {
+        ContentValues values = new ContentValues();
+        values.put(KEY_OWNER, block.getOwner());
+        values.put(KEY_SEQ_NO, block.getSequenceNumber());
+        values.put(KEY_OWN_HASH, block.getOwnHash());
+        values.put(KEY_PREV_HASH_CHAIN, block.getPreviousHashChain());
+        values.put(KEY_PREV_HASH_SENDER, block.getPreviousHashSender());
+        values.put(KEY_IBAN_KEY, block.getIban());
+        values.put(KEY_PUBLIC_KEY, block.getPublicKey());
+        values.put(KEY_REVOKE, block.isRevoked());
+        values.put(KEY_TRUST_VALUE, block.getTrustValue());
+        return values;
+    }
+
+
+    /** Clear all blocks from the database */
+    public final void clearAllBlocks() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        final String script = "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
+        db.execSQL(script);
     }
 }

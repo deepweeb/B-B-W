@@ -5,6 +5,8 @@ package nl.tudelft.b_b_w.model;
  */
 
 public class Block {
+    /** Reasonable value to multiply with to combine hash codes */
+    private static final int HASH_MULTIPLIER = 31;
 
     //properties of a block
     private String owner;
@@ -30,7 +32,9 @@ public class Block {
      */
     public Block(String _owner, String _ownHash, String _previousHashChain, String _previousHashSender, String _publicKey, String _iban, int _trustvalue, boolean _isRevoked) {
         this.owner = _owner;
-        this.sequenceNumber = 0;
+
+        //starting index 1, no longer 0, the mutable thing will be fixed, this is a quick fix
+        this.sequenceNumber = 1;
         this.ownHash = _ownHash;
         this.previousHashChain = _previousHashChain;
         this.previousHashSender = _previousHashSender;
@@ -45,7 +49,7 @@ public class Block {
      *
      * @return owner of the block
      */
-    public String getOwner() {
+    public final String getOwner() {
         return owner;
     }
 
@@ -54,7 +58,7 @@ public class Block {
      *
      * @return own hash
      */
-    public String getOwnHash() {
+    public final String getOwnHash() {
         return ownHash;
     }
 
@@ -63,7 +67,7 @@ public class Block {
      *
      * @return previous hash of chain
      */
-    public String getPreviousHashChain() {
+    public final String getPreviousHashChain() {
         return previousHashChain;
     }
 
@@ -72,7 +76,7 @@ public class Block {
      *
      * @return previous hash of chain
      */
-    public String getPreviousHashSender() {
+    public final String getPreviousHashSender() {
         return previousHashSender;
     }
 
@@ -81,7 +85,7 @@ public class Block {
      *
      * @return public key of the block
      */
-    public String getPublicKey() {
+    public final String getPublicKey() {
         return publicKey;
     }
 
@@ -90,7 +94,7 @@ public class Block {
      *
      * @return the sequence number of the block
      */
-    public int getSequenceNumber() {
+    public final int getSequenceNumber() {
         return sequenceNumber;
     }
 
@@ -100,7 +104,7 @@ public class Block {
      *
      * @return the sequence number of the block after initialization
      */
-    public int setSeqNumberTo(int _sequenceNumber) {
+    public final int setSeqNumberTo(int _sequenceNumber) {
         sequenceNumber = _sequenceNumber;
         return sequenceNumber;
     }
@@ -111,7 +115,7 @@ public class Block {
      *
      * @return the sequence number of the block
      */
-    public String getIban() {
+    public final String getIban() {
         return iban;
     }
 
@@ -121,7 +125,7 @@ public class Block {
      *
      * @return true or false
      */
-    public boolean isRevoked() {
+    public final boolean isRevoked() {
         return isRevoked;
     }
 
@@ -129,19 +133,19 @@ public class Block {
      * Default getter for trustValue
      * @return the trust value of the block
      */
-    public int getTrustValue() { return trustValue;}
+    public final int getTrustValue() { return trustValue;}
 
     /**
      * Default setter for trustValue
      * @param setValue trust value to set
      */
-    public void setTrustValue(int setValue) {this.trustValue = setValue;}
+    public final void setTrustValue(int setValue) {this.trustValue = setValue;}
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
@@ -163,16 +167,16 @@ public class Block {
      * {@inheritDoc}
      */
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         int result = owner.hashCode();
-        result = 31 * result + sequenceNumber;
-        result = 31 * result + ownHash.hashCode();
-        result = 31 * result + previousHashChain.hashCode();
-        result = 31 * result + previousHashSender.hashCode();
-        result = 31 * result + publicKey.hashCode();
-        result = 31 * result + iban.hashCode();
-        result = 31 * result + trustValue;
-        result = 31 * result + (isRevoked ? 1 : 0);
+        result = HASH_MULTIPLIER * result + sequenceNumber;
+        result = HASH_MULTIPLIER * result + ownHash.hashCode();
+        result = HASH_MULTIPLIER * result + previousHashChain.hashCode();
+        result = HASH_MULTIPLIER * result + previousHashSender.hashCode();
+        result = HASH_MULTIPLIER * result + publicKey.hashCode();
+        result = HASH_MULTIPLIER * result + iban.hashCode();
+        result = HASH_MULTIPLIER * result + trustValue;
+        result = HASH_MULTIPLIER * result + (isRevoked ? 1 : 0);
         return result;
     }
 
@@ -180,7 +184,7 @@ public class Block {
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
+    public final String toString() {
         return "Block{" +
                 "owner='" + owner + '\'' +
                 ", sequenceNumber=" + sequenceNumber +

@@ -28,6 +28,60 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
     }
 
     /**
+     * Find the last sequence number of the chain of a specific owner
+     *
+     * @param owner the owner of the chain which you want to get the last sequence number from
+     *              There is no need for a public key because each block of the chain is
+     *              supposed to have different public key from the contact
+     */
+    public final int lastSeqNumberOfChain(String owner) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        try (Cursor c = db.query(TABLE_NAME,
+                new String[]{"MAX(" + KEY_SEQ_NO + ")"},
+                KEY_OWNER + " = ? ",
+                new String[]{
+                        owner
+                }, null, null, null, null)) {
+            c.moveToFirst();
+            return c.getInt(0);
+        }
+
+    }
+
+    /**
+     * Function to backtrace the contact name given the hash that refer to their block
+     * @param hash hash of the block which owner name we want to find from
+     * @return name of owner
+     */
+    public final String getContactName(String hash) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME,
+                _columns,
+                KEY_OWN_HASH + " = ? ",
+                new String[]{
+                        hash
+                }, null, null, null, null);
+
+        // When returning an exception the whole program crashes,
+        // but we want to preserve the state.
+        if (cursor.getCount() < 1) return null;
+
+        cursor.moveToFirst();
+
+        // Extract block from database
+        Block block = extractBlock(cursor);
+
+        db.close();
+        cursor.close();
+
+
+        return (block.getSequenceNumber()==1) ? block.getOwner() : block.getOwner()+"'s friend #" + (block.getSequenceNumber() - 1);
+
+    }
+
+    /**
      * Method to get a specific block
      *
      * @param owner          The owner of the block you want
@@ -35,9 +89,8 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      * @param sequenceNumber The number of the block in the sequence
      * @return The block you were searching for
      */
-    public Block getBlock(String owner, String publicKey, int sequenceNumber) {
+    public final Block getBlock(String owner, String publicKey, int sequenceNumber) {
         SQLiteDatabase db = this.getReadableDatabase();
-
         Cursor cursor = db.query(TABLE_NAME,
                 _columns,
                 KEY_OWNER + " = ? AND " + KEY_PUBLIC_KEY + " = ? AND " + KEY_SEQ_NO + " = ?",
@@ -51,15 +104,8 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
         cursor.moveToFirst();
 
-        final String blockType = (cursor.getInt(7) > 0) ?  "REVOKE" : "BLOCK";
-        Block block = BlockFactory.getBlock(
-                blockType,cursor.getString(0),
-                cursor.getString(2),
-                cursor.getString(3),
-                cursor.getString(4),
-                cursor.getString(5),
-                cursor.getString(6),
-                cursor.getInt(7));
+        // Extract block from database
+        Block block = extractBlock(cursor);
 
         // Close database connection
         db.close();
@@ -80,7 +126,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      * @param sequenceNumber The number of the block in the sequence
      * @return true if the blockchain contains the specified block, otherwise false
      */
-    public boolean containsBlock(String owner, String publicKey, int sequenceNumber) {
+    public final boolean containsBlock(String owner, String publicKey, int sequenceNumber) {
         return this.getBlock(owner, publicKey, sequenceNumber) != null;
     }
 
@@ -92,7 +138,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      * @param publicKey the publickey of the block you want
      * @return true if the blockchain contains the specified block, otherwise false
      */
-    public boolean containsBlock(String owner, String publicKey) {
+    public final boolean containsBlock(String owner, String publicKey) {
         return this.getLatestBlock(owner) != null;
     }
 
@@ -104,7 +150,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      * @param publicKey the owner of the sequence number
      * @return the latest sequence number of the specified block
      */
-    public int getLatestSeqNum(String owner, String publicKey) {
+    public final int getLatestSeqNum(String owner, String publicKey) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor c = db.query(TABLE_NAME,
@@ -126,15 +172,36 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
     }
 
     /**
+     * Helper method to construct a block from the database cursor.
+     * @param cursor The cursor to extract from
+     * @return A freshly constructed block
+     */
+    private Block extractBlock(Cursor cursor) {
+        final String blockType = (cursor.getInt(INDEX_REVOKE) > 0) ? "REVOKE" : "BLOCK";
+        Block block = BlockFactory.getBlock(
+                blockType,cursor.getString(INDEX_OWNER),
+                cursor.getString(INDEX_OWN_HASH),
+                cursor.getString(INDEX_PREV_HASH_CHAIN),
+                cursor.getString(INDEX_PREV_HASH_SENDER),
+                cursor.getString(INDEX_PUBLIC_KEY),
+                cursor.getString(INDEX_IBAN_KEY),
+                cursor.getInt(INDEX_TRUST_VALUE));
+        block.setSeqNumberTo(cursor.getInt(INDEX_SEQ_NO));
+        return block;
+    }
+
+    /**
      * Method to get the latest block in a blockchain using the
      * owner and publickey
      *
      * @param owner the owner of the block
      * @return the latest block
      */
-    public Block getLatestBlock(String owner) {
+    public final Block getLatestBlock(String owner) {
         int maxSeqNum = this.lastSeqNumberOfChain(owner);
         SQLiteDatabase db = this.getReadableDatabase();
+
+        if (maxSeqNum == 0){return null;}
 
         Cursor cursor = db.query(TABLE_NAME,
                 _columns,
@@ -149,16 +216,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
         cursor.moveToFirst();
 
-        final String blockType = (cursor.getInt(7) > 0) ?  "REVOKE" : "BLOCK";
-        Block block = BlockFactory.getBlock(
-                blockType,cursor.getString(0),
-                cursor.getString(2),
-                cursor.getString(3),
-                cursor.getString(4),
-                cursor.getString(5),
-                cursor.getString(6),
-                cursor.getInt(7));
-
+        Block block = extractBlock(cursor);
         // Close database connection
         db.close();
 
@@ -177,7 +235,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      * @return the block after the specified one
      */
 
-    public Block getBlockAfter(String owner, int sequenceNumber) {
+    public final Block getBlockAfter(String owner, int sequenceNumber) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_NAME,
@@ -191,15 +249,8 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
         cursor.moveToFirst();
 
-        final String blockType = (cursor.getInt(7) > 0) ?  "REVOKE" : "BLOCK";
-        Block block = BlockFactory.getBlock(
-                blockType,cursor.getString(0),
-                cursor.getString(2),
-                cursor.getString(3),
-                cursor.getString(4),
-                cursor.getString(5),
-                cursor.getString(6),
-                cursor.getInt(7));
+        // extract block from cursor
+        Block block = extractBlock(cursor);
 
         // Close database connection
         db.close();
@@ -212,14 +263,44 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
     }
 
     /**
+     * Check if a block already exists in the database.
+     * It is not possible to add a revoked key again.
+     * @param owner owner of the block
+     * @param key public key in the block
+     * @param revoked whether the block is revoked
+     * @return if the block already exists
+     */
+    public final boolean blockExists(String owner, String key, boolean revoked) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_NAME,
+                _columns,
+                KEY_OWNER + " = ? AND " + KEY_PUBLIC_KEY + " = ? AND " + KEY_REVOKE + " = ?",
+                new String[]{
+                        owner,
+                        key,
+                        String.valueOf(revoked ? 1 : 0)
+                }, null, null, null, null);
+
+        boolean exists = cursor.getCount() > 0;
+
+        // Close database connection
+        db.close();
+
+        // Close cursor
+        cursor.close();
+
+        return exists;
+    }
+
+    /**
      * Method to get the block before a specified block
      *
      * @param owner          the owner of the block after
      * @param sequenceNumber the sequencenumber of the block after
      * @return the block before the specified one
      */
-
-    public Block getBlockBefore(String owner, int sequenceNumber) {
+    public final Block getBlockBefore(String owner, int sequenceNumber) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_NAME,
@@ -233,15 +314,8 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
         cursor.moveToFirst();
 
-        final String blockType = (cursor.getInt(7) > 0) ?  "REVOKE" : "BLOCK";
-        Block block = BlockFactory.getBlock(
-                blockType,cursor.getString(0),
-                cursor.getString(2),
-                cursor.getString(3),
-                cursor.getString(4),
-                cursor.getString(5),
-                cursor.getString(6),
-                cursor.getInt(7));
+        // Extract block from database
+        Block block = extractBlock(cursor);
 
         // Close database connection
         db.close();
@@ -260,7 +334,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      * @param owner the owner of the blocks that are going to be fetched
      * @return List of all the blocks
      */
-    public List<Block> getAllBlocks(String owner) {
+    public final List<Block> getAllBlocks(String owner) {
         List<Block> blocks = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -270,21 +344,14 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
                 KEY_OWNER + " = ?",
                 new String[]{
                         owner
-                }, null, null, null, null);
+                }, null, null, KEY_SEQ_NO, null);
 
 
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             do {
-                final String blockType = (cursor.getInt(7) > 0) ?  "REVOKE" : "BLOCK";
-                Block block = BlockFactory.getBlock(
-                        blockType,cursor.getString(0),
-                        cursor.getString(2),
-                        cursor.getString(3),
-                        cursor.getString(4),
-                        cursor.getString(5),
-                        cursor.getString(6),
-                        cursor.getInt(7));
+                // Extract block from database
+                Block block = extractBlock(cursor);
                 blocks.add(block);
             } while (cursor.moveToNext());
         }
@@ -296,5 +363,24 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         cursor.close();
 
         return blocks;
+    }
+
+    /**
+     * Check if the database is empty.
+     * @return if the database is empty
+     */
+    public final boolean isDatabaseEmpty() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.query(TABLE_NAME,
+                _columns,
+                KEY_PREV_HASH_SENDER + " = ? ",
+                new String[]{
+                        "N/A"
+                }, null, null, null, null);
+
+        boolean empty = c.getCount() < 1;
+
+        c.close();
+        return empty;
     }
 }

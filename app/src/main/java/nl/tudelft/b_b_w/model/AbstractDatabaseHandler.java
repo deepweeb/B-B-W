@@ -34,6 +34,19 @@ public abstract class AbstractDatabaseHandler extends SQLiteOpenHelper {
     public static final String KEY_REVOKE = "revoke";
     public static final String KEY_CREATED_AT = "created_at";
 
+    /** Table indices */
+    public final int INDEX_OWNER = 0;
+    public final int INDEX_SEQ_NO = 1;
+    public final int INDEX_OWN_HASH = 2;
+    public final int INDEX_PREV_HASH_CHAIN = 3;
+    public final int INDEX_PREV_HASH_SENDER = 4;
+    public final int INDEX_PUBLIC_KEY = 5;
+    public final int INDEX_IBAN_KEY = 6;
+    public final int INDEX_TRUST_VALUE = 7;
+    public final int INDEX_REVOKE = 8;
+    public final int INDEX_CREATED_AT = 9;
+
+
     // Persistence helpers
     public final String[] _columns = new String[]{
             KEY_OWNER, KEY_SEQ_NO, KEY_OWN_HASH, KEY_PREV_HASH_CHAIN, KEY_PREV_HASH_SENDER,

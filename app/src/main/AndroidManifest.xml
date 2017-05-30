@@ -25,6 +25,9 @@
         <activity
             android:name=".view.PairActivity"
             android:label="@string/title_activity_pair"></activity>
+        <activity
+            android:name=".view.ContactsActivity"
+            android:label="ContactsActivity"></activity>
     </application>
 
 </manifest>

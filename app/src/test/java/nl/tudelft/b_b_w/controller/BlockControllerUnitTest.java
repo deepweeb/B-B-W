@@ -1,5 +1,10 @@
 package nl.tudelft.b_b_w.controller;
 
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+
+import static org.junit.Assert.assertEquals;
+
 import android.content.res.Resources;
 
 import org.junit.After;
@@ -17,10 +22,6 @@ import nl.tudelft.b_b_w.BuildConfig;
 import nl.tudelft.b_b_w.model.Block;
 import nl.tudelft.b_b_w.model.BlockFactory;
 import nl.tudelft.b_b_w.model.TrustValues;
-
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -100,36 +101,13 @@ public class BlockControllerUnitTest {
 
 
     /**
-     * getOwnerName test no 1
-     * Test getting the owner name given hash key.
-     */
-    @Test
-    public final void getContactNameTest1() {
-
-        Block block2 = BlockFactory.getBlock(
-                TYPE_BLOCK,
-                owner,
-                bc.getLatestSeqNumber(owner) + 1,
-                "ownHash2",
-                ownHash,
-                "Hash44324",
-                publicKey + "2",
-                iban,
-                trustValue
-        );
-        bc.addBlock(_block);
-        bc.addBlock(block2);
-        assertEquals(owner, bc.getContactName(ownHash));
-    }
-
-    /**
      * getOwnerName test no 2
      * Test getting the owner name given hash key.
      */
     @Test
     public final void getContactNameTest2() {
         bc.addBlock(_block);
-        Block block2 = BlockFactory.getBlock(
+        final Block block2 = BlockFactory.getBlock(
                 TYPE_BLOCK,
                 owner,
                 bc.getLatestSeqNumber(owner) + 1,
@@ -141,10 +119,8 @@ public class BlockControllerUnitTest {
                 trustValue
         );
         bc.addBlock(block2);
-        assertEquals(owner + "'s friend #" + block2.getSequenceNumber(), bc.getContactName(
-                "ownHash2"));
+        assertEquals("Unknown", bc.getContactName(ownHash));
     }
-
 
     /**
      * Tests to return the latest block

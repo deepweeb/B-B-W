@@ -41,7 +41,7 @@ interface BlockControllerInterface {
 
     /**
      * Get all blocks that are not revoked in sorted order
-     *
+     * @param owner owner of which to get the blocks from
      * @return List of all the blocks
      */
     List<Block> getBlocks(String owner);
@@ -55,14 +55,14 @@ interface BlockControllerInterface {
 
     /**
      * Get the latest block of a specific owner
-     *
+     * @param owner owner of which to get the block from
      * @return a Block object, which is the newest block of the owner
      */
     Block getLatestBlock(String owner);
 
     /**
      * Get the latest sequence number of the chain of a specific owner
-     *
+     * @param owner owner of which to get the block from
      * @return an integer which is the latest sequence number of the chain
      */
     int getLatestSeqNumber(String owner);

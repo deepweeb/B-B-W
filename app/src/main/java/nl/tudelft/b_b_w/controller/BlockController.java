@@ -158,10 +158,16 @@ public class BlockController implements BlockControllerInterface {
     @Override
     public final List<Block> revokeBlock(Block block) {
         String owner = block.getOwner();
-        Block newBlock = BlockFactory.getBlock(REVOKE, block.getOwner(),
-                block.getOwnHash(), block.getPreviousHashChain(), block.getPreviousHashSender(),
-                block.getPublicKey(), block.getIban(), block.getTrustValue());
-        addBlock(newBlock);
+        addBlock(BlockFactory.getBlock(
+                REVOKE,
+                owner,
+                getLatestSeqNumber(owner) + 1,
+                block.getOwnHash(),
+                block.getPreviousHashChain(),
+                block.getPreviousHashSender(),
+                block.getPublicKey(),
+                block.getIban(),
+                block.getTrustValue()));
         return getBlocks(owner);
     }
 
@@ -238,9 +244,17 @@ public class BlockController implements BlockControllerInterface {
         ConversionController conversionController = new ConversionController(owner, publicKey,
                 chainHash, senderHash, iban);
         String hash = conversionController.hashKey();
-        Block block = BlockFactory.getBlock(BLOCK, owner, hash, chainHash, senderHash, publicKey,
-                iban, 0);
-        block.setSeqNumberTo(1);
+        Block block = BlockFactory.getBlock(
+                BLOCK,
+                owner,
+                getLatestSeqNumber(owner) + 1,
+                hash,
+                chainHash,
+                senderHash,
+                publicKey,
+                iban,
+                0
+        );
         addBlock(block);
         return block;
     }
@@ -303,9 +317,17 @@ public class BlockController implements BlockControllerInterface {
                 owner, publicKey, previousBlockHash, contactBlockHash, iban
         );
         String hash = conversionController.hashKey();
-        Block block = BlockFactory.getBlock(revoke ? REVOKE : BLOCK, owner, hash, previousBlockHash,
-                contactBlockHash, publicKey, iban, 0);
-        block.setSeqNumberTo(seqNumber);
+        Block block = BlockFactory.getBlock(
+                revoke ? REVOKE : BLOCK,
+                owner,
+                seqNumber,
+                hash,
+                previousBlockHash,
+                contactBlockHash,
+                publicKey,
+                iban,
+                0
+        );
         addBlock(block);
         return block;
     }

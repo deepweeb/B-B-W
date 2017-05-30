@@ -2,7 +2,13 @@ package nl.tudelft.b_b_w.model;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
+import nl.tudelft.b_b_w.BuildConfig;
+import nl.tudelft.b_b_w.controller.BlockController;
 import nl.tudelft.b_b_w.model.Block;
 import nl.tudelft.b_b_w.model.BlockFactory;
 
@@ -16,9 +22,12 @@ import static org.junit.Assert.assertTrue;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class,sdk= 21,  manifest = "src/main/AndroidManifest.xml")
 public class BlockUnitTest {
 
     private Block _block;
+    private BlockController blockController;
     private final String TYPE_BLOCK = "BLOCK";
     private final String TYPE_REVOKE = "REVOKE";
     private final String owner = "owner";
@@ -38,8 +47,18 @@ public class BlockUnitTest {
      */
     @Before
     public void makeNewBlock() throws Exception {
-        _block = BlockFactory.getBlock(TYPE_BLOCK, owner, ownHash,
-                previousHashChain, previousHashSender, publicKey, iban, trustValue);
+        this.blockController = new BlockController(RuntimeEnvironment.application);
+        this._block = BlockFactory.getBlock(
+                TYPE_BLOCK,
+                owner,
+                blockController.getLatestSeqNumber(owner) + 1,
+                ownHash,
+                previousHashChain,
+                previousHashSender,
+                publicKey,
+                iban,
+                trustValue
+        );
     }
 
 
@@ -110,22 +129,6 @@ public class BlockUnitTest {
         final String check = "iban";
         assertEquals(check, _block.getIban());
     }
-
-
-    /**
-     * Test to check whether the setSeqNumberTo() sets the sequence number of a block to correctly.
-     * @throws Exception Catches error when the MessageDigest
-     * gets an error.
-     */
-    @Test
-    public void setSeqNumberToTest() throws Exception {
-        _block.setSeqNumberTo(99);
-        assertEquals(99, _block.getSequenceNumber());
-    }
-
-
-
-
     /**
      * Test to check whether the isRevoked() method returns the right boolean value indicating if the block is revoked or not.
      * @throws Exception Catches error when the MessageDigest
@@ -161,8 +164,17 @@ public class BlockUnitTest {
      */
     @Test
     public void equalsTest() throws Exception {
-        final Block check = BlockFactory.getBlock(TYPE_BLOCK, owner, ownHash,
-                previousHashChain, previousHashSender, publicKey, iban, trustValue);
+        final Block check = BlockFactory.getBlock(
+                TYPE_BLOCK,
+                owner,
+                blockController.getLatestSeqNumber(owner) + 1,
+                ownHash,
+                previousHashChain,
+                previousHashSender,
+                publicKey,
+                iban,
+                trustValue
+        );
         assertTrue(_block.equals(check));
     }
 
@@ -175,8 +187,17 @@ public class BlockUnitTest {
     @Test
     public void equalsFalseTest() throws Exception {
         final String _owner = "NOTOWNER";
-        final Block check = BlockFactory.getBlock(TYPE_REVOKE, _owner, ownHash,
-                previousHashChain, previousHashSender, publicKey, iban, trustValue);
+        final Block check = BlockFactory.getBlock(
+                TYPE_BLOCK,
+                _owner,
+                blockController.getLatestSeqNumber(owner),
+                ownHash,
+                previousHashChain,
+                previousHashSender,
+                publicKey,
+                iban,
+                trustValue
+        );
         assertFalse(_block.equals(check));
     }
 
@@ -205,10 +226,28 @@ public class BlockUnitTest {
      */
     @Test
     public void testHashCode() {
-        final Block x  = BlockFactory.getBlock(TYPE_BLOCK, "owner2", ownHash,
-                previousHashChain, previousHashSender, "pub2", iban, trustValue);
-        final Block y = BlockFactory.getBlock(TYPE_BLOCK, "owner2", ownHash,
-                previousHashChain, previousHashSender, "pub2", iban, trustValue);
+        final Block x = BlockFactory.getBlock(
+                TYPE_BLOCK,
+                owner + "2",
+                blockController.getLatestSeqNumber(owner) + 1,
+                ownHash,
+                previousHashChain,
+                previousHashSender,
+                publicKey + "2",
+                iban,
+                trustValue
+        );
+        final Block y = BlockFactory.getBlock(
+                TYPE_BLOCK,
+                owner + "2",
+                blockController.getLatestSeqNumber(owner) + 1,
+                ownHash,
+                previousHashChain,
+                previousHashSender,
+                publicKey + "2",
+                iban,
+                trustValue
+        );
         assertTrue(x.equals(y) && y.equals(x));
         assertTrue(x.hashCode() == y.hashCode());
     }

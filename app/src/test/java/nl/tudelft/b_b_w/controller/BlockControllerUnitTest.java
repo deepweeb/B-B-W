@@ -43,7 +43,7 @@ public class BlockControllerUnitTest {
     private final String iban = "iban";
     private final String publicKey = "publicKey";
     private Block _block;
-    private final int trustValue = 0;
+    private final int trustValue = TrustValues.INITIALIZED.getValue();
     private final String TYPE_BLOCK = "BLOCK";
     private final String TYPE_REVOKE = "REVOKE";
 
@@ -240,7 +240,8 @@ public class BlockControllerUnitTest {
     @Test
     public final void testSuccessfulTransaction() {
         bc.successfulTransaction(_block);
-        assertEquals(TrustValues.SUCCESFUL_TRANSACTION.getValue(), _block.getTrustValue());
+        assertEquals(TrustValues.INITIALIZED.getValue() + TrustValues.SUCCESFUL_TRANSACTION.getValue(),
+                _block.getTrustValue());
     }
 
     /**
@@ -250,7 +251,8 @@ public class BlockControllerUnitTest {
     @Test
     public final void testFailedTransaction() {
         bc.failedTransaction(_block);
-        assertEquals(TrustValues.FAILED_TRANSACTION.getValue(), _block.getTrustValue());
+        assertEquals(TrustValues.INITIALIZED.getValue() + TrustValues.FAILED_TRANSACTION.getValue(),
+                _block.getTrustValue());
     }
 
     /**

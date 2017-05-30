@@ -304,7 +304,7 @@ public class BlockController implements BlockControllerInterface {
         );
         String hash = conversionController.hashKey();
         Block block = BlockFactory.getBlock(revoke ? REVOKE : BLOCK, owner, hash, previousBlockHash,
-                contactBlockHash, publicKey, iban, 0);
+                contactBlockHash, publicKey, iban, TrustValues.INITIALIZED.getValue());
         block.setSeqNumberTo(seqNumber);
         addBlock(block);
         return block;

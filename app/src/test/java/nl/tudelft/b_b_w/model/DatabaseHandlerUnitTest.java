@@ -42,7 +42,7 @@ public class DatabaseHandlerUnitTest {
     private final String iban = "iban";
     private final String publicKey = "publicKey";
     private Block _block;
-    private final int trustValue = 0;
+    private final int trustValue = TrustValues.INITIALIZED.getValue();
     /**
      * setUp method
      * Does this method before every test

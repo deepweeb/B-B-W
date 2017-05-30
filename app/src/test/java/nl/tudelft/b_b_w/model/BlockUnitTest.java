@@ -29,7 +29,7 @@ public class BlockUnitTest {
     private final String publicKey = "publicKey";
     private final boolean isRevoked = false;
     private final String iban = "iban";
-    private final int trustValue = 0;
+    private final int trustValue = TrustValues.INITIALIZED.getValue();
 
     /**
      * This method runs before each test to initialize the test object
@@ -151,7 +151,7 @@ public class BlockUnitTest {
      */
     @Test
     public void testTrustValueInit() {
-        assertEquals(0, _block.getTrustValue());
+        assertEquals(TrustValues.INITIALIZED.getValue(), _block.getTrustValue());
     }
 
     /**
@@ -193,7 +193,7 @@ public class BlockUnitTest {
                 ", previousHashSender='" + previousHashSender + '\'' +
                 ", publicKey='" + publicKey + '\'' +
                 ", iban='" + iban + '\'' +
-                ", trustValue='" + 0 + '\'' +
+                ", trustValue='" + trustValue + '\'' +
                 ", isRevoked=" + isRevoked +
                 '}';
         assertEquals(result, _block.toString());

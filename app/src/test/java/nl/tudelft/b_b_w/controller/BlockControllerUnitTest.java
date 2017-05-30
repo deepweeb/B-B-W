@@ -19,6 +19,7 @@ import nl.tudelft.b_b_w.model.BlockFactory;
 import nl.tudelft.b_b_w.model.TrustValues;
 
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 //import android.test.mock.MockContext;
@@ -52,6 +53,8 @@ public class BlockControllerUnitTest {
     private Block genesisB;
     private Block blockA_A1;
     private Block blockA_B1;
+    private Block blockB_A1;
+    private Block blockB_rA1;
 
     /**
      * Initialize BlockController before every test
@@ -69,6 +72,8 @@ public class BlockControllerUnitTest {
             genesisB = bc.createGenesis("B");
             blockA_A1 = bc.createKeyBlock("A", "A", "ka", "ibanA");
             blockA_B1 = bc.createKeyBlock("A", "B", "kb", "ibanB");
+            blockB_A1 = bc.createKeyBlock("B", "A", "ka", "ibanA");
+            blockB_rA1 = bc.createRevokeBlock("B", "A", "ka", "ibanA");
         } catch (Exception e) {
             // we will check this in later tests
         }
@@ -317,6 +322,12 @@ public class BlockControllerUnitTest {
         } catch (Exception e) {
             assertNotNull(null);
         }
+    }
+
+    /** Is the revoked block indeed revoked? */
+    @Test
+    public void verifyRevoked() {
+        assertTrue(blockB_rA1.isRevoked());
     }
 
     /**

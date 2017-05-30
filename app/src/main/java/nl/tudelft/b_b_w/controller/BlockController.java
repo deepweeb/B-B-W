@@ -249,8 +249,43 @@ public class BlockController {
     /**
      * Create a block which adds a key for a certain user and weaves it into the blockchain.
      * The initial trust value is zero.
+     * @param owner owner of the block
+     * @param contact of whom is the information
+     * @param publicKey public key you want to store
+     * @param iban IBAN number to store in this block
+     * @return the newly created block
+     * @throws Exception when the hashing algorithm is not available
      */
     public Block createKeyBlock(String owner, String contact, String publicKey, String iban) throws Exception {
+        return createBlock(owner, contact, publicKey, iban, false);
+    }
+
+    /**
+     * Create a block which revokes a key for a certain user and weaves it into the blockchain.
+     * The initial trust value is zero.
+     * @param owner owner of the block
+     * @param contact of whom is the information
+     * @param publicKey public key you want to store
+     * @param iban IBAN number to store in this block
+     * @return the newly created block
+     * @throws Exception when the hashing algorithm is not available
+     */
+    public Block createRevokeBlock(String owner, String contact, String publicKey, String iban) throws Exception {
+        return createBlock(owner, contact, publicKey, iban, true);
+    }
+
+    /**
+     * Creates a block with given revoke status. The block is added to the blockchain automatically
+     * with all fields set correctly.
+     * @param owner owner of the block
+     * @param contact of whom is the information
+     * @param publicKey public key you want to store
+     * @param iban IBAN number to store in this block
+     * @param revoke whether to revoke?
+     * @return the newly created block
+     * @throws Exception when the hashing algorithm is not available
+     */
+    private Block createBlock(String owner, String contact, String publicKey, String iban, boolean revoke) throws Exception {
         Block latest = getLatestBlock(owner);
         String previousBlockHash = latest.getOwnHash();
 
@@ -266,7 +301,7 @@ public class BlockController {
                 owner, publicKey, previousBlockHash, contactBlockHash, iban
         );
         String hash = conversionController.hashKey();
-        Block block = new Block(index, owner, hash, previousBlockHash, contactBlockHash, publicKey, iban, 0, false);
+        Block block = new Block(index, owner, hash, previousBlockHash, contactBlockHash, publicKey, iban, 0, revoke);
         addBlock(block);
         return block;
     }

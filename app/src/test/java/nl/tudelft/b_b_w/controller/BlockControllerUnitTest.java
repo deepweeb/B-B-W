@@ -22,8 +22,6 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
-//import android.test.mock.MockContext;
-
 /**
  * Example local unit test, which will execute on the development machine (host).
  *

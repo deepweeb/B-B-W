@@ -6,55 +6,16 @@ import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.ContactsContract;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class to create and handle the Database.
+ * Class to create and handle the Database for get requests
  */
 
-public class DatabaseHandler extends SQLiteOpenHelper {
-
-    // All Static variables
-    // Database Version
-    private static final int DATABASE_VERSION = 1;
-
-    // Database Name
-    private static final String DATABASE_NAME = "blockChain";
-
-    // Table name
-    private static final String TABLE_NAME = "blocks";
-
-    // Contacts Table Columns names
-    private static final String KEY_OWNER = "owner";
-    private static final String KEY_SEQ_NO = "sequenceNumber";
-    private static final String KEY_OWN_HASH = "ownHash";
-    private static final String KEY_PREV_HASH_CHAIN = "previousHashChain";
-    private static final String KEY_PREV_HASH_SENDER = "previousHashSender";
-    private static final String KEY_PUBLIC_KEY = "publicKey";
-    private static final String KEY_IBAN_KEY = "iban";
-    private static final String KEY_TRUST_VALUE = "trustValue";
-    private static final String KEY_REVOKE = "revoke";
-    private static final String KEY_CREATED_AT = "created_at";
-
-    /** Table indices */
-    private final int INDEX_OWNER = 0;
-    private final int INDEX_SEQ_NO = 1;
-    private final int INDEX_OWN_HASH = 2;
-    private final int INDEX_PREV_HASH_CHAIN = 3;
-    private final int INDEX_PREV_HASH_SENDER = 4;
-    private final int INDEX_PUBLIC_KEY = 5;
-    private final int INDEX_IBAN_KEY = 6;
-    private final int INDEX_TRUST_VALUE = 7;
-    private final int INDEX_REVOKE = 8;
-    private final int INDEX_CREATED_AT = 9;
-
-    // Persistence helpers
-    private final String[] _columns = new String[]{
-            KEY_OWNER, KEY_SEQ_NO, KEY_OWN_HASH, KEY_PREV_HASH_CHAIN, KEY_PREV_HASH_SENDER,
-            KEY_PUBLIC_KEY, KEY_IBAN_KEY, KEY_TRUST_VALUE, KEY_REVOKE
-    };
+public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
     /**
      * Constructor
@@ -62,96 +23,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      *
      * @param context given context
      */
-    public DatabaseHandler(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-    }
-
-    /**
-     * Called when the database is created for the first time. This is where the
-     * creation of tables and the initial population of the tables should happen.
-     *
-     * @param db The database.
-     */
-    @Override
-    public final void onCreate(SQLiteDatabase db) {
-        final String CREATE_BLOCKS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "("
-                + KEY_OWNER + " TEXT NOT NULL,"
-                + KEY_SEQ_NO + " INTEGER NOT NULL,"
-                + KEY_OWN_HASH + " TEXT NOT NULL,"
-                + KEY_PREV_HASH_CHAIN + " TEXT NOT NULL,"
-                + KEY_PREV_HASH_SENDER + " TEXT NOT NULL,"
-                + KEY_PUBLIC_KEY + " TEXT NOT NULL,"
-                + KEY_IBAN_KEY + " TEXT NOT NULL,"
-                + KEY_TRUST_VALUE + " INTEGER NOT NULL,"
-                + KEY_REVOKE + " BOOLEAN DEFAULT FALSE NOT NULL,"
-                + KEY_CREATED_AT + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,"
-                + " PRIMARY KEY (owner, publicKey, sequenceNumber)"
-                + ")";
-        db.execSQL(CREATE_BLOCKS_TABLE);
-    }
-
-    /** Clear all blocks from the database */
-    public final void clearAllBlocks() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        final String script = "DELETE FROM " + TABLE_NAME + ";";
-        db.execSQL(script);
-    }
-
-    /**
-     * Called when the database needs to be upgraded. The implementation
-     * should use this method to drop tables, add tables, or do anything else it
-     * needs to upgrade to the new schema version.
-     * <p>
-     * <p>
-     * The SQLite ALTER TABLE documentation can be found
-     * <a href="http://sqlite.org/lang_altertable.html">here</a>. If you add new columns
-     * you can use ALTER TABLE to insert them into a live table. If you rename or remove columns
-     * you can use ALTER TABLE to rename the old table, then create the new table and then
-     * populate the new table with the contents of the old table.
-     * </p><p>
-     * This method executes within a transaction.  If an exception is thrown, all changes
-     * will automatically be rolled back.
-     * </p>
-     *
-     * @param db         The database.
-     * @param oldVersion The old database version.
-     * @param newVersion The new database version.
-     */
-    @Override
-    public final void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        final String upgrade_script = "DROP TABLE IF EXISTS " + TABLE_NAME + ";"
-                + "DROP TABLE IF EXISTS option;";
-
-        // TODO: check if the db version is lower than the latest
-
-        db.execSQL(upgrade_script);
-        onCreate(db);
-    }
-
-    /**
-     * Adds a block to the blockchain
-     *
-     * @param block the block you want to add
-     */
-    public final void addBlock(Block block) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        String owner = block.getOwner();
-        values.put(KEY_OWNER, owner);
-        values.put(KEY_SEQ_NO, lastSeqNumberOfChain(owner) + 1);
-        values.put(KEY_OWN_HASH, block.getOwnHash());
-        values.put(KEY_PREV_HASH_CHAIN, block.getPreviousHashChain());
-        values.put(KEY_PREV_HASH_SENDER, block.getPreviousHashSender());
-        values.put(KEY_IBAN_KEY, block.getIban());
-        values.put(KEY_PUBLIC_KEY, block.getPublicKey());
-        values.put(KEY_TRUST_VALUE, block.getTrustValue());
-        values.put(KEY_REVOKE, block.isRevoked());
-
-        // Inserting Row
-        long res = db.insert(TABLE_NAME, null, values);
-        if (res == -1) throw new RuntimeException("Block cannot be added - " + block.toString());
-        db.close(); // Closing database connection
+    public GetDatabaseHandler(Context context) {
+        super(context);
     }
 
     /**
@@ -164,23 +37,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public final int lastSeqNumberOfChain(String owner) {
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.query(TABLE_NAME,
+
+        try (Cursor c = db.query(TABLE_NAME,
                 new String[]{"MAX(" + KEY_SEQ_NO + ")"},
                 KEY_OWNER + " = ? ",
                 new String[]{
                         owner
-                }, null, null, null, null);
-
-
-        try {
+                }, null, null, null, null)) {
             c.moveToFirst();
             return c.getInt(0);
-        } finally {
-            c.close();
         }
 
     }
-
 
     /**
      * Function to backtrace the contact name given the hash that refer to their block
@@ -416,6 +284,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         boolean exists = cursor.getCount() > 0;
 
+        // Close database connection
+        db.close();
+
         // Close cursor
         cursor.close();
 
@@ -492,39 +363,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         cursor.close();
 
         return blocks;
-    }
-
-    /**
-     * updateBlock function
-     * updates the values of the block
-     * @param block block that needs to be updated
-     * @throws RuntimeException if the block cannot be updated
-     */
-    public final void updateBlock(Block block) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(KEY_OWNER, block.getOwner());
-        values.put(KEY_SEQ_NO, block.getSequenceNumber());
-        values.put(KEY_OWN_HASH, block.getOwnHash());
-        values.put(KEY_PREV_HASH_CHAIN, block.getPreviousHashChain());
-        values.put(KEY_PREV_HASH_SENDER, block.getPreviousHashSender());
-        values.put(KEY_IBAN_KEY, block.getIban());
-        values.put(KEY_PUBLIC_KEY, block.getPublicKey());
-        values.put(KEY_REVOKE, block.isRevoked());
-        values.put(KEY_TRUST_VALUE, block.getTrustValue());
-
-        // updating row
-        int result = db.update(TABLE_NAME,
-                values,
-                KEY_OWNER + " = ? AND " + KEY_PUBLIC_KEY + " = ? AND " + KEY_SEQ_NO + " = ?",
-                new String[] {
-                        block.getOwner(),
-                        block.getPublicKey(),
-                        String.valueOf(block.getSequenceNumber()),
-                });
-        if (result == -1) throw new RuntimeException("Block cannot be updated - " + block.toString());
-        db.close(); // Closing database connection
     }
 
     /**

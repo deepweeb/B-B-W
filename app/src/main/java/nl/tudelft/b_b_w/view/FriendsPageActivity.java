@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.controller.BlockController;
-import nl.tudelft.b_b_w.model.DatabaseHandler;
+import nl.tudelft.b_b_w.model.GetDatabaseHandler;
 
 /**
  * This class displays the Friend Page. Here we want to be able to see the
@@ -17,7 +17,7 @@ public class FriendsPageActivity extends Activity {
     /**
      * Used to create connection with database
      */
-    private DatabaseHandler databaseHandler;
+    private GetDatabaseHandler getDatabaseHandler;
 
     /**
      * block controller

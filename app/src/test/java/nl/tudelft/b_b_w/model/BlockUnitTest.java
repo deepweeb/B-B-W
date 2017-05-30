@@ -1,4 +1,4 @@
-package nl.tudelft.b_b_w.ModelsUnitTest;
+package nl.tudelft.b_b_w.model;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +30,7 @@ public class BlockUnitTest {
     private final boolean isRevoked = false;
     private final String iban = "iban";
     private final int trustValue = 0;
+
     /**
      * This method runs before each test to initialize the test object
      * @throws Exception Catches error when the MessageDigest

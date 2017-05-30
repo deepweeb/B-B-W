@@ -79,7 +79,17 @@ public class Api {
                 key, prevHashSelf, prevHashOther, iban);
         String hash = conversionController.hashKey();
 
-        Block fresh = BlockFactory.getBlock("BLOCK", owner, hash, prevHashSelf, prevHashOther, key, iban, 0);
+        Block fresh = BlockFactory.getBlock(
+                "BLOCK",
+                owner,
+                blockController.getLatestSeqNumber(owner) + 1,
+                hash,
+                prevHashSelf,
+                prevHashOther,
+                key,
+                iban,
+                0
+        );
 
         // add to database
         blockController.addBlock(fresh);
@@ -109,7 +119,17 @@ public class Api {
                 key, prevHashSelf, prevHashOther, iban);
         String hash = conversionController.hashKey();
 
-        Block fresh = BlockFactory.getBlock("REVOKE", owner, hash, prevHashSelf, prevHashOther, key, iban, 0);
+        Block fresh = BlockFactory.getBlock(
+                "REVOKE",
+                owner,
+                blockController.getLatestSeqNumber(owner) + 1,
+                hash,
+                prevHashSelf,
+                prevHashOther,
+                key,
+                iban,
+                0
+        );
 
         // add to database
         blockController.addBlock(fresh);

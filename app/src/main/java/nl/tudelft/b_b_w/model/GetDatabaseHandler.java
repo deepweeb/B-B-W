@@ -177,16 +177,16 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      */
     private Block extractBlock(Cursor cursor) {
         final String blockType = (cursor.getInt(INDEX_REVOKE) > 0) ? "REVOKE" : "BLOCK";
-        Block block = BlockFactory.getBlock(
-                blockType,cursor.getString(INDEX_OWNER),
+        return BlockFactory.getBlock(
+                blockType,
+                cursor.getString(INDEX_OWNER),
+                cursor.getInt(INDEX_SEQ_NO),
                 cursor.getString(INDEX_OWN_HASH),
                 cursor.getString(INDEX_PREV_HASH_CHAIN),
                 cursor.getString(INDEX_PREV_HASH_SENDER),
                 cursor.getString(INDEX_PUBLIC_KEY),
                 cursor.getString(INDEX_IBAN_KEY),
                 cursor.getInt(INDEX_TRUST_VALUE));
-        block.setSeqNumberTo(cursor.getInt(INDEX_SEQ_NO));
-        return block;
     }
 
     /**
@@ -381,5 +381,37 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
         c.close();
         return empty;
+    }
+
+    /**
+     * getByHashOwner function
+     * Gets a block by its hash and owner value
+     * @param hash given hash value
+     * @return block that matches it
+     */
+    public Block getByHash(String hash) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_NAME,
+                _columns,
+                KEY_OWN_HASH + " = ?",
+                new String[]{
+                        hash
+                }, null, null, null, null);
+
+        // Preserves the state
+        if (cursor.getCount() < 1) return null;
+        cursor.moveToFirst();
+
+        Block returnBlock = extractBlock(cursor);
+
+        // Close database connection
+        db.close();
+
+        // Close cursor
+        cursor.close();
+
+        // return block
+        return returnBlock;
     }
 }

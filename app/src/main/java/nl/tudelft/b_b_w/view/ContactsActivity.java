@@ -148,12 +148,9 @@ public class ContactsActivity extends Activity {
                 view = inflater.inflate(R.layout.simple_list_item_1, null);
             }
             TextView nameItemText = (TextView)view.findViewById(R.id.list_item_name);
-            if(blcController.getBlocks(ownerName).get(position).getPreviousHashSender().equals("N/A")){
-                nameItemText.setText(blcController.getBlocks(ownerName).get(position).getOwner());
-            } else {
-                nameItemText.setText(blcController.getContactName(blcController.getBlocks(
-                        ownerName).get(position).getPreviousHashSender()));
-            }
+            nameItemText.setText(
+                    blcController.backtrack(
+                            blcController.getBlocks(ownerName).get(position)).getOwner());
             TextView ibanItemText = (TextView)view.findViewById(R.id.list_item_iban);
             ibanItemText.setText(blcController.getBlocks(ownerName).get(position).getIban());
 

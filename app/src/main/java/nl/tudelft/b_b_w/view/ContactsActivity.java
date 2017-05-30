@@ -31,140 +31,9 @@ import nl.tudelft.b_b_w.model.Block;
  */
 public class ContactsActivity extends Activity {
 
+    //Owner of the blockchain
     private String ownerName;
 
-    /**
-     * Adapter to add the different blocks dynamically
-     */
-    private class ContactAdapter extends BaseAdapter implements ListAdapter {
-
-        //Variables which we use for getting the block information
-        private BlockController blcController;
-        Context context;
-        private final int image1 = 0;
-        private final int image2 = 1;
-        private final int image3 = 2;
-        private final int image4 = 3;
-        private final int image5 = 4;
-        //Images for displaying trust
-        private Integer images[] = {R.drawable.pic1,
-                R.drawable.pic2,
-                R.drawable.pic3,
-                R.drawable.pic4,
-                R.drawable.pic5};
-
-        /**
-         * Default constructor to initiate the Adapter
-         * @param bc BlockController which is passed on
-         * @param context Context which is passed on
-         */
-        private ContactAdapter(BlockController bc, Context context) {
-            this.context = context;
-            this.blcController = bc;
-        }
-
-        /**
-         *{@inheritDoc}
-         */
-        @Override
-        public Object getItem(int position) {
-            return blcController.getBlocks(ownerName).get(position);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public int getCount() {
-            return blcController.getBlocks(ownerName).size();
-        }
-
-
-        /**
-         * Method to get the right image number
-         * @param trust The trust value
-         * @return Image number
-         */
-        private int getImageNo(int trust) {
-
-            if (trust >= 80) return image1;
-            if (trust >= 60) return image2;
-            if (trust >= 40) return image3;
-            if (trust >= 20) return image4;
-            else return image5;
-        }
-
-        /**
-         * Method to create a dialog
-         * @param position Current position of the view
-         * @return The listener
-         */
-        private View.OnClickListener createDialog(final int position) {
-            return new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle("Confirm");
-                    builder.setMessage("Are you sure you want to revoke "
-                            + blcController.getBlocks(ownerName).get(position).getOwner()
-                            + " IBAN?");
-                    builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            blcController.revokeBlock(blcController.getBlocks(ownerName).get(position));
-                            notifyDataSetChanged();
-                            dialog.dismiss();
-                        }
-                    });
-                    builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // Do nothing
-                            dialog.dismiss();
-                        }
-                    });
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                }
-            };
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            View view = convertView;
-            if (view == null) {
-                LayoutInflater inflater =
-                        (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = inflater.inflate(R.layout.simple_list_item_1, null);
-            }
-            TextView nameItemText = (TextView)view.findViewById(R.id.list_item_name);
-            nameItemText.setText(
-                    blcController.backtrack(
-                            blcController.getBlocks(ownerName).get(position)).getOwner());
-            TextView ibanItemText = (TextView)view.findViewById(R.id.list_item_iban);
-            ibanItemText.setText(blcController.getBlocks(ownerName).get(position).getIban());
-
-            ImageView pic = (ImageView)view.findViewById(R.id.trust_image);
-            int picNo = getImageNo(blcController.getBlocks(ownerName).get(position).getTrustValue());
-            pic.setImageResource(images[picNo]);
-
-
-            Button revokeButton = (Button)view.findViewById(R.id.revoke_btn);
-
-            revokeButton.setOnClickListener(createDialog(position));
-            return view;
-        }
-    }
     /**
      * On create we request a database connection
      *
@@ -175,16 +44,12 @@ public class ContactsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
         setTitle("Contacts");
-
         Bundle extras = getIntent().getExtras();
         ownerName = extras.getString("ownerName");
-
         // get contacts
         BlockController blcController = new BlockController(this);
         setUpGraph(blcController.getBlocks(ownerName));
-
-
-        ContactAdapter adapter = new ContactAdapter(blcController, this);
+        ContactAdapter adapter = new ContactAdapter(blcController, ownerName, this);
         ListView lView = (ListView)findViewById(R.id.contacts);
         lView.setAdapter(adapter);
     }
@@ -198,7 +63,6 @@ public class ContactsActivity extends Activity {
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setMinX(0);
         graph.getViewport().setMaxX(blocks.size());
-
         DataPoint[] points = new DataPoint[blocks.size()];
         for (int i = 0; i < blocks.size(); i++) {
             points[i] = new DataPoint(i, blocks.get(i).getTrustValue());

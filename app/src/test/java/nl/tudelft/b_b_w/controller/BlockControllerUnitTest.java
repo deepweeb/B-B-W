@@ -1,6 +1,8 @@
 package nl.tudelft.b_b_w.controller;
 
-import static org.cyberneko.html.HTMLElements.HEAD;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+
 import static org.junit.Assert.assertEquals;
 
 import android.content.res.Resources;
@@ -20,9 +22,6 @@ import nl.tudelft.b_b_w.BuildConfig;
 import nl.tudelft.b_b_w.model.Block;
 import nl.tudelft.b_b_w.model.BlockFactory;
 import nl.tudelft.b_b_w.model.TrustValues;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -108,7 +107,7 @@ public class BlockControllerUnitTest {
     @Test
     public final void getContactNameTest2() {
         bc.addBlock(_block);
-        Block block2 = BlockFactory.getBlock(
+        final Block block2 = BlockFactory.getBlock(
                 TYPE_BLOCK,
                 owner,
                 bc.getLatestSeqNumber(owner) + 1,

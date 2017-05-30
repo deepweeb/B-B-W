@@ -73,6 +73,7 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
      * @return Image number
      */
     private int getImageNo(int trust) {
+        if (trust > 100) trust = 100; //maximum value
         final int trustInterval = 20;
         return images[trust/trustInterval];
     }

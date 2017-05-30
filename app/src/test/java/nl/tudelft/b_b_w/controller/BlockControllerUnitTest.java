@@ -1,5 +1,7 @@
 package nl.tudelft.b_b_w.controller;
 
+import static org.junit.Assert.assertEquals;
+
 import android.content.res.Resources;
 
 import org.junit.After;
@@ -17,8 +19,6 @@ import nl.tudelft.b_b_w.BuildConfig;
 import nl.tudelft.b_b_w.model.Block;
 import nl.tudelft.b_b_w.model.BlockFactory;
 import nl.tudelft.b_b_w.model.TrustValues;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -78,29 +78,14 @@ public class BlockControllerUnitTest {
     @Test
     public void getContactNameTest1() {
 
-        Block block2 = BlockFactory.getBlock(TYPE_BLOCK, owner, "ownHash2",
-                ownHash, "Hash44324", publicKey + "2", iban, trustValue);
-        block2.setSeqNumberTo(1);
+        final String hash = "ownHash2";
+        final String randomSenderHash = "Hash44324";
+        Block block2 = BlockFactory.getBlock(TYPE_BLOCK, "Jack", randomSenderHash,
+                ownHash, hash, publicKey, iban, trustValue);
         bc.addBlock(_block);
         bc.addBlock(block2);
-        assertEquals(owner, bc.getContactName(ownHash));
+        assertEquals("Unknown", bc.getContactName(hash));
     }
-
-    /**
-     * getOwnerName test no 2
-     * Test getting the owner name given hash key.
-     */
-    @Test
-    public void getContactNameTest2() {
-
-        Block block2 = BlockFactory.getBlock(TYPE_BLOCK, owner, "ownHash2",
-                ownHash, "Hash44324", publicKey + "2", iban, trustValue);
-        block2.setSeqNumberTo(1);
-        bc.addBlock(_block);
-        bc.addBlock(block2);
-        assertEquals(owner + "'s friend #" + block2.getSequenceNumber(), bc.getContactName("ownHash2"));
-    }
-
 
     /**
      * Tests to return the latest block

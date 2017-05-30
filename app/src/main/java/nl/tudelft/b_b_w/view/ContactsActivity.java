@@ -36,7 +36,7 @@ public class ContactsActivity extends Activity {
     /**
      * Adapter to add the different blocks dynamically
      */
-    public class ContactAdapter extends BaseAdapter implements ListAdapter {
+    private class ContactAdapter extends BaseAdapter implements ListAdapter {
 
         //Variables which we use for getting the block information
         private BlockController blcController;
@@ -47,14 +47,18 @@ public class ContactsActivity extends Activity {
         private final int image4 = 3;
         private final int image5 = 4;
         //Images for displaying trust
-        private Integer images[] = {R.drawable.pic1, R.drawable.pic2, R.drawable.pic3, R.drawable.pic4, R.drawable.pic5};
+        private Integer images[] = {R.drawable.pic1,
+                R.drawable.pic2,
+                R.drawable.pic3,
+                R.drawable.pic4,
+                R.drawable.pic5};
 
         /**
          * Default constructor to initiate the Adapter
          * @param bc BlockController which is passed on
          * @param context Context which is passed on
          */
-        public ContactAdapter(BlockController bc, Context context) {
+        private ContactAdapter(BlockController bc, Context context) {
             this.context = context;
             this.blcController = bc;
         }
@@ -89,7 +93,7 @@ public class ContactsActivity extends Activity {
          * @param trust The trust value
          * @return Image number
          */
-        public int getImageNo(int trust) {
+        private int getImageNo(int trust) {
 
             if (trust >= 80) return image1;
             if (trust >= 60) return image2;
@@ -103,13 +107,15 @@ public class ContactsActivity extends Activity {
          * @param position Current position of the view
          * @return The listener
          */
-        public View.OnClickListener createDialog(final int position) {
+        private View.OnClickListener createDialog(final int position) {
             return new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setTitle("Confirm");
-                    builder.setMessage("Are you sure you want to revoke "+ blcController.getBlocks(ownerName).get(position).getOwner()+ " IBAN?");
+                    builder.setMessage("Are you sure you want to revoke "
+                            + blcController.getBlocks(ownerName).get(position).getOwner()
+                            + " IBAN?");
                     builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             blcController.revokeBlock(blcController.getBlocks(ownerName).get(position));
@@ -137,11 +143,17 @@ public class ContactsActivity extends Activity {
         public View getView(final int position, View convertView, ViewGroup parent) {
             View view = convertView;
             if (view == null) {
-                LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                LayoutInflater inflater =
+                        (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.simple_list_item_1, null);
             }
             TextView nameItemText = (TextView)view.findViewById(R.id.list_item_name);
-            nameItemText.setText(blcController.getBlocks(ownerName).get(position).getOwner()); //use function to backtrack owner
+            if(blcController.getBlocks(ownerName).get(position).getPreviousHashSender().equals("N/A")){
+                nameItemText.setText(blcController.getBlocks(ownerName).get(position).getOwner());
+            } else {
+                nameItemText.setText(blcController.getContactName(blcController.getBlocks(
+                        ownerName).get(position).getPreviousHashSender()));
+            }
             TextView ibanItemText = (TextView)view.findViewById(R.id.list_item_iban);
             ibanItemText.setText(blcController.getBlocks(ownerName).get(position).getIban());
 
@@ -172,7 +184,7 @@ public class ContactsActivity extends Activity {
 
         // get contacts
         BlockController blcController = new BlockController(this);
-//        setUpGraph(blcController.getBlocks(ownerName));
+        setUpGraph(blcController.getBlocks(ownerName));
 
 
         ContactAdapter adapter = new ContactAdapter(blcController, this);

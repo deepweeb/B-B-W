@@ -1,5 +1,12 @@
 package nl.tudelft.b_b_w.model;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import android.database.sqlite.SQLiteDatabase;
 
 import org.junit.After;
@@ -14,12 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.tudelft.b_b_w.BuildConfig;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -38,7 +39,7 @@ public class DatabaseHandlerUnitTest {
     private final int sequenceNumber = 1;
     private final String ownHash = "ownHash";
     private final String previousHashChain = "previousHashChain";
-    private final String previousHashSender = "previousHashSender";
+    private final String previousHashSender = "N/A";
     private final String iban = "iban";
     private final String publicKey = "publicKey";
     private Block _block;
@@ -148,16 +149,30 @@ public class DatabaseHandlerUnitTest {
     public void getContactName() {
         final String hash = "ownHash2";
         final String randomSenderHash = "Hash44324";
-        Block block2 = BlockFactory.getBlock(TYPE_BLOCK, owner, hash,
-                ownHash, "randomSenderHash", publicKey, iban, trustValue);
-        block2.setSeqNumberTo(1);
+        Block block2 = BlockFactory.getBlock(TYPE_BLOCK, owner, randomSenderHash,
+                ownHash, hash, publicKey, iban, trustValue);
         mutateDatabaseHandler.addBlock(_block);
         mutateDatabaseHandler.addBlock(block2);
-        assertEquals(owner+"'s friend #" + block2.getSequenceNumber(), getDatabaseHandler.getContactName(hash));
+        assertEquals("Unknown", getDatabaseHandler.getContactName(hash));
 
     }
 
+    /**
+     * getOwnerName test
+     * Test getting the owner name given hash key.
+     */
+    @Test
+    public void getContactName1() {
+        final String hash = "ownHash2";
+        final String randomSenderHash = "Hash44324";
+        Block block2 = BlockFactory.getBlock(TYPE_BLOCK, "Jack", hash,
+                randomSenderHash, ownHash, publicKey, iban, trustValue);
+        mutateDatabaseHandler.addBlock(_block);
+        mutateDatabaseHandler.addBlock(block2);
+        System.out.println(getDatabaseHandler.getAllBlocks(owner).toString());
+        assertEquals(_block.getOwner(), getDatabaseHandler.getContactName(ownHash));
 
+    }
 
     /**
      * getLatestBlock test

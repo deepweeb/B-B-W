@@ -16,6 +16,20 @@ import nl.tudelft.b_b_w.model.TrustValues;
  */
 
 public class BlockController implements BlockControllerInterface {
+    /**
+     * For when info is not available.
+     */
+    private static final String NA = "N/A";
+
+    /**
+     * Block argument to create a block
+     */
+    private static final String BLOCK = "BLOCK";
+
+    /**
+     * Block argument to create a revoke block
+     */
+    private static final String REVOKE = "REVOKE";
 
     /**
      * Context of the block database
@@ -145,7 +159,7 @@ public class BlockController implements BlockControllerInterface {
     public final List<Block> revokeBlock(Block block) {
         String owner = block.getOwner();
         addBlock(BlockFactory.getBlock(
-                "REVOKE",
+                REVOKE,
                 owner,
                 getLatestSeqNumber(owner) + 1,
                 block.getOwnHash(),
@@ -164,7 +178,8 @@ public class BlockController implements BlockControllerInterface {
     public final List<Block> removeBlock(List<Block> list, Block block) {
         List<Block> res = new ArrayList<>();
         for (Block blc : list) {
-            if (!(blc.getOwner().equals(block.getOwner()) && blc.getPublicKey().equals(block.getPublicKey()))) {
+            if (!(blc.getOwner().equals(block.getOwner()) && blc.getPublicKey().equals(block.
+                    getPublicKey()))) {
                 res.add(blc);
             }
         }
@@ -215,4 +230,97 @@ public class BlockController implements BlockControllerInterface {
         return getDatabaseHandler.isDatabaseEmpty();
     }
 
+    /**
+     * Create genesis block for an owner
+     * @param owner the new owner of the block
+     * @return the freshly created block
+     * @throws Exception when the key hashing method does not work
+     */
+    public Block createGenesis(String owner) throws Exception {
+        String chainHash = NA;
+        String senderHash = NA;
+        String publicKey = NA;
+        String iban = NA;
+        ConversionController conversionController = new ConversionController(owner, publicKey,
+                chainHash, senderHash, iban);
+        String hash = conversionController.hashKey();
+        Block block = BlockFactory.getBlock(
+                BLOCK,
+                owner,
+                getLatestSeqNumber(owner) + 1,
+                hash,
+                chainHash,
+                senderHash,
+                publicKey,
+                iban,
+                0
+        );
+        addBlock(block);
+        return block;
+    }
+
+    /**
+     * Create a block which adds a key for a certain user and weaves it into the blockchain.
+     * The initial trust value is zero.
+     * @param owner owner of the block
+     * @param contact of whom is the information
+     * @param publicKey public key you want to store
+     * @param iban IBAN number to store in this block
+     * @return the newly created block
+     * @throws Exception when the hashing algorithm is not available
+     */
+    public Block createKeyBlock(String owner, String contact, String publicKey, String iban) throws
+            Exception {
+        return createBlock(owner, contact, publicKey, iban, false);
+    }
+
+    /**
+     * Create a block which revokes a key for a certain user and weaves it into the blockchain.
+     * The initial trust value is zero.
+     * @param owner owner of the block
+     * @param contact of whom is the information
+     * @param publicKey public key you want to store
+     * @param iban IBAN number to store in this block
+     * @return the newly created block
+     * @throws Exception when the hashing algorithm is not available
+     */
+    public Block createRevokeBlock(String owner, String contact, String publicKey, String iban)
+            throws Exception {
+        return createBlock(owner, contact, publicKey, iban, true);
+    }
+
+    /**
+     * Creates a block with given revoke status. The block is added to the blockchain automatically
+     * with all fields set correctly.
+     * @param owner owner of the block
+     * @param contact of whom is the information
+     * @param publicKey public key you want to store
+     * @param iban IBAN number to store in this block
+     * @param revoke whether to revoke?
+     * @return the newly created block
+     * @throws Exception when the hashing algorithm is not available
+     */
+    private Block createBlock(String owner, String contact, String publicKey, String iban, boolean
+            revoke) throws Exception {
+        Block latest = getLatestBlock(owner);
+        String previousBlockHash = latest.getOwnHash();
+
+        // always link to genesis of contact blocks
+        String contactBlockHash;
+        if (owner.equals(contact))
+            contactBlockHash = NA;
+        else
+            contactBlockHash = getBlocks(contact).get(0).getOwnHash();
+        int seqNumber = latest.getSequenceNumber() + 1;
+
+        ConversionController conversionController = new ConversionController(
+                owner, publicKey, previousBlockHash, contactBlockHash, iban
+        );
+        String hash = conversionController.hashKey();
+        Block block = BlockFactory.getBlock(revoke?REVOKE:BLOCK, owner, seqNumber,
+                hash, previousBlockHash,
+                contactBlockHash, publicKey, iban, 0);
+        addBlock(block);
+        return block;
+    }
 }

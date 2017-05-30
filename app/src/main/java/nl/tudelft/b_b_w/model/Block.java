@@ -21,7 +21,8 @@ public class Block {
 
     /**
      * Constructor for a block
-     * @param _owner              owner of a block
+     * @param _sequenceNumber     sequence number of this block
+     * @param _owner              owner of this block
      * @param _ownHash            our own hash
      * @param _previousHashChain  the hash value of the block before in the chain
      * @param _previousHashSender the hash value of the block before of the sender

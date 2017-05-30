@@ -1,6 +1,7 @@
 package nl.tudelft.b_b_w.controller;
 
 import android.content.Context;
+import android.content.res.Resources;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -330,5 +331,24 @@ public class BlockController implements BlockControllerInterface {
         );
         addBlock(block);
         return block;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public Block backtrack(Block block) {
+        String previousHashSender = block.getPreviousHashSender();
+        Block loop_block = block;
+        int i=0;
+        
+        while (!previousHashSender.equals("N/A")) {
+            loop_block = getDatabaseHandler.getByHash(previousHashSender);
+            if (loop_block == null) throw new
+                    Resources.NotFoundException("Error - Block cannot be backtracked: " + block.toString());
+            previousHashSender = loop_block.getPreviousHashSender();
+        }
+
+        return loop_block;
     }
 }

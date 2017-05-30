@@ -34,6 +34,7 @@ public class BlockControllerUnitTest {
     /**
      * Attributes
      */
+    private final String NA = "N/A";
     private BlockController bc;
     private final String owner = "owner";
     private final int sequenceNumber = 1;
@@ -126,7 +127,7 @@ public class BlockControllerUnitTest {
      * Test getting the owner name given hash key.
      */
     @Test
-    public void getContactNameTest2() {
+    public final void getContactNameTest2() {
         bc.addBlock(_block);
         Block block2 = BlockFactory.getBlock(
                 TYPE_BLOCK,
@@ -151,7 +152,7 @@ public class BlockControllerUnitTest {
      * @throws Exception RuntimeException
      */
     @Test
-    public void testGetLatestBlock() throws Exception {
+    public final void testGetLatestBlock() throws Exception {
         Block expected = BlockFactory.getBlock(
                 TYPE_BLOCK,
                 owner,
@@ -238,7 +239,7 @@ public class BlockControllerUnitTest {
      * Tests adding an already revoked block
      */
     @Test(expected = RuntimeException.class)
-    public void alreadyRevoked() {
+    public final void alreadyRevoked() {
         final Block newBlock = BlockFactory.getBlock(
                 TYPE_REVOKE,
                 owner,
@@ -390,6 +391,38 @@ public class BlockControllerUnitTest {
     @Test
     public final void verifyRevoked() {
         assertTrue(blockWithOwnerBRevokesKeyKa.isRevoked());
+    }
+
+    /**
+     * backtrack test
+     * Tests whether backtracking from previousHashSender works
+     */
+    @Test
+    public void testBacktrack() {
+        final Block newBlock = BlockFactory.getBlock(
+                TYPE_BLOCK,
+                owner,
+                bc.getLatestSeqNumber(owner) + 1,
+                ownHash,
+                previousHashChain,
+                NA,
+                publicKey,
+                iban,
+                trustValue
+        );
+        final Block newBlock2 = BlockFactory.getBlock(
+                TYPE_BLOCK,
+                owner,
+                bc.getLatestSeqNumber(owner) + 1,
+                previousHashSender,
+                previousHashChain,
+                ownHash,
+                publicKey,
+                iban,
+                trustValue
+        );
+        bc.addBlock(newBlock);
+        assertEquals(newBlock, bc.backtrack(newBlock2));
     }
 
     /**

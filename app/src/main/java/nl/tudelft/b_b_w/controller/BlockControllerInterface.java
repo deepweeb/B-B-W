@@ -122,4 +122,11 @@ interface BlockControllerInterface {
      * @return if the database is empty
      */
     boolean isDatabaseEmpty();
+
+    /**
+     * backtrack method
+     * @param block given input block to backtrace the previous hash of the sender from
+     * @return block which is the true ancestor
+     */
+    Block backtrack(Block block);
 }

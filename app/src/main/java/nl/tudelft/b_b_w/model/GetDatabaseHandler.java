@@ -383,4 +383,36 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         c.close();
         return empty;
     }
+
+    /**
+     * getByHashOwner function
+     * Gets a block by its hash and owner value
+     * @param hash given hash value
+     * @return block that matches it
+     */
+    public Block getByHash(String hash) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_NAME,
+                _columns,
+                KEY_OWN_HASH + " = ?",
+                new String[]{
+                        hash
+                }, null, null, null, null);
+
+        // Preserves the state
+        if (cursor.getCount() < 1) return null;
+        cursor.moveToFirst();
+
+        Block returnBlock = extractBlock(cursor);
+
+        // Close database connection
+        db.close();
+
+        // Close cursor
+        cursor.close();
+
+        // return block
+        return returnBlock;
+    }
 }

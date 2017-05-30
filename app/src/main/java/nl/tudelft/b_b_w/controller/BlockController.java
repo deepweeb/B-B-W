@@ -340,8 +340,7 @@ public class BlockController implements BlockControllerInterface {
     public Block backtrack(Block block) {
         String previousHashSender = block.getPreviousHashSender();
         Block loopBlock = block;
-        int i=0;
-        
+
         while (!previousHashSender.equals("N/A")) {
             loopBlock = getDatabaseHandler.getByHash(previousHashSender);
             if (loopBlock == null) throw new

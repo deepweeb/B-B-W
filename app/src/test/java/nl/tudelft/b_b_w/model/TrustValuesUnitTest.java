@@ -13,7 +13,7 @@ public class TrustValuesUnitTest {
      */
     @Test
     public void testTrustValuesInitialized() {
-        assertEquals(0, TrustValues.INITIALIZED.getValue());
+        assertEquals(20, TrustValues.INITIALIZED.getValue());
     }
 
     /**

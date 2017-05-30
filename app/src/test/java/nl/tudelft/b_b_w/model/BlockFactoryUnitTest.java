@@ -34,14 +34,7 @@ public class BlockFactoryUnitTest {
     private final String previousHashSender = "previousHashSender";
     private final String publicKey = "publicKey";
     private final String iban = "iban";
-<<<<<<< HEAD
     private final int trustValue = TrustValues.INITIALIZED.getValue();
-    private final boolean isRevoked = false;
-    private BlockFactory blockFactory;
-=======
-    private final int trustValue = 0;
->>>>>>> a26ed04780399481967241e95cdcfe3ca91c607d
-
     /**
      * This method runs before each test to initialize the test object
      * @throws Exception Catches error when the MessageDigest

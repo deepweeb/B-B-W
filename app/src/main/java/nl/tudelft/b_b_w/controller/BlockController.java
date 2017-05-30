@@ -351,4 +351,13 @@ public class BlockController implements BlockControllerInterface {
 
         return loop_block;
     }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public boolean verifyTrustworthiness(Block block) {
+        return !blockExists(block.getOwner(), block.getPublicKey(), block.isRevoked())
+                && block.verifyBlock(backtrack(block));
+    }
 }

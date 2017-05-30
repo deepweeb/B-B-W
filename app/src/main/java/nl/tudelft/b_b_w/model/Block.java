@@ -21,7 +21,8 @@ public class Block {
 
     /**
      * Constructor for a block
-     * @param _owner              owner of a block
+     * @param _sequenceNumber     sequence number of this block
+     * @param _owner              owner of this block
      * @param _ownHash            our own hash
      * @param _previousHashChain  the hash value of the block before in the chain
      * @param _previousHashSender the hash value of the block before of the sender
@@ -30,11 +31,9 @@ public class Block {
      * @param _trustvalue         the trust value of the contact
      * @param _isRevoked          boolean to check whether a block is revoked or not
      */
-    public Block(String _owner, String _ownHash, String _previousHashChain, String _previousHashSender, String _publicKey, String _iban, int _trustvalue, boolean _isRevoked) {
+    public Block(int _sequenceNumber, String _owner, String _ownHash, String _previousHashChain, String _previousHashSender, String _publicKey, String _iban, int _trustvalue, boolean _isRevoked) {
+        this.sequenceNumber = _sequenceNumber;
         this.owner = _owner;
-
-        //starting index 1, no longer 0, the mutable thing will be fixed, this is a quick fix
-        this.sequenceNumber = 1;
         this.ownHash = _ownHash;
         this.previousHashChain = _previousHashChain;
         this.previousHashSender = _previousHashSender;

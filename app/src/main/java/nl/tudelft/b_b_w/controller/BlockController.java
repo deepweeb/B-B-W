@@ -5,8 +5,8 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.tudelft.b_b_w.model.Block;
-import nl.tudelft.b_b_w.model.BlockFactory;
+import nl.tudelft.b_b_w.model.block.Block;
+import nl.tudelft.b_b_w.model.block.BlockFactory;
 import nl.tudelft.b_b_w.model.GetDatabaseHandler;
 import nl.tudelft.b_b_w.model.MutateDatabaseHandler;
 import nl.tudelft.b_b_w.model.TrustValues;

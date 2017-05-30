@@ -10,8 +10,8 @@ import android.widget.Toast;
 import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.controller.BlockController;
 import nl.tudelft.b_b_w.controller.ConversionController;
-import nl.tudelft.b_b_w.model.Block;
-import nl.tudelft.b_b_w.model.BlockFactory;
+import nl.tudelft.b_b_w.model.block.Block;
+import nl.tudelft.b_b_w.model.block.BlockFactory;
 
 /**
  * When the user wants to add a block he enters into the AddBlockActivity, which contain

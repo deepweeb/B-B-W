@@ -1,15 +1,15 @@
 package nl.tudelft.b_b_w.model;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.ContactsContract;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import nl.tudelft.b_b_w.model.block.Block;
+import nl.tudelft.b_b_w.model.block.BlockFactory;
 
 /**
  * Class to create and handle the Database for get requests

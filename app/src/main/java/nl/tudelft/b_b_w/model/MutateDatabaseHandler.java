@@ -2,12 +2,9 @@ package nl.tudelft.b_b_w.model;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.res.Resources.NotFoundException;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.util.ArrayList;
-import java.util.List;
+import nl.tudelft.b_b_w.model.block.Block;
 
 /**
  * Class to create and handle the Database for mutation requests

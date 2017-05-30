@@ -8,7 +8,7 @@ import java.util.List;
 
 import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.controller.BlockController;
-import nl.tudelft.b_b_w.model.Block;
+import nl.tudelft.b_b_w.model.block.Block;
 
 public class DisplayChainActivity extends Activity {
     private BlockController controller;

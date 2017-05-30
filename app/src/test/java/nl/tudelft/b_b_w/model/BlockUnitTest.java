@@ -3,10 +3,9 @@ package nl.tudelft.b_b_w.model;
 import org.junit.Before;
 import org.junit.Test;
 
-import nl.tudelft.b_b_w.model.Block;
-import nl.tudelft.b_b_w.model.BlockFactory;
+import nl.tudelft.b_b_w.model.block.Block;
+import nl.tudelft.b_b_w.model.block.BlockFactory;
 
-import static org.cyberneko.html.HTMLElements.HEAD;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

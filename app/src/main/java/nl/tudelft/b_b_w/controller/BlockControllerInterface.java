@@ -2,7 +2,7 @@ package nl.tudelft.b_b_w.controller;
 
 import java.util.List;
 
-import nl.tudelft.b_b_w.model.Block;
+import nl.tudelft.b_b_w.model.block.Block;
 
 /**
  * Interface for BlockController class

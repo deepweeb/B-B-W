@@ -317,9 +317,17 @@ public class BlockController implements BlockControllerInterface {
                 owner, publicKey, previousBlockHash, contactBlockHash, iban
         );
         String hash = conversionController.hashKey();
-        Block block = BlockFactory.getBlock(revoke?REVOKE:BLOCK, owner, seqNumber,
-                hash, previousBlockHash,
-                contactBlockHash, publicKey, iban, 0);
+        Block block = BlockFactory.getBlock(
+                revoke ? REVOKE : BLOCK,
+                owner,
+                seqNumber,
+                hash,
+                previousBlockHash,
+                contactBlockHash,
+                publicKey,
+                iban,
+                0
+        );
         addBlock(block);
         return block;
     }

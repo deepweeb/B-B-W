@@ -16,6 +16,20 @@ import nl.tudelft.b_b_w.model.TrustValues;
  */
 
 public class BlockController implements BlockControllerInterface {
+    /**
+     * For when info is not available.
+     */
+    private static final String NA = "N/A";
+
+    /**
+     * Block argument to create a block
+     */
+    private static final String BLOCK = "BLOCK";
+
+    /**
+     * Block argument to create a revoke block
+     */
+    private static final String REVOKE = "REVOKE";
 
     /**
      * Context of the block database
@@ -144,7 +158,7 @@ public class BlockController implements BlockControllerInterface {
     @Override
     public final List<Block> revokeBlock(Block block) {
         String owner = block.getOwner();
-        Block newBlock = BlockFactory.getBlock("REVOKE", block.getOwner(),
+        Block newBlock = BlockFactory.getBlock(REVOKE, block.getOwner(),
                 block.getOwnHash(), block.getPreviousHashChain(), block.getPreviousHashSender(),
                 block.getPublicKey(), block.getIban(), block.getTrustValue());
         addBlock(newBlock);
@@ -217,14 +231,14 @@ public class BlockController implements BlockControllerInterface {
      * @throws Exception when the key hashing method does not work
      */
     public Block createGenesis(String owner) throws Exception {
-        String chainHash = "N/A";
-        String senderHash = "N/A";
-        String publicKey = "N/A";
-        String iban = "N/A";
+        String chainHash = NA;
+        String senderHash = NA;
+        String publicKey = NA;
+        String iban = NA;
         ConversionController conversionController = new ConversionController(owner, publicKey,
                 chainHash, senderHash, iban);
         String hash = conversionController.hashKey();
-        Block block = BlockFactory.getBlock("BLOCK", owner, hash, chainHash, senderHash, publicKey,
+        Block block = BlockFactory.getBlock(BLOCK, owner, hash, chainHash, senderHash, publicKey,
                 iban, 0);
         block.setSeqNumberTo(1);
         addBlock(block);
@@ -280,7 +294,7 @@ public class BlockController implements BlockControllerInterface {
         // always link to genesis of contact blocks
         String contactBlockHash;
         if (owner.equals(contact))
-            contactBlockHash = "N/A";
+            contactBlockHash = NA;
         else
             contactBlockHash = getBlocks(contact).get(0).getOwnHash();
         int seqNumber = latest.getSequenceNumber() + 1;
@@ -289,7 +303,7 @@ public class BlockController implements BlockControllerInterface {
                 owner, publicKey, previousBlockHash, contactBlockHash, iban
         );
         String hash = conversionController.hashKey();
-        Block block = BlockFactory.getBlock(revoke?"REVOKE":"BLOCK", owner, hash, previousBlockHash,
+        Block block = BlockFactory.getBlock(revoke?REVOKE:BLOCK, owner, hash, previousBlockHash,
                 contactBlockHash, publicKey, iban, 0);
         block.setSeqNumberTo(seqNumber);
         addBlock(block);

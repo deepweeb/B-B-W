@@ -312,14 +312,10 @@ public class BlockControllerUnitTest {
 
     /** Verify block hash */
     @Test
-    public void verifySenderHash() {
-        try {
-            ConversionController conversionController = new ConversionController("A", "kb", blockA_A1.getOwnHash(), genesisB.getOwnHash(), "ibanB");
-            String hash = conversionController.hashKey();
-            assertEquals(hash, blockA_B1.getOwnHash());
-        } catch (Exception e) {
-            assertNotNull(null);
-        }
+    public void verifySenderHash() throws Exception {
+        ConversionController conversionController = new ConversionController("A", "kb", blockA_A1.getOwnHash(), genesisB.getOwnHash(), "ibanB");
+        String hash = conversionController.hashKey();
+        assertEquals(hash, blockA_B1.getOwnHash());
     }
 
     /** Is the revoked block indeed revoked? */

@@ -20,8 +20,6 @@ import nl.tudelft.b_b_w.model.TrustValues;
 
 import static org.junit.Assert.assertEquals;
 
-//import android.test.mock.MockContext;
-
 /**
  * Example local unit test, which will execute on the development machine (host).
  *

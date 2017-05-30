@@ -49,10 +49,10 @@ public class BlockControllerUnitTest {
 
     private Block genesisA;
     private Block genesisB;
-    private Block blockA_A1;
-    private Block blockA_B1;
-    private Block blockB_A1;
-    private Block blockB_rA1;
+    private Block blockWithOwnerAAddsKeyKa;
+    private Block blockWithOwnerAAddsKeyKb;
+    private Block blockWithOwnerBAddsKeyKa;
+    private Block blockWithOwnerBRevokesKeyKa;
 
     /**
      * Initialize BlockController before every test
@@ -68,10 +68,10 @@ public class BlockControllerUnitTest {
         try {
             genesisA = bc.createGenesis("A");
             genesisB = bc.createGenesis("B");
-            blockA_A1 = bc.createKeyBlock("A", "A", "ka", "ibanA");
-            blockA_B1 = bc.createKeyBlock("A", "B", "kb", "ibanB");
-            blockB_A1 = bc.createKeyBlock("B", "A", "ka", "ibanA");
-            blockB_rA1 = bc.createRevokeBlock("B", "A", "ka", "ibanA");
+            blockWithOwnerAAddsKeyKa = bc.createKeyBlock("A", "A", "ka", "ibanA");
+            blockWithOwnerAAddsKeyKb = bc.createKeyBlock("A", "B", "kb", "ibanB");
+            blockWithOwnerBAddsKeyKa = bc.createKeyBlock("B", "A", "ka", "ibanA");
+            blockWithOwnerBRevokesKeyKa = bc.createRevokeBlock("B", "A", "ka", "ibanA");
         } catch (Exception e) {
             // we will check this in later tests
         }
@@ -297,34 +297,34 @@ public class BlockControllerUnitTest {
     /** Verify the block A-A1 was created */
     @Test
     public void verifyBlockA_A1Creation() {
-        assertNotNull(blockA_A1);
+        assertNotNull(blockWithOwnerAAddsKeyKa);
     }
 
     /** Verify the block A-B1 was created */
     @Test
     public void verifyBlockA_B1Creation() {
-        assertNotNull(blockA_B1);
+        assertNotNull(blockWithOwnerAAddsKeyKb);
     }
 
     /** Blocks without sender should not have a sender hash */
     @Test
     public void verifyBlockChainHash() {
-        assertEquals("N/A", blockA_A1.getPreviousHashSender());
+        assertEquals("N/A", blockWithOwnerAAddsKeyKa.getPreviousHashSender());
     }
 
     /** Verify block hash */
     @Test
     public void verifySenderHash() throws Exception {
-        ConversionController conversionController = new ConversionController("A", "kb", blockA_A1.
+        ConversionController conversionController = new ConversionController("A", "kb", blockWithOwnerAAddsKeyKa.
                 getOwnHash(), genesisB.getOwnHash(), "ibanB");
         String hash = conversionController.hashKey();
-        assertEquals(hash, blockA_B1.getOwnHash());
+        assertEquals(hash, blockWithOwnerAAddsKeyKb.getOwnHash());
     }
 
     /** Is the revoked block indeed revoked? */
     @Test
     public void verifyRevoked() {
-        assertTrue(blockB_rA1.isRevoked());
+        assertTrue(blockWithOwnerBRevokesKeyKa.isRevoked());
     }
 
     /**

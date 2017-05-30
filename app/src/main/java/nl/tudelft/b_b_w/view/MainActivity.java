@@ -80,6 +80,7 @@ public class MainActivity extends Activity {
             Block block = BlockFactory.getBlock(
                     "BLOCK",
                     ownerName,
+                    blockController.getLatestSeqNumber(ownerName) + 1,
                     cvc.hashKey(),
                     "N/A",
                     "N/A",

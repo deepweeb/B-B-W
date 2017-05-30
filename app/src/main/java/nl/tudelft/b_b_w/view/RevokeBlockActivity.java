@@ -74,6 +74,7 @@ public class RevokeBlockActivity extends Activity {
             Block block =  BlockFactory.getBlock(
                     "REVOKE", // is revoked?
                     ownerName,// owner of the block
+                    blockController.getLatestSeqNumber(ownerName) + 1,
                     ownHash, // our own hash
                     previous.getOwnHash(), //  the hash value of the block before in the chain
                     senderHash, // the hash value of the block before of the sender

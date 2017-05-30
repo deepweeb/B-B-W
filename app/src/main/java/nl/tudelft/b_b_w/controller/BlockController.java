@@ -241,7 +241,8 @@ public class BlockController {
         String iban = "N/A";
         ConversionController conversionController = new ConversionController(owner, publicKey, chainHash, senderHash, iban);
         String hash = conversionController.hashKey();
-        Block block = new Block(1, owner, hash, chainHash, senderHash, publicKey, iban, 0, false);
+        Block block = BlockFactory.getBlock("BLOCK", owner, hash, chainHash, senderHash, publicKey, iban, 0);
+        block.setSeqNumberTo(1);
         addBlock(block);
         return block;
     }
@@ -295,13 +296,14 @@ public class BlockController {
             contactBlockHash = "N/A";
         else
             contactBlockHash = getBlocks(contact).get(0).getOwnHash();
-        int index = latest.getSequenceNumber() + 1;
+        int seqNumber = latest.getSequenceNumber() + 1;
 
         ConversionController conversionController = new ConversionController(
                 owner, publicKey, previousBlockHash, contactBlockHash, iban
         );
         String hash = conversionController.hashKey();
-        Block block = new Block(index, owner, hash, previousBlockHash, contactBlockHash, publicKey, iban, 0, revoke);
+        Block block = BlockFactory.getBlock(revoke?"REVOKE":"BLOCK", owner, hash, previousBlockHash, contactBlockHash, publicKey, iban, 0);
+        block.setSeqNumberTo(seqNumber);
         addBlock(block);
         return block;
     }

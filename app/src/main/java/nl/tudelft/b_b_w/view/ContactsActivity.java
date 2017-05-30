@@ -1,19 +1,9 @@
 package nl.tudelft.b_b_w.view;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -31,6 +21,7 @@ import nl.tudelft.b_b_w.model.Block;
  */
 public class ContactsActivity extends Activity {
 
+    public static final String PREFS_NAME = "MyPrefsFile";
     //Owner of the blockchain
     private String ownerName;
 
@@ -44,8 +35,8 @@ public class ContactsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
         setTitle("Contacts");
-        Bundle extras = getIntent().getExtras();
-        ownerName = extras.getString("ownerName");
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        ownerName = settings.getString("userName", "");
         // get contacts
         BlockController blcController = new BlockController(this);
         setUpGraph(blcController.getBlocks(ownerName));

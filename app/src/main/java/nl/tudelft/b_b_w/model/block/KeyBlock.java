@@ -7,4 +7,6 @@ public abstract class KeyBlock extends Block {
     public KeyBlock(BlockData blockData) {
         super(blockData);
     }
+
+    public abstract boolean isRevoked();
 }

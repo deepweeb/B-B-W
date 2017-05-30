@@ -5,11 +5,16 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.tudelft.b_b_w.model.block.Block;
-import nl.tudelft.b_b_w.model.block.BlockFactory;
 import nl.tudelft.b_b_w.model.GetDatabaseHandler;
 import nl.tudelft.b_b_w.model.MutateDatabaseHandler;
 import nl.tudelft.b_b_w.model.TrustValues;
+import nl.tudelft.b_b_w.model.block.Block;
+import nl.tudelft.b_b_w.model.block.BlockData;
+import nl.tudelft.b_b_w.model.block.BlockFactory;
+import nl.tudelft.b_b_w.model.block.BlockType;
+
+import static org.bouncycastle.asn1.x500.style.RFC4519Style.owner;
+import static org.bouncycastle.crypto.tls.CipherType.block;
 
 /**
  * Performs the actions on the blockchain
@@ -286,8 +291,8 @@ public class BlockController implements BlockControllerInterface {
      * @return the newly created block
      * @throws Exception when the hashing algorithm is not available
      */
-    private Block createBlock(String owner, String contact, String publicKey, String iban, boolean
-            revoke) throws Exception {
+    private Block createBlock(String owner, String contact, String publicKey, String iban,
+                              BlockType blockType) throws Exception {
         Block latest = getLatestBlock(owner);
         String previousBlockHash = latest.getOwnHash();
 
@@ -303,8 +308,10 @@ public class BlockController implements BlockControllerInterface {
                 owner, publicKey, previousBlockHash, contactBlockHash, iban
         );
         String hash = conversionController.hashKey();
-        Block block = BlockFactory.getBlock(revoke ? REVOKE : BLOCK, owner, hash, previousBlockHash,
-                contactBlockHash, publicKey, iban, 0);
+        BlockData blockData = new BlockData();
+        blockData.setBlockType(blockType);
+        blockData.setIban(iban);
+        blockData.setHash();
         block.setSeqNumberTo(seqNumber);
         addBlock(block);
         return block;

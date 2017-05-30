@@ -1,5 +1,12 @@
 package nl.tudelft.b_b_w.model.block;
 
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import nl.tudelft.b_b_w.model.HashException;
+
 public class BlockData {
     private BlockType blockType;
     private int sequenceNumber;
@@ -11,22 +18,25 @@ public class BlockData {
     private String iban;
     private int trustValue;
 
-    public boolean isRevoked() {
-        return revoked;
-    }
-
-    public void setRevoked(boolean revoked) {
-        this.revoked = revoked;
-    }
-
-    private boolean revoked;
-
-    public String getHash() {
-        return hash;
-    }
-
-    public void setHash(String hash) {
-        this.hash = hash;
+    /**
+     * Calculate the SHA-256 hash of this block
+     * @return the base-64 encoded hash as a string
+     * @throws HashException when the crypto functions are not available
+     */
+    public String calculateHash() throws HashException {
+        try {
+            // ConversionController conversionController = new ConversionController();
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            String text = owner + publicKey + previousHashChain + previousHashSender + iban;
+            md.update(text.getBytes("UTF-8"));
+            byte[] digest = md.digest();
+            String hash = String.format("%064x", new BigInteger(1, digest));
+            return hash;
+        } catch (NoSuchAlgorithmException e) {
+            throw new HashException("SHA-256 not available on this device");
+        } catch (UnsupportedEncodingException e) {
+            throw new HashException("UTF-8 not available on this device");
+        }
     }
 
     public BlockType getBlockType() {
@@ -89,8 +99,22 @@ public class BlockData {
         return trustValue;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BlockData blockData = (BlockData) o;
+
+        try {
+            return calculateHash().equals(blockData.calculateHash());
+        } catch (HashException e) {
+            return false;
+        }
+    }
+
     public void setTrustValue(int trustValue) {
         this.trustValue = trustValue;
     }
-
 }

@@ -1,5 +1,7 @@
 package nl.tudelft.b_b_w.model.block;
 
+import nl.tudelft.b_b_w.model.HashException;
+
 import static org.bouncycastle.asn1.x500.style.RFC4519Style.owner;
 
 /**
@@ -7,15 +9,24 @@ import static org.bouncycastle.asn1.x500.style.RFC4519Style.owner;
  */
 
 public abstract class Block {
-    /** Reasonable value to multiply with to combine hash codes */
-    private static final int HASH_MULTIPLIER = 31;
-
     /** All block data is stored in another class */
     private BlockData blockData;
 
+    /** Hash value of the block */
+    private String hash;
+
     /** Set the blockdata for this block */
-    public Block(BlockData blockData) {
+    public Block(BlockData blockData) throws HashException {
         this.blockData = blockData;
+        this.hash = blockData.calculateHash();
+    }
+
+    /**
+     * Retrieve block data of this block
+     * @return the block data
+     */
+    public final BlockData getBlockData() {
+        return blockData;
     }
 
     /**
@@ -34,7 +45,7 @@ public abstract class Block {
      * @return own hash
      */
     public final String getOwnHash() {
-        return blockData.getHash();
+        return hash;
     }
 
     /**
@@ -94,16 +105,6 @@ public abstract class Block {
         return blockData.getIban();
     }
 
-
-    /**
-     * Default getter for checking whether a block is revoked
-     *
-     * @return true or false
-     */
-    public final boolean isRevoked() {
-        return blockData.isRevoked();
-    }
-
     /**
      * Default getter for trustValue
      * @return the trust value of the block
@@ -130,8 +131,7 @@ public abstract class Block {
 
         Block block = (Block) o;
 
-        return block.blockData.equals(block.blockData);
-
+        return this.blockData.equals(block.blockData);
     }
 
     /**
@@ -150,13 +150,13 @@ public abstract class Block {
         return "Block{" +
                 "owner='" + owner + '\'' +
                 ", sequenceNumber=" + blockData.getSequenceNumber() +
-                ", ownHash='" + blockData.getHash() + '\'' +
+                ", ownHash='" + hash + '\'' +
                 ", previousHashChain='" + blockData.getPreviousHashChain() + '\'' +
                 ", previousHashSender='" + blockData.getPreviousHashSender() + '\'' +
                 ", publicKey='" + blockData.getPublicKey() + '\'' +
                 ", iban='" + blockData.getIban() + '\'' +
                 ", trustValue='" + blockData.getTrustValue() + '\'' +
-                ", isRevoked=" + blockData.isRevoked() +
+                ", type='" + blockData.getBlockType() + '\'' +
                 '}';
     }
 }

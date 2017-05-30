@@ -12,6 +12,7 @@ import nl.tudelft.b_b_w.model.block.BlockFactory;
 /** The Api class provides read and write access to our data without having to worry about
  * the blockchain and database.
  */
+@Deprecated
 public class Api {
     /** BlockController for access to the blocks */
     private BlockController blockController;
@@ -79,7 +80,7 @@ public class Api {
                 key, prevHashSelf, prevHashOther, iban);
         String hash = conversionController.hashKey();
 
-        Block fresh = BlockFactory.getBlock("BLOCK", owner, hash, prevHashSelf, prevHashOther, key, iban, 0);
+        Block fresh = BlockFactory.getBlock("BLOCK", owner, -999, hash, prevHashSelf, prevHashOther, key, iban, 0);
 
         // add to database
         blockController.addBlock(fresh);

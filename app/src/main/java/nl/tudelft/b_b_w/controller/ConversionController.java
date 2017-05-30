@@ -3,8 +3,9 @@ package nl.tudelft.b_b_w.controller;
 import java.security.MessageDigest;
 
 /**
- * Class to convert values into a hashed value
+ * Class to convert values into a hashed value. Use BlockData.calculateHash instead.
  */
+@Deprecated
 public class ConversionController {
     // Variables which we need to create a hashed key
     private String blockOwner;

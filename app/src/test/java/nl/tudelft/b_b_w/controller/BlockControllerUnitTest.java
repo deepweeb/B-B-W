@@ -118,7 +118,8 @@ public class BlockControllerUnitTest {
         block2.setSeqNumberTo(1);
         bc.addBlock(_block);
         bc.addBlock(block2);
-        assertEquals(owner + "'s friend #" + block2.getSequenceNumber(), bc.getContactName("ownHash2"));
+        assertEquals(owner + "'s friend #" + block2.getSequenceNumber(), bc.getContactName(
+                "ownHash2"));
     }
 
 
@@ -283,7 +284,8 @@ public class BlockControllerUnitTest {
     /** Hash of genesis block */
     @Test
     public void verifyGenesisHashA() {
-        ConversionController conversionController = new ConversionController("A", "N/A", "N/A", "N/A", "N/A");
+        ConversionController conversionController = new ConversionController("A", "N/A", "N/A",
+                "N/A", "N/A");
         try {
             String hash = conversionController.hashKey();
             assertEquals(genesisA.getOwnHash(), hash);
@@ -313,7 +315,8 @@ public class BlockControllerUnitTest {
     /** Verify block hash */
     @Test
     public void verifySenderHash() throws Exception {
-        ConversionController conversionController = new ConversionController("A", "kb", blockA_A1.getOwnHash(), genesisB.getOwnHash(), "ibanB");
+        ConversionController conversionController = new ConversionController("A", "kb", blockA_A1.
+                getOwnHash(), genesisB.getOwnHash(), "ibanB");
         String hash = conversionController.hashKey();
         assertEquals(hash, blockA_B1.getOwnHash());
     }

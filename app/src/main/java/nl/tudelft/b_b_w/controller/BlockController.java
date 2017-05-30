@@ -158,7 +158,8 @@ public class BlockController implements BlockControllerInterface {
     public final List<Block> removeBlock(List<Block> list, Block block) {
         List<Block> res = new ArrayList<>();
         for (Block blc : list) {
-            if (!(blc.getOwner().equals(block.getOwner()) && blc.getPublicKey().equals(block.getPublicKey()))) {
+            if (!(blc.getOwner().equals(block.getOwner()) && blc.getPublicKey().equals(block.
+                    getPublicKey()))) {
                 res.add(blc);
             }
         }
@@ -220,9 +221,11 @@ public class BlockController implements BlockControllerInterface {
         String senderHash = "N/A";
         String publicKey = "N/A";
         String iban = "N/A";
-        ConversionController conversionController = new ConversionController(owner, publicKey, chainHash, senderHash, iban);
+        ConversionController conversionController = new ConversionController(owner, publicKey,
+                chainHash, senderHash, iban);
         String hash = conversionController.hashKey();
-        Block block = BlockFactory.getBlock("BLOCK", owner, hash, chainHash, senderHash, publicKey, iban, 0);
+        Block block = BlockFactory.getBlock("BLOCK", owner, hash, chainHash, senderHash, publicKey,
+                iban, 0);
         block.setSeqNumberTo(1);
         addBlock(block);
         return block;
@@ -238,7 +241,8 @@ public class BlockController implements BlockControllerInterface {
      * @return the newly created block
      * @throws Exception when the hashing algorithm is not available
      */
-    public Block createKeyBlock(String owner, String contact, String publicKey, String iban) throws Exception {
+    public Block createKeyBlock(String owner, String contact, String publicKey, String iban) throws
+            Exception {
         return createBlock(owner, contact, publicKey, iban, false);
     }
 
@@ -252,7 +256,8 @@ public class BlockController implements BlockControllerInterface {
      * @return the newly created block
      * @throws Exception when the hashing algorithm is not available
      */
-    public Block createRevokeBlock(String owner, String contact, String publicKey, String iban) throws Exception {
+    public Block createRevokeBlock(String owner, String contact, String publicKey, String iban)
+            throws Exception {
         return createBlock(owner, contact, publicKey, iban, true);
     }
 
@@ -267,7 +272,8 @@ public class BlockController implements BlockControllerInterface {
      * @return the newly created block
      * @throws Exception when the hashing algorithm is not available
      */
-    private Block createBlock(String owner, String contact, String publicKey, String iban, boolean revoke) throws Exception {
+    private Block createBlock(String owner, String contact, String publicKey, String iban, boolean
+            revoke) throws Exception {
         Block latest = getLatestBlock(owner);
         String previousBlockHash = latest.getOwnHash();
 
@@ -283,7 +289,8 @@ public class BlockController implements BlockControllerInterface {
                 owner, publicKey, previousBlockHash, contactBlockHash, iban
         );
         String hash = conversionController.hashKey();
-        Block block = BlockFactory.getBlock(revoke?"REVOKE":"BLOCK", owner, hash, previousBlockHash, contactBlockHash, publicKey, iban, 0);
+        Block block = BlockFactory.getBlock(revoke?"REVOKE":"BLOCK", owner, hash, previousBlockHash,
+                contactBlockHash, publicKey, iban, 0);
         block.setSeqNumberTo(seqNumber);
         addBlock(block);
         return block;

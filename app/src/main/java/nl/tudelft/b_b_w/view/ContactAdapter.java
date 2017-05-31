@@ -122,7 +122,7 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
         if (view == null) {
             LayoutInflater inflater =
                     (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.simple_list_item_1, null);
+            view = inflater.inflate(R.layout.simple_list_item_1, parent, false);
         }
         TextView nameItemText = (TextView)view.findViewById(R.id.list_item_name);
         nameItemText.setText(

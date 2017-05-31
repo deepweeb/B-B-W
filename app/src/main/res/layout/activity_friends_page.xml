@@ -67,7 +67,7 @@
                     android:text="Public Key:" />
 
                 <EditText
-                    android:id="@+id/editText4"
+                    android:id="@+id/editPubKey"
                     android:layout_width="314dp"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
@@ -92,7 +92,7 @@
                     android:text="IBAN:" />
 
                 <EditText
-                    android:id="@+id/editText5"
+                    android:id="@+id/editIban"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="22.56"

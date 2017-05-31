@@ -42,11 +42,4 @@
         tools:layout_editor_absoluteX="100dp"
         tools:layout_editor_absoluteY="400dp" />
 
-    <Button
-        android:id="@+id/button13"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="onClearDatabase"
-        android:text="Clear database" />
-
 </android.widget.LinearLayout>

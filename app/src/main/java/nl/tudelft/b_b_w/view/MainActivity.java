@@ -116,7 +116,7 @@ public class MainActivity extends Activity {
         }
    }
 
-    /**
+     /**
      * This method clears the database since a limited amount of data can be viewed.
      * @param view  The view of the program.
      */

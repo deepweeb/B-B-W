@@ -28,34 +28,13 @@ apply plugin: 'checkstyle'
 checkstyle {
     configFile = new File(rootDir, "config/checkstyle/checkstyle.xml")
     ignoreFailures = true
-    sourceSets = [sourceSets.main]
 }
 
 findbugs {
     ignoreFailures = true
-    sourceSets = [sourceSets.main]
 }
 
 pmd {
     ruleSets = ["basic", "braces", "design"]
     ignoreFailures = true
-    sourceSets = [sourceSets.main]
-}
-
-sourceSets {
-    main {
-        java {
-            srcDir 'src/main/java'
-        }
-    }
-    test {
-        java {
-            srcDir 'src/test/java/'
-        }
-    }
-//    integrationTest {
-//        java {
-//            srcDir 'src/java-test'
-//        }
-//    }
 }

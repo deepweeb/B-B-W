@@ -25,16 +25,18 @@ apply plugin: 'pmd'
 apply plugin: 'findbugs'
 apply plugin: 'checkstyle'
 
-checkstyle {
+
+
+task checkstyle {
     configFile = new File(rootDir, "config/checkstyle/checkstyle.xml")
     ignoreFailures = true
 }
 
-findbugs {
+task findbugs {
     ignoreFailures = true
 }
 
-pmd {
+task pmd {
     ruleSets = ["basic", "braces", "design"]
     ignoreFailures = true
 }

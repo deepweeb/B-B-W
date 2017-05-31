@@ -24,13 +24,6 @@
             android:onClick="onContactsPage"
             android:text="Contacts" />
 
-        <Button
-            android:id="@+id/button8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="onFriendPage"
-            android:text="Friend" />
     </LinearLayout>
 
     <Button

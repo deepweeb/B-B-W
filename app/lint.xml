@@ -3,5 +3,6 @@
     <issue id="all">
         <ignore path="src/main/java/nl.tudelft.b_b_w.view"/>
         <ignore path="src/main/res" />
+        <ignore path="src/main/AndroidManifest.xml" />
     </issue>
 </lint>

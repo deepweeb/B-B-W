@@ -114,7 +114,7 @@ public class MainActivity extends Activity {
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
-    }
+   }
 
     /**
      * This method clears the database since a limited amount of data can be viewed.

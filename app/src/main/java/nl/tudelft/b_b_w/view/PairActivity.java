@@ -13,8 +13,6 @@ import nl.tudelft.b_b_w.controller.BlockController;
 import nl.tudelft.b_b_w.model.Block;
 import nl.tudelft.b_b_w.model.BlockFactory;
 
-import static android.R.attr.id;
-
 /**
  * Pair activity lets you pair with a fixed number of preprogrammed contacts, for demo purposes.
  */
@@ -118,15 +116,15 @@ public class PairActivity extends Activity {
         );
         blockController.addBlock(block4);
 
-        List<Block> list = blockController.getBlocks(ownerName);
+       List<Block> list = blockController.getBlocks(ownerName);
+
+
 
         Toast.makeText(this, list.get(0).getPublicKey() + ", " +
                 list.get(ONE).getPublicKey() + ", " +
                 list.get(TWO).getPublicKey() + ", " +
                 list.get(THREE).getPublicKey(), Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, FriendsPageActivity.class);
-        intent.getExtras().putInt("userID", id);
-        startActivity(intent);
+        startActivity(new Intent(this, FriendsPageActivity.class));
     }
 
     /**
@@ -171,7 +169,7 @@ public class PairActivity extends Activity {
                 "HASH3",
                 "HASH2",
                 "HASHfromContact2",
-                "b",
+                "c",
                 "IBANContact3",
                 0
         );
@@ -183,11 +181,12 @@ public class PairActivity extends Activity {
                 "HASH4",
                 "HASH3",
                 "HASHfromContact3",
-                "b",
+                "d",
                 "IBANContact4",
                 0
         );
         blockController.addBlock(block4);
+
         block5 = BlockFactory.getBlock(
                 "BLOCK",
                 ownerName,
@@ -195,7 +194,7 @@ public class PairActivity extends Activity {
                 "HASH5",
                 "HASH4",
                 "HASHfromContact4",
-                "b",
+                "e",
                 "IBANContact5",
                 0
         );
@@ -218,7 +217,7 @@ public class PairActivity extends Activity {
      * @param view  The view of the program.
      */
     public final void onTestSubject3(View view) {
-        ownerName = "TestSubject2";
+        ownerName = "TestSubject3";
         blockController = new BlockController(this);
         block1 = BlockFactory.getBlock(
                 "BLOCK",
@@ -248,8 +247,7 @@ public class PairActivity extends Activity {
         List<Block> list = blockController.getBlocks(ownerName);
 
         Toast.makeText(this, list.get(0).getPublicKey() + ", " +
-                list.get(1).getPublicKey() + ", " +
-                list.get(2).getPublicKey(), Toast.LENGTH_SHORT).show();
+                list.get(1).getPublicKey(), Toast.LENGTH_SHORT).show();
 
         startActivity(new Intent(this, FriendsPageActivity.class));
 

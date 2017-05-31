@@ -1,5 +1,8 @@
 package nl.tudelft.b_b_w.controller;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,9 +15,6 @@ import java.util.List;
 
 import nl.tudelft.b_b_w.BuildConfig;
 import nl.tudelft.b_b_w.model.BlockFactory;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 
 /**
  * Test the API.

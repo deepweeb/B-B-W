@@ -51,7 +51,8 @@ public class MainActivity extends Activity {
 
         // Set up the input
         final EditText input = new EditText(this);
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        // Specify the type of input expected; this, for example, sets the input as a password,
+        // and will mask the text
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
 
@@ -117,6 +118,16 @@ public class MainActivity extends Activity {
      */
     public final void onFriendPage(View view) {
         Intent intent = new Intent(this, FriendsPageActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * When you want to visit the ContactsPageActivity.
+     * @param view The view
+     */
+    public final void onContactsPage(View view) {
+        Intent intent = new Intent(this, ContactsActivity.class);
+        intent.putExtra("ownerName", ownerName);
         startActivity(intent);
     }
 }

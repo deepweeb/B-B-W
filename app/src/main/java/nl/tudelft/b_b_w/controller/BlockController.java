@@ -356,7 +356,7 @@ public class BlockController implements BlockControllerInterface {
      */
     @Override
     public boolean verifyTrustworthiness(Block block) {
-        return !blockExists(block.getOwner(), block.getPublicKey(), block.isRevoked())
+        return blockExists(block.getOwner(), block.getPublicKey(), block.isRevoked())
                 && block.verifyBlock(backtrack(block));
     }
 }

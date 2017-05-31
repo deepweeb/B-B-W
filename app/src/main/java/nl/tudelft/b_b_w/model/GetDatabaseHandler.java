@@ -1,12 +1,9 @@
 package nl.tudelft.b_b_w.model;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.ContactsContract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +63,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
         // When returning an exception the whole program crashes,
         // but we want to preserve the state.
-        if (cursor.getCount() < 1) return null;
+        if (cursor.getCount() < 1) return "Unknown";
 
         cursor.moveToFirst();
 
@@ -76,9 +73,11 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         db.close();
         cursor.close();
 
-
-        return (block.getSequenceNumber()==1) ? block.getOwner() : block.getOwner()+"'s friend #" + block.getSequenceNumber();
-
+        if (block.getPreviousHashSender().equals("N/A")) {
+            return block.getOwner();
+        } else {
+            return getContactName(block.getPreviousHashSender());
+        }
     }
 
     /**

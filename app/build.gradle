@@ -36,18 +36,3 @@ dependencies {
     testCompile 'org.robolectric:robolectric:3.0'
     compile 'com.jjoe64:graphview:4.2.1'
 }
-
-
-task checkstyle {
-    configFile = new File(rootDir, "config/checkstyle/checkstyle.xml")
-    ignoreFailures = true
-}
-
-task findbugs {
-    ignoreFailures = true
-}
-
-task pmd {
-    ruleSets = ["basic", "braces", "design"]
-    ignoreFailures = true
-}

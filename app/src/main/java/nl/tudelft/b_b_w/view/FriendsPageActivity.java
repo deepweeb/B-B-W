@@ -13,10 +13,8 @@ import nl.tudelft.b_b_w.controller.BlockController;
 import nl.tudelft.b_b_w.controller.ConversionController;
 import nl.tudelft.b_b_w.model.Block;
 import nl.tudelft.b_b_w.model.BlockFactory;
-import nl.tudelft.b_b_w.model.GetDatabaseHandler;
 import nl.tudelft.b_b_w.model.User;
 
-import static android.icu.lang.UProperty.BLOCK;
 import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
 
 /**
@@ -29,8 +27,17 @@ public class FriendsPageActivity extends Activity {
     /**
      * block controller
      */
-    private BlockController blockController;
+    private BlockController bc;
 
+    /**
+     * Block argument to create a block
+     */
+    private static final String BLOCK = "BLOCK";
+
+    //This is yourself
+    User user;
+
+    //This is the paired contact
     User contact;
 
     /**
@@ -46,7 +53,12 @@ public class FriendsPageActivity extends Activity {
     /**
      * the public key of the contact
      */
-    private String contactPublicKey;
+    private String publicKey;
+
+
+    private String contactGenesisBlockHash;
+    private String userLatestBlockHash;
+
 
     /**
      * Text view of the iban number.
@@ -65,18 +77,21 @@ public class FriendsPageActivity extends Activity {
      */
     @Override
     protected final void onCreate(Bundle savedInstanceState) {
-        blockController = new BlockController(this);
+        bc = new BlockController(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends_page);
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         contact = new User(settings.getString("userNameTestSubject", ""), settings.getString("ibanTestSubject", ""));
+        user = new User(settings.getString("userName", ""), settings.getString("iban", ""));
 
         contactName = contact.getName();
         ibanNumber = contact.getIBAN();
         publicKey = contact.generatePublicKey();
 
+        userLatestBlockHash = bc.getBlocks(user.getName()).get(bc.getBlocks(user.getName()).size()-1).getOwnHash();
+        contactGenesisBlockHash = bc.getBlocks(contactName).get(0).getOwnHash();
         //Displaying the information of the contact whose you are paired with
         textViewIban = (TextView) findViewById(R.id.editIban);
         textViewContact = (TextView) findViewById(R.id.senderName);
@@ -98,27 +113,23 @@ public class FriendsPageActivity extends Activity {
      * When you want to add this person to your own contact list page.
      * @param view  The view
      */
-    public final void onAddThisPersonToContactList(View view) {
+    public final void onAddThisPersonToContactList(View view) throws Exception {
 
-        String chainHash = NA;
-        String senderHash = NA;
-        String publicKey = user.generatePublicKey();
-        String iban = user.getIBAN();
         ConversionController conversionController = new ConversionController(user.getName(), publicKey,
-                chainHash, senderHash, iban);
+                userLatestBlockHash, contactGenesisBlockHash, ibanNumber);
         String hash = conversionController.hashKey();
         Block block = BlockFactory.getBlock(
                 BLOCK,
                 user.getName(),
-                getLatestSeqNumber(user.getName()) + 1,
+                bc.getLatestSeqNumber(user.getName()) + 1,
                 hash,
-                chainHash,
-                senderHash,
+                userLatestBlockHash,
+                contactGenesisBlockHash,
                 publicKey,
-                iban,
+                ibanNumber,
                 0
         );
-        blockController.addBlock(block);
+        bc.addBlock(block);
 
         Toast.makeText(this, "Added!", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(this, MainActivity.class));

@@ -28,15 +28,18 @@ apply plugin: 'checkstyle'
 checkstyle {
     configFile = new File(rootDir, "config/checkstyle/checkstyle.xml")
     ignoreFailures = true
+    sourceSets = [sourceSets.main]
 }
 
 findbugs {
     ignoreFailures = true
+    sourceSets = [sourceSets.main]
 }
 
 pmd {
     ruleSets = ["basic", "braces", "design"]
     ignoreFailures = true
+    sourceSets = [sourceSets.main]
 }
 
 sourceSets {

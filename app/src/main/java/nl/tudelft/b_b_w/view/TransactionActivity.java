@@ -18,10 +18,12 @@ public class TransactionActivity extends Activity {
         setContentView(R.layout.activity_transaction);
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         User user = new User(settings.getString("userName", ""), settings.getString("iban", ""));
-        user.getIBAN();
 
         TextView ownerItemText = (TextView)  findViewById(R.id.OwnerName);
         ownerItemText.setText(user.getName());
+
+        TextView IbanItemText = (TextView)  findViewById(R.id.IbanTransferor);
+        IbanItemText.setText(user.getIBAN());
     }
 
 

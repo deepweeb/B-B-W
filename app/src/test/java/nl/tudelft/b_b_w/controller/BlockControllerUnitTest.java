@@ -212,25 +212,6 @@ public class BlockControllerUnitTest {
         bc.addBlock(_block);
     }
 
-    /**
-     * Tests adding an already revoked block
-     */
-    @Test(expected = RuntimeException.class)
-    public final void alreadyRevoked() {
-        final Block newBlock = BlockFactory.getBlock(
-                TYPE_REVOKE,
-                owner,
-                bc.getLatestSeqNumber(owner) + 1,
-                ownHash,
-                previousHashChain,
-                previousHashSender,
-                publicKey,
-                iban,
-                trustValue
-        );
-        bc.addBlockToChain(newBlock);
-        bc.addBlockToChain(_block);
-    }
 
     /**
      * Tests filtering duplicates out of a list

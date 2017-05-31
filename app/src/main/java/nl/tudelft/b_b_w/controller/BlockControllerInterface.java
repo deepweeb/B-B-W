@@ -18,13 +18,6 @@ interface BlockControllerInterface {
      */
     boolean blockExists(String owner, String key, boolean revoked);
 
-    /**
-     * Adding a block to the blockchain
-     *
-     * @param block Block you want to add
-     * @return returns the block you added
-     */
-    List<Block> addBlockToChain(Block block);
 
     /**
      * Add a block to the database with checking if the (owner,pubkey) pair

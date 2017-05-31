@@ -62,34 +62,7 @@ public class BlockController implements BlockControllerInterface {
     public final boolean blockExists(String owner, String key, boolean revoked) {
         return getDatabaseHandler.blockExists(owner, key, revoked);
     }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public final List<Block> addBlockToChain(Block block) {
-        // Check if the block already exists
-        String owner = block.getOwner();
-        Block latest = getDatabaseHandler.getLatestBlock(owner);
-
-        if (latest == null) {
-            mutateDatabaseHandler.addBlock(block);
-        } else if (latest.isRevoked()) {
-            throw new RuntimeException("Error - Block is already revoked");
-        } else {
-            if (block.isRevoked()) {
-                latest = revokedTrustValue(latest);
-                mutateDatabaseHandler.updateBlock(latest);
-                mutateDatabaseHandler.addBlock(block);
-            }
-            else {
-                throw new RuntimeException("Error - Block already exists");
-            }
-        }
-
-        return getBlocks(owner);
-    }
-
+    
 
     /**
      * @inheritDoc

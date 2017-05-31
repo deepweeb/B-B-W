@@ -25,6 +25,9 @@
         <activity
             android:name=".view.ContactsActivity"
             android:label="ContactsActivity"></activity>
+        <activity
+            android:name=".view.DisplayContactFriendListActivity"
+            android:label="DisplayContactFriendListActivity" />
     </application>
 
 </manifest>

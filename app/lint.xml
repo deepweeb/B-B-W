@@ -2,5 +2,6 @@
 <lint>
     <issue id="all">
         <ignore path="src/main/java/nl.tudelft.b_b_w.view"/>
+        <ignore path="src/main/res" />
     </issue>
 </lint>

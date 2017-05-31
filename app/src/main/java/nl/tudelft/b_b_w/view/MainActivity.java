@@ -64,14 +64,11 @@ public class MainActivity extends Activity {
         nameBox.setHint("Name");
         ibanBox.setInputType(InputType.TYPE_CLASS_TEXT);
         ibanBox.setHint("IBAN");
-
         LinearLayout ll = new LinearLayout(this);
         ll.setOrientation(LinearLayout.VERTICAL);
         ll.addView(nameBox);
         ll.addView(ibanBox);
         builder.setView(ll);
-
-        // Set up the buttons
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -81,7 +78,7 @@ public class MainActivity extends Activity {
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("userName", user.getName());
                 editor.putString("iban", user.getIBAN());
-                editor.commit();
+                editor.apply();
             }
         });
         builder.show();
@@ -133,7 +130,6 @@ public class MainActivity extends Activity {
      */
     public final void onPairPage(View view) {
         Intent intent = new Intent(this, PairActivity.class);
-        intent.putExtra("ownerName", user.getName());
         startActivity(intent);
     }
 
@@ -143,7 +139,6 @@ public class MainActivity extends Activity {
      */
     public final void onFriendPage(View view) {
         Intent intent = new Intent(this, FriendsPageActivity.class);
-        intent.putExtra("ownerName", user.getName());
         startActivity(intent);
     }
 
@@ -153,8 +148,6 @@ public class MainActivity extends Activity {
      */
     public final void onContactsPage(View view) {
         Intent intent = new Intent(this, ContactsActivity.class);
-        intent.putExtra("ownerName", user.getName());
-        intent.putExtra("iban", user.getIBAN());
         startActivity(intent);
     }
 }

@@ -21,10 +21,6 @@ import nl.tudelft.b_b_w.model.Block;
  */
 public class ContactsActivity extends Activity {
 
-    public static final String PREFS_NAME = "MyPrefsFile";
-    //Owner of the blockchain
-    private String ownerName;
-
     /**
      * On create we request a database connection
      *
@@ -35,9 +31,8 @@ public class ContactsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
         setTitle("Contacts");
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        ownerName = settings.getString("userName", "");
-        // get contacts
+        SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
+        final String ownerName = settings.getString("userName", "");
         BlockController blcController = new BlockController(this);
         setUpGraph(blcController.getBlocks(ownerName));
         ContactAdapter adapter = new ContactAdapter(blcController, ownerName, this);

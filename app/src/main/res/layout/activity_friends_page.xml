@@ -108,6 +108,7 @@
                     android:layout_weight="0.11"
                     android:background="@android:color/holo_blue_light"
                     android:backgroundTint="@android:color/holo_green_dark"
+                    android:onClick="onViewContactListPage"
                     android:text="View this person contact list" />
             </LinearLayout>
 

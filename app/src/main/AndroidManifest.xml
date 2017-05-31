@@ -16,9 +16,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.AddBlockActivity" />
-        <activity android:name=".view.RevokeBlockActivity" />
-        <activity android:name=".view.DisplayChainActivity" />
         <activity
             android:name=".view.FriendsPageActivity"
             android:label="@string/title_activity_friends_page" />

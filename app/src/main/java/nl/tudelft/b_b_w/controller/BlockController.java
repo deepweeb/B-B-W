@@ -76,7 +76,6 @@ public class BlockController implements BlockControllerInterface {
     }
 
 
-
     /**
      * @inheritDoc
      */

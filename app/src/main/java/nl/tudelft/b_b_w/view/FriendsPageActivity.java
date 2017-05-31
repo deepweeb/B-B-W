@@ -34,10 +34,14 @@ public class FriendsPageActivity extends Activity {
      */
     private static final String BLOCK = "BLOCK";
 
-    //This is yourself
+    /**
+     * This is your own user
+     */
     User user;
 
-    //This is the paired contact
+    /**
+     * this is the paired contact
+     */
     User contact;
 
     /**
@@ -55,10 +59,15 @@ public class FriendsPageActivity extends Activity {
      */
     private String publicKey;
 
-
+    /**
+     * Block hash of the paired contact's genesis
+     */
     private String contactGenesisBlockHash;
-    private String userLatestBlockHash;
 
+    /**
+     * the hash of your latest block
+     */
+    private String userLatestBlockHash;
 
     /**
      * Text view of the iban number.
@@ -127,7 +136,7 @@ public class FriendsPageActivity extends Activity {
                 contactGenesisBlockHash,
                 publicKey,
                 ibanNumber,
-                0
+                0 // trust value still not implemented
         );
 
         try {bc.addBlock(block);}

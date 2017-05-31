@@ -16,8 +16,8 @@ import nl.tudelft.b_b_w.controller.BlockController;
 import nl.tudelft.b_b_w.model.Block;
 
 /**
- * When the user wants to add a block he enters into the ContactsActivity, which contain
- * some entry fields and a button to confirm the addition.
+ * When the user wants to see a list of friends of the contact he just paired he enters into the
+ * DisplayContactFriendListActivity, which contain some entry fields.
  */
 public class DisplayContactFriendListActivity extends Activity {
 

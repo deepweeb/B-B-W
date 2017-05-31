@@ -6,7 +6,6 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.2'
-        classpath 'com.github.nrudenko:gradle-android-cq-plugin:0.1+'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -22,4 +21,38 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-apply plugin: 'android-cq'
+apply plugin: 'pmd'
+apply plugin: 'findbugs'
+apply plugin: 'checkstyle'
+
+checkstyle {
+    configFile = new File(rootDir, "config/checkstyle/checkstyle.xml")
+    ignoreFailures = true
+}
+
+findbugs {
+    ignoreFailures = true
+}
+
+pmd {
+    ruleSets = ["basic", "braces", "design"]
+    ignoreFailures = true
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+        }
+    }
+    test {
+        java {
+            srcDir 'src/test/java/'
+        }
+    }
+//    integrationTest {
+//        java {
+//            srcDir 'src/java-test'
+//        }
+//    }
+}

@@ -1,8 +1,10 @@
 package nl.tudelft.b_b_w.view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import nl.tudelft.b_b_w.R;
@@ -74,6 +76,15 @@ public class FriendsPageActivity extends Activity {
         textViewIban.setText(user.getIBAN());
         textViewOwner.setText(user.getName());
 
+    }
+
+    /**
+     * When you want to visit the DisplayContactFriendListActivity page.
+     * @param view  The view
+     */
+    public final void onViewContactListPage(View view) {
+        Intent intent = new Intent(this, DisplayContactFriendListActivity.class);
+        startActivity(intent);
     }
 
 

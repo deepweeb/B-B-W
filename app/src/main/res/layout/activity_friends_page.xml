@@ -10,7 +10,7 @@
         android:layout_width="400dp"
         android:layout_height="500dp"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="2dp"
+        tools:layout_editor_absoluteX="6dp"
         tools:layout_editor_absoluteY="9dp">
 
         <LinearLayout
@@ -32,7 +32,7 @@
 
             <EditText
                 android:id="@+id/senderName"
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="80dp"
                 android:background="@android:color/transparent"
                 android:ems="20"
@@ -62,31 +62,6 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:weightSum="1">
-
-                <Button
-                    android:id="@+id/button3"
-                    style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
-                    android:layout_width="165dp"
-                    android:layout_height="119dp"
-                    android:layout_weight="0.58"
-                    android:background="@android:color/holo_blue_light"
-                    android:text="Add this person to   your contact list" />
-
-                <Button
-                    android:id="@+id/button9"
-                    style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
-                    android:layout_width="197dp"
-                    android:layout_height="118dp"
-                    android:background="@android:color/holo_blue_light"
-                    android:backgroundTint="@android:color/holo_green_dark"
-                    android:text="View this person's Contact List" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:orientation="horizontal">
 
@@ -108,6 +83,32 @@
                     android:selectAllOnFocus="false"
                     android:singleLine="false"
                     android:text="ibanDummy" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="224dp"
+                android:orientation="horizontal"
+                android:weightSum="1"
+                android:layout_weight="0.23">
+
+                <Button
+                    android:id="@+id/button3"
+                    style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                    android:layout_width="171dp"
+                    android:layout_height="99dp"
+                    android:background="@android:color/holo_blue_light"
+                    android:text="Add this person to your contact list" />
+
+                <Button
+                    android:id="@+id/button9"
+                    style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                    android:layout_width="167dp"
+                    android:layout_height="104dp"
+                    android:layout_weight="0.11"
+                    android:background="@android:color/holo_blue_light"
+                    android:backgroundTint="@android:color/holo_green_dark"
+                    android:text="View this person contact list" />
             </LinearLayout>
 
         </LinearLayout>

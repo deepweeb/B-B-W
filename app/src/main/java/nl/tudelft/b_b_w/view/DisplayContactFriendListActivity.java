@@ -34,7 +34,8 @@ public class DisplayContactFriendListActivity extends Activity {
         final String ownerName = settings.getString("userNameTestSubject", "");
         setTitle(ownerName+ "'s contact list");
         BlockController blockController = new BlockController(this);
-        setUpGraph(blockController.getBlocks(ownerName));
+        List<Block> list = blockController.getBlocks(ownerName);
+        setUpGraph(list);
         ContactAdapter adapter = new ContactAdapter(blockController, ownerName, this);
         ListView lView = (ListView)findViewById(R.id.contacts);
         lView.setAdapter(adapter);

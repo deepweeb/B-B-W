@@ -98,6 +98,7 @@
                     android:layout_width="171dp"
                     android:layout_height="99dp"
                     android:background="@android:color/holo_blue_light"
+                    android:onClick="onAddThisPersonToContactList"
                     android:text="Add this person to your contact list" />
 
                 <Button

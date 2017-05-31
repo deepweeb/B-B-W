@@ -1,17 +1,17 @@
 package nl.tudelft.b_b_w.view;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Toast;
+        import android.app.Activity;
+        import android.content.Intent;
+        import android.os.Bundle;
+        import android.view.View;
+        import android.widget.Toast;
 
-import java.util.List;
+        import java.util.List;
 
-import nl.tudelft.b_b_w.R;
-import nl.tudelft.b_b_w.controller.BlockController;
-import nl.tudelft.b_b_w.model.Block;
-import nl.tudelft.b_b_w.model.BlockFactory;
+        import nl.tudelft.b_b_w.R;
+        import nl.tudelft.b_b_w.controller.BlockController;
+        import nl.tudelft.b_b_w.model.Block;
+        import nl.tudelft.b_b_w.model.BlockFactory;
 
 /**
  * Pair activity lets you pair with a fixed number of preprogrammed contacts, for demo purposes.
@@ -116,7 +116,7 @@ public class PairActivity extends Activity {
         );
         blockController.addBlock(block4);
 
-       List<Block> list = blockController.getBlocks(ownerName);
+        List<Block> list = blockController.getBlocks(ownerName);
 
 
 
@@ -124,7 +124,15 @@ public class PairActivity extends Activity {
                 list.get(ONE).getPublicKey() + ", " +
                 list.get(TWO).getPublicKey() + ", " +
                 list.get(THREE).getPublicKey(), Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(this, FriendsPageActivity.class));
+
+        Intent intent = new Intent(this, FriendsPageActivity.class);
+
+        intent.putExtra("IBAN", block1.getIban());
+        intent.putExtra("PUBKEY", block1.getPublicKey());
+        intent.putExtra("OWNER", block1.getOwner());
+
+        startActivity(intent);
+
     }
 
     /**
@@ -208,12 +216,18 @@ public class PairActivity extends Activity {
                 list.get(THREE).getPublicKey() + ", " +
                 list.get(FOUR).getPublicKey(), Toast.LENGTH_SHORT).show();
 
-        startActivity(new Intent(this, FriendsPageActivity.class));
+        Intent intent = new Intent(this, FriendsPageActivity.class);
+
+        intent.putExtra("IBAN", block1.getIban());
+        intent.putExtra("PUBKEY", block1.getPublicKey());
+        intent.putExtra("OWNER", block1.getOwner());
+
+        startActivity(intent);
     }
 
     /**
      * This method creates another test subject (third). It is hardcoded and will be change later on.
-     * We do this to simulate a transaction.
+     * We do this to simulate a transaction.aa
      * @param view  The view of the program.
      */
     public final void onTestSubject3(View view) {
@@ -249,7 +263,13 @@ public class PairActivity extends Activity {
         Toast.makeText(this, list.get(0).getPublicKey() + ", " +
                 list.get(1).getPublicKey(), Toast.LENGTH_SHORT).show();
 
-        startActivity(new Intent(this, FriendsPageActivity.class));
+        Intent intent = new Intent(this, FriendsPageActivity.class);
+
+        intent.putExtra("IBAN", block1.getIban());
+        intent.putExtra("PUBKEY", block1.getPublicKey());
+        intent.putExtra("OWNER", block1.getOwner());
+
+        startActivity(intent);
 
     }
 

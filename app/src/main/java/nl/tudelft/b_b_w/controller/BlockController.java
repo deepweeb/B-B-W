@@ -78,7 +78,7 @@ public class BlockController implements BlockControllerInterface {
             throw new RuntimeException("Error - Block is already revoked");
         } else {
             if (block.isRevoked()) {
-                revokedTrustValue(latest);
+                latest = revokedTrustValue(latest);
                 mutateDatabaseHandler.updateBlock(latest);
                 mutateDatabaseHandler.addBlock(block);
             }
@@ -202,7 +202,10 @@ public class BlockController implements BlockControllerInterface {
      */
     @Override
     public final Block successfulTransaction(Block block) {
-        block.setTrustValue(block.getTrustValue() + TrustValues.SUCCESFUL_TRANSACTION.getValue());
+        final int maxCeil = 100;
+        final int newTrust = block.getTrustValue() + TrustValues.SUCCESFUL_TRANSACTION.getValue();
+        if (newTrust > maxCeil) block.setTrustValue(maxCeil);
+        block.setTrustValue(newTrust);
         return block;
     }
 
@@ -211,7 +214,10 @@ public class BlockController implements BlockControllerInterface {
      */
     @Override
     public final Block failedTransaction(Block block) {
-        block.setTrustValue(block.getTrustValue() + TrustValues.FAILED_TRANSACTION.getValue());
+        final int minCeil = 0;
+        final int newTrust = block.getTrustValue() + TrustValues.FAILED_TRANSACTION.getValue();
+        if (newTrust < minCeil) block.setTrustValue(minCeil);
+        block.setTrustValue(newTrust);
         return block;
     }
 

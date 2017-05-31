@@ -76,6 +76,11 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
         return images[calculateImageIndex(trust)];
     }
 
+    /**
+     * Method to calculate the right index number of the array
+     * @param trust the trust value
+     * @return the index
+     */
     private int calculateImageIndex(int trust) {
         final int trustInterval = 20;
         int result = trust/ trustInterval - 1;

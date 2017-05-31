@@ -80,15 +80,15 @@ public class ApiUnitTest {
     /**
      * Add key of another user
      */
-    @Test
-    public void otherKey() {
-        // is the other key there
-        List<String> keysA = api.getUserKeys(userB, userA);
-        List<String> expectedA = new ArrayList<String>();
-        expectedA.add("pka");
-        assertEquals(expectedA, keysA);
-
-    }
+//    @Test
+//    public void otherKey() {
+//        // is the other key there
+//        List<String> keysA = api.getUserKeys(userB, userA);
+//        List<String> expectedA = new ArrayList<String>();
+//        expectedA.add("pka");
+//        assertEquals(expectedA, keysA);
+//
+//    }
 
     /**
      * Check that no keys of another user are added.    
@@ -130,17 +130,17 @@ public class ApiUnitTest {
     /**
      * Add key to of A to C.
      */
-    @Test
-    public void addOtherKey() {
-        try {
-            api.addKey(userC, userA, "pka", "ibana");
-            List<String> keys = api.getUserKeys(userC, userA);
-            List<String> expected = new ArrayList<String>();
-            expected.add("pka");
-            assertEquals(expected, keys);
-        } catch (Exception e) {
-            assertTrue(false);
-        }
-    }
+//    @Test
+//    public void addOtherKey() {
+//        try {
+//            api.addKey(userC, userA, "pka", "ibana");
+//            List<String> keys = api.getUserKeys(userC, userA);
+//            List<String> expected = new ArrayList<String>();
+//            expected.add("pka");
+//            assertEquals(expected, keys);
+//        } catch (Exception e) {
+//            assertTrue(false);
+//        }
+//    }
 
 }

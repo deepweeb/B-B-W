@@ -27,16 +27,6 @@ public class DisplayChainActivity extends Activity {
             publicKey = extras.getString("publicKey");
         }
 
-        /*ListView view = (ListView) findViewById(R.id.chain);
-
-        List<Block> blocks = handler.getAllBlocks(ownerName);
-        ArrayList<Block> array = new ArrayList<Block>(blocks);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.activity_displaychain);//, array);
-        //new ArrayAdapter<>()
-        view.setAdapter(adapter);
-
-        Genesis:eigen pubkey
-        Genesis: sender 1 key*/
 
         List<Block> blocks = controller.getBlocks(ownerName);
 

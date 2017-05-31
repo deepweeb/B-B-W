@@ -1,13 +1,16 @@
 package nl.tudelft.b_b_w.view;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
 
 import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.controller.BlockController;
 import nl.tudelft.b_b_w.model.GetDatabaseHandler;
+import nl.tudelft.b_b_w.model.User;
+
+import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
 
 /**
  * This class displays the Friend Page. Here we want to be able to see the
@@ -47,11 +50,6 @@ public class FriendsPageActivity extends Activity {
     private TextView textViewIban;
 
     /**
-     * Text view of the public key.
-     */
-    private TextView textViewPubkey;
-
-    /**
      * Text view of the owner name.
      */
     private TextView textViewOwner;
@@ -69,20 +67,14 @@ public class FriendsPageActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends_page);
 
-        Intent myIntent = getIntent();
-        String iban = myIntent.getStringExtra("IBAN");
-        String pubKey = myIntent.getStringExtra("PUBKEY");
-        String ownerName= myIntent.getStringExtra("OWNER");
-
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        User user = new User(settings.getString("userNameTestSubject", ""), settings.getString("ibanTestSubject", ""));
 
         textViewIban = (TextView) findViewById(R.id.editIban);
-        textViewPubkey = (TextView) findViewById(R.id.editPubKey);
         textViewOwner = (TextView) findViewById(R.id.senderName);
 
-
-        textViewIban.setText(iban);
-        textViewPubkey.setText(pubKey);
-        textViewOwner.setText(ownerName);
+        textViewIban.setText(user.getIBAN());
+        textViewOwner.setText(user.getName());
 
     }
 

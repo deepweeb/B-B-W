@@ -254,7 +254,7 @@ public class BlockController implements BlockControllerInterface {
                 senderHash,
                 publicKey,
                 iban,
-                0
+                TrustValues.INITIALIZED.getValue()
         );
         addBlock(block);
         return block;

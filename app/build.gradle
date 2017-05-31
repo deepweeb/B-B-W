@@ -29,6 +29,11 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'org.encryptor4j:encryptor4j:0.1.1'
     testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:2.8.9'
     testCompile 'org.robolectric:robolectric:3.0'
+    androidTestCompile 'info.cukes:cucumber-android:1.2.2@jar'
+    androidTestCompile 'info.cukes:cucumber-picocontainer:1.2.2'
+    androidTestCompile 'org.mockito:mockito-android:2.7.22'
+
     compile 'com.jjoe64:graphview:4.2.1'
 }

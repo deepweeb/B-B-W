@@ -1,17 +1,20 @@
 package nl.tudelft.b_b_w.view;
 
-        import android.app.Activity;
-        import android.content.Intent;
-        import android.os.Bundle;
-        import android.view.View;
-        import android.widget.Toast;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
-        import java.util.List;
+import java.util.List;
 
-        import nl.tudelft.b_b_w.R;
-        import nl.tudelft.b_b_w.controller.BlockController;
-        import nl.tudelft.b_b_w.model.Block;
-        import nl.tudelft.b_b_w.model.BlockFactory;
+import nl.tudelft.b_b_w.R;
+import nl.tudelft.b_b_w.controller.BlockController;
+import nl.tudelft.b_b_w.model.Block;
+import nl.tudelft.b_b_w.model.BlockFactory;
+
+import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
 
 /**
  * Pair activity lets you pair with a fixed number of preprogrammed contacts, for demo purposes.
@@ -65,6 +68,7 @@ public class PairActivity extends Activity {
      * @param view The view of the program.
      */
     public final void onTestSubject1(View view) {
+        final String ibanTestSub1= "IBANTestSubject1";
         ownerName = "TestSubject1";
         blockController = new BlockController(this);
         block1 = BlockFactory.getBlock(
@@ -75,7 +79,7 @@ public class PairActivity extends Activity {
                 "N/A",
                 "N/A",
                 "TestSubject_PUBKEY",
-                "IBANTestSubject1",
+                ibanTestSub1,
                 0
         );
         blockController.addBlock(block1);
@@ -125,13 +129,15 @@ public class PairActivity extends Activity {
                 list.get(TWO).getPublicKey() + ", " +
                 list.get(THREE).getPublicKey(), Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(this, FriendsPageActivity.class);
 
-        intent.putExtra("IBAN", block1.getIban());
-        intent.putExtra("PUBKEY", block1.getPublicKey());
-        intent.putExtra("OWNER", block1.getOwner());
 
-        startActivity(intent);
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("userNameTestSubject", ownerName);
+        editor.putString("ibanTestSubject", ibanTestSub1);
+        editor.apply();
+
+        startActivity(new Intent(this, FriendsPageActivity.class));
 
     }
 
@@ -143,6 +149,7 @@ public class PairActivity extends Activity {
     public final void onTestSubject2(View view) {
 
         Block block5;
+        final String ibanTestSub2= "IBANTestSubject2";
 
         ownerName = "TestSubject2";
         blockController = new BlockController(this);
@@ -154,7 +161,7 @@ public class PairActivity extends Activity {
                 "N/A",
                 "N/A",
                 "a",
-                "IBANTestSubject1",
+                ibanTestSub2,
                 0
         );
         blockController.addBlock(block1);
@@ -216,13 +223,16 @@ public class PairActivity extends Activity {
                 list.get(THREE).getPublicKey() + ", " +
                 list.get(FOUR).getPublicKey(), Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(this, FriendsPageActivity.class);
 
-        intent.putExtra("IBAN", block1.getIban());
-        intent.putExtra("PUBKEY", block1.getPublicKey());
-        intent.putExtra("OWNER", block1.getOwner());
 
-        startActivity(intent);
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("userNameTestSubject", ownerName);
+        editor.putString("ibanTestSubject", ibanTestSub2);
+        editor.apply();
+
+
+        startActivity(new Intent(this, FriendsPageActivity.class));
     }
 
     /**
@@ -231,6 +241,8 @@ public class PairActivity extends Activity {
      * @param view  The view of the program.
      */
     public final void onTestSubject3(View view) {
+
+        final String ibanTestSub3= "IBANTestSubject3";
         ownerName = "TestSubject3";
         blockController = new BlockController(this);
         block1 = BlockFactory.getBlock(
@@ -241,7 +253,7 @@ public class PairActivity extends Activity {
                 "N/A",
                 "N/A",
                 "sub3KeyA",
-                "IBANTestSubject1",
+                ibanTestSub3,
                 0
         );
         blockController.addBlock(block1);
@@ -263,13 +275,13 @@ public class PairActivity extends Activity {
         Toast.makeText(this, list.get(0).getPublicKey() + ", " +
                 list.get(1).getPublicKey(), Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(this, FriendsPageActivity.class);
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("userNameTestSubject", ownerName);
+        editor.putString("ibanTestSubject", ibanTestSub3);
+        editor.apply();
 
-        intent.putExtra("IBAN", block1.getIban());
-        intent.putExtra("PUBKEY", block1.getPublicKey());
-        intent.putExtra("OWNER", block1.getOwner());
-
-        startActivity(intent);
+        startActivity(new Intent(this, FriendsPageActivity.class));
 
     }
 

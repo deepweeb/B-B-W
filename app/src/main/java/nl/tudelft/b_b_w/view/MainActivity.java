@@ -115,7 +115,7 @@ public class MainActivity extends Activity {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
    }
-    
+
 
     /**
      * When you want to visit the PairActivity page.

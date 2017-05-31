@@ -22,6 +22,7 @@ import nl.tudelft.b_b_w.BuildConfig;
 import nl.tudelft.b_b_w.model.Block;
 import nl.tudelft.b_b_w.model.BlockFactory;
 import nl.tudelft.b_b_w.model.TrustValues;
+import nl.tudelft.b_b_w.model.User;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -75,8 +76,8 @@ public class BlockControllerUnitTest {
                 trustValue
         );
         try {
-            genesisA = bc.createGenesis("A");
-            genesisB = bc.createGenesis("B");
+            genesisA = bc.createGenesis(new User("A", "ibanA"));
+            genesisB = bc.createGenesis(new User("B", "ibanB"));
             blockWithOwnerAAddsKeyKa = bc.createKeyBlock("A", "A", "ka", "ibanA");
             blockWithOwnerAAddsKeyKb = bc.createKeyBlock("A", "B", "kb", "ibanB");
             blockWithOwnerBAddsKeyKa = bc.createKeyBlock("B", "A", "ka", "ibanA");
@@ -326,8 +327,8 @@ public class BlockControllerUnitTest {
     /** Hash of genesis block */
     @Test
     public final void verifyGenesisHashA() {
-        ConversionController conversionController = new ConversionController("A", "N/A", "N/A",
-                "N/A", "N/A");
+        ConversionController conversionController = new ConversionController("A", "PUBLIC_KEY", "N/A",
+                "N/A", "ibanA");
         try {
             String hash = conversionController.hashKey();
             assertEquals(genesisA.getOwnHash(), hash);

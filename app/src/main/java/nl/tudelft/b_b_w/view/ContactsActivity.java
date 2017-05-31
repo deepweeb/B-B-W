@@ -33,9 +33,9 @@ public class ContactsActivity extends Activity {
         setTitle("Contacts");
         SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
         final String ownerName = settings.getString("userName", "");
-        BlockController blcController = new BlockController(this);
-        setUpGraph(blcController.getBlocks(ownerName));
-        ContactAdapter adapter = new ContactAdapter(blcController, ownerName, this);
+        BlockController blockController = new BlockController(this);
+        setUpGraph(blockController.getBlocks(ownerName));
+        ContactAdapter adapter = new ContactAdapter(blockController, ownerName, this);
         ListView lView = (ListView)findViewById(R.id.contacts);
         lView.setAdapter(adapter);
     }

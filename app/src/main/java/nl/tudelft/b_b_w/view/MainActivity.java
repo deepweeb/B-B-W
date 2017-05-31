@@ -14,9 +14,6 @@ import android.widget.Toast;
 
 import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.controller.BlockController;
-import nl.tudelft.b_b_w.controller.ConversionController;
-import nl.tudelft.b_b_w.model.Block;
-import nl.tudelft.b_b_w.model.BlockFactory;
 import nl.tudelft.b_b_w.model.User;
 
 /**
@@ -94,25 +91,7 @@ public class MainActivity extends Activity {
      */
     private void addGenesis() {
         try {
-                ConversionController cvc = new ConversionController(
-                        user.getName(),
-                        user.generatePublicKey(),
-                        "N/A",
-                        "N/A",
-                        user.getIBAN());
-
-                Block block = BlockFactory.getBlock(
-                        "BLOCK",
-                        user.getName(),
-                        blockController.getLatestSeqNumber(user.getName()) + 1,
-                        cvc.hashKey(),
-                        "N/A",
-                        "N/A",
-                        user.generatePublicKey(),
-                        user.getIBAN(),
-                        0
-                );
-                blockController.addBlock(block);
+            blockController.createGenesis(user);
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
         }

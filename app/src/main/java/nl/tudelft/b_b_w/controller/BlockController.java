@@ -11,6 +11,7 @@ import nl.tudelft.b_b_w.model.BlockFactory;
 import nl.tudelft.b_b_w.model.GetDatabaseHandler;
 import nl.tudelft.b_b_w.model.MutateDatabaseHandler;
 import nl.tudelft.b_b_w.model.TrustValues;
+import nl.tudelft.b_b_w.model.User;
 
 /**
  * Performs the actions on the blockchain
@@ -77,7 +78,7 @@ public class BlockController implements BlockControllerInterface {
             throw new RuntimeException("Error - Block is already revoked");
         } else {
             if (block.isRevoked()) {
-                revokedTrustValue(latest);
+                latest = revokedTrustValue(latest);
                 mutateDatabaseHandler.updateBlock(latest);
                 mutateDatabaseHandler.addBlock(block);
             }
@@ -201,7 +202,10 @@ public class BlockController implements BlockControllerInterface {
      */
     @Override
     public final Block successfulTransaction(Block block) {
-        block.setTrustValue(block.getTrustValue() + TrustValues.SUCCESFUL_TRANSACTION.getValue());
+        final int maxCeil = 100;
+        final int newTrust = block.getTrustValue() + TrustValues.SUCCESFUL_TRANSACTION.getValue();
+        if (newTrust > maxCeil) block.setTrustValue(maxCeil);
+        block.setTrustValue(newTrust);
         return block;
     }
 
@@ -210,7 +214,10 @@ public class BlockController implements BlockControllerInterface {
      */
     @Override
     public final Block failedTransaction(Block block) {
-        block.setTrustValue(block.getTrustValue() + TrustValues.FAILED_TRANSACTION.getValue());
+        final int minCeil = 0;
+        final int newTrust = block.getTrustValue() + TrustValues.FAILED_TRANSACTION.getValue();
+        if (newTrust < minCeil) block.setTrustValue(minCeil);
+        block.setTrustValue(newTrust);
         return block;
     }
 
@@ -233,22 +240,22 @@ public class BlockController implements BlockControllerInterface {
 
     /**
      * Create genesis block for an owner
-     * @param owner the new owner of the block
+     * @param user User of the block
      * @return the freshly created block
      * @throws Exception when the key hashing method does not work
      */
-    public Block createGenesis(String owner) throws Exception {
+    public Block createGenesis(User user) throws Exception {
         String chainHash = NA;
         String senderHash = NA;
-        String publicKey = NA;
-        String iban = NA;
-        ConversionController conversionController = new ConversionController(owner, publicKey,
+        String publicKey = user.generatePublicKey();
+        String iban = user.getIBAN();
+        ConversionController conversionController = new ConversionController(user.getName(), publicKey,
                 chainHash, senderHash, iban);
         String hash = conversionController.hashKey();
         Block block = BlockFactory.getBlock(
                 BLOCK,
-                owner,
-                getLatestSeqNumber(owner) + 1,
+                user.getName(),
+                getLatestSeqNumber(user.getName()) + 1,
                 hash,
                 chainHash,
                 senderHash,

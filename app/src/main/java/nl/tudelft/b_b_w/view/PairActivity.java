@@ -82,7 +82,12 @@ public class PairActivity extends Activity {
                 ibanTestSub1,
                 0
         );
-        blockController.addBlock(block1);
+
+        try {blockController.addBlock(block1);}
+        catch(Exception e) {Toast.makeText(this, "Sorry, this contact is already added!",
+                Toast.LENGTH_SHORT).show();
+            return;}
+
         block2 = BlockFactory.getBlock(
                 "BLOCK",
                 ownerName,
@@ -164,7 +169,12 @@ public class PairActivity extends Activity {
                 ibanTestSub2,
                 0
         );
-        blockController.addBlock(block1);
+
+        try {blockController.addBlock(block1);}
+        catch(Exception e) {Toast.makeText(this, "Sorry, this contact is already added!",
+                Toast.LENGTH_SHORT).show();
+            return;}
+
         block2 = BlockFactory.getBlock(
                 "BLOCK",
                 ownerName,
@@ -256,7 +266,12 @@ public class PairActivity extends Activity {
                 ibanTestSub3,
                 0
         );
-        blockController.addBlock(block1);
+
+        try {blockController.addBlock(block1);}
+        catch(Exception e) {Toast.makeText(this, "Sorry, this contact is already added!",
+                Toast.LENGTH_SHORT).show();
+            return;}
+
         block2 = BlockFactory.getBlock(
                 "BLOCK",
                 ownerName,
@@ -268,6 +283,7 @@ public class PairActivity extends Activity {
                 "IBANContact1",
                 0
         );
+
         blockController.addBlock(block2);
 
         List<Block> list = blockController.getBlocks(ownerName);
@@ -284,5 +300,6 @@ public class PairActivity extends Activity {
         startActivity(new Intent(this, FriendsPageActivity.class));
 
     }
+
 
 }

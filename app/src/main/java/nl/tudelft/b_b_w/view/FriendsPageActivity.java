@@ -129,7 +129,11 @@ public class FriendsPageActivity extends Activity {
                 ibanNumber,
                 0
         );
-        bc.addBlock(block);
+
+        try {bc.addBlock(block);}
+        catch(Exception e) {Toast.makeText(this, "Sorry, this contact is already added!",
+                Toast.LENGTH_SHORT).show();
+            return;}
 
         Toast.makeText(this, "Added!", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(this, MainActivity.class));

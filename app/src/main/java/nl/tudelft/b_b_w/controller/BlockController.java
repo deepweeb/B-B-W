@@ -2,7 +2,6 @@ package nl.tudelft.b_b_w.controller;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,14 +70,12 @@ public class BlockController implements BlockControllerInterface {
     @Override
     public final void addBlock(Block block) {
 
-        if (blockExists(block.getOwner(), block.getPublicKey(), block.isRevoked())) {
-            Toast.makeText(context, "Sorry, this contact is already added!", Toast.LENGTH_SHORT).show();
-            //throw new RuntimeException("block already exists");
-            return;
-        }
-
+        if (blockExists(block.getOwner(), block.getPublicKey(), block.isRevoked()))
+            throw new RuntimeException("block already exists");
         mutateDatabaseHandler.addBlock(block);
     }
+
+
 
     /**
      * @inheritDoc

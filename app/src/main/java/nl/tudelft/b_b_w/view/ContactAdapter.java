@@ -144,4 +144,5 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
         revokeButton.setOnClickListener(createDialog(position));
         return view;
     }
+
 }

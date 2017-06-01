@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 public class UserUnitTest {
 
     private final String name = "NAME";
-    private final String IBAN = "IBAN";
+    private final String iban = "IBAN";
     private User _user;
 
     /**
@@ -27,7 +27,7 @@ public class UserUnitTest {
         this._user = mock(User.class);
         when(_user.generatePublicKey()).thenReturn("PUBLIC_KEY");
         when(_user.getName()).thenReturn(name);
-        when(_user.getIBAN()).thenReturn(IBAN);
+        when(_user.getIBAN()).thenReturn(iban);
     }
 
     /**
@@ -43,7 +43,7 @@ public class UserUnitTest {
      */
     @Test
     public void getIBAN(){
-        assertEquals(IBAN, _user.getIBAN());
+        assertEquals(iban, _user.getIBAN());
     }
 
     /**

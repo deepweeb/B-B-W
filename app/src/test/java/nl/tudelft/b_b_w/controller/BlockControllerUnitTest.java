@@ -39,7 +39,7 @@ public class BlockControllerUnitTest {
      * Attributes
      */
     private final String NA = "N/A";
-    private BlockController bc;
+    private BlockController blockController;
     private final String owner = "owner";
     private final int sequenceNumber = 1;
     private final String ownHash = "ownHash";
@@ -65,11 +65,11 @@ public class BlockControllerUnitTest {
      */
     @Before
     public final void setUp() {
-        this.bc = new BlockController(RuntimeEnvironment.application);
+        this.blockController = new BlockController(RuntimeEnvironment.application);
         this._block = BlockFactory.getBlock(
                 TYPE_BLOCK,
                 owner,
-                bc.getLatestSeqNumber(owner) + 1,
+                blockController.getLatestSeqNumber(owner) + 1,
                 ownHash,
                 previousHashChain,
                 previousHashSender,
@@ -82,12 +82,12 @@ public class BlockControllerUnitTest {
             when(user.getName()).thenReturn("A");
             when(user.getIBAN()).thenReturn("ibanA");
             when(user.generatePublicKey()).thenReturn(publicKey);
-            genesisA = bc.createGenesis(user);
-            genesisB = bc.createGenesis(new User("B", "ibanB"));
-            blockWithOwnerAAddsKeyKa = bc.createKeyBlock("A", "A", "ka", "ibanA");
-            blockWithOwnerAAddsKeyKb = bc.createKeyBlock("A", "B", "kb", "ibanB");
-            blockWithOwnerBAddsKeyKa = bc.createKeyBlock("B", "A", "ka", "ibanA");
-            blockWithOwnerBRevokesKeyKa = bc.createRevokeBlock("B", "A", "ka", "ibanA");
+            genesisA = blockController.createGenesis(user);
+            genesisB = blockController.createGenesis(new User("B", "ibanB"));
+            blockWithOwnerAAddsKeyKa = blockController.createKeyBlock("A", "A", "ka", "ibanA");
+            blockWithOwnerAAddsKeyKb = blockController.createKeyBlock("A", "B", "kb", "ibanB");
+            blockWithOwnerBAddsKeyKa = blockController.createKeyBlock("B", "A", "ka", "ibanA");
+            blockWithOwnerBRevokesKeyKa = blockController.createRevokeBlock("B", "A", "ka", "ibanA");
         } catch (Exception e) {
             // we will check this in later tests
         }
@@ -100,10 +100,10 @@ public class BlockControllerUnitTest {
      */
     @Test
     public final void testAddBlock() throws Exception {
-        bc.addBlock(_block);
+        blockController.addBlock(_block);
         List<Block> list = new ArrayList<>();
         list.add(_block);
-        assertEquals(bc.getBlocks(owner), list);
+        assertEquals(blockController.getBlocks(owner), list);
     }
 
 
@@ -113,11 +113,11 @@ public class BlockControllerUnitTest {
      */
     @Test
     public final void getContactNameTest2() {
-        bc.addBlock(_block);
+        blockController.addBlock(_block);
         final Block block2 = BlockFactory.getBlock(
                 TYPE_BLOCK,
                 owner,
-                bc.getLatestSeqNumber(owner) + 1,
+                blockController.getLatestSeqNumber(owner) + 1,
                 "ownHash2",
                 ownHash,
                 "Hash44324",
@@ -125,8 +125,8 @@ public class BlockControllerUnitTest {
                 iban,
                 trustValue
         );
-        bc.addBlock(block2);
-        assertEquals("Unknown", bc.getContactName(ownHash));
+        blockController.addBlock(block2);
+        assertEquals("Unknown", blockController.getContactName(ownHash));
     }
 
     /**
@@ -139,7 +139,7 @@ public class BlockControllerUnitTest {
         Block expected = BlockFactory.getBlock(
                 TYPE_BLOCK,
                 owner,
-                bc.getLatestSeqNumber(owner) + 1,
+                blockController.getLatestSeqNumber(owner) + 1,
                 ownHash,
                 previousHashChain,
                 previousHashSender,
@@ -147,8 +147,8 @@ public class BlockControllerUnitTest {
                 iban,
                 trustValue
         );
-        bc.addBlock(_block);
-        assertEquals(expected, bc.getLatestBlock(owner));
+        blockController.addBlock(_block);
+        assertEquals(expected, blockController.getLatestBlock(owner));
     }
 
     /**
@@ -162,7 +162,7 @@ public class BlockControllerUnitTest {
         final Block newBlock = BlockFactory.getBlock(
                 TYPE_BLOCK,
                 newOwner,
-                bc.getLatestSeqNumber(owner) + 1,
+                blockController.getLatestSeqNumber(owner) + 1,
                 ownHash,
                 previousHashChain,
                 previousHashSender,
@@ -170,11 +170,11 @@ public class BlockControllerUnitTest {
                 iban,
                 trustValue
         );
-        bc.addBlock(_block);
-        bc.addBlock(newBlock);
+        blockController.addBlock(_block);
+        blockController.addBlock(newBlock);
 
 
-        assertEquals(1, bc.getLatestSeqNumber(owner));
+        assertEquals(1, blockController.getLatestSeqNumber(owner));
     }
 
 
@@ -189,7 +189,7 @@ public class BlockControllerUnitTest {
         Block newBlock = BlockFactory.getBlock(
                 TYPE_BLOCK,
                 newOwner,
-                bc.getLatestSeqNumber(owner) + 1,
+                blockController.getLatestSeqNumber(owner) + 1,
                 ownHash,
                 previousHashChain,
                 previousHashSender,
@@ -197,14 +197,14 @@ public class BlockControllerUnitTest {
                 iban,
                 trustValue
         );
-        bc.addBlock(_block);
-        bc.addBlock(newBlock);
+        blockController.addBlock(_block);
+        blockController.addBlock(newBlock);
         List<Block> list = new ArrayList<>();
         list.add(_block);
         list.add(newBlock);
 
-        List<Block> newList = bc.getBlocks(owner);
-        newList.addAll(bc.getBlocks(newOwner));
+        List<Block> newList = blockController.getBlocks(owner);
+        newList.addAll(blockController.getBlocks(newOwner));
 
         assertEquals(list, newList);
     }
@@ -214,8 +214,8 @@ public class BlockControllerUnitTest {
      */
     @Test(expected = RuntimeException.class)
     public final void testAddDupBlocks() {
-        bc.addBlock(_block);
-        bc.addBlock(_block);
+        blockController.addBlock(_block);
+        blockController.addBlock(_block);
     }
 
 
@@ -224,10 +224,10 @@ public class BlockControllerUnitTest {
      */
     @Test
     public final void testEmptyList() {
-        bc.addBlock(_block);
-        bc.revokeBlock(_block);
+        blockController.addBlock(_block);
+        blockController.revokeBlock(_block);
         List<Block> list = new ArrayList<>();
-        assertEquals(list, bc.getBlocks(owner));
+        assertEquals(list, blockController.getBlocks(owner));
     }
 
     /**
@@ -235,11 +235,11 @@ public class BlockControllerUnitTest {
      */
     @Test
     public final void testRemoveWithNoMatch() throws Resources.NotFoundException {
-        bc.addBlock(_block);
+        blockController.addBlock(_block);
         final Block blc2 = BlockFactory.getBlock(
                 TYPE_BLOCK,
                 owner + "2",
-                bc.getLatestSeqNumber(owner) + 1,
+                blockController.getLatestSeqNumber(owner) + 1,
                 ownHash,
                 previousHashChain,
                 previousHashSender,
@@ -247,10 +247,10 @@ public class BlockControllerUnitTest {
                 iban,
                 trustValue
         );
-        bc.revokeBlock(blc2);
+        blockController.revokeBlock(blc2);
         List<Block> list = new ArrayList<>();
         list.add(_block);
-        assertEquals(list, bc.getBlocks(owner));
+        assertEquals(list, blockController.getBlocks(owner));
     }
 
     /**
@@ -259,7 +259,7 @@ public class BlockControllerUnitTest {
      */
     @Test
     public final void testVerifyIBAN() {
-        bc.verifyIBAN(_block);
+        blockController.verifyIBAN(_block);
         assertEquals(TrustValues.VERIFIED.getValue(), _block.getTrustValue());
     }
 
@@ -269,7 +269,7 @@ public class BlockControllerUnitTest {
      */
     @Test
     public final void testSuccessfulTransaction() {
-        bc.successfulTransaction(_block);
+        blockController.successfulTransaction(_block);
         assertEquals(TrustValues.INITIALIZED.getValue() + TrustValues.SUCCESFUL_TRANSACTION.getValue(),
                 _block.getTrustValue());
     }
@@ -280,7 +280,7 @@ public class BlockControllerUnitTest {
      */
     @Test
     public final void testFailedTransaction() {
-        bc.failedTransaction(_block);
+        blockController.failedTransaction(_block);
         assertEquals(TrustValues.INITIALIZED.getValue() + TrustValues.FAILED_TRANSACTION.getValue(),
                 _block.getTrustValue());
     }
@@ -291,7 +291,7 @@ public class BlockControllerUnitTest {
      */
     @Test
     public final void testRevokedTrustValue() {
-        bc.revokedTrustValue(_block);
+        blockController.revokedTrustValue(_block);
         assertEquals(TrustValues.REVOKED.getValue(), _block.getTrustValue());
     }
 
@@ -370,7 +370,7 @@ public class BlockControllerUnitTest {
         final Block newBlock = BlockFactory.getBlock(
                 TYPE_BLOCK,
                 owner,
-                bc.getLatestSeqNumber(owner) + 1,
+                blockController.getLatestSeqNumber(owner) + 1,
                 ownHash,
                 previousHashChain,
                 NA,
@@ -381,7 +381,7 @@ public class BlockControllerUnitTest {
         final Block newBlock2 = BlockFactory.getBlock(
                 TYPE_BLOCK,
                 owner,
-                bc.getLatestSeqNumber(owner) + 1,
+                blockController.getLatestSeqNumber(owner) + 1,
                 previousHashSender,
                 previousHashChain,
                 ownHash,
@@ -389,8 +389,8 @@ public class BlockControllerUnitTest {
                 iban,
                 trustValue
         );
-        bc.addBlock(newBlock);
-        assertEquals(newBlock, bc.backtrack(newBlock2));
+        blockController.addBlock(newBlock);
+        assertEquals(newBlock, blockController.backtrack(newBlock2));
     }
 
     /**
@@ -399,10 +399,10 @@ public class BlockControllerUnitTest {
      */
     @Test
     public void testVerifyTrustworthiness() {
-        final Block newBlock = BlockFactory.getBlock(TYPE_BLOCK, owner, bc.getLatestSeqNumber(owner)+1,
+        final Block newBlock = BlockFactory.getBlock(TYPE_BLOCK, owner, blockController.getLatestSeqNumber(owner)+1,
                 ownHash, previousHashChain, NA, publicKey, iban, trustValue);
-        bc.addBlock(newBlock);
-        assertTrue(bc.verifyTrustworthiness(newBlock));
+        blockController.addBlock(newBlock);
+        assertTrue(blockController.verifyTrustworthiness(newBlock));
     }
 
     /**
@@ -412,9 +412,9 @@ public class BlockControllerUnitTest {
      */
     @Test
     public void testVerifyTrustworthinessFalse() {
-        final Block newBlock = BlockFactory.getBlock(TYPE_BLOCK, owner, bc.getLatestSeqNumber(owner)+1,
+        final Block newBlock = BlockFactory.getBlock(TYPE_BLOCK, owner, blockController.getLatestSeqNumber(owner)+1,
                 ownHash, previousHashChain, NA, publicKey+"1", iban, trustValue);
-        assertFalse(bc.verifyTrustworthiness(newBlock));
+        assertFalse(blockController.verifyTrustworthiness(newBlock));
     }
 
     /**
@@ -422,6 +422,6 @@ public class BlockControllerUnitTest {
      */
     @After
     public final void tearDown() {
-        bc.clearAllBlocks();
+        blockController.clearAllBlocks();
     }
 }

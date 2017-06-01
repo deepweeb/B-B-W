@@ -1,10 +1,5 @@
 package nl.tudelft.b_b_w.controller;
 
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-
-import static org.junit.Assert.assertEquals;
-
 import android.content.res.Resources;
 
 import org.junit.After;
@@ -28,6 +23,9 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
@@ -80,7 +78,11 @@ public class BlockControllerUnitTest {
                 trustValue
         );
         try {
-            genesisA = bc.createGenesis(new User("A", "ibanA"));
+            User a = mock(User.class);
+            when(a.getName()).thenReturn("A");
+            when(a.getIBAN()).thenReturn("ibanA");
+            when(a.generatePublicKey()).thenReturn("PULBIC_KEY");
+            genesisA = bc.createGenesis(a);
             genesisB = bc.createGenesis(new User("B", "ibanB"));
             blockWithOwnerAAddsKeyKa = bc.createKeyBlock("A", "A", "ka", "ibanA");
             blockWithOwnerAAddsKeyKb = bc.createKeyBlock("A", "B", "kb", "ibanB");
@@ -313,12 +315,12 @@ public class BlockControllerUnitTest {
 
     /** Hash of genesis block */
     @Test
-    public final void verifyGenesisHashA() {
-        ConversionController conversionController = new ConversionController("A", "PUBLIC_KEY", "N/A",
+    public final void verifyGenesisHashA() throws Exception {
+        ConversionController conversionController = new ConversionController("A", "PULBIC_KEY", "N/A",
                 "N/A", "ibanA");
         try {
             String hash = conversionController.hashKey();
-            assertEquals(genesisA.getOwnHash(), hash);
+            assertEquals(hash, genesisA.getOwnHash());
         } catch (Exception e) {
             assertNotNull(e.getMessage(), null);
         }

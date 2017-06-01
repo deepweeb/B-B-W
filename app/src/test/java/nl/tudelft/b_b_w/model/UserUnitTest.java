@@ -1,9 +1,11 @@
 package nl.tudelft.b_b_w.model;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -22,7 +24,8 @@ public class UserUnitTest {
      */
     @Before
     public void setUp() {
-        this._user = new User(name, IBAN);
+        this._user = mock(User.class);
+        when(_user.generatePublicKey()).thenReturn("PUBLIC_KEY");
     }
 
     /**

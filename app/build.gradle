@@ -42,6 +42,7 @@ apply plugin: 'pmd'
 apply plugin: 'findbugs'
 apply plugin: 'checkstyle'
 apply plugin: "com.github.kt3k.coveralls"
+apply plugin: 'cobertura'
 
 cobertura.coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
 

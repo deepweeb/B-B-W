@@ -123,6 +123,7 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
     }
 
     /**
+     * The getview method is becoming too large, we should considering refactoring it in the future.
      * {@inheritDoc}
      */
     @Override

@@ -45,7 +45,7 @@ public class User {
      */
     public String generatePublicKey() {
         //TODO: Generate public key using ED25519 protocol
-        //generate random number until this protocal is implemented
+        //generate random number until this protocol is implemented
         final String PUBLIC_KEY = String.valueOf((int )(Math.random() * 50 + 1));
         return PUBLIC_KEY;
     }

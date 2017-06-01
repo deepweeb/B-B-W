@@ -25,37 +25,37 @@ import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
 public class FriendsPageActivity extends Activity {
 
     /**
-     * block controller
+     * Block controller
      */
     private BlockController bc;
 
     /**
      * Block argument to create a block
      */
-    private static final String BLOCK = "BLOCK";
+    private static final String TYPE_BLOCK = "BLOCK";
 
     /**
      * This is your own user
      */
-    User user;
+    private User user;
 
     /**
-     * this is the paired contact
+     * This is the paired contact
      */
-    User contact;
+     private User contact;
 
     /**
-     * the contact name
+     * The contact name
      */
     private String contactName;
 
     /**
-     * the IBAN nummer of the contact
+     * The iban nummer of the contact
      */
     private String ibanNumber;
 
     /**
-     * the public key of the contact
+     * The public key of the contact
      */
     private String publicKey;
 
@@ -65,7 +65,7 @@ public class FriendsPageActivity extends Activity {
     private String contactGenesisBlockHash;
 
     /**
-     * the hash of your latest block
+     * The hash of your latest block
      */
     private String userLatestBlockHash;
 
@@ -128,7 +128,7 @@ public class FriendsPageActivity extends Activity {
                 userLatestBlockHash, contactGenesisBlockHash, ibanNumber);
         String hash = conversionController.hashKey();
         Block block = BlockFactory.getBlock(
-                BLOCK,
+                TYPE_BLOCK,
                 user.getName(),
                 bc.getLatestSeqNumber(user.getName()) + 1,
                 hash,

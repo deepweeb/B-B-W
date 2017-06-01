@@ -62,7 +62,6 @@ public class BlockController implements BlockControllerInterface {
     public final boolean blockExists(String owner, String key, boolean revoked) {
         return getDatabaseHandler.blockExists(owner, key, revoked);
     }
-    
 
     /**
      * @inheritDoc
@@ -74,7 +73,6 @@ public class BlockController implements BlockControllerInterface {
             throw new RuntimeException("block already exists");
         mutateDatabaseHandler.addBlock(block);
     }
-
 
     /**
      * @inheritDoc

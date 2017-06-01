@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 /**
  * Class to create and handle the Database for mutation requests
  */
-
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class MutateDatabaseHandler extends AbstractDatabaseHandler {
 
     /**
@@ -32,7 +32,9 @@ public class MutateDatabaseHandler extends AbstractDatabaseHandler {
 
         // Inserting Row
         long res = db.insert(TABLE_NAME, null, values);
-        if (res == -1) throw new RuntimeException("Block cannot be added - " + block.toString());
+        if (res == -1) {
+            throw new RuntimeException("Block cannot be added - " + block.toString());
+        }
         db.close(); // Closing database connection
     }
 
@@ -56,7 +58,9 @@ public class MutateDatabaseHandler extends AbstractDatabaseHandler {
                         block.getPublicKey(),
                         String.valueOf(block.getSequenceNumber()),
                 });
-        if (result == -1) throw new RuntimeException("Block cannot be updated - " + block.toString());
+        if (result == -1) {
+            throw new RuntimeException("Block cannot be updated - " + block.toString());
+        }
         db.close(); // Closing database connection
     }
 

@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * AbstractDatabaseHandler class
  * Parent class for all database handlers
  */
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 abstract class AbstractDatabaseHandler extends SQLiteOpenHelper {
 
     // All Static variables

@@ -42,13 +42,14 @@ dependencies {
 
 apply plugin: 'pmd'
 apply plugin: 'findbugs'
-apply plugin: 'checkstyle'
+//apply plugin: 'checkstyle'
 apply plugin: "com.github.kt3k.coveralls"
 apply plugin: 'cobertura'
 
 cobertura.coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
 
 check.dependsOn 'checkstyle', 'findbugs', 'pmd'
+
 
 task checkstyle(type: Checkstyle) {
     configFile file("${project.rootDir}/config/checkstyle/checkstyle.xml")
@@ -71,10 +72,12 @@ task findbugs(type: FindBugs) {
     exclude '**/gen/**'
 
     reports {
-        xml {
-            destination "$project.buildDir/reports/findbugs/findbugs.xml"
-            xml.withMessages true
-        }
+//        xml {
+//            destination "$project.buildDir/reports/findbugs/findbugs.xml"
+//            xml.withMessages true
+//        }
+        xml.enabled false
+        html.enabled true
     }
 
     classpath = files()
@@ -83,7 +86,7 @@ task findbugs(type: FindBugs) {
 task pmd(type: Pmd) {
     ruleSetFiles = files("${project.rootDir}/config/pmd/pmd-ruleset.xml")
     ignoreFailures = true
-    ruleSets = ["basic", "braces", "strings"]
+    ruleSets = [ "java-basic", "java-strings", "java-braces" ]
 
     source 'src'
     include '**/*.java'
@@ -91,6 +94,6 @@ task pmd(type: Pmd) {
 
     reports {
         xml.enabled = true
-        html.enabled = false
+        html.enabled = true
     }
 }

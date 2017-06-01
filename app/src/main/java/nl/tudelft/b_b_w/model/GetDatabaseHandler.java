@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Class to create and handle the Database for get requests
  */
-
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
     /**
@@ -63,7 +63,9 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
         // When returning an exception the whole program crashes,
         // but we want to preserve the state.
-        if (cursor.getCount() < 1) return "Unknown";
+        if (cursor.getCount() < 1) {
+            return "Unknown";
+        }
 
         cursor.moveToFirst();
 
@@ -99,7 +101,9 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
         //When returning an exception the whole program crashes,
         //but we want to preserve the state.
-        if (cursor.getCount() < 1) return null;
+        if (cursor.getCount() < 1) {
+            return null;
+        }
 
         cursor.moveToFirst();
 
@@ -159,7 +163,9 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
                         owner, publicKey
                 }, null, null, null, null);
 
-        if (c.getCount() < 1) return -1;
+        if (c.getCount() < 1) {
+            return -1;
+        }
         c.moveToFirst();
 
         int result = c.getInt(0);
@@ -200,7 +206,9 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         int maxSeqNum = this.lastSeqNumberOfChain(owner);
         SQLiteDatabase db = this.getReadableDatabase();
 
-        if (maxSeqNum == 0){return null;}
+        if (maxSeqNum == 0) {
+            return null;
+        }
 
         Cursor cursor = db.query(TABLE_NAME,
                 COLUMNS,
@@ -211,7 +219,9 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
         //When returning an exception the whole program crashes,
         //but we want to preserve the state.
-        if (cursor.getCount() < 1) return null;
+        if (cursor.getCount() < 1) {
+            return null;
+        }
 
         cursor.moveToFirst();
 
@@ -244,7 +254,9 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
                         owner, String.valueOf(sequenceNumber)
                 }, null, null, null, null);
 
-        if (cursor.getCount() < 1) throw new NotFoundException();
+        if (cursor.getCount() < 1) {
+            throw new NotFoundException();
+        }
 
         cursor.moveToFirst();
 
@@ -309,7 +321,9 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
                         owner, String.valueOf(sequenceNumber)
                 }, null, null, null, null);
 
-        if (cursor.getCount() < 1) throw new NotFoundException();
+        if (cursor.getCount() < 1) {
+            throw new NotFoundException();
+        }
 
         cursor.moveToFirst();
 
@@ -400,7 +414,9 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
                 }, null, null, null, null);
 
         // Preserves the state
-        if (cursor.getCount() < 1) return null;
+        if (cursor.getCount() < 1) {
+            return null;
+        }
         cursor.moveToFirst();
 
         Block returnBlock = extractBlock(cursor);

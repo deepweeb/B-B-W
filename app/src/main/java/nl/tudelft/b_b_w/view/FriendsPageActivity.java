@@ -134,7 +134,7 @@ public class FriendsPageActivity extends Activity {
         String hash = conversionController.hashKey();
 
         try {
-            blockController.createKeyBlock(user, contact, publicKey, ibanNumber);
+            blockController.createKeyBlock(user, contact, publicKey);
         } catch (Exception e) {
             Toast.makeText(this, "Sorry, this contact is already added!",
                     Toast.LENGTH_SHORT).show();

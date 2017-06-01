@@ -22,7 +22,6 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -63,9 +62,9 @@ public class BlockControllerUnitTest {
         // construct an easy blockchain
         genesisA = blockController.createGenesis(a);
         genesisB = blockController.createGenesis(b);
-        blockWithOwnerAAddsKeyKa = blockController.createKeyBlock(a, a, "ka", "ibanA");
-        blockWithOwnerAAddsKeyKb = blockController.createKeyBlock(a, b, "kb", "ibanB");
-        blockWithOwnerBAddsKeyKa = blockController.createKeyBlock(b, a, "ka", "ibanA");
+        blockWithOwnerAAddsKeyKa = blockController.createKeyBlock(a, a, "ka");
+        blockWithOwnerAAddsKeyKb = blockController.createKeyBlock(a, b, "kb");
+        blockWithOwnerBAddsKeyKa = blockController.createKeyBlock(b, a, "ka");
         blockWithOwnerBRevokesKeyKa = blockController.createRevokeBlock(b, a, "ka", "ibanA");
     }
 
@@ -77,7 +76,7 @@ public class BlockControllerUnitTest {
     @Test
     public final void testAddBlock() throws Exception {
         Block genesisC = blockController.createGenesis(c);
-        Block blockC = blockController.createKeyBlock(c, c, "kc", "ibanC");
+        Block blockC = blockController.createKeyBlock(c, c, "kc");
         List<Block> list = new ArrayList<>();
         list.add(genesisC);
         list.add(blockC);
@@ -98,7 +97,7 @@ public class BlockControllerUnitTest {
     @Test
     public final void testGetLatestBlock() throws Exception {
         blockController.createGenesis(c);
-        Block blockC = blockController.createKeyBlock(c, c, "kc", "ibanC");
+        Block blockC = blockController.createKeyBlock(c, c, "kc");
         assertEquals(blockC, blockController.getLatestBlock(c.getName()));
     }
 
@@ -117,7 +116,7 @@ public class BlockControllerUnitTest {
      */
     @Test(expected = RuntimeException.class)
     public final void testAddDupBlocks() throws HashException {
-        Block blockC = blockController.createKeyBlock(c, c, "pkc", "ibanC");
+        Block blockC = blockController.createKeyBlock(c, c, "pkc");
         blockController.addBlock(blockC);
         blockController.addBlock(blockC);
     }
@@ -127,7 +126,7 @@ public class BlockControllerUnitTest {
      */
     @Test(expected = RuntimeException.class)
     public final void alreadyRevoked() throws HashException {
-        blockController.createKeyBlock(b, a, "pka", "ibanB");
+        blockController.createKeyBlock(b, a, "pka");
     }
 
     /**
@@ -136,7 +135,7 @@ public class BlockControllerUnitTest {
     @Test
     public final void testEmptyList() throws HashException {
         Block genesisC = blockController.createGenesis(c);
-        blockController.createKeyBlock(c, c, "pkc", "ibanC");
+        blockController.createKeyBlock(c, c, "pkc");
         blockController.createRevokeBlock(c, c, "pkc", "ibanC");
         List<Block> list = new ArrayList<>();
         list.add(genesisC);
@@ -236,7 +235,7 @@ public class BlockControllerUnitTest {
     @Test
     public void testBacktrack() throws HashException {
         blockController.createGenesis(c);
-        Block fresh = blockController.createKeyBlock(c, c, "pkc", "ibanc");
+        Block fresh = blockController.createKeyBlock(c, c, "pkc");
         assertEquals(fresh, blockController.backtrack(fresh));
     }
 
@@ -247,7 +246,7 @@ public class BlockControllerUnitTest {
     @Test
     public void testVerifyTrustworthiness() throws HashException {
         blockController.createGenesis(c);
-        Block b = blockController.createKeyBlock(c, c, "pk", "iban");
+        Block b = blockController.createKeyBlock(c, c, "pk");
         assertTrue(blockController.verifyTrustworthiness(b));
     }
 
@@ -259,8 +258,8 @@ public class BlockControllerUnitTest {
     @Test
     public void testVerifyTrustworthinessFalse() throws HashException {
         blockController.createGenesis(c);
-        Block b1 = blockController.createKeyBlock(c, c, "pk1", "iban");
-        Block b2 = blockController.createKeyBlock(c, c, "pk2", "iban");
+        Block b1 = blockController.createKeyBlock(c, c, "pk1");
+        Block b2 = blockController.createKeyBlock(c, c, "pk2");
         assertFalse(blockController.verifyTrustworthiness(b2));
     }
 

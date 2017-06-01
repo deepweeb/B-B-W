@@ -34,6 +34,7 @@ public class BlockFactory {
             HashException {
         BlockData data = new BlockData();
         data.setOwner(new User(newOwner, iban));
+        data.setIban(new User(newOwner, iban));
         data.setPreviousHashChain(previousHashChain);
         data.setPreviousHashSender(previousHashSender);
         data.setPublicKey(publicKey);

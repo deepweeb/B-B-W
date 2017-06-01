@@ -64,7 +64,10 @@ public class BlockData {
 
     public void setOwner(User owner) {
         this.ownerName = owner.getName();
-        this.iban = owner.getIBAN();
+    }
+
+    public void setIban(User contact) {
+        this.iban = contact.getIBAN();
     }
 
     public String getPreviousHashChain() {

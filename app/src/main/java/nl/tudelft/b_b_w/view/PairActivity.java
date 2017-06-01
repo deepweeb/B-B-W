@@ -13,6 +13,7 @@ import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.controller.BlockController;
 import nl.tudelft.b_b_w.model.Block;
 import nl.tudelft.b_b_w.model.BlockFactory;
+import nl.tudelft.b_b_w.model.TrustValues;
 
 import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
 
@@ -80,7 +81,7 @@ public class PairActivity extends Activity {
                 "N/A",
                 "TestSubject_PUBKEY",
                 ibanTestSub1,
-                0
+                TrustValues.INITIALIZED.getValue()
         );
 
         try {blockController.addBlock(block1);}
@@ -97,7 +98,7 @@ public class PairActivity extends Activity {
                 "HASHfromContact1",
                 "Contact1_PUBKEY",
                 "IBANContact1",
-                0
+                TrustValues.INITIALIZED.getValue()
         );
         blockController.addBlock(block2);
         block3 = BlockFactory.getBlock(
@@ -109,7 +110,7 @@ public class PairActivity extends Activity {
                 "HASHfromContact2",
                 "Contact2_PUBKEY",
                 "IBANContact2",
-                0
+                TrustValues.INITIALIZED.getValue()
         );
         blockController.addBlock(block3);
         block4 = BlockFactory.getBlock(
@@ -121,7 +122,7 @@ public class PairActivity extends Activity {
                 "HASHfromContact3",
                 "Contact3_PUBKEY",
                 "IBANContact3",
-                0
+                TrustValues.INITIALIZED.getValue()
         );
         blockController.addBlock(block4);
 
@@ -167,7 +168,7 @@ public class PairActivity extends Activity {
                 "N/A",
                 "a",
                 ibanTestSub2,
-                0
+                TrustValues.INITIALIZED.getValue()
         );
 
         try {blockController.addBlock(block1);}
@@ -184,7 +185,7 @@ public class PairActivity extends Activity {
                 "HASHfromContact1",
                 "b",
                 "IBANContact2",
-                0
+                TrustValues.INITIALIZED.getValue()
         );
         blockController.addBlock(block2);
         block3 = BlockFactory.getBlock(
@@ -196,7 +197,7 @@ public class PairActivity extends Activity {
                 "HASHfromContact2",
                 "c",
                 "IBANContact3",
-                0
+                TrustValues.INITIALIZED.getValue()
         );
         blockController.addBlock(block3);
         block4 = BlockFactory.getBlock(
@@ -208,7 +209,7 @@ public class PairActivity extends Activity {
                 "HASHfromContact3",
                 "d",
                 "IBANContact4",
-                0
+                TrustValues.INITIALIZED.getValue()
         );
         blockController.addBlock(block4);
 
@@ -221,7 +222,7 @@ public class PairActivity extends Activity {
                 "HASHfromContact4",
                 "e",
                 "IBANContact5",
-                0
+                TrustValues.INITIALIZED.getValue()
         );
         blockController.addBlock(block5);
 
@@ -264,7 +265,7 @@ public class PairActivity extends Activity {
                 "N/A",
                 "sub3KeyA",
                 ibanTestSub3,
-                0
+                TrustValues.INITIALIZED.getValue()
         );
 
         try {blockController.addBlock(block1);}
@@ -281,7 +282,7 @@ public class PairActivity extends Activity {
                 "HASHfromContact1",
                 "sub3KeyB",
                 "IBANContact1",
-                0
+                TrustValues.INITIALIZED.getValue()
         );
 
         blockController.addBlock(block2);

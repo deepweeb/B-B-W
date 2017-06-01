@@ -13,6 +13,7 @@ import nl.tudelft.b_b_w.controller.BlockController;
 import nl.tudelft.b_b_w.controller.ConversionController;
 import nl.tudelft.b_b_w.model.Block;
 import nl.tudelft.b_b_w.model.BlockFactory;
+import nl.tudelft.b_b_w.model.TrustValues;
 import nl.tudelft.b_b_w.model.User;
 
 import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
@@ -136,7 +137,7 @@ public class FriendsPageActivity extends Activity {
                 contactGenesisBlockHash,
                 publicKey,
                 ibanNumber,
-                0 // trust value still not implemented
+                TrustValues.INITIALIZED.getValue() // trust value still not implemented
         );
 
         try {bc.addBlock(block);}

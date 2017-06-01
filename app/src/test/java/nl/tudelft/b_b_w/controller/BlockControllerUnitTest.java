@@ -78,11 +78,11 @@ public class BlockControllerUnitTest {
                 trustValue
         );
         try {
-            User a = mock(User.class);
-            when(a.getName()).thenReturn("A");
-            when(a.getIBAN()).thenReturn("ibanA");
-            when(a.generatePublicKey()).thenReturn(publicKey);
-            genesisA = bc.createGenesis(a);
+            User user = mock(User.class);
+            when(user.getName()).thenReturn("A");
+            when(user.getIBAN()).thenReturn("ibanA");
+            when(user.generatePublicKey()).thenReturn(publicKey);
+            genesisA = bc.createGenesis(user);
             genesisB = bc.createGenesis(new User("B", "ibanB"));
             blockWithOwnerAAddsKeyKa = bc.createKeyBlock("A", "A", "ka", "ibanA");
             blockWithOwnerAAddsKeyKb = bc.createKeyBlock("A", "B", "kb", "ibanB");

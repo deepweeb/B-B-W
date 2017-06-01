@@ -72,18 +72,13 @@
                 android:text="Name:"
                 android:textSize="15sp" />
 
-            <EditText
-                android:id="@+id/NameTransferee"
+            <Spinner
+                android:id="@+id/spinner1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:selectAllOnFocus="false"
-                android:singleLine="false"
-                android:text="Name"
-                android:textColor="@android:color/holo_blue_dark" />
-
+                android:background="@android:drawable/btn_dropdown"
+                android:hint="Name"
+                android:spinnerMode="dialog" />
         </LinearLayout>
 
         <LinearLayout
@@ -99,13 +94,11 @@
                 android:text="IBAN:"
                 android:textSize="15sp" />
 
-            <EditText
+            <TextView
                 android:id="@+id/IbanTransferee"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.09"
-                android:ems="10"
-                android:inputType="textPersonName"
                 android:text="Iban"
                 android:textColor="@android:color/holo_blue_dark" />
         </LinearLayout>

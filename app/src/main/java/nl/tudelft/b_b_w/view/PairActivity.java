@@ -34,7 +34,7 @@ public class PairActivity extends Activity {
     private BlockController blockController;
 
     /**
-     * It's own block.
+     * Its own block.
      */
     private Block block1;
 
@@ -66,21 +66,20 @@ public class PairActivity extends Activity {
 
     /**
      * This method create the first test subject.We do this in order to simulate a transaction.
+     *
      * @param view The view of the program.
      */
     public final void onTestSubject1(View view) throws Exception {
 
         ownerName = "TestSubject1";
-        final String ibanTestSub1= "IBAN1";
+        final String ibanTestSub1 = "IBAN1";
 
         try {
             blockController.createGenesis(new User(ownerName, ibanTestSub1));
-        }
-        catch(Exception e)
-        {
-        Toast.makeText(this, "Sorry, this contact is already added!",
-                Toast.LENGTH_SHORT).show();
-        return;
+        } catch (Exception e) {
+            Toast.makeText(this, "Sorry, this contact is already added!",
+                    Toast.LENGTH_SHORT).show();
+            return;
         }
 
         blockController.createGenesis(new User("Subject1Contact1", "IBAN1Contact1"));
@@ -111,19 +110,18 @@ public class PairActivity extends Activity {
     /**
      * This method creates another test subject(second). It is hardcoded and will be change later on.
      * We do this to simulate a transaction.
+     *
      * @param view The view of the program.
      */
     public final void onTestSubject2(View view) throws Exception {
 
         Block block5;
         ownerName = "TestSubject2";
-        final String ibanTestSub2= "IBAN2";
+        final String ibanTestSub2 = "IBAN2";
 
         try {
             blockController.createGenesis(new User(ownerName, ibanTestSub2));
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             Toast.makeText(this, "Sorry, this contact is already added!",
                     Toast.LENGTH_SHORT).show();
             return;
@@ -161,19 +159,18 @@ public class PairActivity extends Activity {
     /**
      * This method creates another test subject (third). It is hardcoded and will be change later on.
      * We do this to simulate a transaction.aa
-     * @param view  The view of the program.
+     *
+     * @param view The view of the program.
      */
     public final void onTestSubject3(View view) {
 
 
         ownerName = "TestSubject3";
-        final String ibanTestSub3= "IBAN3";
+        final String ibanTestSub3 = "IBAN3";
 
         try {
             block1 = blockController.createGenesis(new User(ownerName, ibanTestSub3));
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             Toast.makeText(this, "Sorry, this contact is already added!",
                     Toast.LENGTH_SHORT).show();
             return;

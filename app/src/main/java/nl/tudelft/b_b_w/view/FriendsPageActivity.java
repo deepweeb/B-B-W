@@ -104,8 +104,8 @@ public class FriendsPageActivity extends Activity {
         //Displaying the information of the contact whose you are paired with
         textViewIban = (TextView) findViewById(R.id.editIban);
         textViewContact = (TextView) findViewById(R.id.senderName);
-        textViewIban.setText(contactName);
-        textViewContact.setText(ibanNumber);
+        textViewIban.setText(ibanNumber);
+        textViewContact.setText(contactName);
 
     }
 

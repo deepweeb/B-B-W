@@ -4,26 +4,28 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.controller.BlockController;
-import nl.tudelft.b_b_w.controller.ConversionController;
-import nl.tudelft.b_b_w.model.block.Block;
-import nl.tudelft.b_b_w.model.block.BlockFactory;
+import nl.tudelft.b_b_w.model.User;
 
 /**
  * This is the page you will see when you enter the app.
  */
 public class MainActivity extends Activity {
     private BlockController blockController;
+    public static final String PREFS_NAME = "MyPrefsFile";
 
-    /** The name of this app user */
-    private String ownerName;
+
+    /** The user of this app, containing it's information */
+    private User user;
 
     /**
      * This method sets up the page.
@@ -34,9 +36,12 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         blockController = new BlockController(this);
-
-        if (blockController.isDatabaseEmpty()) {
-            askUserName();
+        // add genesis if we don't have any blocks
+        if (user == null && blockController.isDatabaseEmpty()) {
+            user = getUser();
+        } else {
+            SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+            user = new User(settings.getString("userName", ""), settings.getString("iban", ""));
         }
     }
 
@@ -45,27 +50,36 @@ public class MainActivity extends Activity {
      * This dialog is modal so the rest of the application will pause.
      * The username will be stored in the field ownerName..
      */
-    private void askUserName() {
+    public User getUser() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("What is your name?");
+        builder.setTitle("Welcome!");
+        builder.setMessage("Fill in your information");
 
-        // Set up the input
-        final EditText input = new EditText(this);
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
-
-        // Set up the buttons
+        final EditText nameBox = new EditText(this);
+        final EditText ibanBox = new EditText(this);
+        nameBox.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+        nameBox.setHint("Name");
+        ibanBox.setInputType(InputType.TYPE_CLASS_TEXT);
+        ibanBox.setHint("IBAN");
+        LinearLayout ll = new LinearLayout(this);
+        ll.setOrientation(LinearLayout.VERTICAL);
+        ll.addView(nameBox);
+        ll.addView(ibanBox);
+        builder.setView(ll);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ownerName = input.getText().toString();
+                user = new User(nameBox.getText().toString(), ibanBox.getText().toString());
                 addGenesis();
+                SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString("userName", user.getName());
+                editor.putString("iban", user.getIBAN());
+                editor.apply();
             }
         });
-
         builder.show();
-
+        return user;
     }
 
     /**
@@ -74,20 +88,8 @@ public class MainActivity extends Activity {
      * and as sender hash "N/A" as is usual with blocks without sender.
      */
     private void addGenesis() {
-
-        ConversionController cvc = new ConversionController(ownerName, "pubkey", "N/A", "N/A", "Iban");
         try {
-            Block block = BlockFactory.getBlock(
-                    "BLOCK",
-                    ownerName,
-                    cvc.hashKey(),
-                    "N/A",
-                    "N/A",
-                    "pubkey",
-                    "Iban",
-                    0
-            );
-            blockController.addBlock(block);
+            blockController.createGenesis(user);
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -116,6 +118,15 @@ public class MainActivity extends Activity {
      */
     public final void onFriendPage(View view) {
         Intent intent = new Intent(this, FriendsPageActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * When you want to visit the ContactsPageActivity.
+     * @param view The view
+     */
+    public final void onContactsPage(View view) {
+        Intent intent = new Intent(this, ContactsActivity.class);
         startActivity(intent);
     }
 }

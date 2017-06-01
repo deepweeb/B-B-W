@@ -1,6 +1,7 @@
 package nl.tudelft.b_b_w.model.block;
 
 import nl.tudelft.b_b_w.model.HashException;
+import nl.tudelft.b_b_w.model.User;
 
 /**
  * BlockFactory class
@@ -32,7 +33,7 @@ public class BlockFactory {
                                        String publicKey, String iban, int trustValue) throws
             HashException {
         BlockData data = new BlockData();
-        data.setOwner(newOwner);
+        data.setOwner(new User(newOwner, iban));
         data.setPreviousHashChain(previousHashChain);
         data.setPreviousHashSender(previousHashSender);
         data.setPublicKey(publicKey);

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.tudelft.b_b_w.model.block.Block;
+import nl.tudelft.b_b_w.model.block.BlockData;
 import nl.tudelft.b_b_w.model.block.BlockFactory;
 
 /**
@@ -55,7 +56,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      * @param hash hash of the block which owner name we want to find from
      * @return name of owner
      */
-    public final String getContactName(String hash) {
+    public final String getContactName(String hash) throws HashException, HashMismatchException {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_NAME,
                 _columns,
@@ -66,7 +67,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
         // When returning an exception the whole program crashes,
         // but we want to preserve the state.
-        if (cursor.getCount() < 1) return null;
+        if (cursor.getCount() < 1) return "Unknown";
 
         cursor.moveToFirst();
 
@@ -76,9 +77,11 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         db.close();
         cursor.close();
 
-
-        return (block.getSequenceNumber()==1) ? block.getOwner() : block.getOwner()+"'s friend #" + (block.getSequenceNumber() - 1);
-
+        if (block.getPreviousHashSender().equals("N/A")) {
+            return block.getOwner();
+        } else {
+            return getContactName(block.getPreviousHashSender());
+        }
     }
 
     /**
@@ -89,7 +92,8 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      * @param sequenceNumber The number of the block in the sequence
      * @return The block you were searching for
      */
-    public final Block getBlock(String owner, String publicKey, int sequenceNumber) {
+    public final Block getBlock(String owner, String publicKey, int sequenceNumber) throws
+            HashException, HashMismatchException {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_NAME,
                 _columns,
@@ -126,7 +130,8 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      * @param sequenceNumber The number of the block in the sequence
      * @return true if the blockchain contains the specified block, otherwise false
      */
-    public final boolean containsBlock(String owner, String publicKey, int sequenceNumber) {
+    public final boolean containsBlock(String owner, String publicKey, int sequenceNumber)
+    throws HashException, HashMismatchException {
         return this.getBlock(owner, publicKey, sequenceNumber) != null;
     }
 
@@ -138,7 +143,8 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      * @param publicKey the publickey of the block you want
      * @return true if the blockchain contains the specified block, otherwise false
      */
-    public final boolean containsBlock(String owner, String publicKey) {
+    public final boolean containsBlock(String owner, String publicKey) throws HashException,
+            HashMismatchException {
         return this.getLatestBlock(owner) != null;
     }
 
@@ -176,17 +182,26 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      * @param cursor The cursor to extract from
      * @return A freshly constructed block
      */
-    private Block extractBlock(Cursor cursor) {
-        final String blockType = (cursor.getInt(INDEX_REVOKE) > 0) ? "REVOKE" : "BLOCK";
-        Block block = BlockFactory.getBlock(
-                blockType,cursor.getString(INDEX_OWNER),
-                cursor.getString(INDEX_OWN_HASH),
-                cursor.getString(INDEX_PREV_HASH_CHAIN),
-                cursor.getString(INDEX_PREV_HASH_SENDER),
-                cursor.getString(INDEX_PUBLIC_KEY),
-                cursor.getString(INDEX_IBAN_KEY),
-                cursor.getInt(INDEX_TRUST_VALUE));
-        block.setSeqNumberTo(cursor.getInt(INDEX_SEQ_NO));
+    private Block extractBlock(Cursor cursor) throws HashException, HashMismatchException {
+        String ownerName = cursor.getString(INDEX_OWNER);
+        String iban = cursor.getString(INDEX_IBAN_KEY);
+        User owner = new User(ownerName, iban);
+        BlockData blockData = new BlockData();
+        blockData.setOwner(owner);
+        blockData.setSequenceNumber(cursor.getInt(INDEX_SEQ_NO));
+        blockData.setPreviousHashChain(cursor.getString(INDEX_PREV_HASH_CHAIN));
+        blockData.setPreviousHashSender(cursor.getString(INDEX_PREV_HASH_SENDER));
+        blockData.setPublicKey(cursor.getString(INDEX_PUBLIC_KEY));
+        blockData.setIban(cursor.getString(INDEX_IBAN_KEY));
+        blockData.setTrustValue(cursor.getInt(INDEX_TRUST_VALUE));
+        Block block = BlockFactory.createBlock(blockData);
+
+        // verify
+        String expectedHash = cursor.getString(INDEX_OWN_HASH);
+        String calculatedHash = blockData.calculateHash();
+        if (!expectedHash.equals(calculatedHash))
+            throw new HashMismatchException(expectedHash, calculatedHash);
+
         return block;
     }
 
@@ -197,7 +212,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      * @param owner the owner of the block
      * @return the latest block
      */
-    public final Block getLatestBlock(String owner) {
+    public final Block getLatestBlock(String owner) throws HashException, HashMismatchException {
         int maxSeqNum = this.lastSeqNumberOfChain(owner);
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -235,7 +250,8 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      * @return the block after the specified one
      */
 
-    public final Block getBlockAfter(String owner, int sequenceNumber) {
+    public final Block getBlockAfter(String owner, int sequenceNumber) throws HashException,
+            HashMismatchException {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_NAME,
@@ -300,7 +316,8 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      * @param sequenceNumber the sequencenumber of the block after
      * @return the block before the specified one
      */
-    public final Block getBlockBefore(String owner, int sequenceNumber) {
+    public final Block getBlockBefore(String owner, int sequenceNumber) throws HashException,
+            HashMismatchException{
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_NAME,
@@ -334,7 +351,8 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      * @param owner the owner of the blocks that are going to be fetched
      * @return List of all the blocks
      */
-    public final List<Block> getAllBlocks(String owner) {
+    public final List<Block> getAllBlocks(String owner) throws HashException,
+            HashMismatchException {
         List<Block> blocks = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -382,5 +400,37 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
         c.close();
         return empty;
+    }
+
+    /**
+     * getByHashOwner function
+     * Gets a block by its hash and owner value
+     * @param hash given hash value
+     * @return block that matches it
+     */
+    public Block getByHash(String hash) throws HashException, HashMismatchException {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_NAME,
+                _columns,
+                KEY_OWN_HASH + " = ?",
+                new String[]{
+                        hash
+                }, null, null, null, null);
+
+        // Preserves the state
+        if (cursor.getCount() < 1) return null;
+        cursor.moveToFirst();
+
+        Block returnBlock = extractBlock(cursor);
+
+        // Close database connection
+        db.close();
+
+        // Close cursor
+        cursor.close();
+
+        // return block
+        return returnBlock;
     }
 }

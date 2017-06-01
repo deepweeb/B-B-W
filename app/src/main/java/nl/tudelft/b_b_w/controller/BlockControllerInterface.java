@@ -25,7 +25,7 @@ interface BlockControllerInterface {
      * @param block Block you want to add
      * @return returns the block you added
      */
-    List<Block> addBlockToChain(Block block);
+    List<Block> addBlockToChain(Block block) throws HashException;
 
     /**
      * Add a block to the database with checking if the (owner,pubkey) pair
@@ -42,28 +42,28 @@ interface BlockControllerInterface {
 
     /**
      * Get all blocks that are not revoked in sorted order
-     *
+     * @param owner owner of which to get the blocks from
      * @return List of all the blocks
      */
-    List<Block> getBlocks(String owner);
+    List<Block> getBlocks(String owner) throws HashException;
 
     /**
      * Function to backtrace the contact name given the hash that refer to their block
      * @param hash hash of the block which owner name we want to find from
      * @return name of owner
      */
-    String getContactName(String hash);
+    String getContactName(String hash) throws HashException;
 
     /**
      * Get the latest block of a specific owner
-     *
+     * @param owner owner of which to get the block from
      * @return a Block object, which is the newest block of the owner
      */
-    Block getLatestBlock(String owner);
+    Block getLatestBlock(String owner) throws HashException;
 
     /**
      * Get the latest sequence number of the chain of a specific owner
-     *
+     * @param owner owner of which to get the block from
      * @return an integer which is the latest sequence number of the chain
      */
     int getLatestSeqNumber(String owner);
@@ -124,4 +124,11 @@ interface BlockControllerInterface {
      * @return if the database is empty
      */
     boolean isDatabaseEmpty();
+
+    /**
+     * backtrack method
+     * @param block given input block to backtrace the previous hash of the sender from
+     * @return block which is the true ancestor
+     */
+    Block backtrack(Block block) throws HashException;
 }

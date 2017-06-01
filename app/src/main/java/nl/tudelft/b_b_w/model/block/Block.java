@@ -45,7 +45,7 @@ public abstract class Block {
      * @return owner of the block
      */
     public final String getOwner() {
-        return blockData.getOwner();
+        return blockData.getOwner().getName();
     }
 
     /**
@@ -92,17 +92,6 @@ public abstract class Block {
      */
     public final int getSequenceNumber() {
         return blockData.getSequenceNumber();
-    }
-
-
-    /**
-     * Default initializar for sequence number
-     *
-     * @return the sequence number of the block after initialization
-     */
-    public final int setSeqNumberTo(int _sequenceNumber) {
-        sequenceNumber = _sequenceNumber;
-        return sequenceNumber;
     }
 
 

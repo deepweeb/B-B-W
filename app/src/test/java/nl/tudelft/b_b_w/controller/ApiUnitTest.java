@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.tudelft.b_b_w.BuildConfig;
+import nl.tudelft.b_b_w.model.HashException;
 import nl.tudelft.b_b_w.model.block.BlockFactory;
 
 import static junit.framework.Assert.assertEquals;
@@ -44,25 +45,25 @@ public class ApiUnitTest {
      * All is tested from viewpoint of A.
      */
     @Before
-    public void setUp() {
+    public void setUp() throws HashException {
         bc = new BlockController(RuntimeEnvironment.application);
         api = new Api(RuntimeEnvironment.application);
 
         // A: add A
-        bc.addBlock(BlockFactory.getBlock("BLOCK", "Antro", "roothashA", "prevhashchain", "root", "pkroot", "NL81...", 0));
-        bc.addBlock(BlockFactory.getBlock("BLOCK", "Antro", "hashA", "roothash", "N/A", "pka", "NL81...", 0));
+        bc.addBlock(BlockFactory.getBlock("BLOCK","Antro", bc.getLatestSeqNumber("Antro") + 1, "roothashA", "prevhashchain", "root", "pkroot", "NL81...", 0));
+        bc.addBlock(BlockFactory.getBlock("BLOCK", "Antro", bc.getLatestSeqNumber("Antro") + 1, "hashA", "roothash", "N/A", "pka", "NL81...", 0));
 
         // B: add A
-        bc.addBlock(BlockFactory.getBlock("BLOCK", "Besse", "roothashB", "prevhashchain", "root", "pkroot", "NL81...", 0));
-        bc.addBlock(BlockFactory.getBlock("BLOCK", "Besse", "hashB", "roothashB", "roothashA", "pka", "NL81...", 0));
+        bc.addBlock(BlockFactory.getBlock("BLOCK", "Besse", bc.getLatestSeqNumber("Besse") + 1, "roothashB", "prevhashchain", "root", "pkroot", "NL81...", 0));
+        bc.addBlock(BlockFactory.getBlock("BLOCK", "Besse", bc.getLatestSeqNumber("Besse") + 1, "hashB", "roothashB", "roothashA", "pka", "NL81...", 0));
 
         // C
-        bc.addBlock(BlockFactory.getBlock("BLOCK", "Cacao", "roothashC", "prevhashchain", "root", "pkroot", "NL81...", 0));
+        bc.addBlock(BlockFactory.getBlock("BLOCK", "Cacao", bc.getLatestSeqNumber("Cacao") + 1, "roothashC", "prevhashchain", "root", "pkroot", "NL81...", 0));
 
         // E: add A, revoke A
-        bc.addBlock(BlockFactory.getBlock("BLOCK", "Erwti", "roothashE", "prevhashchain", "root", "pkroot", "NL81...", 0));
-        bc.addBlock(BlockFactory.getBlock("BLOCK", "Erwti", "hashE1", "roothashE", "roothashA", "pka", "NL81...", 0));
-        bc.addBlock(BlockFactory.getBlock("REVOKE", "Erwti", "hashE2", "hashE1", "roothashA", "pka", "NL81...", 0));
+        bc.addBlock(BlockFactory.getBlock("BLOCK", "Erwti", bc.getLatestSeqNumber("Erwti") + 1, "roothashE", "prevhashchain", "root", "pkroot", "NL81...", 0));
+        bc.addBlock(BlockFactory.getBlock("BLOCK", "Erwti", bc.getLatestSeqNumber("Erwti") + 1, "hashE1", "roothashE", "roothashA", "pka", "NL81...", 0));
+        bc.addBlock(BlockFactory.getBlock("REVOKE", "Erwti", bc.getLatestSeqNumber("Erwti") + 1, "hashE2", "hashE1", "roothashA", "pka", "NL81...", 0));
     }
 
 
@@ -70,7 +71,7 @@ public class ApiUnitTest {
      * Add one own key
      */
     @Test
-    public void ownKey() {
+    public void ownKey() throws HashException{
         List<String> keysA = api.getUserKeys(userA, userA);
         List<String> expectedA = new ArrayList<String>();
         expectedA.add("pka");
@@ -81,7 +82,7 @@ public class ApiUnitTest {
      * Add key of another user
      */
     @Test
-    public void otherKey() {
+    public void otherKey() throws HashException{
         // is the other key there
         List<String> keysA = api.getUserKeys(userB, userA);
         List<String> expectedA = new ArrayList<String>();
@@ -94,7 +95,7 @@ public class ApiUnitTest {
      * Check that no keys of another user are added.    
      */
     @Test
-    public void filterOtherKey() {
+    public void filterOtherKey() throws HashException {
         // does it really filter
         List<String> keysB = api.getUserKeys(userB, userB);
         assertTrue(keysB.isEmpty());
@@ -104,7 +105,7 @@ public class ApiUnitTest {
      * User without keys
      */
     @Test
-    public void userWithoutKeys() {
+    public void userWithoutKeys() throws HashException {
         List<String> keys = api.getUserKeys(userC, userA);
         assertTrue(keys.isEmpty());
     }

@@ -1,6 +1,7 @@
 package nl.tudelft.b_b_w.controller;
 
 import android.content.Context;
+import android.content.res.Resources;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,9 @@ import nl.tudelft.b_b_w.model.block.Block;
 import nl.tudelft.b_b_w.model.block.BlockData;
 import nl.tudelft.b_b_w.model.block.BlockFactory;
 import nl.tudelft.b_b_w.model.block.BlockType;
+import nl.tudelft.b_b_w.model.User;
+
+import static org.bouncycastle.crypto.tls.CipherType.block;
 
 /**
  * Performs the actions on the blockchain
@@ -20,20 +24,12 @@ import nl.tudelft.b_b_w.model.block.BlockType;
 
 public class BlockController implements BlockControllerInterface {
     @Deprecated
-    private static final String BLOCK = "BLOCK";
-
-    @Deprecated
     private static final String REVOKE = "REVOKE";
 
     /**
      * For when info is not available.
      */
     private static final String NA = "N/A";
-
-    /**
-     * Context of the block database
-     */
-    private Context context;
 
     /**
      *  Databasehandlers to use
@@ -47,7 +43,6 @@ public class BlockController implements BlockControllerInterface {
      * @param _context the instance
      */
     public BlockController(Context _context) {
-        this.context = _context;
         this.getDatabaseHandler = new GetDatabaseHandler(_context);
         this.mutateDatabaseHandler = new MutateDatabaseHandler(_context);
     }
@@ -64,7 +59,7 @@ public class BlockController implements BlockControllerInterface {
      * @inheritDoc
      */
     @Override
-    public final List<Block> addBlockToChain(Block block) {
+    public final List<Block> addBlockToChain(Block block) throws HashException {
         // Check if the block already exists
         String owner = block.getOwner();
         Block latest = getDatabaseHandler.getLatestBlock(owner);
@@ -75,7 +70,7 @@ public class BlockController implements BlockControllerInterface {
             throw new RuntimeException("Error - Block is already revoked");
         } else {
             if (block.isRevoked()) {
-                revokedTrustValue(latest);
+                latest = revokedTrustValue(latest);
                 mutateDatabaseHandler.updateBlock(latest);
                 mutateDatabaseHandler.addBlock(block);
             }
@@ -112,7 +107,7 @@ public class BlockController implements BlockControllerInterface {
      * @inheritDoc
      */
     @Override
-    public final List<Block> getBlocks(String owner) {
+    public final List<Block> getBlocks(String owner) throws HashException {
         // retrieve all blocks in the database and then sort it in order of sequence number
         List<Block> blocks = getDatabaseHandler.getAllBlocks(owner);
         List < Block > res = new ArrayList<>();
@@ -131,7 +126,7 @@ public class BlockController implements BlockControllerInterface {
      * @inheritDoc
      */
     @Override
-    public final String getContactName(String hash) {
+    public final String getContactName(String hash) throws HashException {
         return getDatabaseHandler.getContactName(hash);
     }
 
@@ -139,7 +134,7 @@ public class BlockController implements BlockControllerInterface {
      * @inheritDoc
      */
     @Override
-    public final Block getLatestBlock(String owner) {
+    public final Block getLatestBlock(String owner) throws HashException {
         return getDatabaseHandler.getLatestBlock(owner);
     }
 
@@ -157,10 +152,16 @@ public class BlockController implements BlockControllerInterface {
     @Override
     public final List<Block> revokeBlock(Block block) throws HashException {
         String owner = block.getOwner();
-        Block newBlock = BlockFactory.getBlock(REVOKE, block.getOwner(), block.getSequenceNumber(),
-                block.getOwnHash(), block.getPreviousHashChain(), block.getPreviousHashSender(),
-                block.getPublicKey(), block.getIban(), block.getTrustValue());
-        addBlock(newBlock);
+        addBlock(BlockFactory.getBlock(
+                REVOKE,
+                owner,
+                getLatestSeqNumber(owner) + 1,
+                block.getOwnHash(),
+                block.getPreviousHashChain(),
+                block.getPreviousHashSender(),
+                block.getPublicKey(),
+                block.getIban(),
+                block.getTrustValue()));
         return getBlocks(owner);
     }
 
@@ -193,7 +194,10 @@ public class BlockController implements BlockControllerInterface {
      */
     @Override
     public final Block successfulTransaction(Block block) {
-        block.setTrustValue(block.getTrustValue() + TrustValues.SUCCESFUL_TRANSACTION.getValue());
+        final int maxCeil = 100;
+        final int newTrust = block.getTrustValue() + TrustValues.SUCCESFUL_TRANSACTION.getValue();
+        if (newTrust > maxCeil) block.setTrustValue(maxCeil);
+        block.setTrustValue(newTrust);
         return block;
     }
 
@@ -202,7 +206,10 @@ public class BlockController implements BlockControllerInterface {
      */
     @Override
     public final Block failedTransaction(Block block) {
-        block.setTrustValue(block.getTrustValue() + TrustValues.FAILED_TRANSACTION.getValue());
+        final int minCeil = 0;
+        final int newTrust = block.getTrustValue() + TrustValues.FAILED_TRANSACTION.getValue();
+        if (newTrust < minCeil) block.setTrustValue(minCeil);
+        block.setTrustValue(newTrust);
         return block;
     }
 
@@ -225,11 +232,11 @@ public class BlockController implements BlockControllerInterface {
 
     /**
      * Create genesis block for an owner
-     * @param owner the new owner of the block
+     * @param owner Owner of the block
      * @return the freshly created block
      * @throws Exception when the key hashing method does not work
      */
-    public Block createGenesis(String owner) throws Exception {
+    public Block createGenesis(User owner) throws Exception {
         BlockData blockData = new BlockData();
         blockData.setBlockType(BlockType.GENESIS);
         blockData.setSequenceNumber(1);
@@ -253,7 +260,7 @@ public class BlockController implements BlockControllerInterface {
      * @return the newly created block
      * @throws Exception when the hashing algorithm is not available
      */
-    public Block createKeyBlock(String owner, String contact, String publicKey, String iban) throws
+    public Block createKeyBlock(User owner, User contact, String publicKey, String iban) throws
             Exception {
         return createBlock(owner, contact, publicKey, iban, BlockType.ADD_KEY);
     }
@@ -268,7 +275,7 @@ public class BlockController implements BlockControllerInterface {
      * @return the newly created block
      * @throws Exception when the hashing algorithm is not available
      */
-    public Block createRevokeBlock(String owner, String contact, String publicKey, String iban)
+    public Block createRevokeBlock(User owner, User contact, String publicKey, String iban)
             throws Exception {
         return createBlock(owner, contact, publicKey, iban, BlockType.REVOKE_KEY);
     }
@@ -284,23 +291,20 @@ public class BlockController implements BlockControllerInterface {
      * @return the newly created block
      * @throws Exception when the hashing algorithm is not available
      */
-    private Block createBlock(String owner, String contact, String publicKey, String iban,
+    private Block createBlock(User owner, User contact, String publicKey, String iban,
                               BlockType blockType) throws Exception {
-        Block latest = getLatestBlock(owner);
+        Block latest = getLatestBlock(owner.getName());
         String previousBlockHash = latest.getOwnHash();
 
         // always link to genesis of contact blocks
         String contactBlockHash;
-        if (owner.equals(contact))
+        if (owner.equals(contact)) {
             contactBlockHash = NA;
-        else
-            contactBlockHash = getBlocks(contact).get(0).getOwnHash();
+        } else {
+            contactBlockHash = getBlocks(contact.getName()).get(0).getOwnHash();
+        }
         int seqNumber = latest.getSequenceNumber() + 1;
 
-        ConversionController conversionController = new ConversionController(
-                owner, publicKey, previousBlockHash, contactBlockHash, iban
-        );
-        String hash = conversionController.hashKey();
         BlockData blockData = new BlockData();
         blockData.setBlockType(blockType);
         blockData.setIban(iban);
@@ -309,8 +313,27 @@ public class BlockController implements BlockControllerInterface {
         blockData.setPreviousHashSender(contactBlockHash);
         blockData.setOwner(owner);
         blockData.setPublicKey(publicKey);
+        blockData.setTrustValue(TrustValues.INITIALIZED.getValue());
         Block block = BlockFactory.createBlock(blockData);
         addBlock(block);
         return block;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public Block backtrack(Block block) throws HashException {
+        String previousHashSender = block.getPreviousHashSender();
+        Block loop_block = block;
+        
+        while (!previousHashSender.equals("N/A")) {
+            loop_block = getDatabaseHandler.getByHash(previousHashSender);
+            if (loop_block == null) throw new
+                    Resources.NotFoundException("Error - Block cannot be backtracked: " + block.toString());
+            previousHashSender = loop_block.getPreviousHashSender();
+        }
+
+        return loop_block;
     }
 }

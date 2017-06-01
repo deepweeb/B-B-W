@@ -20,10 +20,10 @@ public class GenesisBlock extends Block {
             // verify integrity
             if (blockData.getBlockType() != BlockType.ADD_KEY
                     || blockData.getSequenceNumber() != 1
-                    || blockData.getPreviousHashChain().equals("N/A")
-                    || blockData.getPreviousHashSender().equals("N/A")
-                    || blockData.getIban().equals("N/A"))
-                throw new AssertionError("invalid genesis block");
+                    || !blockData.getPreviousHashChain().equals("N/A")
+                    || !blockData.getPreviousHashSender().equals("N/A")
+                    || !blockData.getIban().equals("N/A"))
+                throw new AssertionError("invalid genesis block " + this.toString());
         }
     }
 

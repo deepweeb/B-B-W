@@ -5,12 +5,15 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import nl.tudelft.b_b_w.model.EncodingUnavailableException;
 import nl.tudelft.b_b_w.model.HashException;
+import nl.tudelft.b_b_w.model.HashUnavailableException;
+import nl.tudelft.b_b_w.model.User;
 
 public class BlockData {
     private BlockType blockType;
     private int sequenceNumber;
-    private String owner;
+    private User owner;
     private String hash;
     private String previousHashChain;
     private String previousHashSender;
@@ -33,9 +36,9 @@ public class BlockData {
             String hash = String.format("%064x", new BigInteger(1, digest));
             return hash;
         } catch (NoSuchAlgorithmException e) {
-            throw new HashException("SHA-256 not available on this device");
+            throw new HashUnavailableException();
         } catch (UnsupportedEncodingException e) {
-            throw new HashException("UTF-8 not available on this device");
+            throw new EncodingUnavailableException();
         }
     }
 
@@ -55,11 +58,11 @@ public class BlockData {
         this.sequenceNumber = sequenceNumber;
     }
 
-    public String getOwner() {
+    public User getOwner() {
         return owner;
     }
 
-    public void setOwner(String owner) {
+    public void setOwner(User owner) {
         this.owner = owner;
     }
 

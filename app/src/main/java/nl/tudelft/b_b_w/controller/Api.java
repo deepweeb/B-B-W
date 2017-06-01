@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import nl.tudelft.b_b_w.model.HashException;
 import nl.tudelft.b_b_w.model.block.Block;
 import nl.tudelft.b_b_w.model.block.BlockFactory;
 
@@ -31,7 +32,7 @@ public class Api {
      * @param user the user of whom to retrieve non-revoked public keys
      * @return a list of public keys in string form
      */
-    public final List<String> getUserKeys(String owner, String user) {
+    public final List<String> getUserKeys(String owner, String user) throws HashException {
         List<Block> blocks = blockController.getBlocks(owner);
         List<String> keys = new ArrayList<String>();
 
@@ -80,7 +81,17 @@ public class Api {
                 key, prevHashSelf, prevHashOther, iban);
         String hash = conversionController.hashKey();
 
-        Block fresh = BlockFactory.getBlock("BLOCK", owner, -999, hash, prevHashSelf, prevHashOther, key, iban, 0);
+        Block fresh = BlockFactory.getBlock(
+                "BLOCK",
+                owner,
+                blockController.getLatestSeqNumber(owner) + 1,
+                hash,
+                prevHashSelf,
+                prevHashOther,
+                key,
+                iban,
+                0
+        );
 
         // add to database
         blockController.addBlock(fresh);
@@ -110,7 +121,17 @@ public class Api {
                 key, prevHashSelf, prevHashOther, iban);
         String hash = conversionController.hashKey();
 
-        Block fresh = BlockFactory.getBlock("REVOKE", owner, hash, prevHashSelf, prevHashOther, key, iban, 0);
+        Block fresh = BlockFactory.getBlock(
+                "REVOKE",
+                owner,
+                blockController.getLatestSeqNumber(owner) + 1,
+                hash,
+                prevHashSelf,
+                prevHashOther,
+                key,
+                iban,
+                0
+        );
 
         // add to database
         blockController.addBlock(fresh);

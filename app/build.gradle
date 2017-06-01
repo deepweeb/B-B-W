@@ -36,3 +36,55 @@ dependencies {
     testCompile 'org.robolectric:robolectric:3.0'
     compile 'com.jjoe64:graphview:4.2.1'
 }
+
+
+apply plugin: 'pmd'
+apply plugin: 'findbugs'
+apply plugin: 'checkstyle'
+
+check.dependsOn 'checkstyle', 'findbugs', 'pmd'
+
+task checkstyle(type: Checkstyle) {
+    configFile file("${project.rootDir}/config/checkstyle/checkstyle.xml")
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    classpath = files()
+}
+
+task findbugs(type: FindBugs) {
+    ignoreFailures = true
+    effort = "max"
+    reportLevel = "high"
+//    excludeFilter = new File("${project.rootDir}/config/findbugs/findbugs-filter.xml")
+    classes = files("$project.buildDir/intermediates/classes/")
+
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    reports {
+        xml {
+            destination "$project.buildDir/reports/findbugs/findbugs.xml"
+            xml.withMessages true
+        }
+    }
+
+    classpath = files()
+}
+
+task pmd(type: Pmd) {
+//    ruleSetFiles = files("${project.rootDir}/config/pmd/pmd-ruleset.xml")
+    ignoreFailures = true
+    ruleSets = ["basic", "braces", "strings"]
+
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    reports {
+        xml.enabled = true
+        html.enabled = false
+    }
+}

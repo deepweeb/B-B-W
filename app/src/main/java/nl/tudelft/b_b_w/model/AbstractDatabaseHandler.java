@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * AbstractDatabaseHandler class
  * Parent class for all database handlers
  */
-public abstract class AbstractDatabaseHandler extends SQLiteOpenHelper {
+abstract class AbstractDatabaseHandler extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
@@ -20,35 +20,33 @@ public abstract class AbstractDatabaseHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "blockChain";
 
     // Table name
-    public static final String TABLE_NAME = "blocks";
+    static final String TABLE_NAME = "blocks";
 
     // Contacts Table Columns names
-    public static final String KEY_OWNER = "owner";
-    public static final String KEY_SEQ_NO = "sequenceNumber";
-    public static final String KEY_PREV_HASH_SENDER = "previousHashSender";
-    public static final String KEY_OWN_HASH = "ownHash";
-    public static final String KEY_PREV_HASH_CHAIN = "previousHashChain";
-    public static final String KEY_PUBLIC_KEY = "publicKey";
-    public static final String KEY_IBAN_KEY = "iban";
-    public static final String KEY_TRUST_VALUE = "trustValue";
-    public static final String KEY_REVOKE = "revoke";
-    public static final String KEY_CREATED_AT = "created_at";
+    static final String KEY_OWNER = "owner";
+    static final String KEY_SEQ_NO = "sequenceNumber";
+    static final String KEY_PREV_HASH_SENDER = "previousHashSender";
+    static final String KEY_OWN_HASH = "ownHash";
+    static final String KEY_PREV_HASH_CHAIN = "previousHashChain";
+    static final String KEY_PUBLIC_KEY = "publicKey";
+    static final String KEY_IBAN_KEY = "iban";
+    static final String KEY_TRUST_VALUE = "trustValue";
+    static final String KEY_REVOKE = "revoke";
+    private static final String KEY_CREATED_AT = "created_at";
 
     /** Table indices */
-    public final int INDEX_OWNER = 0;
-    public final int INDEX_SEQ_NO = 1;
-    public final int INDEX_OWN_HASH = 2;
-    public final int INDEX_PREV_HASH_CHAIN = 3;
-    public final int INDEX_PREV_HASH_SENDER = 4;
-    public final int INDEX_PUBLIC_KEY = 5;
-    public final int INDEX_IBAN_KEY = 6;
-    public final int INDEX_TRUST_VALUE = 7;
-    public final int INDEX_REVOKE = 8;
-    public final int INDEX_CREATED_AT = 9;
-
+    final int INDEX_OWNER = 0;
+    final int INDEX_SEQ_NO = 1;
+    final int INDEX_OWN_HASH = 2;
+    final int INDEX_PREV_HASH_CHAIN = 3;
+    final int INDEX_PREV_HASH_SENDER = 4;
+    final int INDEX_PUBLIC_KEY = 5;
+    final int INDEX_IBAN_KEY = 6;
+    final int INDEX_TRUST_VALUE = 7;
+    final int INDEX_REVOKE = 8;
 
     // Persistence helpers
-    public final String[] _columns = new String[]{
+    final String[] _columns = new String[]{
             KEY_OWNER, KEY_SEQ_NO, KEY_OWN_HASH, KEY_PREV_HASH_CHAIN, KEY_PREV_HASH_SENDER,
             KEY_PUBLIC_KEY, KEY_IBAN_KEY, KEY_TRUST_VALUE, KEY_REVOKE
     };
@@ -59,7 +57,7 @@ public abstract class AbstractDatabaseHandler extends SQLiteOpenHelper {
      *
      * @param context given context
      */
-    public AbstractDatabaseHandler(Context context) {
+    AbstractDatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -125,23 +123,17 @@ public abstract class AbstractDatabaseHandler extends SQLiteOpenHelper {
      *              supposed to have different public key from the contact
      */
     public int lastSeqNumberOfChain(String owner) {
-
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.query(TABLE_NAME,
+
+        try (Cursor c = db.query(TABLE_NAME,
                 new String[]{"MAX(" + KEY_SEQ_NO + ")"},
                 KEY_OWNER + " = ? ",
                 new String[]{
                         owner
-                }, null, null, null, null);
-
-
-        try {
+                }, null, null, null, null)) {
             c.moveToFirst();
             return c.getInt(0);
-        } finally {
-            c.close();
         }
-
     }
 
 }

@@ -1,9 +1,11 @@
 package nl.tudelft.b_b_w.model;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -13,7 +15,7 @@ import org.junit.Test;
 public class UserUnitTest {
 
     private final String name = "NAME";
-    private final String IBAN = "IBAN";
+    private final String iban = "IBAN";
     private User _user;
 
     /**
@@ -22,7 +24,10 @@ public class UserUnitTest {
      */
     @Before
     public void setUp() {
-        this._user = new User(name, IBAN);
+        this._user = mock(User.class);
+        when(_user.generatePublicKey()).thenReturn("PUBLIC_KEY");
+        when(_user.getName()).thenReturn(name);
+        when(_user.getIBAN()).thenReturn(iban);
     }
 
     /**
@@ -38,7 +43,7 @@ public class UserUnitTest {
      */
     @Test
     public void getIBAN(){
-        assertEquals(IBAN, _user.getIBAN());
+        assertEquals(iban, _user.getIBAN());
     }
 
     /**

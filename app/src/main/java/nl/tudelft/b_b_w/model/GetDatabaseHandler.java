@@ -230,6 +230,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
             blockData.setBlockType(BlockType.ADD_KEY);
         }
         blockData.setOwner(owner);
+        blockData.setIban(owner);
         blockData.setSequenceNumber(cursor.getInt(INDEX_SEQ_NO));
         blockData.setPreviousHashChain(cursor.getString(INDEX_PREV_HASH_CHAIN));
         blockData.setPreviousHashSender(cursor.getString(INDEX_PREV_HASH_SENDER));

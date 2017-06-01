@@ -64,9 +64,9 @@ public class BlockControllerUnitTest {
         // construct an easy blockchain
         genesisA = blockController.createGenesis(a);
         genesisB = blockController.createGenesis(b);
-        blockWithOwnerAAddsKeyKa = blockController.createKeyBlock(a, a, "ka", "ibanA");
-        blockWithOwnerAAddsKeyKb = blockController.createKeyBlock(a, b, "kb", "ibanB");
-        blockWithOwnerBAddsKeyKa = blockController.createKeyBlock(b, a, "ka", "ibanA");
+        blockWithOwnerAAddsKeyKa = blockController.createKeyBlock(a, a, "ka");
+        blockWithOwnerAAddsKeyKb = blockController.createKeyBlock(a, b, "kb");
+        blockWithOwnerBAddsKeyKa = blockController.createKeyBlock(b, a, "ka");
         blockWithOwnerBRevokesKeyKa = blockController.createRevokeBlock(b, a, "ka", "ibanA");
     }
 
@@ -78,7 +78,7 @@ public class BlockControllerUnitTest {
     @Test
     public final void testAddBlock() throws Exception {
         Block genesisC = blockController.createGenesis(c);
-        Block blockC = blockController.createKeyBlock(c, c, "kc", "ibanC");
+        Block blockC = blockController.createKeyBlock(c, c, "kc");
         List<Block> list = new ArrayList<>();
         list.add(genesisC);
         list.add(blockC);
@@ -99,7 +99,7 @@ public class BlockControllerUnitTest {
     @Test
     public final void testGetLatestBlock() throws Exception {
         blockController.createGenesis(c);
-        Block blockC = blockController.createKeyBlock(c, c, "kc", "ibanC");
+        Block blockC = blockController.createKeyBlock(c, c, "kc");
         assertEquals(blockC, blockController.getLatestBlock(c.getName()));
     }
 
@@ -118,7 +118,7 @@ public class BlockControllerUnitTest {
      */
     @Test(expected = RuntimeException.class)
     public final void testAddDupBlocks() throws HashException {
-        Block blockC = blockController.createKeyBlock(c, c, "pkc", "ibanC");
+        Block blockC = blockController.createKeyBlock(c, c, "pkc");
         blockController.addBlock(blockC);
         blockController.addBlock(blockC);
     }
@@ -128,7 +128,7 @@ public class BlockControllerUnitTest {
      */
     @Test(expected = RuntimeException.class)
     public final void alreadyRevoked() throws HashException {
-        blockController.createKeyBlock(b, a, "ka", "ibanB");
+        blockController.createKeyBlock(b, a, "ka");
     }
 
     /**
@@ -137,7 +137,7 @@ public class BlockControllerUnitTest {
     @Test
     public final void testEmptyList() throws HashException {
         Block genesisC = blockController.createGenesis(c);
-        blockController.createKeyBlock(c, c, "pkc", "ibanC");
+        blockController.createKeyBlock(c, c, "pkc");
         blockController.createRevokeBlock(c, c, "pkc", "ibanC");
         List<Block> list = new ArrayList<>();
         list.add(genesisC);
@@ -237,7 +237,7 @@ public class BlockControllerUnitTest {
     @Test
     public void testBacktrack() throws HashException {
         blockController.createGenesis(c);
-        Block fresh = blockController.createKeyBlock(c, c, "pkc", "ibanc");
+        Block fresh = blockController.createKeyBlock(c, c, "pkc");
         assertEquals(fresh, blockController.backtrack(fresh));
     }
 
@@ -248,7 +248,7 @@ public class BlockControllerUnitTest {
     @Test
     public void testVerifyTrustworthiness() throws HashException {
         blockController.createGenesis(c);
-        Block b = blockController.createKeyBlock(c, c, "pk", "iban");
+        Block b = blockController.createKeyBlock(c, c, "pk");
         assertTrue(blockController.verifyTrustworthiness(b));
     }
 
@@ -260,7 +260,7 @@ public class BlockControllerUnitTest {
     @Test
     public void testVerifyTrustworthinessFalse() throws HashException {
         blockController.createGenesis(c);
-        Block b1 = blockController.createKeyBlock(c, c, "pk1", "iban");
+        Block b1 = blockController.createKeyBlock(c, c, "pk1");
         BlockData data = new BlockData();
         data.setBlockType(BlockType.ADD_KEY);
         data.setPublicKey("pk2");
@@ -271,7 +271,6 @@ public class BlockControllerUnitTest {
         data.setSequenceNumber(3);
         Block b2 = BlockFactory.createBlock(data);
 
-//        blockController.revokeBlock(b2);
         assertFalse(blockController.verifyTrustworthiness(b2));
     }
 

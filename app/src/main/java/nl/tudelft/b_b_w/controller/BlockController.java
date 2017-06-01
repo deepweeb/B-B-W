@@ -236,6 +236,7 @@ public class BlockController implements BlockControllerInterface {
         blockData.setBlockType(BlockType.GENESIS);
         blockData.setSequenceNumber(1);
         blockData.setOwner(owner);
+        blockData.setIban(owner);
         blockData.setPreviousHashChain(NA);
         blockData.setPreviousHashSender(NA);
         blockData.setPublicKey(NA);
@@ -251,13 +252,12 @@ public class BlockController implements BlockControllerInterface {
      * @param owner     owner of the block
      * @param contact   of whom is the information
      * @param publicKey public key you want to store
-     * @param iban      IBAN number to store in this block
      * @return the newly created block
      * @throws Exception when the hashing algorithm is not available
      */
-    public Block createKeyBlock(User owner, User contact, String publicKey, String iban) throws
+    public Block createKeyBlock(User owner, User contact, String publicKey) throws
             HashException {
-        return createBlock(owner, contact, publicKey, iban, BlockType.ADD_KEY);
+        return createBlock(owner, contact, publicKey, contact.getIBAN(), BlockType.ADD_KEY);
     }
 
     /**
@@ -310,6 +310,7 @@ public class BlockController implements BlockControllerInterface {
         blockData.setPreviousHashChain(previousBlockHash);
         blockData.setPreviousHashSender(contactBlockHash);
         blockData.setOwner(owner);
+        blockData.setIban(contact);
         blockData.setPublicKey(publicKey);
         blockData.setTrustValue(TrustValues.INITIALIZED.getValue());
         Block block = BlockFactory.createBlock(blockData);

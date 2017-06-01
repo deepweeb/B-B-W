@@ -3,8 +3,6 @@ package nl.tudelft.b_b_w.model.block;
 import nl.tudelft.b_b_w.model.HashException;
 import nl.tudelft.b_b_w.model.User;
 
-import static org.bouncycastle.asn1.x500.style.RFC4519Style.owner;
-
 /**
  * Block represents
  */
@@ -139,7 +137,7 @@ public abstract class Block {
     @Override
     public final String toString() {
         return "Block{" +
-                "owner='" + owner + '\'' +
+                "owner='" + blockData.getOwner() + '\'' +
                 ", sequenceNumber=" + blockData.getSequenceNumber() +
                 ", ownHash='" + hash + '\'' +
                 ", previousHashChain='" + blockData.getPreviousHashChain() + '\'' +

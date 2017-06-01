@@ -11,10 +11,8 @@ import java.util.List;
 
 import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.controller.BlockController;
-import nl.tudelft.b_b_w.model.HashException;
 import nl.tudelft.b_b_w.model.User;
 import nl.tudelft.b_b_w.model.block.Block;
-import nl.tudelft.b_b_w.model.block.BlockFactory;
 
 import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
 
@@ -87,13 +85,13 @@ public class PairActivity extends Activity {
         User subject1contact2 = new User("Subject1Contact2", "IBAN1Contact2");
         User subject1contact3 = new User("Subject1Contact3", "IBAN1Contact3");
         blockController.createGenesis(subject1contact1);
-        blockController.createKeyBlock(owner, subject1contact1, "Contact1_PUBKEY", "IBAN1Contact1");
+        blockController.createKeyBlock(owner, subject1contact1, "Contact1_PUBKEY");
 
         blockController.createGenesis(subject1contact2);
-        blockController.createKeyBlock(owner, subject1contact2, "Contact2_PUBKEY", "IBAN1Contact2");
+        blockController.createKeyBlock(owner, subject1contact2, "Contact2_PUBKEY");
 
         blockController.createGenesis(subject1contact3);
-        blockController.createKeyBlock(owner, subject1contact3, "Contact3_PUBKEY", "IBAN1Contact3");
+        blockController.createKeyBlock(owner, subject1contact3, "Contact3_PUBKEY");
 
         List<Block> list = blockController.getBlocks(owner.getName());
 
@@ -136,16 +134,16 @@ public class PairActivity extends Activity {
         User subject2contact4 = new User("Subject2Contact4", "IBAN2Contact4");
 
         blockController.createGenesis(subject2contact1);
-        blockController.createKeyBlock(owner, subject2contact1, "b", "IBAN2Contact1");
+        blockController.createKeyBlock(owner, subject2contact1, "b");
 
         blockController.createGenesis(subject2contact2);
-        blockController.createKeyBlock(owner, subject2contact2, "c", "IBAN2Contact2");
+        blockController.createKeyBlock(owner, subject2contact2, "c");
 
         blockController.createGenesis(subject2contact3);
-        blockController.createKeyBlock(owner, subject2contact3, "d", "IBAN2Contact3");
+        blockController.createKeyBlock(owner, subject2contact3, "d");
 
         blockController.createGenesis(subject2contact4);
-        blockController.createKeyBlock(owner, subject2contact4, "e", "IBAN2Contact4");
+        blockController.createKeyBlock(owner, subject2contact4, "e");
 
         List<Block> list = blockController.getBlocks(owner.getName());
 
@@ -199,9 +197,7 @@ public class PairActivity extends Activity {
         editor.putString("ibanTestSubject", owner.getIBAN());
         editor.apply();
 
-        Toast.makeText(this, list.get(0).getPublicKey() + ", " +
-                list.get(1).getPublicKey() + ", " +
-                list.get(2).getPublicKey(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, list.get(0).getPublicKey(), Toast.LENGTH_SHORT).show();
 
         startActivity(new Intent(this, FriendsPageActivity.class));
     }

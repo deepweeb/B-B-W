@@ -38,6 +38,7 @@ public class GenesisBlockUnitTest {
         blockDataA.setSequenceNumber(1);
         blockDataA.setTrustValue(TrustValues.INITIALIZED.getValue());
         blockDataA.setOwner(a);
+        blockDataA.setIban(a);
         blockDataA.setPreviousHashSender("N/A");
         blockDataA.setPreviousHashChain("N/A");
         blockDataA.setPublicKey(PKA);
@@ -50,6 +51,7 @@ public class GenesisBlockUnitTest {
         blockDataB.setSequenceNumber(1);
         blockDataB.setTrustValue(TrustValues.INITIALIZED.getValue());
         blockDataB.setOwner(b);
+        blockDataB.setIban(b);
         blockDataB.setPreviousHashSender("N/A");
         blockDataB.setPreviousHashChain("N/A");
         blockDataB.setPublicKey(PKB);

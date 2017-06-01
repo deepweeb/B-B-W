@@ -69,7 +69,9 @@ Severity: EASY
 
         <!-- Checks for Naming Conventions.                  -->
         <!-- See http://checkstyle.sourceforge.net/config_naming.html -->
-        <module name="ConstantName" />
+        <module name="ConstantName">
+            <property name="format" value="^[A-Z][A-Z0-9]*$"/>
+        </module>
         <module name="LocalFinalVariableName" />
         <module name="LocalVariableName" />
         <module name="MemberName" />

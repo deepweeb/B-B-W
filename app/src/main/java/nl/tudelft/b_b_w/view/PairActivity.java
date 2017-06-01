@@ -16,6 +16,7 @@ import nl.tudelft.b_b_w.controller.BlockController;
 import nl.tudelft.b_b_w.model.Block;
 import nl.tudelft.b_b_w.model.User;
 
+
 /**
  * Pair activity lets you pair with a fixed number of preprogrammed contacts, for demo purposes.
  */

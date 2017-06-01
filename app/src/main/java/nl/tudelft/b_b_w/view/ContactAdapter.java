@@ -85,7 +85,7 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
         final int trustInterval = 20;
         double result = trust/ trustInterval - 0.5;
         if (result < 0) result = 0;
-        return (int)result;
+        return (int) result;
     }
 
     /**

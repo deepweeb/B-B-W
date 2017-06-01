@@ -38,7 +38,7 @@ public class BlockUnitTest {
     private final String publicKey = "publicKey";
     private final boolean isRevoked = false;
     private final String iban = "iban";
-    private final int trustValue = 0;
+    private final int trustValue = TrustValues.INITIALIZED.getValue();
 
     /**
      * This method runs before each test to initialize the test object
@@ -154,7 +154,33 @@ public class BlockUnitTest {
      */
     @Test
     public void testTrustValueInit() {
-        assertEquals(0, _block.getTrustValue());
+        assertEquals(TrustValues.INITIALIZED.getValue(), _block.getTrustValue());
+    }
+
+    /**
+     * Test to check whether the verifyBlock() method returns the right boolean value indicating if this block is equal to the parameter block.
+     * @throws Exception Catches error when the MessageDigest
+     * gets an error.
+     */
+    @Test
+    public void verifyBlockTest() throws Exception {
+        final Block check = BlockFactory.getBlock(TYPE_BLOCK, owner, blockController.getLatestSeqNumber(owner)+1,
+                ownHash, previousHashChain, previousHashSender, publicKey, iban, trustValue);
+        assertTrue(_block.equals(check));
+    }
+
+    /**
+     * Test to check whether the verifyBlock() method returns the right boolean value indicating if this block is equal to the parameter block.
+     * Forces a false
+     * @throws Exception Catches error when the MessageDigest
+     * gets an error.
+     */
+    @Test
+    public void verifyBlockFalseTest() throws Exception {
+        final String _owner = "NOTOWNER";
+        final Block check = BlockFactory.getBlock(TYPE_BLOCK, _owner, blockController.getLatestSeqNumber(owner),
+                ownHash, previousHashChain, previousHashSender, publicKey, iban, trustValue);
+        assertFalse(_block.equals(check));
     }
 
     /**
@@ -214,7 +240,7 @@ public class BlockUnitTest {
                 ", previousHashSender='" + previousHashSender + '\'' +
                 ", publicKey='" + publicKey + '\'' +
                 ", iban='" + iban + '\'' +
-                ", trustValue='" + 0 + '\'' +
+                ", trustValue='" + trustValue + '\'' +
                 ", isRevoked=" + isRevoked +
                 '}';
         assertEquals(result, _block.toString());

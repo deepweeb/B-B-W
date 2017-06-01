@@ -95,15 +95,8 @@ public class MainActivity extends Activity {
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
-    }
+   }
 
-    /**
-     * This method clears the database since a limited amount of data can be viewed.
-     * @param view  The view of the program.
-     */
-    public final void onClearDatabase(View view) {
-        blockController.clearAllBlocks();
-    }
 
     /**
      * When you want to visit the PairActivity page.
@@ -114,14 +107,6 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
 
-    /**
-     * When you want to visit the FriendsPageActivity page.
-     * @param view The view
-     */
-    public final void onFriendPage(View view) {
-        Intent intent = new Intent(this, FriendsPageActivity.class);
-        startActivity(intent);
-    }
 
     /**
      * When you want to visit the ContactsPageActivity.

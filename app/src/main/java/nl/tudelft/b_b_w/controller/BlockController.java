@@ -39,7 +39,7 @@ public class BlockController implements BlockControllerInterface {
     private Context context;
 
     /**
-     *  Databasehandlers to use
+     * Databasehandlers to use
      */
     private GetDatabaseHandler getDatabaseHandler;
     private MutateDatabaseHandler mutateDatabaseHandler;
@@ -81,15 +81,12 @@ public class BlockController implements BlockControllerInterface {
                 latest = revokedTrustValue(latest);
                 mutateDatabaseHandler.updateBlock(latest);
                 mutateDatabaseHandler.addBlock(block);
-            }
-            else {
+            } else {
                 throw new RuntimeException("Error - Block already exists");
             }
         }
-
         return getBlocks(owner);
     }
-
 
     /**
      * @inheritDoc
@@ -99,7 +96,6 @@ public class BlockController implements BlockControllerInterface {
 
         if (blockExists(block.getOwner(), block.getPublicKey(), block.isRevoked()))
             throw new RuntimeException("block already exists");
-
         mutateDatabaseHandler.addBlock(block);
     }
 
@@ -118,7 +114,7 @@ public class BlockController implements BlockControllerInterface {
     public final List<Block> getBlocks(String owner) {
         // retrieve all blocks in the database and then sort it in order of sequence number
         List<Block> blocks = getDatabaseHandler.getAllBlocks(owner);
-        List < Block > res = new ArrayList<>();
+        List<Block> res = new ArrayList<>();
 
         for (Block block : blocks) {
             if (block.isRevoked()) {
@@ -244,6 +240,7 @@ public class BlockController implements BlockControllerInterface {
 
     /**
      * Create genesis block for an owner
+     *
      * @param user User of the block
      * @return the freshly created block
      * @throws Exception when the key hashing method does not work
@@ -265,7 +262,7 @@ public class BlockController implements BlockControllerInterface {
                 senderHash,
                 publicKey,
                 iban,
-                0
+                TrustValues.INITIALIZED.getValue()
         );
         addBlock(block);
         return block;
@@ -274,10 +271,11 @@ public class BlockController implements BlockControllerInterface {
     /**
      * Create a block which adds a key for a certain user and weaves it into the blockchain.
      * The initial trust value is zero.
-     * @param owner owner of the block
-     * @param contact of whom is the information
+     *
+     * @param owner     owner of the block
+     * @param contact   of whom is the information
      * @param publicKey public key you want to store
-     * @param iban IBAN number to store in this block
+     * @param iban      IBAN number to store in this block
      * @return the newly created block
      * @throws Exception when the hashing algorithm is not available
      */
@@ -289,10 +287,11 @@ public class BlockController implements BlockControllerInterface {
     /**
      * Create a block which revokes a key for a certain user and weaves it into the blockchain.
      * The initial trust value is zero.
-     * @param owner owner of the block
-     * @param contact of whom is the information
+     *
+     * @param owner     owner of the block
+     * @param contact   of whom is the information
      * @param publicKey public key you want to store
-     * @param iban IBAN number to store in this block
+     * @param iban      IBAN number to store in this block
      * @return the newly created block
      * @throws Exception when the hashing algorithm is not available
      */
@@ -304,11 +303,12 @@ public class BlockController implements BlockControllerInterface {
     /**
      * Creates a block with given revoke status. The block is added to the blockchain automatically
      * with all fields set correctly.
-     * @param owner owner of the block
-     * @param contact of whom is the information
+     *
+     * @param owner     owner of the block
+     * @param contact   of whom is the information
      * @param publicKey public key you want to store
-     * @param iban IBAN number to store in this block
-     * @param revoke whether to revoke?
+     * @param iban      IBAN number to store in this block
+     * @param revoke    whether to revoke?
      * @return the newly created block
      * @throws Exception when the hashing algorithm is not available
      */
@@ -338,7 +338,7 @@ public class BlockController implements BlockControllerInterface {
                 contactBlockHash,
                 publicKey,
                 iban,
-                0
+                TrustValues.INITIALIZED.getValue()
         );
         addBlock(block);
         return block;
@@ -350,15 +350,24 @@ public class BlockController implements BlockControllerInterface {
     @Override
     public Block backtrack(Block block) {
         String previousHashSender = block.getPreviousHashSender();
-        Block loop_block = block;
-        
+        Block loopBlock = block;
+
         while (!previousHashSender.equals("N/A")) {
-            loop_block = getDatabaseHandler.getByHash(previousHashSender);
-            if (loop_block == null) throw new
+            loopBlock = getDatabaseHandler.getByHash(previousHashSender);
+            if (loopBlock == null) throw new
                     Resources.NotFoundException("Error - Block cannot be backtracked: " + block.toString());
-            previousHashSender = loop_block.getPreviousHashSender();
+            previousHashSender = loopBlock.getPreviousHashSender();
         }
 
-        return loop_block;
+        return loopBlock;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public boolean verifyTrustworthiness(Block block) {
+        return blockExists(block.getOwner(), block.getPublicKey(), block.isRevoked())
+                && block.verifyBlock(backtrack(block));
     }
 }

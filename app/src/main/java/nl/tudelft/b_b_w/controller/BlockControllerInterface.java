@@ -129,4 +129,11 @@ interface BlockControllerInterface {
      * @return block which is the true ancestor
      */
     Block backtrack(Block block);
+
+    /**
+     * verifyTrustworthiness method
+     * @param block given input block to backtrace and verify trust value from
+     * @return boolean, representing whether the blocks are equal
+     */
+    boolean verifyTrustworthiness(Block block);
 }

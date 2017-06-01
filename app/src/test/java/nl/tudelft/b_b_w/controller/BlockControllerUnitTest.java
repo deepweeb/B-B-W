@@ -73,9 +73,10 @@ public class BlockControllerUnitTest {
      */
     @Test
     public final void testAddBlock() throws Exception {
+        Block genesisC = blockController.createGenesis(c);
         Block blockC = blockController.createKeyBlock(c, c, "kc", "ibanC");
-        blockController.addBlock(blockC);
         List<Block> list = new ArrayList<>();
+        list.add(genesisC);
         list.add(blockC);
         assertEquals(list, blockController.getBlocks(c.getName()));
     }
@@ -93,6 +94,7 @@ public class BlockControllerUnitTest {
      */
     @Test
     public final void testGetLatestBlock() throws Exception {
+        blockController.createGenesis(c);
         Block blockC = blockController.createKeyBlock(c, c, "kc", "ibanC");
         assertEquals(blockC, blockController.getLatestBlock(c.getName()));
     }
@@ -130,9 +132,11 @@ public class BlockControllerUnitTest {
      */
     @Test
     public final void testEmptyList() throws HashException {
+        Block genesisC = blockController.createGenesis(c);
         blockController.createKeyBlock(c, c, "pkc", "ibanC");
         blockController.createRevokeBlock(c, c, "pkc", "ibanC");
         List<Block> list = new ArrayList<>();
+        list.add(genesisC);
         assertEquals(list, blockController.getBlocks(c.getName()));
     }
 
@@ -239,6 +243,7 @@ public class BlockControllerUnitTest {
      */
     @Test
     public void testVerifyTrustworthiness() throws HashException {
+        blockController.createGenesis(c);
         Block b = blockController.createKeyBlock(c, c, "pk", "iban");
         assertTrue(blockController.verifyTrustworthiness(b));
     }
@@ -250,6 +255,7 @@ public class BlockControllerUnitTest {
      */
     @Test
     public void testVerifyTrustworthinessFalse() throws HashException {
+        blockController.createGenesis(c);
         Block b1 = blockController.createKeyBlock(c, c, "pk1", "iban");
         Block b2 = blockController.createKeyBlock(c, c, "pk2", "iban");
         assertFalse(blockController.verifyTrustworthiness(b2));

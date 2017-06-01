@@ -291,6 +291,8 @@ public class BlockController implements BlockControllerInterface {
     private Block createBlock(User owner, User contact, String publicKey, String iban,
                               BlockType blockType) throws HashException {
         Block latest = getLatestBlock(owner.getName());
+        if (latest == null)
+            throw new IllegalArgumentException("No genesis found for user " + owner);
         String previousBlockHash = latest.getOwnHash();
 
         // always link to genesis of contact blocks

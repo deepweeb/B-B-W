@@ -1,19 +1,9 @@
 package nl.tudelft.b_b_w.view;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -31,9 +21,6 @@ import nl.tudelft.b_b_w.model.Block;
  */
 public class ContactsActivity extends Activity {
 
-    //Owner of the blockchain
-    private String ownerName;
-
     /**
      * On create we request a database connection
      *
@@ -44,12 +31,11 @@ public class ContactsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
         setTitle("Contacts");
-        Bundle extras = getIntent().getExtras();
-        ownerName = extras.getString("ownerName");
-        // get contacts
-        BlockController blcController = new BlockController(this);
-        setUpGraph(blcController.getBlocks(ownerName));
-        ContactAdapter adapter = new ContactAdapter(blcController, ownerName, this);
+        SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
+        final String ownerName = settings.getString("userName", "");
+        BlockController blockController = new BlockController(this);
+        setUpGraph(blockController.getBlocks(ownerName));
+        ContactAdapter adapter = new ContactAdapter(blockController, ownerName, this);
         ListView lView = (ListView)findViewById(R.id.contacts);
         lView.setAdapter(adapter);
     }

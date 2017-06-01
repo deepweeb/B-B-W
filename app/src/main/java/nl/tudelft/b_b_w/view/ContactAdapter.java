@@ -157,9 +157,9 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
             TextView nameItemText = (TextView) view.findViewById(R.id.list_item_name);
             nameItemText.setText(
                     blcController.backtrack(
-                            blcController.getBlocks(ownerName).get(position)).getOwner());
+                            blcController.getBlocks(ownerName).get(position)).getOwner().getName());
             TextView ibanItemText = (TextView) view.findViewById(R.id.list_item_iban);
-            ibanItemText.setText(blcController.getBlocks(ownerName).get(position).getIban());
+            ibanItemText.setText(blcController.getBlocks(ownerName).get(position).getOwner().getIBAN());
             ImageView pic = (ImageView) view.findViewById(R.id.trust_image);
             pic.setImageResource(
                     getImageNo(blcController.getBlocks(ownerName).get(position).getTrustValue()));

@@ -18,11 +18,10 @@ public class GenesisBlock extends Block {
         // verify integration
         if (BuildConfig.DEBUG) {
             // verify integrity
-            if (blockData.getBlockType() != BlockType.ADD_KEY
+            if (blockData.getBlockType() != BlockType.GENESIS
                     || blockData.getSequenceNumber() != 1
                     || !blockData.getPreviousHashChain().equals("N/A")
-                    || !blockData.getPreviousHashSender().equals("N/A")
-                    || !blockData.getIban().equals("N/A"))
+                    || !blockData.getPreviousHashSender().equals("N/A"))
                 throw new AssertionError("invalid genesis block " + this.toString());
         }
     }

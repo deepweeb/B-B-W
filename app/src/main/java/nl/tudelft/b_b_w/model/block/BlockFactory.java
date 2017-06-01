@@ -37,15 +37,15 @@ public class BlockFactory {
         data.setPreviousHashChain(previousHashChain);
         data.setPreviousHashSender(previousHashSender);
         data.setPublicKey(publicKey);
-        data.setIban(iban);
         data.setTrustValue(trustValue);
+        data.setSequenceNumber(sequenceIndex);
 
         // determine block type
         if (sequenceIndex == 1)
             data.setBlockType(BlockType.GENESIS);
         else if (type.equals("REVOKE"))
             data.setBlockType(BlockType.REVOKE_KEY);
-        else if (type.equals("ADD"))
+        else if (type.equals("BLOCK"))
             data.setBlockType(BlockType.ADD_KEY);
         else
             throw new IllegalArgumentException("Unknown Block Type");

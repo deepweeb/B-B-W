@@ -20,8 +20,8 @@ public class RevokeKeyBlock extends KeyBlock {
             // verify integrity
             if (blockData.getBlockType() != BlockType.REVOKE_KEY
                     || blockData.getSequenceNumber() <= 1
-                    || !blockData.getPreviousHashChain().equals("N/A")
-                    || !blockData.getPreviousHashSender().equals("N/A"))
+                    || blockData.getPreviousHashChain().equals("N/A"))
+                    //|| blockData.getPreviousHashSender().equals("N/A"))
                 throw new AssertionError("invalid revoke block");
         }
     }

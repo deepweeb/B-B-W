@@ -48,4 +48,14 @@ public class User {
         final String PUBLIC_KEY = "PUBLIC_KEY";
         return PUBLIC_KEY;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof User) {
+            User other = (User) object;
+            return other.getIBAN().equals(getIBAN()) &&
+                    other.getName().equals(getName());
+        }
+        return false;
+    }
 }

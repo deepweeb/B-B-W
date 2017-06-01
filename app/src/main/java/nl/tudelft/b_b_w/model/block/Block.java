@@ -1,6 +1,7 @@
 package nl.tudelft.b_b_w.model.block;
 
 import nl.tudelft.b_b_w.model.HashException;
+import nl.tudelft.b_b_w.model.User;
 
 import static org.bouncycastle.asn1.x500.style.RFC4519Style.owner;
 
@@ -44,8 +45,8 @@ public abstract class Block {
      *
      * @return owner of the block
      */
-    public final String getOwner() {
-        return blockData.getOwner().getName();
+    public final User getOwner() {
+        return blockData.getOwner();
     }
 
     /**
@@ -96,15 +97,6 @@ public abstract class Block {
 
 
     /**
-     * Default getter for sequence number
-     *
-     * @return the sequence number of the block
-     */
-    public final String getIban() {
-        return blockData.getIban();
-    }
-
-    /**
      * Default getter for trustValue
      * @return the trust value of the block
      */
@@ -153,7 +145,7 @@ public abstract class Block {
                 ", previousHashChain='" + blockData.getPreviousHashChain() + '\'' +
                 ", previousHashSender='" + blockData.getPreviousHashSender() + '\'' +
                 ", publicKey='" + blockData.getPublicKey() + '\'' +
-                ", iban='" + blockData.getIban() + '\'' +
+                ", iban='" + blockData.getOwner().getIBAN() + '\'' +
                 ", trustValue='" + blockData.getTrustValue() + '\'' +
                 ", type='" + blockData.getBlockType() + '\'' +
                 '}';
@@ -172,7 +164,7 @@ public abstract class Block {
         Block block = (Block) o;
 
         if (isRevoked() != block.isRevoked()) return false;
-        if (!getIban().equals(block.getIban())) return false;
+        if (!getOwner().getIBAN().equals(block.getOwner().getIBAN())) return false;
         return getPublicKey().equals(block.getPublicKey());
     }
 

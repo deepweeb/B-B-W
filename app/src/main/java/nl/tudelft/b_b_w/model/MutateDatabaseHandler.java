@@ -30,7 +30,7 @@ public class MutateDatabaseHandler extends AbstractDatabaseHandler {
     public void addBlock(Block block) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = blockToContentValues(block);
-        values.put(KEY_SEQ_NO, lastSeqNumberOfChain(block.getOwner())+1);
+        values.put(KEY_SEQ_NO, lastSeqNumberOfChain(block.getOwner().getName())+1);
 
         // Inserting Row
         long res = db.insert(TABLE_NAME, null, values);
@@ -54,7 +54,7 @@ public class MutateDatabaseHandler extends AbstractDatabaseHandler {
                 values,
                 KEY_OWNER + " = ? AND " + KEY_PUBLIC_KEY + " = ? AND " + KEY_SEQ_NO + " = ?",
                 new String[] {
-                        block.getOwner(),
+                        block.getOwner().getName(),
                         block.getPublicKey(),
                         String.valueOf(block.getSequenceNumber()),
                 });
@@ -70,12 +70,12 @@ public class MutateDatabaseHandler extends AbstractDatabaseHandler {
      */
     private ContentValues blockToContentValues(Block block) {
         ContentValues values = new ContentValues();
-        values.put(KEY_OWNER, block.getOwner());
+        values.put(KEY_OWNER, block.getOwner().getName());
         values.put(KEY_SEQ_NO, block.getSequenceNumber());
         values.put(KEY_OWN_HASH, block.getOwnHash());
         values.put(KEY_PREV_HASH_CHAIN, block.getPreviousHashChain());
         values.put(KEY_PREV_HASH_SENDER, block.getPreviousHashSender());
-        values.put(KEY_IBAN_KEY, block.getIban());
+        values.put(KEY_IBAN_KEY, block.getOwner().getIBAN());
         values.put(KEY_PUBLIC_KEY, block.getPublicKey());
         values.put(KEY_REVOKE, block.isRevoked());
         values.put(KEY_TRUST_VALUE, block.getTrustValue());

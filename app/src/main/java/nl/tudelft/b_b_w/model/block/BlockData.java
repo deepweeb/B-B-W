@@ -13,7 +13,7 @@ import nl.tudelft.b_b_w.model.User;
 public class BlockData {
     private BlockType blockType;
     private int sequenceNumber;
-    private User owner;
+    private String ownerName;
     private String hash;
     private String previousHashChain;
     private String previousHashSender;
@@ -30,7 +30,7 @@ public class BlockData {
         try {
             // ConversionController conversionController = new ConversionController();
             MessageDigest md = MessageDigest.getInstance("SHA-256");
-            String text = owner + publicKey + previousHashChain + previousHashSender + iban;
+            String text = ownerName + publicKey + previousHashChain + previousHashSender + iban;
             md.update(text.getBytes("UTF-8"));
             byte[] digest = md.digest();
             String hash = String.format("%064x", new BigInteger(1, digest));
@@ -59,11 +59,12 @@ public class BlockData {
     }
 
     public User getOwner() {
-        return owner;
+        return new User(ownerName, iban);
     }
 
     public void setOwner(User owner) {
-        this.owner = owner;
+        this.ownerName = owner.getName();
+        this.iban = owner.getIBAN();
     }
 
     public String getPreviousHashChain() {
@@ -88,14 +89,6 @@ public class BlockData {
 
     public void setPublicKey(String publicKey) {
         this.publicKey = publicKey;
-    }
-
-    public String getIban() {
-        return iban;
-    }
-
-    public void setIban(String iban) {
-        this.iban = iban;
     }
 
     public int getTrustValue() {

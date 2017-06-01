@@ -28,8 +28,8 @@ public class BlockFactoryUnitTest {
     private final String TYPE_BLOCK = "BLOCK";
     private final String owner = "owner";
     private final String ownHash = "ownHash";
-    private final String previousHashChain = "previousHashChain";
-    private final String previousHashSender = "previousHashSender";
+    private final String previousHashChain = "N/A";
+    private final String previousHashSender = "N/A";
     private final String publicKey = "publicKey";
     private final String iban = "iban";
     private final int trustValue = TrustValues.INITIALIZED.getValue();
@@ -102,30 +102,11 @@ public class BlockFactoryUnitTest {
      * With an empty type
      */
     @Test(expected=IllegalArgumentException.class)
-    public void testGetBlockEmpty()throws HashException{
+    public void testGetBlockEmpty() throws HashException {
         BlockFactory.getBlock(
                 "",
                 owner,
-                blockController.getLatestSeqNumber(owner)+1,
-                ownHash,
-                previousHashChain,
-                previousHashSender,
-                publicKey,
-                iban,
-                trustValue
-        );
-    }
-
-    /**
-     * Tests whether the creation through a block factory works
-     * With a faulty type
-     */
-    @Test(expected=IllegalArgumentException.class)
-    public void testGetBlockFaultyString()throws HashException{
-        BlockFactory.getBlock(
-                "block",
-                owner,
-                blockController.getLatestSeqNumber(owner)+1,
+                2,
                 ownHash,
                 previousHashChain,
                 previousHashSender,

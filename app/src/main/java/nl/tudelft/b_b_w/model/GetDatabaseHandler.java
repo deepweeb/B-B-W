@@ -11,12 +11,15 @@ import java.util.List;
 import nl.tudelft.b_b_w.model.block.Block;
 import nl.tudelft.b_b_w.model.block.BlockData;
 import nl.tudelft.b_b_w.model.block.BlockFactory;
+import nl.tudelft.b_b_w.model.block.BlockType;
 
 /**
  * Class to create and handle the Database for get requests
  */
 
 public class GetDatabaseHandler extends AbstractDatabaseHandler {
+    /** Not Available information */
+    private static final String NA = "N/A";
 
     /**
      * Constructor
@@ -78,7 +81,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         cursor.close();
 
         if (block.getPreviousHashSender().equals("N/A")) {
-            return block.getOwner();
+            return block.getOwner().getName();
         } else {
             return getContactName(block.getPreviousHashSender());
         }
@@ -187,20 +190,27 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         String iban = cursor.getString(INDEX_IBAN_KEY);
         User owner = new User(ownerName, iban);
         BlockData blockData = new BlockData();
+        if (cursor.getInt(INDEX_SEQ_NO) == 1) {
+            blockData.setBlockType(BlockType.GENESIS);
+        } else if (cursor.getInt(INDEX_REVOKE) != 0) {
+            blockData.setBlockType(BlockType.REVOKE_KEY);
+        } else {
+            blockData.setBlockType(BlockType.ADD_KEY);
+        }
         blockData.setOwner(owner);
         blockData.setSequenceNumber(cursor.getInt(INDEX_SEQ_NO));
         blockData.setPreviousHashChain(cursor.getString(INDEX_PREV_HASH_CHAIN));
         blockData.setPreviousHashSender(cursor.getString(INDEX_PREV_HASH_SENDER));
         blockData.setPublicKey(cursor.getString(INDEX_PUBLIC_KEY));
-        blockData.setIban(cursor.getString(INDEX_IBAN_KEY));
         blockData.setTrustValue(cursor.getInt(INDEX_TRUST_VALUE));
         Block block = BlockFactory.createBlock(blockData);
 
         // verify
         String expectedHash = cursor.getString(INDEX_OWN_HASH);
         String calculatedHash = blockData.calculateHash();
-        if (!expectedHash.equals(calculatedHash))
+        if (!expectedHash.equals(calculatedHash)) {
             throw new HashMismatchException(expectedHash, calculatedHash);
+        }
 
         return block;
     }
@@ -327,7 +337,9 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
                         owner, String.valueOf(sequenceNumber)
                 }, null, null, null, null);
 
-        if (cursor.getCount() < 1) throw new NotFoundException();
+        if (cursor.getCount() < 1) {
+            throw new NotFoundException();
+        }
 
         cursor.moveToFirst();
 

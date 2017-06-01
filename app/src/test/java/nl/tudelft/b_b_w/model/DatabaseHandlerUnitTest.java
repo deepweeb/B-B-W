@@ -38,8 +38,8 @@ public class DatabaseHandlerUnitTest {
     private final String TYPE_REVOKE = "REVOKE";
     private final String owner = "owner";
     private final int sequenceNumber = 1;
-    private final String ownHash = "ownHash";
-    private final String previousHashChain = "previousHashChain";
+    private String ownHash;
+    private final String previousHashChain = "N/A";
     private final String previousHashSender = "N/A";
     private final String iban = "iban";
     private final String publicKey = "publicKey";
@@ -57,7 +57,7 @@ public class DatabaseHandlerUnitTest {
         _block =  BlockFactory.getBlock(
                 TYPE_BLOCK,
                 owner,
-                getDatabaseHandler.lastSeqNumberOfChain(owner) + 1,
+                1,
                 ownHash,
                 previousHashChain,
                 previousHashSender,
@@ -65,6 +65,7 @@ public class DatabaseHandlerUnitTest {
                 iban,
                 trustValue
         );
+        ownHash = _block.getOwnHash();
     }
 
     /**
@@ -89,7 +90,7 @@ public class DatabaseHandlerUnitTest {
                 owner,
                 getDatabaseHandler.lastSeqNumberOfChain(owner) + 1,
                 ownHash,
-                previousHashChain,
+                _block.getOwnHash(),
                 previousHashSender,
                 publicKey,
                 iban,
@@ -199,11 +200,11 @@ public class DatabaseHandlerUnitTest {
     @Test
     public void getContactName1() throws HashException {
         final String hash = "ownHash2";
-        final String randomSenderHash = "Hash44324";
+        final String randomSenderHash = "N/A";
         Block block2 = BlockFactory.getBlock(
                 TYPE_BLOCK,
                 "Jack",
-                getDatabaseHandler.lastSeqNumberOfChain(owner) + 1,
+                2,
                 hash,
                 randomSenderHash,
                 ownHash,
@@ -213,7 +214,7 @@ public class DatabaseHandlerUnitTest {
         mutateDatabaseHandler.addBlock(_block);
         mutateDatabaseHandler.addBlock(block2);
         System.out.println(getDatabaseHandler.getAllBlocks(owner).toString());
-        assertEquals(_block.getOwner(), getDatabaseHandler.getContactName(ownHash));
+        assertEquals(_block.getOwner().getName(), getDatabaseHandler.getContactName(ownHash));
 
     }
 

@@ -59,7 +59,7 @@ public class BlockController implements BlockControllerInterface {
     @Override
     public final List<Block> addBlockToChain(Block block) throws HashException {
         // Check if the block already exists
-        String owner = block.getOwner();
+        String owner = block.getOwner().getName();
         Block latest = getDatabaseHandler.getLatestBlock(owner);
 
         if (latest == null) {
@@ -87,7 +87,7 @@ public class BlockController implements BlockControllerInterface {
     @Override
     public final void addBlock(Block block) {
 
-        if (blockExists(block.getOwner(), block.getPublicKey(), block.isRevoked()))
+        if (blockExists(block.getOwner().getName(), block.getPublicKey(), block.isRevoked()))
             throw new RuntimeException("block already exists");
 
         mutateDatabaseHandler.addBlock(block);
@@ -149,7 +149,7 @@ public class BlockController implements BlockControllerInterface {
      */
     @Override
     public final List<Block> revokeBlock(Block block) throws HashException {
-        String owner = block.getOwner();
+        String owner = block.getOwner().getName();
         addBlock(BlockFactory.getBlock(
                 REVOKE,
                 owner,
@@ -158,7 +158,7 @@ public class BlockController implements BlockControllerInterface {
                 block.getPreviousHashChain(),
                 block.getPreviousHashSender(),
                 block.getPublicKey(),
-                block.getIban(),
+                block.getOwner().getIBAN(),
                 block.getTrustValue()));
         return getBlocks(owner);
     }
@@ -234,12 +234,11 @@ public class BlockController implements BlockControllerInterface {
      * @return the freshly created block
      * @throws Exception when the key hashing method does not work
      */
-    public Block createGenesis(User owner) throws Exception {
+    public Block createGenesis(User owner) throws HashException {
         BlockData blockData = new BlockData();
         blockData.setBlockType(BlockType.GENESIS);
         blockData.setSequenceNumber(1);
         blockData.setOwner(owner);
-        blockData.setIban(NA);
         blockData.setPreviousHashChain(NA);
         blockData.setPreviousHashSender(NA);
         blockData.setPublicKey(NA);
@@ -259,7 +258,7 @@ public class BlockController implements BlockControllerInterface {
      * @throws Exception when the hashing algorithm is not available
      */
     public Block createKeyBlock(User owner, User contact, String publicKey, String iban) throws
-            Exception {
+            HashException {
         return createBlock(owner, contact, publicKey, iban, BlockType.ADD_KEY);
     }
 
@@ -274,7 +273,7 @@ public class BlockController implements BlockControllerInterface {
      * @throws Exception when the hashing algorithm is not available
      */
     public Block createRevokeBlock(User owner, User contact, String publicKey, String iban)
-            throws Exception {
+            throws HashException {
         return createBlock(owner, contact, publicKey, iban, BlockType.REVOKE_KEY);
     }
 
@@ -290,7 +289,7 @@ public class BlockController implements BlockControllerInterface {
      * @throws Exception when the hashing algorithm is not available
      */
     private Block createBlock(User owner, User contact, String publicKey, String iban,
-                              BlockType blockType) throws Exception {
+                              BlockType blockType) throws HashException {
         Block latest = getLatestBlock(owner.getName());
         String previousBlockHash = latest.getOwnHash();
 
@@ -305,7 +304,6 @@ public class BlockController implements BlockControllerInterface {
 
         BlockData blockData = new BlockData();
         blockData.setBlockType(blockType);
-        blockData.setIban(iban);
         blockData.setSequenceNumber(seqNumber);
         blockData.setPreviousHashChain(previousBlockHash);
         blockData.setPreviousHashSender(contactBlockHash);
@@ -340,7 +338,7 @@ public class BlockController implements BlockControllerInterface {
      */
     @Override
     public boolean verifyTrustworthiness(Block block) throws HashException {
-        return blockExists(block.getOwner(), block.getPublicKey(), block.isRevoked())
+        return blockExists(block.getOwner().getName(), block.getPublicKey(), block.isRevoked())
                 && block.verifyBlock(backtrack(block));
     }
 }

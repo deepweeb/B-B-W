@@ -16,13 +16,14 @@ import nl.tudelft.b_b_w.model.HashException;
 import nl.tudelft.b_b_w.model.TrustValues;
 import nl.tudelft.b_b_w.model.User;
 import nl.tudelft.b_b_w.model.block.Block;
+import nl.tudelft.b_b_w.model.block.BlockData;
+import nl.tudelft.b_b_w.model.block.BlockFactory;
+import nl.tudelft.b_b_w.model.block.BlockType;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -127,7 +128,7 @@ public class BlockControllerUnitTest {
      */
     @Test(expected = RuntimeException.class)
     public final void alreadyRevoked() throws HashException {
-        blockController.createKeyBlock(b, a, "pka", "ibanB");
+        blockController.createKeyBlock(b, a, "ka", "ibanB");
     }
 
     /**
@@ -260,7 +261,17 @@ public class BlockControllerUnitTest {
     public void testVerifyTrustworthinessFalse() throws HashException {
         blockController.createGenesis(c);
         Block b1 = blockController.createKeyBlock(c, c, "pk1", "iban");
-        Block b2 = blockController.createKeyBlock(c, c, "pk2", "iban");
+        BlockData data = new BlockData();
+        data.setBlockType(BlockType.ADD_KEY);
+        data.setPublicKey("pk2");
+        data.setPreviousHashChain("DUMMY");
+        data.setPreviousHashSender("DUMMY");
+        data.setTrustValue(0);
+        data.setOwner(c);
+        data.setSequenceNumber(3);
+        Block b2 = BlockFactory.createBlock(data);
+
+//        blockController.revokeBlock(b2);
         assertFalse(blockController.verifyTrustworthiness(b2));
     }
 

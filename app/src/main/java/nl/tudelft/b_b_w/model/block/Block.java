@@ -23,12 +23,12 @@ public abstract class Block {
     }
 
     /** Does this block revoke a key? */
-    public boolean isRevoked() {
+    public final boolean isRevoked() {
         return blockData.getBlockType() == BlockType.REVOKE_KEY;
     }
 
     /** Is this block a genesis block? */
-    public boolean isGenesis() {
+    public final boolean isGenesis() {
         return blockData.getBlockType() == BlockType.GENESIS;
     }
 

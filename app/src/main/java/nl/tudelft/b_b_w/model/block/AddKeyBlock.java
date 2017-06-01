@@ -10,15 +10,6 @@ public class AddKeyBlock extends KeyBlock {
         super(blockData);
 
         // verify integrity
-        assert(blockData.getBlockType() == BlockType.ADD_KEY);
-    }
-
-    /**
-     * As an add block, we never revoke
-     * @return never revoke, so false
-     */
-    @Override
-    public boolean isRevoked() {
-        return false;
+        assert (blockData.getBlockType() == BlockType.ADD_KEY);
     }
 }

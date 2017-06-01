@@ -83,7 +83,8 @@ public class BlockController implements BlockControllerInterface {
      */
     @Override
     public final void addBlock(Block block) {
-
+        if (getDatabaseHandler.containsRevoke(block.getOwner().getName(), block.getPublicKey()))
+            throw new RuntimeException("Block already revoked");
         if (blockExists(block.getOwner().getName(), block.getPublicKey(), block.isRevoked()))
             throw new RuntimeException("block already exists");
         mutateDatabaseHandler.addBlock(block);
@@ -327,7 +328,8 @@ public class BlockController implements BlockControllerInterface {
         while (!previousHashSender.equals("N/A")) {
             loopBlock = getDatabaseHandler.getByHash(previousHashSender);
             if (loopBlock == null) throw new
-                    Resources.NotFoundException("Error - Block cannot be backtracked: " + block.toString());
+                    Resources.NotFoundException("Error - Block cannot be backtracked: " +
+                    block.toString());
             previousHashSender = loopBlock.getPreviousHashSender();
         }
 

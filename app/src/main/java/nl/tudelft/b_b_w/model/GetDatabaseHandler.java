@@ -55,6 +55,38 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
     }
 
     /**
+     * Checks wheter a given key is already revoked
+     * @param owner the owner (NOT user) of the key
+     * @param key the key in question
+     * @return
+     */
+    public final boolean containsRevoke(String owner, String key) {
+        List<Block> blocks = getAllBlocks(owner);
+        for (Block block : blocks) {
+            if (block.getPublicKey().equals(key) && block.isRevoked())
+                return true;
+        }
+        return false;
+    }
+
+    public final boolean containsRevoke_fasterButNotWorking(String owner, String key) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME,
+                _columns,
+                KEY_OWNER + " = ? AND " + KEY_PUBLIC_KEY + " = ? AND " + KEY_REVOKE + " = ?",
+                new String[]{
+                        owner,
+                        key,
+                        String.valueOf(1)
+                }, null, null, null, null);
+
+        // When returning an exception the whole program crashes,
+        // but we want to preserve the state.
+        cursor.moveToFirst();
+        return cursor.getCount() > 0;
+    }
+
+    /**
      * Function to backtrace the contact name given the hash that refer to their block
      * @param hash hash of the block which owner name we want to find from
      * @return name of owner
@@ -185,7 +217,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      * @param cursor The cursor to extract from
      * @return A freshly constructed block
      */
-    private Block extractBlock(Cursor cursor) throws HashException, HashMismatchException {
+    private Block extractBlock(Cursor cursor) throws HashException {
         String ownerName = cursor.getString(INDEX_OWNER);
         String iban = cursor.getString(INDEX_IBAN_KEY);
         User owner = new User(ownerName, iban);
@@ -363,8 +395,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      * @param owner the owner of the blocks that are going to be fetched
      * @return List of all the blocks
      */
-    public final List<Block> getAllBlocks(String owner) throws HashException,
-            HashMismatchException {
+    public final List<Block> getAllBlocks(String owner) {
         List<Block> blocks = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -381,8 +412,13 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
             cursor.moveToFirst();
             do {
                 // Extract block from database
-                Block block = extractBlock(cursor);
-                blocks.add(block);
+                try {
+                    Block block = extractBlock(cursor);
+                    blocks.add(block);
+                } catch (HashException e) {
+                    // not our responsibility here.
+                    return new ArrayList<Block>();
+                }
             } while (cursor.moveToNext());
         }
 

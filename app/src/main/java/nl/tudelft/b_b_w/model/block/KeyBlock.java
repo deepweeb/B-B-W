@@ -9,6 +9,4 @@ public abstract class KeyBlock extends Block {
     public KeyBlock(BlockData blockData) throws HashException {
         super(blockData);
     }
-
-    public abstract boolean isRevoked();
 }

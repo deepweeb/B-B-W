@@ -9,6 +9,7 @@ import nl.tudelft.b_b_w.model.HashException;
 public class RevokeKeyBlock extends KeyBlock {
     /**
      * Create new revoke block
+     *
      * @param blockData {@inheritDoc}
      * @throws HashException {@inheritDoc}
      */
@@ -21,17 +22,9 @@ public class RevokeKeyBlock extends KeyBlock {
             if (blockData.getBlockType() != BlockType.REVOKE_KEY
                     || blockData.getSequenceNumber() <= 1
                     || blockData.getPreviousHashChain().equals("N/A"))
-                    //|| blockData.getPreviousHashSender().equals("N/A"))
+                //|| blockData.getPreviousHashSender().equals("N/A"))
                 throw new AssertionError("invalid revoke block");
         }
     }
-
-    /**
-     * As a revoke block, we always revoke
-     * @return true
-     */
-    @Override
-    public boolean isRevoked() {
-        return true;
-    }
 }
+

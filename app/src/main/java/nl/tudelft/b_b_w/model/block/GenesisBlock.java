@@ -9,6 +9,7 @@ import nl.tudelft.b_b_w.model.HashException;
 public class GenesisBlock extends Block {
     /**
      * When creating a genesis block in debug mode its values are checked
+     *
      * @param blockData {@inheritDoc}
      * @throws HashException {@inheritDoc}
      */
@@ -24,14 +25,5 @@ public class GenesisBlock extends Block {
                     || !blockData.getPreviousHashSender().equals("N/A"))
                 throw new AssertionError("invalid genesis block " + this.toString());
         }
-    }
-
-    /**
-     * The genesis block is defined as not revoked
-     * @return false
-     */
-    @Override
-    public boolean isRevoked() {
-        return false;
     }
 }

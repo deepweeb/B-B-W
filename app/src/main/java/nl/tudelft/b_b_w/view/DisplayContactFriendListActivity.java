@@ -30,7 +30,7 @@ public class DisplayContactFriendListActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contacts);
+        setContentView(R.layout.activity_friends_contacts);
         SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
         final String ownerName = settings.getString("userNameTestSubject", "");
         final String userName = settings.getString("userName", "");
@@ -41,7 +41,7 @@ public class DisplayContactFriendListActivity extends Activity {
         List<Block> list = blockController.getBlocks(ownerName);
         setUpGraph(list);
         FriendsContactAdapter adapter = new FriendsContactAdapter(blockController, ownerName, user, this);
-        ListView lView = (ListView)findViewById(R.id.contacts);
+        ListView lView = (ListView)findViewById(R.id.contacts2);
         lView.setAdapter(adapter);
     }
 

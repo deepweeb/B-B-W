@@ -2,6 +2,7 @@ package nl.tudelft.b_b_w.controller;
 
 import java.util.List;
 
+import nl.tudelft.b_b_w.model.HashException;
 import nl.tudelft.b_b_w.model.block.Block;
 
 /**
@@ -73,8 +74,9 @@ interface BlockControllerInterface {
      *
      * @param block The block you want to revoke
      * @return the revoked block
+     * @throws HashException when hashing has failed
      */
-    List<Block> revokeBlock(Block block);
+    List<Block> revokeBlock(Block block) throws HashException;
 
     /**
      * Method for removing a certain block from a given list

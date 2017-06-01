@@ -21,6 +21,16 @@ public abstract class Block {
         this.hash = blockData.calculateHash();
     }
 
+    /** Does this block revoke a key? */
+    public boolean isRevoked() {
+        return blockData.getBlockType() == BlockType.REVOKE_KEY;
+    }
+
+    /** Is this block a genesis block? */
+    public boolean isGenesis() {
+        return blockData.getBlockType() == BlockType.GENESIS;
+    }
+
     /**
      * Retrieve block data of this block
      * @return the block data

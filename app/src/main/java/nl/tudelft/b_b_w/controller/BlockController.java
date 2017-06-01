@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.tudelft.b_b_w.model.GetDatabaseHandler;
+import nl.tudelft.b_b_w.model.HashException;
 import nl.tudelft.b_b_w.model.MutateDatabaseHandler;
 import nl.tudelft.b_b_w.model.TrustValues;
 import nl.tudelft.b_b_w.model.block.Block;
@@ -13,28 +14,21 @@ import nl.tudelft.b_b_w.model.block.BlockData;
 import nl.tudelft.b_b_w.model.block.BlockFactory;
 import nl.tudelft.b_b_w.model.block.BlockType;
 
-import static org.bouncycastle.asn1.x500.style.RFC4519Style.owner;
-import static org.bouncycastle.crypto.tls.CipherType.block;
-
 /**
  * Performs the actions on the blockchain
  */
 
 public class BlockController implements BlockControllerInterface {
+    @Deprecated
+    private static final String BLOCK = "BLOCK";
+
+    @Deprecated
+    private static final String REVOKE = "REVOKE";
+
     /**
      * For when info is not available.
      */
     private static final String NA = "N/A";
-
-    /**
-     * Block argument to create a block
-     */
-    private static final String BLOCK = "BLOCK";
-
-    /**
-     * Block argument to create a revoke block
-     */
-    private static final String REVOKE = "REVOKE";
 
     /**
      * Context of the block database
@@ -161,9 +155,9 @@ public class BlockController implements BlockControllerInterface {
      * @inheritDoc
      */
     @Override
-    public final List<Block> revokeBlock(Block block) {
+    public final List<Block> revokeBlock(Block block) throws HashException {
         String owner = block.getOwner();
-        Block newBlock = BlockFactory.getBlock(REVOKE, block.getOwner(),
+        Block newBlock = BlockFactory.getBlock(REVOKE, block.getOwner(), block.getSequenceNumber(),
                 block.getOwnHash(), block.getPreviousHashChain(), block.getPreviousHashSender(),
                 block.getPublicKey(), block.getIban(), block.getTrustValue());
         addBlock(newBlock);
@@ -236,16 +230,15 @@ public class BlockController implements BlockControllerInterface {
      * @throws Exception when the key hashing method does not work
      */
     public Block createGenesis(String owner) throws Exception {
-        String chainHash = NA;
-        String senderHash = NA;
-        String publicKey = NA;
-        String iban = NA;
-        ConversionController conversionController = new ConversionController(owner, publicKey,
-                chainHash, senderHash, iban);
-        String hash = conversionController.hashKey();
-        Block block = BlockFactory.getBlock(BLOCK, owner, hash, chainHash, senderHash, publicKey,
-                iban, 0);
-        block.setSeqNumberTo(1);
+        BlockData blockData = new BlockData();
+        blockData.setBlockType(BlockType.GENESIS);
+        blockData.setSequenceNumber(1);
+        blockData.setOwner(owner);
+        blockData.setIban(NA);
+        blockData.setPreviousHashChain(NA);
+        blockData.setPreviousHashSender(NA);
+        blockData.setPublicKey(NA);
+        Block block = BlockFactory.createBlock(blockData);
         addBlock(block);
         return block;
     }
@@ -262,7 +255,7 @@ public class BlockController implements BlockControllerInterface {
      */
     public Block createKeyBlock(String owner, String contact, String publicKey, String iban) throws
             Exception {
-        return createBlock(owner, contact, publicKey, iban, false);
+        return createBlock(owner, contact, publicKey, iban, BlockType.ADD_KEY);
     }
 
     /**
@@ -277,7 +270,7 @@ public class BlockController implements BlockControllerInterface {
      */
     public Block createRevokeBlock(String owner, String contact, String publicKey, String iban)
             throws Exception {
-        return createBlock(owner, contact, publicKey, iban, true);
+        return createBlock(owner, contact, publicKey, iban, BlockType.REVOKE_KEY);
     }
 
     /**
@@ -287,7 +280,7 @@ public class BlockController implements BlockControllerInterface {
      * @param contact of whom is the information
      * @param publicKey public key you want to store
      * @param iban IBAN number to store in this block
-     * @param revoke whether to revoke?
+     * @param blockType block type to create
      * @return the newly created block
      * @throws Exception when the hashing algorithm is not available
      */
@@ -311,8 +304,12 @@ public class BlockController implements BlockControllerInterface {
         BlockData blockData = new BlockData();
         blockData.setBlockType(blockType);
         blockData.setIban(iban);
-        blockData.setHash();
-        block.setSeqNumberTo(seqNumber);
+        blockData.setSequenceNumber(seqNumber);
+        blockData.setPreviousHashChain(previousBlockHash);
+        blockData.setPreviousHashSender(contactBlockHash);
+        blockData.setOwner(owner);
+        blockData.setPublicKey(publicKey);
+        Block block = BlockFactory.createBlock(blockData);
         addBlock(block);
         return block;
     }

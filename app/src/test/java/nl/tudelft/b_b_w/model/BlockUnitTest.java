@@ -158,6 +158,32 @@ public class BlockUnitTest {
     }
 
     /**
+     * Test to check whether the verifyBlock() method returns the right boolean value indicating if this block is equal to the parameter block.
+     * @throws Exception Catches error when the MessageDigest
+     * gets an error.
+     */
+    @Test
+    public void verifyBlockTest() throws Exception {
+        final Block check = BlockFactory.getBlock(TYPE_BLOCK, owner, blockController.getLatestSeqNumber(owner)+1,
+                ownHash, previousHashChain, previousHashSender, publicKey, iban, trustValue);
+        assertTrue(_block.equals(check));
+    }
+
+    /**
+     * Test to check whether the verifyBlock() method returns the right boolean value indicating if this block is equal to the parameter block.
+     * Forces a false
+     * @throws Exception Catches error when the MessageDigest
+     * gets an error.
+     */
+    @Test
+    public void verifyBlockFalseTest() throws Exception {
+        final String _owner = "NOTOWNER";
+        final Block check = BlockFactory.getBlock(TYPE_BLOCK, _owner, blockController.getLatestSeqNumber(owner),
+                ownHash, previousHashChain, previousHashSender, publicKey, iban, trustValue);
+        assertFalse(_block.equals(check));
+    }
+
+    /**
      * Test to check whether the equals() method returns the right boolean value indicating if this block is equal to the parameter block.
      * @throws Exception Catches error when the MessageDigest
      * gets an error.

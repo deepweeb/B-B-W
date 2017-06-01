@@ -17,6 +17,7 @@ import nl.tudelft.b_b_w.controller.BlockController;
 import nl.tudelft.b_b_w.model.HashException;
 import nl.tudelft.b_b_w.model.block.Block;
 
+
 /**
  * When the user wants to see a list of friends of the contact he just paired he enters into the
  * DisplayContactFriendListActivity, which contain some entry fields.
@@ -31,7 +32,7 @@ public class DisplayContactFriendListActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contacts);
+        setContentView(R.layout.activity_friends_contacts);
         SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
         final String ownerName = settings.getString("userNameTestSubject", "");
         setTitle(ownerName + "'s contact list");
@@ -45,6 +46,7 @@ public class DisplayContactFriendListActivity extends Activity {
         } catch (HashException e) {
             Toast.makeText(this, "Hash error while retrieving blocks", Toast.LENGTH_LONG).show();
         }
+
     }
 
     /**

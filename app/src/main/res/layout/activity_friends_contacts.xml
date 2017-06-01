@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="nl.tudelft.b_b_w.view.ContactsActivity"
+    tools:context="nl.tudelft.b_b_w.view.DisplayContactFriendListActivity"
     android:orientation="vertical">
 
     <ListView
-        android:id="@+id/contacts"
+        android:id="@+id/contacts2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -19,11 +19,5 @@
         android:id="@+id/graph"
         android:layout_weight="1" />
 
-    <Button
-        android:id="@+id/button14"
-        android:layout_width="match_parent"
-        android:layout_height="62dp"
-        android:onClick="onTemp"
-        android:text="Transaction" />
 
 </android.widget.LinearLayout>

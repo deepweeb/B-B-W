@@ -11,9 +11,6 @@ import android.widget.Toast;
 import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.controller.BlockController;
 import nl.tudelft.b_b_w.controller.ConversionController;
-import nl.tudelft.b_b_w.model.Block;
-import nl.tudelft.b_b_w.model.BlockFactory;
-import nl.tudelft.b_b_w.model.TrustValues;
 import nl.tudelft.b_b_w.model.User;
 
 import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
@@ -128,22 +125,16 @@ public class FriendsPageActivity extends Activity {
         ConversionController conversionController = new ConversionController(user.getName(), publicKey,
                 userLatestBlockHash, contactGenesisBlockHash, ibanNumber);
         String hash = conversionController.hashKey();
-        Block block = BlockFactory.getBlock(
-                TYPE_BLOCK,
-                user.getName(),
-                bc.getLatestSeqNumber(user.getName()) + 1,
-                hash,
-                userLatestBlockHash,
-                contactGenesisBlockHash,
-                publicKey,
-                ibanNumber,
-                TrustValues.INITIALIZED.getValue() // trust value still not implemented
-        );
 
-        try {bc.addBlock(block);}
-        catch(Exception e) {Toast.makeText(this, "Sorry, this contact is already added!",
-                Toast.LENGTH_SHORT).show();
-            return;}
+        try {
+            bc.createKeyBlock(user.getName(), contactName, publicKey, ibanNumber);
+        }
+        catch(Exception e)
+        {
+            Toast.makeText(this, "Sorry, this contact is already added!",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         Toast.makeText(this, "Added!", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(this, MainActivity.class));

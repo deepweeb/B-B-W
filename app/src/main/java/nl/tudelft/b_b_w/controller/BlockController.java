@@ -234,7 +234,9 @@ public class BlockController implements BlockControllerInterface {
                 iban,
                 TrustValues.INITIALIZED.getValue()
         );
+
         addBlock(block);
+
         return block;
     }
 

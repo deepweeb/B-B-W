@@ -12,8 +12,7 @@ import java.util.List;
 import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.controller.BlockController;
 import nl.tudelft.b_b_w.model.Block;
-import nl.tudelft.b_b_w.model.BlockFactory;
-import nl.tudelft.b_b_w.model.TrustValues;
+import nl.tudelft.b_b_w.model.User;
 
 import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
 
@@ -61,6 +60,7 @@ public class PairActivity extends Activity {
     protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pair);
+        blockController = new BlockController(this);
     }
 
 
@@ -68,74 +68,33 @@ public class PairActivity extends Activity {
      * This method create the first test subject.We do this in order to simulate a transaction.
      * @param view The view of the program.
      */
-    public final void onTestSubject1(View view) {
-        final String ibanTestSub1= "IBANTestSubject1";
+    public final void onTestSubject1(View view) throws Exception {
+
         ownerName = "TestSubject1";
-        blockController = new BlockController(this);
-        block1 = BlockFactory.getBlock(
-                "BLOCK",
-                ownerName,
-                blockController.getLatestSeqNumber(ownerName) + 1,
-                "TESTSUBJECT_1_HASH1",
-                "N/A",
-                "N/A",
-                "TestSubject_PUBKEY",
-                ibanTestSub1,
-                TrustValues.INITIALIZED.getValue()
-        );
+        final String ibanTestSub1= "IBAN1";
 
-        try {blockController.addBlock(block1);}
-        catch(Exception e) {Toast.makeText(this, "Sorry, this contact is already added!",
+        try {
+            block1 = blockController.createGenesis(new User(ownerName, ibanTestSub1));
+        }
+        catch(Exception e)
+        {
+        Toast.makeText(this, "Sorry, this contact is already added!",
                 Toast.LENGTH_SHORT).show();
-            return;}
+        return;
+        }
 
-        block2 = BlockFactory.getBlock(
-                "BLOCK",
-                ownerName,
-                blockController.getLatestSeqNumber(ownerName) + 1,
-                "HASH2",
-                "TESTSUBJECT_1_HASH1",
-                "HASHfromContact1",
-                "Contact1_PUBKEY",
-                "IBANContact1",
-                TrustValues.INITIALIZED.getValue()
-        );
-        blockController.addBlock(block2);
-        block3 = BlockFactory.getBlock(
-                "BLOCK",
-                ownerName,
-                blockController.getLatestSeqNumber(ownerName) + 1,
-                "HASH3",
-                "HASH2",
-                "HASHfromContact2",
-                "Contact2_PUBKEY",
-                "IBANContact2",
-                TrustValues.INITIALIZED.getValue()
-        );
-        blockController.addBlock(block3);
-        block4 = BlockFactory.getBlock(
-                "BLOCK",
-                ownerName,
-                blockController.getLatestSeqNumber(ownerName) + 1,
-                "HASH4",
-                "HASH3",
-                "HASHfromContact3",
-                "Contact3_PUBKEY",
-                "IBANContact3",
-                TrustValues.INITIALIZED.getValue()
-        );
-        blockController.addBlock(block4);
+        block2 = blockController.createKeyBlock(ownerName, ownerName, "Contact1_PUBKEY", "IBAN1Contact1");
+
+        block3 = blockController.createKeyBlock(ownerName, ownerName, "Contact2_PUBKEY", "IBAN1Contact2");
+
+        block4 = blockController.createKeyBlock(ownerName, ownerName, "Contact3_PUBKEY", "IBAN1Contact3");
 
         List<Block> list = blockController.getBlocks(ownerName);
-
-
 
         Toast.makeText(this, list.get(0).getPublicKey() + ", " +
                 list.get(ONE).getPublicKey() + ", " +
                 list.get(TWO).getPublicKey() + ", " +
                 list.get(THREE).getPublicKey(), Toast.LENGTH_SHORT).show();
-
-
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
@@ -144,7 +103,6 @@ public class PairActivity extends Activity {
         editor.apply();
 
         startActivity(new Intent(this, FriendsPageActivity.class));
-
     }
 
     /**
@@ -152,79 +110,25 @@ public class PairActivity extends Activity {
      * We do this to simulate a transaction.
      * @param view The view of the program.
      */
-    public final void onTestSubject2(View view) {
+    public final void onTestSubject2(View view) throws Exception {
 
         Block block5;
-        final String ibanTestSub2= "IBANTestSubject2";
-
         ownerName = "TestSubject2";
-        blockController = new BlockController(this);
-        block1 = BlockFactory.getBlock(
-                "BLOCK",
-                ownerName,
-                blockController.getLatestSeqNumber(ownerName) + 1,
-                "TESTSUBJECT_2_HASH1",
-                "N/A",
-                "N/A",
-                "a",
-                ibanTestSub2,
-                TrustValues.INITIALIZED.getValue()
-        );
+        final String ibanTestSub2= "IBAN2";
 
-        try {blockController.addBlock(block1);}
-        catch(Exception e) {Toast.makeText(this, "Sorry, this contact is already added!",
-                Toast.LENGTH_SHORT).show();
-            return;}
-
-        block2 = BlockFactory.getBlock(
-                "BLOCK",
-                ownerName,
-                blockController.getLatestSeqNumber(ownerName) + 1,
-                "HASH2",
-                "TESTSUBJECT_2_HASH1",
-                "HASHfromContact1",
-                "b",
-                "IBANContact2",
-                TrustValues.INITIALIZED.getValue()
-        );
-        blockController.addBlock(block2);
-        block3 = BlockFactory.getBlock(
-                "BLOCK",
-                ownerName,
-                blockController.getLatestSeqNumber(ownerName) + 1,
-                "HASH3",
-                "HASH2",
-                "HASHfromContact2",
-                "c",
-                "IBANContact3",
-                TrustValues.INITIALIZED.getValue()
-        );
-        blockController.addBlock(block3);
-        block4 = BlockFactory.getBlock(
-                "BLOCK",
-                ownerName,
-                blockController.getLatestSeqNumber(ownerName) + 1,
-                "HASH4",
-                "HASH3",
-                "HASHfromContact3",
-                "d",
-                "IBANContact4",
-                TrustValues.INITIALIZED.getValue()
-        );
-        blockController.addBlock(block4);
-
-        block5 = BlockFactory.getBlock(
-                "BLOCK",
-                ownerName,
-                blockController.getLatestSeqNumber(ownerName) + 1,
-                "HASH5",
-                "HASH4",
-                "HASHfromContact4",
-                "e",
-                "IBANContact5",
-                TrustValues.INITIALIZED.getValue()
-        );
-        blockController.addBlock(block5);
+        try {
+            block1 = blockController.createGenesis(new User(ownerName, ibanTestSub2));
+        }
+        catch(Exception e)
+        {
+            Toast.makeText(this, "Sorry, this contact is already added!",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        block2 = blockController.createKeyBlock(ownerName, ownerName, "b", "IBAN2Contact1");
+        block3 = blockController.createKeyBlock(ownerName, ownerName, "c", "IBAN2Contact2");
+        block2 = blockController.createKeyBlock(ownerName, ownerName, "d", "IBAN2Contact3");
+        block2 = blockController.createKeyBlock(ownerName, ownerName, "e", "IBAN2Contact4");
 
         List<Block> list = blockController.getBlocks(ownerName);
 
@@ -234,14 +138,11 @@ public class PairActivity extends Activity {
                 list.get(THREE).getPublicKey() + ", " +
                 list.get(FOUR).getPublicKey(), Toast.LENGTH_SHORT).show();
 
-
-
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("userNameTestSubject", ownerName);
         editor.putString("ibanTestSubject", ibanTestSub2);
         editor.apply();
-
 
         startActivity(new Intent(this, FriendsPageActivity.class));
     }
@@ -253,44 +154,24 @@ public class PairActivity extends Activity {
      */
     public final void onTestSubject3(View view) {
 
-        final String ibanTestSub3= "IBANTestSubject3";
+
         ownerName = "TestSubject3";
-        blockController = new BlockController(this);
-        block1 = BlockFactory.getBlock(
-                "BLOCK",
-                ownerName,
-                blockController.getLatestSeqNumber(ownerName) + 1,
-                "TESTSUBJECT_3_HASH1",
-                "N/A",
-                "N/A",
-                "sub3KeyA",
-                ibanTestSub3,
-                TrustValues.INITIALIZED.getValue()
-        );
+        final String ibanTestSub3= "IBAN3";
 
-        try {blockController.addBlock(block1);}
-        catch(Exception e) {Toast.makeText(this, "Sorry, this contact is already added!",
-                Toast.LENGTH_SHORT).show();
-            return;}
+        try {
+            block1 = blockController.createGenesis(new User(ownerName, ibanTestSub3));
+        }
+        catch(Exception e)
+        {
+            Toast.makeText(this, "Sorry, this contact is already added!",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        block2 = BlockFactory.getBlock(
-                "BLOCK",
-                ownerName,
-                blockController.getLatestSeqNumber(ownerName) + 1,
-                "HASH2",
-                "TESTSUBJECT_3_HASH1",
-                "HASHfromContact1",
-                "sub3KeyB",
-                "IBANContact1",
-                TrustValues.INITIALIZED.getValue()
-        );
-
-        blockController.addBlock(block2);
 
         List<Block> list = blockController.getBlocks(ownerName);
 
-        Toast.makeText(this, list.get(0).getPublicKey() + ", " +
-                list.get(1).getPublicKey(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, list.get(0).getPublicKey(), Toast.LENGTH_SHORT).show();
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();

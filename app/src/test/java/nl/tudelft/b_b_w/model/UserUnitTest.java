@@ -26,6 +26,8 @@ public class UserUnitTest {
     public void setUp() {
         this._user = mock(User.class);
         when(_user.generatePublicKey()).thenReturn("PUBLIC_KEY");
+        when(_user.getName()).thenReturn(name);
+        when(_user.getIBAN()).thenReturn(IBAN);
     }
 
     /**

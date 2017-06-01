@@ -33,13 +33,13 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
 
     /**
      * Default constructor to initiate the Adapter
-     * @param bc BlockController which is passed on
+     * @param blockController BlockController which is passed on
      * @param context Context which is passed on
      */
-    public ContactAdapter(BlockController bc, String ownerName, Context context) {
+    public ContactAdapter(BlockController blockController, String ownerName, Context context) {
         this.context = context;
         this.ownerName = ownerName;
-        this.blockController = bc;
+        this.blockController = blockController;
     }
 
     /**
@@ -65,7 +65,6 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
     public int getCount() {
         return blockController.getBlocks(ownerName).size();
     }
-
 
     /**
      * Method to get the right image number
@@ -138,8 +137,8 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
         nameItemText.setText(blockController.getContactName(blockController.getBlocks(ownerName).get(position).getOwnHash()));
         TextView ibanItemText = (TextView)view.findViewById(R.id.list_item_iban);
         ibanItemText.setText(blockController.getBlocks(ownerName).get(position).getIban());
-        ImageView pic = (ImageView)view.findViewById(R.id.trust_image);
-        pic.setImageResource(
+        ImageView trustImage = (ImageView)view.findViewById(R.id.trust_image);
+        trustImage.setImageResource(
                 getImageNo(blockController.getBlocks(ownerName).get(position).getTrustValue()));
         Button revokeButton = (Button)view.findViewById(R.id.revoke_btn);
         revokeButton.setOnClickListener(createDialog(position));

@@ -32,14 +32,14 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
 
     /**
      * Default constructor to initiate the Adapter
-     * @param bc BlockController which is passed on
+     * @param blockController BlockController which is passed on
      * @param context Context which is passed on
      */
-    public FriendsContactAdapter(BlockController bc, String ownerName, User user, Context context) {
+    public FriendsContactAdapter(BlockController blockController, String ownerName, User user, Context context) {
         this.context = context;
         this.ownerName = ownerName;
         this.user = user;
-        this.blockController = bc;
+        this.blockController = blockController;
     }
 
     /**
@@ -65,7 +65,6 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
     public int getCount() {
         return blockController.getBlocks(ownerName).size();
     }
-
 
     /**
      * Method to get the right image number

@@ -110,3 +110,6 @@ after_script:
   - cat ${TRAVIS_BUILD_DIR}/*/build/outputs/androidTest-results/connected/*
   - cat ${TRAVIS_BUILD_DIR}/*/build/reports/lint-results.xml
   - pandoc builder/build/reports/tests/index.html -t plain | sed -n '/^Failed tests/,/default-package/p'
+
+after_success:
+  - ./gradlew cobertura coveralls

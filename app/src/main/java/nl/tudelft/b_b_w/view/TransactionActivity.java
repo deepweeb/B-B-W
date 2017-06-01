@@ -1,7 +1,6 @@
 package nl.tudelft.b_b_w.view;
 
 
-import static nl.tudelft.b_b_w.R.id.spinner1;
 import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
 
 import android.app.Activity;
@@ -35,6 +34,7 @@ public class TransactionActivity extends Activity {
         user = new User(settings.getString("userName", ""), settings.getString("iban", ""));
         blockController = new BlockController(this);
         addItemsOnSpinner();
+        setButtons();
         onSend();
     }
 
@@ -43,11 +43,6 @@ public class TransactionActivity extends Activity {
         ownerItemText.setText(user.getName());
         TextView ibanItemText = (TextView)  findViewById(R.id.IbanTransferor);
         ibanItemText.setText(user.getIBAN());
-        TextView ibanValue = (TextView) findViewById(R.id.IbanTransferee);
-        ibanValue.setText(blockController.getBlocks(transactionName).get(0).getIban());
-        EditText amountText = (EditText) findViewById(R.id.editText11);
-//        int amount = Integer.parseInt(amountText.getText().toString());
-        // this is for when we'll actually do something with an amount
     }
 
     public void onSend() {
@@ -55,12 +50,14 @@ public class TransactionActivity extends Activity {
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                transactionName = String.valueOf(dialog.getSelectedItem());
+                EditText amountText = (EditText) findViewById(R.id.editText11);
+                final int amount = Integer.parseInt(amountText.getText().toString());
                 for (Block block : blockController.getBlocks(user.getName())) {
                     if (blockController.backtrack(block).getOwner().equals(transactionName)) {
                         blockController.successfulTransaction(block);
-                        Toast.makeText(
-                                TransactionActivity.this,
-                                String.valueOf(block.getTrustValue()), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TransactionActivity.this, "Send €" + amount+" to "
+                                + transactionName + "!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -68,7 +65,7 @@ public class TransactionActivity extends Activity {
     }
 
     public void addItemsOnSpinner() {
-        dialog = (Spinner)findViewById(spinner1);
+        dialog = (Spinner)findViewById(R.id.spinner1);
         int listSize = blockController.getBlocks(user.getName()).size();
         String[] items = new String[listSize];
         for (int i = 0; i < listSize; i++) {
@@ -77,6 +74,5 @@ public class TransactionActivity extends Activity {
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, items);
         dialog.setAdapter(adapter);
-        transactionName = String.valueOf(dialog.getSelectedItem());
     }
 }

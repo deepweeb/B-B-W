@@ -35,18 +35,18 @@ abstract class AbstractDatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_CREATED_AT = "created_at";
 
     /** Table indices */
-    final int INDEX_OWNER = 0;
-    final int INDEX_SEQ_NO = 1;
-    final int INDEX_OWN_HASH = 2;
-    final int INDEX_PREV_HASH_CHAIN = 3;
-    final int INDEX_PREV_HASH_SENDER = 4;
-    final int INDEX_PUBLIC_KEY = 5;
-    final int INDEX_IBAN_KEY = 6;
-    final int INDEX_TRUST_VALUE = 7;
-    final int INDEX_REVOKE = 8;
+    static final int INDEX_OWNER = 0;
+    static final int INDEX_SEQ_NO = 1;
+    static final int INDEX_OWN_HASH = 2;
+    static final int INDEX_PREV_HASH_CHAIN = 3;
+    static final int INDEX_PREV_HASH_SENDER = 4;
+    static final int INDEX_PUBLIC_KEY = 5;
+    static final int INDEX_IBAN_KEY = 6;
+    static final int INDEX_TRUST_VALUE = 7;
+    static final int INDEX_REVOKE = 8;
 
     // Persistence helpers
-    final String[] _columns = new String[]{
+    static final String[] _columns = new String[]{
             KEY_OWNER, KEY_SEQ_NO, KEY_OWN_HASH, KEY_PREV_HASH_CHAIN, KEY_PREV_HASH_SENDER,
             KEY_PUBLIC_KEY, KEY_IBAN_KEY, KEY_TRUST_VALUE, KEY_REVOKE
     };
@@ -69,7 +69,7 @@ abstract class AbstractDatabaseHandler extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
-        final String CREATE_BLOCKS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "("
+        final String createBlocksTable = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "("
                 + KEY_OWNER + " TEXT NOT NULL,"
                 + KEY_SEQ_NO + " INTEGER NOT NULL,"
                 + KEY_OWN_HASH + " TEXT NOT NULL,"
@@ -82,7 +82,7 @@ abstract class AbstractDatabaseHandler extends SQLiteOpenHelper {
                 + KEY_CREATED_AT + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,"
                 + " PRIMARY KEY (owner, publicKey, sequenceNumber)"
                 + ")";
-        db.execSQL(CREATE_BLOCKS_TABLE);
+        db.execSQL(createBlocksTable);
     }
 
     /**
@@ -107,12 +107,12 @@ abstract class AbstractDatabaseHandler extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        final String upgrade_script = "DROP TABLE IF EXISTS " + TABLE_NAME + ";"
+        final String upgradeScript = "DROP TABLE IF EXISTS " + TABLE_NAME + ";"
                 + "DROP TABLE IF EXISTS option;";
 
         // TODO: check if the db version is lower than the latest
 
-        db.execSQL(upgrade_script);
+        db.execSQL(upgradeScript);
     }
 
     /**

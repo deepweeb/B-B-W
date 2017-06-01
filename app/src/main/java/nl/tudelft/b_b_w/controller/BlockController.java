@@ -190,6 +190,7 @@ public class BlockController implements BlockControllerInterface {
     @Override
     public final Block verifyIBAN(Block block) {
         block.setTrustValue(TrustValues.VERIFIED.getValue());
+        mutateDatabaseHandler.updateBlock(block);
         return block;
     }
 
@@ -202,6 +203,7 @@ public class BlockController implements BlockControllerInterface {
         final int newTrust = block.getTrustValue() + TrustValues.SUCCESFUL_TRANSACTION.getValue();
         if (newTrust > maxCeil) block.setTrustValue(maxCeil);
         block.setTrustValue(newTrust);
+        mutateDatabaseHandler.updateBlock(block);
         return block;
     }
 
@@ -214,6 +216,7 @@ public class BlockController implements BlockControllerInterface {
         final int newTrust = block.getTrustValue() + TrustValues.FAILED_TRANSACTION.getValue();
         if (newTrust < minCeil) block.setTrustValue(minCeil);
         block.setTrustValue(newTrust);
+        mutateDatabaseHandler.updateBlock(block);
         return block;
     }
 
@@ -223,6 +226,7 @@ public class BlockController implements BlockControllerInterface {
     @Override
     public final Block revokedTrustValue(Block block) {
         block.setTrustValue(TrustValues.REVOKED.getValue());
+        mutateDatabaseHandler.updateBlock(block);
         return block;
     }
 

@@ -46,7 +46,7 @@ abstract class AbstractDatabaseHandler extends SQLiteOpenHelper {
     static final int INDEX_REVOKE = 8;
 
     // Persistence helpers
-    static final String[] _columns = new String[]{
+    static final String[] COLUMNS = new String[]{
             KEY_OWNER, KEY_SEQ_NO, KEY_OWN_HASH, KEY_PREV_HASH_CHAIN, KEY_PREV_HASH_SENDER,
             KEY_PUBLIC_KEY, KEY_IBAN_KEY, KEY_TRUST_VALUE, KEY_REVOKE
     };

@@ -55,7 +55,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
     public final String getContactName(String hash) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_NAME,
-                _columns,
+                COLUMNS,
                 KEY_OWN_HASH + " = ? ",
                 new String[]{
                         hash
@@ -91,7 +91,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
     public final Block getBlock(String owner, String publicKey, int sequenceNumber) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_NAME,
-                _columns,
+                COLUMNS,
                 KEY_OWNER + " = ? AND " + KEY_PUBLIC_KEY + " = ? AND " + KEY_SEQ_NO + " = ?",
                 new String[]{
                         owner, publicKey, String.valueOf(sequenceNumber)
@@ -203,7 +203,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         if (maxSeqNum == 0){return null;}
 
         Cursor cursor = db.query(TABLE_NAME,
-                _columns,
+                COLUMNS,
                 KEY_OWNER + " = ? AND " + KEY_SEQ_NO + " = ?",
                 new String[]{
                         owner, String.valueOf(maxSeqNum)
@@ -238,7 +238,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_NAME,
-                _columns,
+                COLUMNS,
                 KEY_OWNER + " = ? AND " + KEY_SEQ_NO + " > ?",
                 new String[]{
                         owner, String.valueOf(sequenceNumber)
@@ -273,7 +273,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_NAME,
-                _columns,
+                COLUMNS,
                 KEY_OWNER + " = ? AND " + KEY_PUBLIC_KEY + " = ? AND " + KEY_REVOKE + " = ?",
                 new String[]{
                         owner,
@@ -303,7 +303,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_NAME,
-                _columns,
+                COLUMNS,
                 KEY_OWNER + " = ? AND " + KEY_SEQ_NO + " < ?",
                 new String[]{
                         owner, String.valueOf(sequenceNumber)
@@ -339,7 +339,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_NAME,
-                _columns,
+                COLUMNS,
                 KEY_OWNER + " = ?",
                 new String[]{
                         owner
@@ -371,7 +371,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
     public final boolean isDatabaseEmpty() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.query(TABLE_NAME,
-                _columns,
+                COLUMNS,
                 KEY_PREV_HASH_SENDER + " = ? ",
                 new String[]{
                         "N/A"
@@ -393,7 +393,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_NAME,
-                _columns,
+                COLUMNS,
                 KEY_OWN_HASH + " = ?",
                 new String[]{
                         hash

@@ -24,6 +24,10 @@ import nl.tudelft.b_b_w.model.BlockFactory;
 import nl.tudelft.b_b_w.model.TrustValues;
 import nl.tudelft.b_b_w.model.User;
 
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
@@ -402,6 +406,30 @@ public class BlockControllerUnitTest {
         );
         bc.addBlock(newBlock);
         assertEquals(newBlock, bc.backtrack(newBlock2));
+    }
+
+    /**
+     * verifyTrustworthiness test
+     * Tests whether a block is trustworthy
+     */
+    @Test
+    public void testVerifyTrustworthiness() {
+        final Block newBlock = BlockFactory.getBlock(TYPE_BLOCK, owner, bc.getLatestSeqNumber(owner)+1,
+                ownHash, previousHashChain, NA, publicKey, iban, trustValue);
+        bc.addBlock(newBlock);
+        assertTrue(bc.verifyTrustworthiness(newBlock));
+    }
+
+    /**
+     * verifyTrustworthiness test
+     * Tests whether a block is trustworthy
+     * Forces a false
+     */
+    @Test
+    public void testVerifyTrustworthinessFalse() {
+        final Block newBlock = BlockFactory.getBlock(TYPE_BLOCK, owner, bc.getLatestSeqNumber(owner)+1,
+                ownHash, previousHashChain, NA, publicKey+"1", iban, trustValue);
+        assertFalse(bc.verifyTrustworthiness(newBlock));
     }
 
     /**

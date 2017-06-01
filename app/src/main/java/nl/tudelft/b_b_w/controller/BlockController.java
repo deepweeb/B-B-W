@@ -346,15 +346,24 @@ public class BlockController implements BlockControllerInterface {
     @Override
     public Block backtrack(Block block) {
         String previousHashSender = block.getPreviousHashSender();
-        Block loop_block = block;
-        
+        Block loopBlock = block;
+
         while (!previousHashSender.equals("N/A")) {
-            loop_block = getDatabaseHandler.getByHash(previousHashSender);
-            if (loop_block == null) throw new
+            loopBlock = getDatabaseHandler.getByHash(previousHashSender);
+            if (loopBlock == null) throw new
                     Resources.NotFoundException("Error - Block cannot be backtracked: " + block.toString());
-            previousHashSender = loop_block.getPreviousHashSender();
+            previousHashSender = loopBlock.getPreviousHashSender();
         }
 
-        return loop_block;
+        return loopBlock;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public boolean verifyTrustworthiness(Block block) {
+        return blockExists(block.getOwner(), block.getPublicKey(), block.isRevoked())
+                && block.verifyBlock(backtrack(block));
     }
 }

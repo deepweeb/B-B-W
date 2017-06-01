@@ -74,7 +74,7 @@ public class PairActivity extends Activity {
         final String ibanTestSub1= "IBAN1";
 
         try {
-            block1 = blockController.createGenesis(new User(ownerName, ibanTestSub1));
+            blockController.createGenesis(new User(ownerName, ibanTestSub1));
         }
         catch(Exception e)
         {
@@ -83,11 +83,14 @@ public class PairActivity extends Activity {
         return;
         }
 
-        block2 = blockController.createKeyBlock(ownerName, ownerName, "Contact1_PUBKEY", "IBAN1Contact1");
+        blockController.createGenesis(new User("Subject1Contact1", "IBAN1Contact1"));
+        blockController.createKeyBlock(ownerName, "Subject1Contact1", "Contact1_PUBKEY", "IBAN1Contact1");
 
-        block3 = blockController.createKeyBlock(ownerName, ownerName, "Contact2_PUBKEY", "IBAN1Contact2");
+        blockController.createGenesis(new User("Subject1Contact2", "IBAN1Contact2"));
+        blockController.createKeyBlock(ownerName, "Subject1Contact2", "Contact2_PUBKEY", "IBAN1Contact2");
 
-        block4 = blockController.createKeyBlock(ownerName, ownerName, "Contact3_PUBKEY", "IBAN1Contact3");
+        blockController.createGenesis(new User("Subject1Contact3", "IBAN1Contact3"));
+        blockController.createKeyBlock(ownerName, "Subject1Contact3", "Contact3_PUBKEY", "IBAN1Contact3");
 
         List<Block> list = blockController.getBlocks(ownerName);
 
@@ -117,7 +120,7 @@ public class PairActivity extends Activity {
         final String ibanTestSub2= "IBAN2";
 
         try {
-            block1 = blockController.createGenesis(new User(ownerName, ibanTestSub2));
+            blockController.createGenesis(new User(ownerName, ibanTestSub2));
         }
         catch(Exception e)
         {
@@ -125,10 +128,18 @@ public class PairActivity extends Activity {
                     Toast.LENGTH_SHORT).show();
             return;
         }
-        block2 = blockController.createKeyBlock(ownerName, ownerName, "b", "IBAN2Contact1");
-        block3 = blockController.createKeyBlock(ownerName, ownerName, "c", "IBAN2Contact2");
-        block2 = blockController.createKeyBlock(ownerName, ownerName, "d", "IBAN2Contact3");
-        block2 = blockController.createKeyBlock(ownerName, ownerName, "e", "IBAN2Contact4");
+
+        blockController.createGenesis(new User("Subject2Contact1", "IBAN2Contact1"));
+        blockController.createKeyBlock(ownerName, "Subject2Contact1", "b", "IBAN2Contact1");
+
+        blockController.createGenesis(new User("Subject2Contact2", "IBAN2Contact2"));
+        blockController.createKeyBlock(ownerName, "Subject2Contact2", "c", "IBAN2Contact2");
+
+        blockController.createGenesis(new User("Subject2Contact3", "IBAN2Contact3"));
+        blockController.createKeyBlock(ownerName, "Subject2Contact3", "d", "IBAN2Contact3");
+
+        blockController.createGenesis(new User("Subject2Contact4", "IBAN2Contact4"));
+        blockController.createKeyBlock(ownerName, "Subject2Contact4", "e", "IBAN2Contact4");
 
         List<Block> list = blockController.getBlocks(ownerName);
 

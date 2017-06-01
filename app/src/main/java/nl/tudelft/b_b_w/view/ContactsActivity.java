@@ -59,6 +59,10 @@ public class ContactsActivity extends Activity {
         graph.addSeries(series);
     }
 
+    /**
+     * Button to go to the page where transactions are done
+     * @param view The view of the app.
+     */
     public final void onTemp(View view) {
         Intent intent = new Intent(this, TransactionActivity.class);
         startActivity(intent);

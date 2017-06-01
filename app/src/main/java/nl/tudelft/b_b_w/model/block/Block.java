@@ -158,4 +158,22 @@ public abstract class Block {
                 ", type='" + blockData.getBlockType() + '\'' +
                 '}';
     }
+
+    /**
+     * Verifies whether the attributes of the given block are equal to this
+     * Attributes are isRevoked, iban and public key
+     * @param o given block
+     * @return equals or not
+     */
+    public boolean verifyBlock(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Block block = (Block) o;
+
+        if (isRevoked() != block.isRevoked()) return false;
+        if (!getIban().equals(block.getIban())) return false;
+        return getPublicKey().equals(block.getPublicKey());
+    }
+
 }

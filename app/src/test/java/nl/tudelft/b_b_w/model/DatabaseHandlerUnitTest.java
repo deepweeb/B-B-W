@@ -457,6 +457,15 @@ public class DatabaseHandlerUnitTest {
     }
 
     /**
+     * Test to check whether getting a block by its hash value and owner works
+     */
+    @Test
+    public void getByHash() throws HashException {
+        mutateDatabaseHandler.addBlock(_block);
+        assertEquals(_block, getDatabaseHandler.getByHash(ownHash));
+    }
+
+    /**
      * Closes database connection after test
      */
     @After

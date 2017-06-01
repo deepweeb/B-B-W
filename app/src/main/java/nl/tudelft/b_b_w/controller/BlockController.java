@@ -10,13 +10,11 @@ import nl.tudelft.b_b_w.model.GetDatabaseHandler;
 import nl.tudelft.b_b_w.model.HashException;
 import nl.tudelft.b_b_w.model.MutateDatabaseHandler;
 import nl.tudelft.b_b_w.model.TrustValues;
+import nl.tudelft.b_b_w.model.User;
 import nl.tudelft.b_b_w.model.block.Block;
 import nl.tudelft.b_b_w.model.block.BlockData;
 import nl.tudelft.b_b_w.model.block.BlockFactory;
 import nl.tudelft.b_b_w.model.block.BlockType;
-import nl.tudelft.b_b_w.model.User;
-
-import static org.bouncycastle.crypto.tls.CipherType.block;
 
 /**
  * Performs the actions on the blockchain
@@ -325,15 +323,24 @@ public class BlockController implements BlockControllerInterface {
     @Override
     public Block backtrack(Block block) throws HashException {
         String previousHashSender = block.getPreviousHashSender();
-        Block loop_block = block;
-        
+        Block loopBlock = block;
+
         while (!previousHashSender.equals("N/A")) {
-            loop_block = getDatabaseHandler.getByHash(previousHashSender);
-            if (loop_block == null) throw new
+            loopBlock = getDatabaseHandler.getByHash(previousHashSender);
+            if (loopBlock == null) throw new
                     Resources.NotFoundException("Error - Block cannot be backtracked: " + block.toString());
-            previousHashSender = loop_block.getPreviousHashSender();
+            previousHashSender = loopBlock.getPreviousHashSender();
         }
 
-        return loop_block;
+        return loopBlock;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public boolean verifyTrustworthiness(Block block) throws HashException {
+        return blockExists(block.getOwner(), block.getPublicKey(), block.isRevoked())
+                && block.verifyBlock(backtrack(block));
     }
 }

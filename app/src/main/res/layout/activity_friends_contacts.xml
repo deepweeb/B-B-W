@@ -19,5 +19,4 @@
         android:id="@+id/graph"
         android:layout_weight="1" />
 
-
 </android.widget.LinearLayout>

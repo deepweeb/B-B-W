@@ -46,7 +46,7 @@ public class BlockControllerUnitTest {
     private final String previousHashChain = "previousHashChain";
     private final String previousHashSender = "previousHashSender";
     private final String iban = "iban";
-    private final String publicKey = "publicKey";
+    private final String publicKey = "PUBLIC_KEY";
     private Block _block;
     private final int trustValue = TrustValues.INITIALIZED.getValue();
     private final String TYPE_BLOCK = "BLOCK";
@@ -81,7 +81,7 @@ public class BlockControllerUnitTest {
             User a = mock(User.class);
             when(a.getName()).thenReturn("A");
             when(a.getIBAN()).thenReturn("ibanA");
-            when(a.generatePublicKey()).thenReturn("PULBIC_KEY");
+            when(a.generatePublicKey()).thenReturn(publicKey);
             genesisA = bc.createGenesis(a);
             genesisB = bc.createGenesis(new User("B", "ibanB"));
             blockWithOwnerAAddsKeyKa = bc.createKeyBlock("A", "A", "ka", "ibanA");
@@ -316,12 +316,14 @@ public class BlockControllerUnitTest {
     /** Hash of genesis block */
     @Test
     public final void verifyGenesisHashA() throws Exception {
-        ConversionController conversionController = new ConversionController("A", "PULBIC_KEY", "N/A",
+        ConversionController conversionController = new ConversionController("A", publicKey, "N/A",
                 "N/A", "ibanA");
         try {
             String hash = conversionController.hashKey();
             assertEquals(hash, genesisA.getOwnHash());
-        } catch (Exception e) {
+        }
+            catch (Exception e)
+            {
             assertNotNull(e.getMessage(), null);
         }
     }

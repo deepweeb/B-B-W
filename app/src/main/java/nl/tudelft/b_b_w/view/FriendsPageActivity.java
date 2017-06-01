@@ -14,6 +14,7 @@ import nl.tudelft.b_b_w.controller.ConversionController;
 import nl.tudelft.b_b_w.model.User;
 
 import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
+import static org.bouncycastle.asn1.bc.BCObjectIdentifiers.bc;
 
 /**
  * This class displays the Friend Page. Here we want to be able to see the
@@ -25,7 +26,7 @@ public class FriendsPageActivity extends Activity {
     /**
      * Block controller
      */
-    private BlockController bc;
+    private BlockController blockController;
 
     /**
      * Block argument to create a block
@@ -84,7 +85,7 @@ public class FriendsPageActivity extends Activity {
      */
     @Override
     protected final void onCreate(Bundle savedInstanceState) {
-        bc = new BlockController(this);
+        blockController = new BlockController(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends_page);
@@ -97,14 +98,13 @@ public class FriendsPageActivity extends Activity {
         ibanNumber = contact.getIBAN();
         publicKey = contact.generatePublicKey();
 
-        userLatestBlockHash = bc.getBlocks(user.getName()).get(bc.getBlocks(user.getName()).size()-1).getOwnHash();
-        contactGenesisBlockHash = bc.getBlocks(contactName).get(0).getOwnHash();
+        userLatestBlockHash = blockController.getBlocks(user.getName()).get(blockController.getBlocks(user.getName()).size()-1).getOwnHash();
+        contactGenesisBlockHash = blockController.getBlocks(contactName).get(0).getOwnHash();
         //Displaying the information of the contact whose you are paired with
         textViewIban = (TextView) findViewById(R.id.editIban);
         textViewContact = (TextView) findViewById(R.id.senderName);
         textViewIban.setText(ibanNumber);
         textViewContact.setText(contactName);
-
     }
 
        /**
@@ -127,9 +127,9 @@ public class FriendsPageActivity extends Activity {
         String hash = conversionController.hashKey();
 
         try {
-            bc.createKeyBlock(user.getName(), contactName, publicKey, ibanNumber);
+            blockController.createKeyBlock(user.getName(), contactName, publicKey, ibanNumber);
         }
-        catch(Exception e)
+            catch(Exception e)
         {
             Toast.makeText(this, "Sorry, this contact is already added!",
                     Toast.LENGTH_SHORT).show();

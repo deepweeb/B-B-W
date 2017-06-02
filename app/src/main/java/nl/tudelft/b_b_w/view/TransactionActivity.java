@@ -19,13 +19,21 @@ import nl.tudelft.b_b_w.controller.BlockController;
 import nl.tudelft.b_b_w.model.Block;
 import nl.tudelft.b_b_w.model.User;
 
+/**
+ * Page which handles transactions between user and a contact.
+ */
 public class TransactionActivity extends Activity {
 
+    //Variables which are frequently used
     private BlockController blockController;
     private User user;
     private Spinner dialog;
     private String transactionName;
 
+    /**
+     * Default method which executes all tasks on creation
+     * @param savedInstanceState The current state, which is kept in memory
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,17 +42,23 @@ public class TransactionActivity extends Activity {
         user = new User(settings.getString("userName", ""), settings.getString("iban", ""));
         blockController = new BlockController(this);
         addItemsOnSpinner();
-        setButtons();
+        setText();
         onSend();
     }
 
-    public void setButtons() {
+    /**
+     * Method which sets the text in fields.
+     */
+    public void setText() {
         TextView ownerItemText = (TextView)  findViewById(R.id.OwnerName);
         ownerItemText.setText(user.getName());
         TextView ibanItemText = (TextView)  findViewById(R.id.IbanTransferor);
         ibanItemText.setText(user.getIban());
     }
 
+    /**
+     * Method which handles the transaction when the user clicks send.
+     */
     public void onSend() {
         Button buttonSend = (Button) findViewById(R.id.SendButton);
         buttonSend.setOnClickListener(new View.OnClickListener() {
@@ -64,6 +78,9 @@ public class TransactionActivity extends Activity {
         });
     }
 
+    /**
+     * Method which fills in the dropDown with contacts.
+     */
     public void addItemsOnSpinner() {
         dialog = (Spinner)findViewById(R.id.spinner1);
         int listSize = blockController.getBlocks(user.getName()).size();

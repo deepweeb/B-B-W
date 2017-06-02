@@ -33,15 +33,15 @@ import static org.junit.Assert.assertEquals;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class,sdk= 21,  manifest = "src/main/AndroidManifest.xml")
 public class BlockControllerUnitTest {
-    private final String NA = "N/A";
+    private final String na = "N/A";
     private BlockController blockController;
     private final String publicKey = "publicKey";
 
     @Deprecated
-    private final String TYPE_BLOCK = "BLOCK";
+    private final String typeBlock = "BLOCK";
 
     @Deprecated
-    private final String TYPE_REVOKE = "REVOKE";
+    private final String typeRevoke = "REVOKE";
 
     private final User a = new User("Alice", "ibanA");
     private final User b = new User("Bob", "ibanB");

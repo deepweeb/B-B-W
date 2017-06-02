@@ -19,7 +19,6 @@ import nl.tudelft.b_b_w.model.block.BlockType;
 /**
  * Performs the actions on the blockchain
  */
-
 public class BlockController implements BlockControllerInterface {
     @Deprecated
     private static final String REVOKE = "REVOKE";
@@ -339,9 +338,11 @@ public class BlockController implements BlockControllerInterface {
 
         while (!previousHashSender.equals(NA)) {
             loopBlock = getDatabaseHandler.getByHash(previousHashSender);
-            if (loopBlock == null) throw new
-                    Resources.NotFoundException("Error - Block cannot be backtracked: " +
-                    block.toString());
+            if (loopBlock == null) {
+                throw new
+                        Resources.NotFoundException("Error - Block cannot be backtracked: " +
+                        block.toString());
+            }
             previousHashSender = loopBlock.getPreviousHashSender();
         }
 

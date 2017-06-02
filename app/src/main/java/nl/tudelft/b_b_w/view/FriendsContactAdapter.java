@@ -154,20 +154,20 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
         View view = convertView;
         if (view == null) {
             LayoutInflater inflater =
-                    (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.simple_list_item_2, null);
         }
         try {
-        TextView nameItemText = (TextView)view.findViewById(R.id.list_item_name2);
-        nameItemText.setText(blockController.getContactName(blockController.getBlocks(ownerName).get(position).getOwnHash()));
-        TextView ibanItemText = (TextView)view.findViewById(R.id.list_item_iban2);
-        ibanItemText.setText(blockController.getBlocks(ownerName).get(position).getOwner().getIban());
-        ImageView pic = (ImageView)view.findViewById(R.id.trust_image2);
-        pic.setImageResource(
-                getImageNo(blockController.getBlocks(ownerName).get(position).getTrustValue()));
-        Button addButton = (Button)view.findViewById(R.id.add_btn);
-        addButton.setOnClickListener(createDialog(position));
-        return view;
+            TextView nameItemText = (TextView) view.findViewById(R.id.list_item_name2);
+            nameItemText.setText(blockController.getContactName(blockController.getBlocks(ownerName).get(position).getOwnHash()));
+            TextView ibanItemText = (TextView) view.findViewById(R.id.list_item_iban2);
+            ibanItemText.setText(blockController.getBlocks(ownerName).get(position).getOwner().getIban());
+            ImageView pic = (ImageView) view.findViewById(R.id.trust_image2);
+            pic.setImageResource(
+                    getImageNo(blockController.getBlocks(ownerName).get(position).getTrustValue()));
+            Button addButton = (Button) view.findViewById(R.id.add_btn);
+            addButton.setOnClickListener(createDialog(position));
+            return view;
         } catch (HashException e) {
             Toast.makeText(context, "Hash error while retrieving blocks", Toast.LENGTH_LONG).show();
             return null;

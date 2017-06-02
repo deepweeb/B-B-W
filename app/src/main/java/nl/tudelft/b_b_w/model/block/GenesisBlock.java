@@ -8,7 +8,7 @@ import nl.tudelft.b_b_w.model.HashException;
  */
 public class GenesisBlock extends Block {
     /** First used sequence number */
-    private final int FIRST_SEQUENCE_NUMBER = 1;
+    private final int firstSequenceNumber = 1;
 
     /** Not available information */
     private final String NA = "N/A";
@@ -26,7 +26,7 @@ public class GenesisBlock extends Block {
         if (BuildConfig.DEBUG) {
             // verify integrity
             if (blockData.getBlockType() != BlockType.GENESIS
-                    || blockData.getSequenceNumber() != FIRST_SEQUENCE_NUMBER
+                    || blockData.getSequenceNumber() != firstSequenceNumber
                     || !blockData.getPreviousHashChain().equals(NA)
                     || !blockData.getPreviousHashSender().equals(NA))
                 throw new AssertionError("invalid genesis block " + this.toString());

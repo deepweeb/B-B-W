@@ -15,10 +15,14 @@ import nl.tudelft.b_b_w.model.User;
  */
 
 public abstract class Block {
-    /** All block data is stored in another class */
+    /**
+     * All data is stored here
+     */
     private BlockData blockData;
 
-    /** Hash value of the block */
+    /**
+     * Hash of this block
+     */
     private String hash;
 
     /** Set the blockdata for this block */
@@ -27,12 +31,18 @@ public abstract class Block {
         this.hash = calculateHash();
     }
 
-    /** Does this block revoke a key? */
+    /**
+     * Boolean indicating if this block is revoked.
+     * @return if this block is a revoke block
+     */
     public final boolean isRevoked() {
         return blockData.getBlockType() == BlockType.REVOKE_KEY;
     }
 
-    /** Is this block a genesis block? */
+    /**
+     * Boolean indicating if this block is a genesis block.
+     * @return if this block is a genesis block
+     */
     public final boolean isGenesis() {
         return blockData.getBlockType() == BlockType.GENESIS;
     }
@@ -47,7 +57,6 @@ public abstract class Block {
 
     /**
      * Default getter for owner
-     *
      * @return owner of the block
      */
     public final User getOwner() {
@@ -56,7 +65,6 @@ public abstract class Block {
 
     /**
      * Default getter for own block hash
-     *
      * @return own hash
      */
     public final String getOwnHash() {
@@ -65,7 +73,6 @@ public abstract class Block {
 
     /**
      * Default getter for previous block hash of chain
-     *
      * @return previous hash of chain
      */
     public final String getPreviousHashChain() {
@@ -74,7 +81,6 @@ public abstract class Block {
 
     /**
      * Default getter for previous block hash of chain
-     *
      * @return previous hash of chain
      */
     public final String getPreviousHashSender() {
@@ -83,7 +89,6 @@ public abstract class Block {
 
     /**
      * Default getter for public key
-     *
      * @return public key of the block
      */
     public final String getPublicKey() {
@@ -92,7 +97,6 @@ public abstract class Block {
 
     /**
      * Default getter for sequence number
-     *
      * @return the sequence number of the block
      */
     public final int getSequenceNumber() {

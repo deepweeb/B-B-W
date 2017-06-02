@@ -1,7 +1,6 @@
 package nl.tudelft.b_b_w.model;
 
 import android.content.Context;
-import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -337,7 +336,6 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
                     Block block = extractBlock(cursor);
                     blocks.add(block);
                 } catch (HashException e) {
-                    // not our responsibility here.
                     return new ArrayList<Block>();
                 }
             } while (cursor.moveToNext());

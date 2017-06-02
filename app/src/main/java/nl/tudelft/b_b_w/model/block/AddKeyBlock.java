@@ -7,13 +7,14 @@ import nl.tudelft.b_b_w.model.HashException;
  * Block for adding a key
  */
 public class AddKeyBlock extends KeyBlock {
-    /** First used sequence number */
-    private final int FIRST_SEQUENCE_NUMBER = 1;
+    /**
+     * First used sequence number
+     */
+    private final int firstSequenceNumber = 1;
 
-    /** Not available information */
-    private final String NA = "N/A";
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public AddKeyBlock(BlockData blockData) throws HashException {
         super(blockData);
 
@@ -21,7 +22,7 @@ public class AddKeyBlock extends KeyBlock {
         if (BuildConfig.DEBUG) {
             // verify integrity
             if (blockData.getBlockType() != BlockType.ADD_KEY
-                    || blockData.getSequenceNumber() <= FIRST_SEQUENCE_NUMBER)
+                    || blockData.getSequenceNumber() <= firstSequenceNumber)
             {
                 throw new AssertionError("invalid add block " + this);
             }

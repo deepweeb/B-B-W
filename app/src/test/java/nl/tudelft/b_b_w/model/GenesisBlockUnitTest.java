@@ -63,86 +63,113 @@ public class GenesisBlockUnitTest {
         genesisBlockB = new GenesisBlock(blockDataB);
     }
 
-    /** Test hash */
+    /**
+     * Test the hash function
+     */
     @Test
     public void hash() {
         assertEquals(HASH_GENESIS_A, genesisBlockA.getOwnHash().toLowerCase());
     }
 
-    /** Test previous hash sender not available A */
+    /**
+     * Test previous hash sender not available A
+     */
     @Test
     public void ownerA() {
         assertEquals(a, genesisBlockA.getOwner());
     }
 
-    /** Test previous hash sender not available B */
+    /**
+     * Test previous hash sender not available B
+     */
     @Test
     public void ownerB() {
         assertEquals(b, genesisBlockB.getOwner());
     }
 
-    /** Test previous hash sender not available */
+    /**
+     * Test previous hash sender not available
+     */
     @Test
     public void previousHashSender() {
         assertEquals(NA, genesisBlockA.getPreviousHashSender());
     }
 
-    /** Test previous hash chain not available */
+    /**
+     * Test previous hash chain not available
+     */
     @Test
     public void previousHashChain() {
         assertEquals(NA, genesisBlockA.getPreviousHashChain());
     }
 
-    /** Test iban */
+    /**
+     * Test iban
+     */
     @Test
     public void testIbanGenesis() {
         assertEquals(genesisBlockA.getOwner().getIban(), a.getIban());
     }
 
-
-    /** Test public key A */
+    /**
+     * Test public key A
+     */
     @Test
     public void publicKeyA() {
         assertEquals(genesisBlockA.getPublicKey(), PKA);
     }
 
-    /** Test public key B */
+    /**
+     * Test public key B
+     */
     @Test
     public void publicKeyB() {
         assertEquals(genesisBlockB.getPublicKey(), PKB);
     }
 
-    /** Test trust value */
+    /**
+     * Test trust value
+     */
     @Test
     public void testTrustGenesis() {
         assertEquals(TrustValues.INITIALIZED.getValue(), genesisBlockA.getTrustValue());
     }
 
-    /** Test if non-revoked */
+    /**
+     * Test if non-revoked
+     */
     @Test
     public void nonrevoked() {
         assertFalse(genesisBlockA.isRevoked());
     }
 
-    /** Test equality */
+    /**
+     * Test equality
+     */
     @Test
     public void testEqualsGenesis() {
         assertTrue(genesisBlockA.equals(genesisBlockA2));
     }
 
-    /** Test inequality */
+    /**
+     * Test inequality
+     */
     @Test
     public void inequals() {
         assertFalse(genesisBlockA.equals(genesisBlockB));
     }
 
-    /** Test verify block */
+    /**
+     * Test verify block
+     */
     @Test
     public void verify() {
         assertTrue(genesisBlockA.verifyBlock(genesisBlockA2));
     }
 
-    /** Test not verify block */
+    /**
+     * Test not verify block
+     */
     @Test
     public void unverify() {
         assertFalse(genesisBlockA.verifyBlock(genesisBlockB));

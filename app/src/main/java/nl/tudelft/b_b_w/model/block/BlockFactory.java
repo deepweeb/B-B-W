@@ -42,14 +42,15 @@ public class BlockFactory {
         data.setSequenceNumber(sequenceIndex);
 
         // determine block type
-        if (sequenceIndex == 1)
+        if (sequenceIndex == 1) {
             data.setBlockType(BlockType.GENESIS);
-        else if (type.equals("REVOKE"))
+        } else if (type.equals("REVOKE")) {
             data.setBlockType(BlockType.REVOKE_KEY);
-        else if (type.equals("BLOCK"))
+        } else if (type.equals("BLOCK")) {
             data.setBlockType(BlockType.ADD_KEY);
-        else
+        } else {
             throw new IllegalArgumentException("Unknown Block Type");
+        }
 
         return createBlock(data);
     }

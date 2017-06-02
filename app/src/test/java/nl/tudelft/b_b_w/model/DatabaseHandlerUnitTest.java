@@ -42,8 +42,12 @@ public class DatabaseHandlerUnitTest {
     private String ownHash;
     private final String previousHashChain = "N/A";
     private final String previousHashSender = "N/A";
+    private final String NA = "N/A";
     private final String iban = "iban";
     private final String publicKey = "publicKey";
+    private final String chainhash = "chainhash";
+    private final int FIRST_BLOCK_INDEX = 1;
+    private final int SECOND_BLOCK_INDEX = FIRST_BLOCK_INDEX + 1;
     private Block _block;
     private final int trustValue = TrustValues.INITIALIZED.getValue();
     /**
@@ -58,7 +62,7 @@ public class DatabaseHandlerUnitTest {
         _block =  BlockFactory.getBlock(
                 TYPE_BLOCK,
                 owner,
-                1,
+                FIRST_BLOCK_INDEX,
                 ownHash,
                 previousHashChain,
                 previousHashSender,
@@ -205,9 +209,9 @@ public class DatabaseHandlerUnitTest {
         Block block2 = BlockFactory.getBlock(
                 TYPE_BLOCK,
                 "Jack",
-                2,
+                SECOND_BLOCK_INDEX,
                 hash,
-                "chainhash",
+                chainhash,
                 ownHash,
                 publicKey,
                 iban,
@@ -229,7 +233,7 @@ public class DatabaseHandlerUnitTest {
                 owner2,
                 getDatabaseHandler.lastSeqNumberOfChain(owner) + 1,
                 ownHash,
-                "N/A",
+                NA,
                 previousHashSender,
                 publicKey,
                 iban,
@@ -241,7 +245,7 @@ public class DatabaseHandlerUnitTest {
                 owner2,
                 getDatabaseHandler.lastSeqNumberOfChain(owner),
                 ownHash,
-                "N/A"   ,
+                NA,
                 previousHashSender,
                 publicKey,
                 iban,

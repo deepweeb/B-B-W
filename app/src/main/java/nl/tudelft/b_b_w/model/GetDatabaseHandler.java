@@ -235,7 +235,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         // return block
         return block;
     }
-    
+
     /**
      * Check if a block already exists in the database.
      * It is not possible to add a revoked key again.

@@ -50,20 +50,19 @@ public class User {
     public String generatePublicKey() {
         //TODO: Generate public key using ED25519 protocol
         //generate SHA256 hash until this protocol is implemented
-        MessageDigest md = null;
+        MessageDigest messageDigest = null;
         try {
-            md = MessageDigest.getInstance("SHA-256");
+            messageDigest = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         String text = name  + iban;
-
         try {
-            md.update(text.getBytes("UTF-8"));
+            messageDigest.update(text.getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        byte[] digest = md.digest();
+        byte[] digest = messageDigest.digest();
         String hash = String.format("%064x", new java.math.BigInteger(1, digest));
         return hash;
     }

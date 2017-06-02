@@ -34,22 +34,22 @@ public class DatabaseHandlerUnitTest {
 
     private GetDatabaseHandler getDatabaseHandler;
     private MutateDatabaseHandler mutateDatabaseHandler;
-    private final String TYPE_BLOCK = "BLOCK";
-    private final String TYPE_REVOKE = "REVOKE";
+    private final String typeBlock = "BLOCK";
+    private final String typeRevoke = "REVOKE";
     private final String owner = "owner";
     private final String owner2 = "owner2";
     private final int sequenceNumber = 1;
     private String ownHash;
     private final String previousHashChain = "N/A";
     private final String previousHashSender = "N/A";
-    private final String NA = "N/A";
+    private final String notAvailable = "N/A";
     private final String iban = "iban";
     private final String publicKey = "publicKey";
     private final String chainhash = "chainhash";
-    private final int FIRST_BLOCK_INDEX = 1;
-    private final int SECOND_BLOCK_INDEX = FIRST_BLOCK_INDEX + 1;
-    private Block _block;
+    private final int firstBlockIndex = 1;
+    private final int secondBlockIndex = firstBlockIndex + 1;
     private final int trustValue = TrustValues.INITIALIZED.getValue();
+    private Block block;
     /**
      * setUp method
      * Does this method before every test
@@ -59,10 +59,10 @@ public class DatabaseHandlerUnitTest {
     public void setUp() throws HashException{
         this.getDatabaseHandler = new GetDatabaseHandler(RuntimeEnvironment.application);
         this.mutateDatabaseHandler = new MutateDatabaseHandler(RuntimeEnvironment.application);
-        _block =  BlockFactory.getBlock(
-                TYPE_BLOCK,
+        block =  BlockFactory.getBlock(
+                typeBlock,
                 owner,
-                FIRST_BLOCK_INDEX,
+                firstBlockIndex,
                 ownHash,
                 previousHashChain,
                 previousHashSender,
@@ -70,7 +70,7 @@ public class DatabaseHandlerUnitTest {
                 iban,
                 trustValue
         );
-        ownHash = _block.getOwnHash();
+        ownHash = block.getOwnHash();
     }
 
     /**
@@ -79,8 +79,8 @@ public class DatabaseHandlerUnitTest {
      */
     @Test
     public void addBlock() throws HashException{
-        mutateDatabaseHandler.addBlock(_block);
-        assertEquals(_block, getDatabaseHandler.getBlock(owner, publicKey, sequenceNumber));
+        mutateDatabaseHandler.addBlock(block);
+        assertEquals(block, getDatabaseHandler.getBlock(owner, publicKey, sequenceNumber));
     }
 
     /**
@@ -89,13 +89,13 @@ public class DatabaseHandlerUnitTest {
      */
     @Test
     public void addBlock2() throws HashException {
-        mutateDatabaseHandler.addBlock(_block);
+        mutateDatabaseHandler.addBlock(block);
         final Block newBlock = BlockFactory.getBlock(
-                TYPE_REVOKE,
+                typeRevoke,
                 owner,
                 getDatabaseHandler.lastSeqNumberOfChain(owner) + 1,
                 ownHash,
-                _block.getOwnHash(),
+                block.getOwnHash(),
                 previousHashSender,
                 publicKey,
                 iban,
@@ -103,7 +103,7 @@ public class DatabaseHandlerUnitTest {
         );
         mutateDatabaseHandler.addBlock(newBlock);
         List<Block> list = new ArrayList<>();
-        list.add(_block);
+        list.add(block);
         list.add(newBlock);
         assertEquals(list, getDatabaseHandler.getAllBlocks(owner));
     }
@@ -123,7 +123,7 @@ public class DatabaseHandlerUnitTest {
      */
     @Test
     public void containsBlock2() throws HashException {
-        mutateDatabaseHandler.addBlock(_block);
+        mutateDatabaseHandler.addBlock(block);
         assertTrue(getDatabaseHandler.containsBlock(owner, publicKey));
     }
 
@@ -133,7 +133,7 @@ public class DatabaseHandlerUnitTest {
      */
     @Test
     public void containsBlock3() throws HashException {
-        mutateDatabaseHandler.addBlock(_block);
+        mutateDatabaseHandler.addBlock(block);
         assertTrue(getDatabaseHandler.containsBlock(owner, publicKey, sequenceNumber));
     }
 
@@ -144,7 +144,7 @@ public class DatabaseHandlerUnitTest {
      */
     @Test
     public void containsBlock2False() throws HashException {
-        mutateDatabaseHandler.addBlock(_block);
+        mutateDatabaseHandler.addBlock(block);
         assertFalse(getDatabaseHandler.containsBlock(owner, "pub_key2", sequenceNumber));
     }
 
@@ -154,13 +154,13 @@ public class DatabaseHandlerUnitTest {
      */
     @Test
     public void getLatestSeqNum() throws HashException {
-        mutateDatabaseHandler.addBlock(_block);
+        mutateDatabaseHandler.addBlock(block);
         final Block block2 = BlockFactory.getBlock(
-                TYPE_BLOCK,
+                typeBlock,
                 owner,
                 getDatabaseHandler.lastSeqNumberOfChain(owner) + 1,
                 ownHash,
-                "chainhash",
+                chainhash,
                 previousHashSender,
                 publicKey,
                 iban,
@@ -179,11 +179,11 @@ public class DatabaseHandlerUnitTest {
      */
     @Test
     public void getContactName() throws HashException {
-        mutateDatabaseHandler.addBlock(_block);
+        mutateDatabaseHandler.addBlock(block);
         final String hash = "ownHash2";
         final String randomSenderHash = "Hash44324";
         Block block2 = BlockFactory.getBlock(
-                TYPE_BLOCK,
+                typeBlock,
                 owner,
                 getDatabaseHandler.lastSeqNumberOfChain(owner) + 1,
                 randomSenderHash,
@@ -192,7 +192,7 @@ public class DatabaseHandlerUnitTest {
                 publicKey,
                 iban,
                 trustValue);
-        mutateDatabaseHandler.addBlock(_block);
+        mutateDatabaseHandler.addBlock(block);
         mutateDatabaseHandler.addBlock(block2);
         assertEquals("Unknown", getDatabaseHandler.getContactName(hash));
 
@@ -207,18 +207,18 @@ public class DatabaseHandlerUnitTest {
         final String hash = "ownHash2";
         final String randomSenderHash = "N/A";
         Block block2 = BlockFactory.getBlock(
-                TYPE_BLOCK,
+                typeBlock,
                 "Jack",
-                SECOND_BLOCK_INDEX,
+                secondBlockIndex,
                 hash,
                 chainhash,
                 ownHash,
                 publicKey,
                 iban,
                 trustValue);
-        mutateDatabaseHandler.addBlock(_block);
+        mutateDatabaseHandler.addBlock(block);
         mutateDatabaseHandler.addBlock(block2);
-        assertEquals(_block.getOwner().getName(), getDatabaseHandler.getContactName(ownHash));
+        assertEquals(block.getOwner().getName(), getDatabaseHandler.getContactName(ownHash));
     }
 
     /**
@@ -227,13 +227,13 @@ public class DatabaseHandlerUnitTest {
      */
     @Test
     public void getLatestBlock() throws HashException {
-        mutateDatabaseHandler.addBlock(_block);
+        mutateDatabaseHandler.addBlock(block);
         final Block block2 = BlockFactory.getBlock(
-                TYPE_BLOCK,
+                typeBlock,
                 owner2,
                 getDatabaseHandler.lastSeqNumberOfChain(owner) + 1,
                 ownHash,
-                NA,
+                notAvailable,
                 previousHashSender,
                 publicKey,
                 iban,
@@ -241,11 +241,11 @@ public class DatabaseHandlerUnitTest {
         );
         mutateDatabaseHandler.addBlock(block2);
         final Block expectBlock = BlockFactory.getBlock(
-                TYPE_BLOCK,
+                typeBlock,
                 owner2,
                 getDatabaseHandler.lastSeqNumberOfChain(owner),
                 ownHash,
-                NA,
+                notAvailable,
                 previousHashSender,
                 publicKey,
                 iban,
@@ -260,9 +260,9 @@ public class DatabaseHandlerUnitTest {
      */
     @Test
     public void getAllBlocks() throws HashException {
-        mutateDatabaseHandler.addBlock(_block);
+        mutateDatabaseHandler.addBlock(block);
         final Block block2 = BlockFactory.getBlock(
-                TYPE_BLOCK,
+                typeBlock,
                 owner2,
                 getDatabaseHandler.lastSeqNumberOfChain(owner),
                 ownHash,
@@ -285,7 +285,7 @@ public class DatabaseHandlerUnitTest {
     @Test
     public void updateBlockTest() throws HashException {
         final Block block2 = BlockFactory.getBlock(
-                TYPE_BLOCK,
+                typeBlock,
                 owner,
                 getDatabaseHandler.lastSeqNumberOfChain(owner) + 1,
                 ownHash,
@@ -295,8 +295,8 @@ public class DatabaseHandlerUnitTest {
                 iban,
                 trustValue
         );
-        _block.setTrustValue(TrustValues.SUCCESFUL_TRANSACTION.getValue());
-        mutateDatabaseHandler.updateBlock(_block);
+        block.setTrustValue(TrustValues.SUCCESFUL_TRANSACTION.getValue());
+        mutateDatabaseHandler.updateBlock(block);
         assertNotEquals(getDatabaseHandler.getBlock(owner, publicKey, sequenceNumber), block2);
     }
 
@@ -321,7 +321,7 @@ public class DatabaseHandlerUnitTest {
     @Test
     public void checkExistsRegular() throws HashException {
         Block b = BlockFactory.getBlock(
-                TYPE_BLOCK,
+                typeBlock,
                 owner,
                 getDatabaseHandler.lastSeqNumberOfChain(owner) + 1,
                 ownHash,
@@ -340,7 +340,7 @@ public class DatabaseHandlerUnitTest {
     @Test
     public void checkExistsRevoked() throws HashException {
         Block b = BlockFactory.getBlock(
-                TYPE_BLOCK,
+                typeBlock,
                 owner,
                 getDatabaseHandler.lastSeqNumberOfChain(owner) + 1,
                 ownHash,
@@ -359,7 +359,7 @@ public class DatabaseHandlerUnitTest {
     @Test
     public void checkExistsAgain() throws HashException {
         Block b1 = BlockFactory.getBlock(
-                TYPE_BLOCK,
+                typeBlock,
                 owner,
                 getDatabaseHandler.lastSeqNumberOfChain(owner) + 1,
                 ownHash,
@@ -371,11 +371,11 @@ public class DatabaseHandlerUnitTest {
         );
         mutateDatabaseHandler.addBlock(b1);
         Block b2 = BlockFactory.getBlock(
-                TYPE_BLOCK,
+                typeBlock,
                 owner,
                 getDatabaseHandler.lastSeqNumberOfChain(owner) + 1,
                 ownHash,
-                "chainhash",
+                chainhash,
                 previousHashSender,
                 publicKey,
                 iban,
@@ -390,7 +390,7 @@ public class DatabaseHandlerUnitTest {
     @Test
     public void checkExistsOtherKey() throws HashException {
         Block b1 = BlockFactory.getBlock(
-                TYPE_BLOCK,
+                typeBlock,
                 owner,
                 getDatabaseHandler.lastSeqNumberOfChain(owner) + 1,
                 ownHash,
@@ -410,8 +410,8 @@ public class DatabaseHandlerUnitTest {
      */
     @Test
     public void getByHash() throws HashException {
-        mutateDatabaseHandler.addBlock(_block);
-        assertEquals(_block, getDatabaseHandler.getByHash(ownHash));
+        mutateDatabaseHandler.addBlock(block);
+        assertEquals(block, getDatabaseHandler.getByHash(ownHash));
     }
 
     /**

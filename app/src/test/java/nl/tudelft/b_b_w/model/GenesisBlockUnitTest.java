@@ -20,21 +20,33 @@ import static junit.framework.Assert.assertTrue;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class,sdk= 21,  manifest = "src/main/AndroidManifest.xml")
 public class GenesisBlockUnitTest {
-    private final User a = new User("Alice", "IBANA");
-    private final User b = new User("Bob", "IBANB");
-    private final String PKA = "pka";
-    private final String PKB = "pkb";
-    private final String NA = "N/A";
-    private final String HASH_GENESIS_A =
+    private final User userA = new User("Alice", "IBANA");
+    private final User userB = new User("Bob", "IBANB");
+    private final String publicKeyA = "pka";
+    private final String publicKeyB = "pkb";
+    private final String notAvailable = "N/A";
+    private final String hashGenesisA =
             "7875f4b585ea90f0db3f3fd3efd257a9104147a443877efac3389afe8f26390d";
 
-    /** Example genesis block of user A */
+    /**
+     * Example genesis block of user A
+     */
     private GenesisBlock genesisBlockA;
-    /** Copy of genesis block of user A */
+
+    /**
+     * Copy of genesis block of user A
+     */
     private GenesisBlock genesisBlockA2;
-    /** Example genesis block of user B */
+
+    /**
+     * Example genesis block of user B
+     */
     private GenesisBlock genesisBlockB;
 
+    /**
+     * Create example block data for block A and block B
+     * @throws HashException
+     */
     @Before
     public void create() throws HashException {
         // alice block data
@@ -42,11 +54,11 @@ public class GenesisBlockUnitTest {
         blockDataA.setBlockType(BlockType.GENESIS);
         blockDataA.setSequenceNumber(1);
         blockDataA.setTrustValue(TrustValues.INITIALIZED.getValue());
-        blockDataA.setOwner(a);
-        blockDataA.setIban(a);
-        blockDataA.setPreviousHashSender(NA);
-        blockDataA.setPreviousHashChain(NA);
-        blockDataA.setPublicKey(PKA);
+        blockDataA.setOwner(userA);
+        blockDataA.setIban(userA);
+        blockDataA.setPreviousHashSender(notAvailable);
+        blockDataA.setPreviousHashChain(notAvailable);
+        blockDataA.setPublicKey(publicKeyA);
         genesisBlockA = new GenesisBlock(blockDataA);
         genesisBlockA2 = new GenesisBlock(blockDataA);
 
@@ -55,11 +67,11 @@ public class GenesisBlockUnitTest {
         blockDataB.setBlockType(BlockType.GENESIS);
         blockDataB.setSequenceNumber(1);
         blockDataB.setTrustValue(TrustValues.INITIALIZED.getValue());
-        blockDataB.setOwner(b);
-        blockDataB.setIban(b);
-        blockDataB.setPreviousHashSender(NA);
-        blockDataB.setPreviousHashChain(NA);
-        blockDataB.setPublicKey(PKB);
+        blockDataB.setOwner(userB);
+        blockDataB.setIban(userB);
+        blockDataB.setPreviousHashSender(notAvailable);
+        blockDataB.setPreviousHashChain(notAvailable);
+        blockDataB.setPublicKey(publicKeyB);
         genesisBlockB = new GenesisBlock(blockDataB);
     }
 
@@ -68,7 +80,7 @@ public class GenesisBlockUnitTest {
      */
     @Test
     public void hash() {
-        assertEquals(HASH_GENESIS_A, genesisBlockA.getOwnHash().toLowerCase());
+        assertEquals(hashGenesisA, genesisBlockA.getOwnHash().toLowerCase());
     }
 
     /**
@@ -76,7 +88,7 @@ public class GenesisBlockUnitTest {
      */
     @Test
     public void ownerA() {
-        assertEquals(a, genesisBlockA.getOwner());
+        assertEquals(userA, genesisBlockA.getOwner());
     }
 
     /**
@@ -84,7 +96,7 @@ public class GenesisBlockUnitTest {
      */
     @Test
     public void ownerB() {
-        assertEquals(b, genesisBlockB.getOwner());
+        assertEquals(userB, genesisBlockB.getOwner());
     }
 
     /**
@@ -92,7 +104,7 @@ public class GenesisBlockUnitTest {
      */
     @Test
     public void previousHashSender() {
-        assertEquals(NA, genesisBlockA.getPreviousHashSender());
+        assertEquals(notAvailable, genesisBlockA.getPreviousHashSender());
     }
 
     /**
@@ -100,7 +112,7 @@ public class GenesisBlockUnitTest {
      */
     @Test
     public void previousHashChain() {
-        assertEquals(NA, genesisBlockA.getPreviousHashChain());
+        assertEquals(notAvailable, genesisBlockA.getPreviousHashChain());
     }
 
     /**
@@ -108,7 +120,7 @@ public class GenesisBlockUnitTest {
      */
     @Test
     public void testIbanGenesis() {
-        assertEquals(genesisBlockA.getOwner().getIban(), a.getIban());
+        assertEquals(genesisBlockA.getOwner().getIban(), userA.getIban());
     }
 
     /**
@@ -116,7 +128,7 @@ public class GenesisBlockUnitTest {
      */
     @Test
     public void publicKeyA() {
-        assertEquals(genesisBlockA.getPublicKey(), PKA);
+        assertEquals(genesisBlockA.getPublicKey(), publicKeyA);
     }
 
     /**
@@ -124,7 +136,7 @@ public class GenesisBlockUnitTest {
      */
     @Test
     public void publicKeyB() {
-        assertEquals(genesisBlockB.getPublicKey(), PKB);
+        assertEquals(genesisBlockB.getPublicKey(), publicKeyB);
     }
 
     /**

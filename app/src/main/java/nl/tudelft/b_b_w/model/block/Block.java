@@ -50,7 +50,6 @@ public abstract class Block {
     /**
      * Default getter for own block hash
      *
-     * TODO change to getHash()
      * @return own hash
      */
     public final String getOwnHash() {
@@ -128,7 +127,7 @@ public abstract class Block {
      */
     @Override
     public final int hashCode() {
-        return blockData.hashCode();
+        return hash.hashCode();
     }
 
     /**
@@ -136,17 +135,17 @@ public abstract class Block {
      */
     @Override
     public final String toString() {
-        return "Block{" +
-                "owner='" + blockData.getOwner() + '\'' +
-                ", sequenceNumber=" + blockData.getSequenceNumber() +
-                ", ownHash='" + hash + '\'' +
-                ", previousHashChain='" + blockData.getPreviousHashChain() + '\'' +
-                ", previousHashSender='" + blockData.getPreviousHashSender() + '\'' +
-                ", publicKey='" + blockData.getPublicKey() + '\'' +
-                ", iban='" + blockData.getOwner().getIBAN() + '\'' +
-                ", trustValue='" + blockData.getTrustValue() + '\'' +
-                ", type='" + blockData.getBlockType() + '\'' +
-                '}';
+        return "Block{"
+                + "owner='" + blockData.getOwner() + '\''
+                + ", sequenceNumber=" + blockData.getSequenceNumber()
+                + ", ownHash='" + hash + '\''
+                + ", previousHashChain='" + blockData.getPreviousHashChain() + '\''
+                + ", previousHashSender='" + blockData.getPreviousHashSender() + '\''
+                + ", publicKey='" + blockData.getPublicKey() + '\''
+                + ", iban='" + blockData.getOwner().getIban() + '\''
+                + ", trustValue='" + blockData.getTrustValue() + '\''
+                + ", type='" + blockData.getBlockType() + '\''
+                + '}';
     }
 
     /**
@@ -162,7 +161,7 @@ public abstract class Block {
         Block block = (Block) o;
 
         if (isRevoked() != block.isRevoked()) return false;
-        if (!getOwner().getIBAN().equals(block.getOwner().getIBAN())) return false;
+        if (!getOwner().getIban().equals(block.getOwner().getIban())) return false;
         return getPublicKey().equals(block.getPublicKey());
     }
 

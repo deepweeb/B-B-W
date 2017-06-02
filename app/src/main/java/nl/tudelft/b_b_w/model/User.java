@@ -53,7 +53,7 @@ public class User {
     public boolean equals(Object object) {
         if (object instanceof User) {
             User other = (User) object;
-            return other.getIBAN().equals(getIBAN()) &&
+            return other.getIban().equals(getIban()) &&
                     other.getName().equals(getName());
         }
         return false;

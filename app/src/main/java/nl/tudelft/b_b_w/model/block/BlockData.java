@@ -67,7 +67,7 @@ public class BlockData {
     }
 
     public void setIban(User contact) {
-        this.iban = contact.getIBAN();
+        this.iban = contact.getIban();
     }
 
     public String getPreviousHashChain() {

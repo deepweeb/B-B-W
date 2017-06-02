@@ -49,7 +49,7 @@ public class User {
      */
     public String generatePublicKey() {
         //TODO: Generate public key using ED25519 protocol
-        //generate SHA256 hash until this protocol is implemented
+        //Generate SHA256 hash until this protocol is implemented
         MessageDigest messageDigest = null;
         try {
             messageDigest = MessageDigest.getInstance("SHA-256");

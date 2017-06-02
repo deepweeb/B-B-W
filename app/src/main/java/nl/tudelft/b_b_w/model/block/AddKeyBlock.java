@@ -8,7 +8,7 @@ import nl.tudelft.b_b_w.model.HashException;
  */
 public class AddKeyBlock extends KeyBlock {
     /** First used sequence number */
-    private static final int FIRST_SEQUENCE_NUMBER = 1;
+    private final int FIRST_SEQUENCE_NUMBER = 1;
 
     /** Not available information */
     private final String NA = "N/A";
@@ -21,7 +21,7 @@ public class AddKeyBlock extends KeyBlock {
         if (BuildConfig.DEBUG) {
             // verify integrity
             if (blockData.getBlockType() != BlockType.ADD_KEY
-                    || blockData.getSequenceNumber() <= 1
+                    || blockData.getSequenceNumber() <= FIRST_SEQUENCE_NUMBER
                     || blockData.getPreviousHashChain().equals(NA))
             {
                 throw new AssertionError("invalid revoke block");

@@ -63,7 +63,6 @@ public class User {
             e.printStackTrace();
         }
         byte[] digest = messageDigest.digest();
-        String hash = String.format("%064x", new java.math.BigInteger(1, digest));
-        return hash;
+        return String.format("%064x", new java.math.BigInteger(1, digest));
     }
 }

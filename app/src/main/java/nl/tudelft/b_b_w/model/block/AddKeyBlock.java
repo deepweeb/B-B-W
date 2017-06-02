@@ -18,14 +18,10 @@ public class AddKeyBlock extends KeyBlock {
     public AddKeyBlock(BlockData blockData) throws HashException {
         super(blockData);
 
-        // verify integration
-        if (BuildConfig.DEBUG) {
-            // verify integrity
-            if (blockData.getBlockType() != BlockType.ADD_KEY
-                    || blockData.getSequenceNumber() <= firstSequenceNumber)
-            {
-                throw new AssertionError("invalid add block " + this);
-            }
+        // verify integration and integrity
+        if (BuildConfig.DEBUG && blockData.getBlockType() != BlockType.ADD_KEY
+                || blockData.getSequenceNumber() <= firstSequenceNumber) {
+            throw new AssertionError("Invalid add block " + this);
         }
     }
 }

@@ -343,8 +343,8 @@ public class BlockController implements BlockControllerInterface {
             loopBlock = getDatabaseHandler.getByHash(previousHashSender);
             if (loopBlock == null) {
                 throw new
-                        Resources.NotFoundException("Error - Block cannot be backtracked: " +
-                        block.toString());
+                        Resources.NotFoundException("Error - Block cannot be backtracked: "
+                        + block.toString());
             }
             previousHashSender = loopBlock.getPreviousHashSender();
         }

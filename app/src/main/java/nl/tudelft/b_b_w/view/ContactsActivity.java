@@ -1,8 +1,10 @@
 package nl.tudelft.b_b_w.view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -62,5 +64,15 @@ public class ContactsActivity extends Activity {
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(points);
         graph.addSeries(series);
     }
+
+    /**
+     * Button to go to the page where transactions are done
+     * @param view The view of the app.
+     */
+    public final void onTransaction(View view) {
+        Intent intent = new Intent(this, TransactionActivity.class);
+        startActivity(intent);
+    }
+
 }
 

@@ -22,7 +22,7 @@ public class CryptoControllerUnitTest {
      * Checks whether the encryption and decryption method work
      */
     @Test
-    public void EncryptDecryptTest() throws Exception {
+    public void encryptDecryptTest() throws Exception {
         String random = "0CYk67Pt08m7DE9Bumbo";
         assertEquals(random, this.cryptoController.decryptString(this.cryptoController.encryptString(random)));
     }

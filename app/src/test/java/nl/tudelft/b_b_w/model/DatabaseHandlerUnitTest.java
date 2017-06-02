@@ -37,6 +37,7 @@ public class DatabaseHandlerUnitTest {
     private final String TYPE_BLOCK = "BLOCK";
     private final String TYPE_REVOKE = "REVOKE";
     private final String owner = "owner";
+    private final String owner2 = "owner2";
     private final int sequenceNumber = 1;
     private String ownHash;
     private final String previousHashChain = "N/A";
@@ -138,7 +139,7 @@ public class DatabaseHandlerUnitTest {
      * Forces a false
      */
     @Test
-    public void containsBlock2_false() throws HashException {
+    public void containsBlock2False() throws HashException {
         mutateDatabaseHandler.addBlock(_block);
         assertFalse(getDatabaseHandler.containsBlock(owner, "pub_key2", sequenceNumber));
     }
@@ -213,9 +214,7 @@ public class DatabaseHandlerUnitTest {
                 trustValue);
         mutateDatabaseHandler.addBlock(_block);
         mutateDatabaseHandler.addBlock(block2);
-        System.out.println(getDatabaseHandler.getAllBlocks(owner).toString());
         assertEquals(_block.getOwner().getName(), getDatabaseHandler.getContactName(ownHash));
-
     }
 
     /**
@@ -227,7 +226,7 @@ public class DatabaseHandlerUnitTest {
         mutateDatabaseHandler.addBlock(_block);
         final Block block2 = BlockFactory.getBlock(
                 TYPE_BLOCK,
-                "owner2",
+                owner2,
                 getDatabaseHandler.lastSeqNumberOfChain(owner) + 1,
                 ownHash,
                 previousHashChain,
@@ -239,7 +238,7 @@ public class DatabaseHandlerUnitTest {
         mutateDatabaseHandler.addBlock(block2);
         final Block expectBlock = BlockFactory.getBlock(
                 TYPE_BLOCK,
-                "owner2",
+                owner2,
                 getDatabaseHandler.lastSeqNumberOfChain(owner),
                 ownHash,
                 previousHashChain,
@@ -313,10 +312,10 @@ public class DatabaseHandlerUnitTest {
     @Test
     public void getAllBlocks() throws HashException {
         mutateDatabaseHandler.addBlock(_block);
-        final String owner2 = "owner2";
         final Block block2 = BlockFactory.getBlock(
                 TYPE_BLOCK,
-                owner2,getDatabaseHandler.lastSeqNumberOfChain(owner),
+                owner2,
+                getDatabaseHandler.lastSeqNumberOfChain(owner),
                 ownHash,
                 previousHashChain,
                 previousHashSender,

@@ -16,7 +16,7 @@ import nl.tudelft.b_b_w.model.block.BlockType;
 /**
  * Class to create and handle the Database for get requests
  */
-
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class GetDatabaseHandler extends AbstractDatabaseHandler {
     /** Not Available information */
     private static final String NA = "N/A";
@@ -94,7 +94,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
     public final String getContactName(String hash) throws HashException, HashMismatchException {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_NAME,
-                _columns,
+                COLUMNS,
                 KEY_OWN_HASH + " = ? ",
                 new String[]{
                         hash
@@ -102,7 +102,9 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
         // When returning an exception the whole program crashes,
         // but we want to preserve the state.
-        if (cursor.getCount() < 1) return "Unknown";
+        if (cursor.getCount() < 1) {
+            return "Unknown";
+        }
 
         cursor.moveToFirst();
 
@@ -131,7 +133,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
             HashException, HashMismatchException {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_NAME,
-                _columns,
+                COLUMNS,
                 KEY_OWNER + " = ? AND " + KEY_PUBLIC_KEY + " = ? AND " + KEY_SEQ_NO + " = ?",
                 new String[]{
                         owner, publicKey, String.valueOf(sequenceNumber)
@@ -139,7 +141,9 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
         //When returning an exception the whole program crashes,
         //but we want to preserve the state.
-        if (cursor.getCount() < 1) return null;
+        if (cursor.getCount() < 1) {
+            return null;
+        }
 
         cursor.moveToFirst();
 
@@ -201,7 +205,9 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
                         owner, publicKey
                 }, null, null, null, null);
 
-        if (c.getCount() < 1) return -1;
+        if (c.getCount() < 1) {
+            return -1;
+        }
         c.moveToFirst();
 
         int result = c.getInt(0);
@@ -259,10 +265,12 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         int maxSeqNum = this.lastSeqNumberOfChain(owner);
         SQLiteDatabase db = this.getReadableDatabase();
 
-        if (maxSeqNum == 0){return null;}
+        if (maxSeqNum == 0) {
+            return null;
+        }
 
         Cursor cursor = db.query(TABLE_NAME,
-                _columns,
+                COLUMNS,
                 KEY_OWNER + " = ? AND " + KEY_SEQ_NO + " = ?",
                 new String[]{
                         owner, String.valueOf(maxSeqNum)
@@ -270,7 +278,9 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
         //When returning an exception the whole program crashes,
         //but we want to preserve the state.
-        if (cursor.getCount() < 1) return null;
+        if (cursor.getCount() < 1) {
+            return null;
+        }
 
         cursor.moveToFirst();
 
@@ -298,13 +308,15 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_NAME,
-                _columns,
+                COLUMNS,
                 KEY_OWNER + " = ? AND " + KEY_SEQ_NO + " > ?",
                 new String[]{
                         owner, String.valueOf(sequenceNumber)
                 }, null, null, null, null);
 
-        if (cursor.getCount() < 1) throw new NotFoundException();
+        if (cursor.getCount() < 1) {
+            throw new NotFoundException();
+        }
 
         cursor.moveToFirst();
 
@@ -333,7 +345,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_NAME,
-                _columns,
+                COLUMNS,
                 KEY_OWNER + " = ? AND " + KEY_PUBLIC_KEY + " = ? AND " + KEY_REVOKE + " = ?",
                 new String[]{
                         owner,
@@ -364,7 +376,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_NAME,
-                _columns,
+                COLUMNS,
                 KEY_OWNER + " = ? AND " + KEY_SEQ_NO + " < ?",
                 new String[]{
                         owner, String.valueOf(sequenceNumber)
@@ -402,7 +414,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_NAME,
-                _columns,
+                COLUMNS,
                 KEY_OWNER + " = ?",
                 new String[]{
                         owner
@@ -439,7 +451,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
     public final boolean isDatabaseEmpty() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.query(TABLE_NAME,
-                _columns,
+                COLUMNS,
                 KEY_PREV_HASH_SENDER + " = ? ",
                 new String[]{
                         "N/A"
@@ -461,14 +473,16 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_NAME,
-                _columns,
+                COLUMNS,
                 KEY_OWN_HASH + " = ?",
                 new String[]{
                         hash
                 }, null, null, null, null);
 
         // Preserves the state
-        if (cursor.getCount() < 1) return null;
+        if (cursor.getCount() < 1) {
+            return null;
+        }
         cursor.moveToFirst();
 
         Block returnBlock = extractBlock(cursor);

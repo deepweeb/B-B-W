@@ -96,7 +96,7 @@ public class FriendsPageActivity extends Activity {
         user = new User(settings.getString("userName", ""), settings.getString("iban", ""));
 
         contactName = contact.getName();
-        ibanNumber = contact.getIBAN();
+        ibanNumber = contact.getIban();
         publicKey = contact.generatePublicKey();
 
         try {

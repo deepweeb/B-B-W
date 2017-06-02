@@ -155,7 +155,7 @@ public class BlockController implements BlockControllerInterface {
                 block.getPreviousHashChain(),
                 block.getPreviousHashSender(),
                 block.getPublicKey(),
-                block.getOwner().getIBAN(),
+                block.getOwner().getIban(),
                 block.getTrustValue()));
         return getBlocks(owner);
     }
@@ -239,7 +239,8 @@ public class BlockController implements BlockControllerInterface {
         blockData.setIban(owner);
         blockData.setPreviousHashChain(NA);
         blockData.setPreviousHashSender(NA);
-        blockData.setPublicKey(NA);
+        blockData.setPublicKey(owner.generatePublicKey());
+        blockData.setTrustValue(TrustValues.INITIALIZED.getValue());
         Block block = BlockFactory.createBlock(blockData);
         addBlock(block);
         return block;
@@ -257,7 +258,7 @@ public class BlockController implements BlockControllerInterface {
      */
     public Block createKeyBlock(User owner, User contact, String publicKey) throws
             HashException {
-        return createBlock(owner, contact, publicKey, contact.getIBAN(), BlockType.ADD_KEY);
+        return createBlock(owner, contact, publicKey, contact.getIban(), BlockType.ADD_KEY);
     }
 
     /**

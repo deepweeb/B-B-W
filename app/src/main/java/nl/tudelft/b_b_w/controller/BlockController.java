@@ -146,7 +146,7 @@ public class BlockController implements BlockControllerInterface {
      */
     @Override
     public final List<Block> revokeBlock(Block block) throws HashException {
-        String owner = block.getOwner().getName();
+        final String owner = block.getOwner().getName();
         addBlock(BlockFactory.getBlock(
                 REVOKE,
                 owner,
@@ -165,7 +165,7 @@ public class BlockController implements BlockControllerInterface {
      */
     @Override
     public final List<Block> removeBlock(List<Block> list, Block block) {
-        List<Block> res = new ArrayList<>();
+        final List<Block> res = new ArrayList<>();
         for (Block blc : list) {
             if (!(blc.getOwner().equals(block.getOwner()) && blc.getPublicKey().equals(block.
                     getPublicKey()))) {

@@ -25,6 +25,7 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
     private Context context;
     private String ownerName;
     private User user;
+    private final String retrievingHashError = "Hash error while retrieving blocks";
     //Images for displaying trust
     private Integer[] images = {R.drawable.pic5,
             R.drawable.pic4,
@@ -52,7 +53,7 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
         try {
             return blockController.getBlocks(ownerName).get(position);
         } catch (HashException e) {
-            Toast.makeText(context, "Hash error while retrieving blocks", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, retrievingHashError, Toast.LENGTH_LONG).show();
             return null;
         }
     }
@@ -73,7 +74,7 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
         try {
         return blockController.getBlocks(ownerName).size();
         } catch (HashException e) {
-            Toast.makeText(context, "Hash error while retrieving blocks", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, retrievingHashError, Toast.LENGTH_LONG).show();
             return 0;
         }
     }
@@ -95,7 +96,9 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
     private int calculateImageIndex(int trust) {
         final int trustInterval = 20;
         double result = trust/ trustInterval - 0.5;
-        if (result < 0) result = 0;
+        if (result < 0) {
+            result = 0;
+        }
         return (int) result;
     }
 
@@ -139,7 +142,7 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
                     AlertDialog alert = builder.create();
                     alert.show();
                 } catch (HashException e) {
-                    Toast.makeText(context, "Hash error while retrieving blocks", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, retrievingHashError, Toast.LENGTH_LONG).show();
                 }
             }
         };
@@ -169,7 +172,7 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
             addButton.setOnClickListener(createDialog(position));
             return view;
         } catch (HashException e) {
-            Toast.makeText(context, "Hash error while retrieving blocks", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, retrievingHashError, Toast.LENGTH_LONG).show();
             return null;
         }
     }

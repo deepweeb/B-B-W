@@ -17,7 +17,7 @@
         tools:layout_editor_absoluteY="8dp">
 
         <Button
-            android:id="@+id/button7"
+            android:id="@+id/onContactsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1.58"

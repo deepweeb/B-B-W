@@ -16,6 +16,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
+/** This class verifies the workings of the GenesisBlock */
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class,sdk= 21,  manifest = "src/main/AndroidManifest.xml")
 public class GenesisBlockUnitTest {
@@ -26,8 +27,11 @@ public class GenesisBlockUnitTest {
     private final String HASH_GENESIS_A =
             "7875f4b585ea90f0db3f3fd3efd257a9104147a443877efac3389afe8f26390d";
 
+    /** Example genesis block of user A */
     private GenesisBlock genesisBlockA;
+    /** Copy of genesis block of user A */
     private GenesisBlock genesisBlockA2;
+    /** Example genesis block of user B */
     private GenesisBlock genesisBlockB;
 
     @Before
@@ -90,7 +94,7 @@ public class GenesisBlockUnitTest {
 
     /** Test iban */
     @Test
-    public void iban() {
+    public void testIbanGenesis() {
         assertEquals(genesisBlockA.getOwner().getIBAN(), a.getIBAN());
     }
 
@@ -109,7 +113,7 @@ public class GenesisBlockUnitTest {
 
     /** Test trust value */
     @Test
-    public void trust() {
+    public void testTrustGenesis() {
         assertEquals(TrustValues.INITIALIZED.getValue(), genesisBlockA.getTrustValue());
     }
 
@@ -121,7 +125,7 @@ public class GenesisBlockUnitTest {
 
     /** Test equality */
     @Test
-    public void equals() {
+    public void testEqualsGenesis() {
         assertTrue(genesisBlockA.equals(genesisBlockA2));
     }
 

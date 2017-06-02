@@ -156,7 +156,7 @@ public class DatabaseHandlerUnitTest {
                 owner,
                 getDatabaseHandler.lastSeqNumberOfChain(owner) + 1,
                 ownHash,
-                previousHashChain,
+                "chainhash",
                 previousHashSender,
                 publicKey,
                 iban,
@@ -207,7 +207,7 @@ public class DatabaseHandlerUnitTest {
                 "Jack",
                 2,
                 hash,
-                randomSenderHash,
+                "chainhash",
                 ownHash,
                 publicKey,
                 iban,
@@ -229,7 +229,7 @@ public class DatabaseHandlerUnitTest {
                 owner2,
                 getDatabaseHandler.lastSeqNumberOfChain(owner) + 1,
                 ownHash,
-                previousHashChain,
+                "N/A",
                 previousHashSender,
                 publicKey,
                 iban,
@@ -241,68 +241,13 @@ public class DatabaseHandlerUnitTest {
                 owner2,
                 getDatabaseHandler.lastSeqNumberOfChain(owner),
                 ownHash,
-                previousHashChain,
+                "N/A"   ,
                 previousHashSender,
                 publicKey,
                 iban,
                 trustValue
         );
         assertEquals(expectBlock, getDatabaseHandler.getLatestBlock("owner2"));
-    }
-
-    /**
-     * getBlockAfter test
-     * Tests the block after a block
-     */
-    @Test
-    public void getBlockAfter() throws HashException {
-        mutateDatabaseHandler.addBlock(_block);
-        final Block block2 = BlockFactory.getBlock(
-                TYPE_BLOCK,
-                owner,
-                getDatabaseHandler.lastSeqNumberOfChain(owner) + 1,
-                ownHash,
-                previousHashChain,
-                previousHashSender,
-                publicKey,
-                iban,
-                trustValue
-        );
-        mutateDatabaseHandler.addBlock(block2);
-        final Block expectBlock = BlockFactory.getBlock(
-                TYPE_BLOCK,
-                owner,
-                getDatabaseHandler.lastSeqNumberOfChain(owner),
-                ownHash,
-                previousHashChain,
-                previousHashSender,
-                publicKey,
-                iban,
-                trustValue
-        );
-        assertEquals(expectBlock, getDatabaseHandler.getBlockAfter(owner, sequenceNumber));
-    }
-
-    /**
-     * getBlockBefore test
-     * Tests the block before a block
-     */
-    @Test
-    public void getBlockBefore() throws HashException {
-        mutateDatabaseHandler.addBlock(_block);
-        final Block block2 = BlockFactory.getBlock(
-                TYPE_BLOCK,
-                owner,
-                getDatabaseHandler.lastSeqNumberOfChain(owner) + 1,
-                ownHash,
-                previousHashChain,
-                previousHashSender,
-                publicKey,
-                iban,
-                trustValue
-        );
-        mutateDatabaseHandler.addBlock(block2);
-        assertEquals(getDatabaseHandler.getBlockBefore(owner, 2), _block);
     }
 
     /**
@@ -426,7 +371,7 @@ public class DatabaseHandlerUnitTest {
                 owner,
                 getDatabaseHandler.lastSeqNumberOfChain(owner) + 1,
                 ownHash,
-                previousHashChain,
+                "chainhash",
                 previousHashSender,
                 publicKey,
                 iban,

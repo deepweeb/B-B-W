@@ -16,16 +16,15 @@ import android.widget.Toast;
 import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.controller.BlockController;
 import nl.tudelft.b_b_w.model.HashException;
+import nl.tudelft.b_b_w.model.User;
 
-/**
- * Adapter to add the different blocks dynamically
- */
-public class ContactAdapter extends BaseAdapter implements ListAdapter {
+public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
 
     //Variables which we use for getting the block information
     private BlockController blockController;
     private Context context;
     private String ownerName;
+    private User user;
     //Images for displaying trust
     private Integer images[] = {R.drawable.pic5,
             R.drawable.pic4,
@@ -38,9 +37,10 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
      * @param blockController BlockController which is passed on
      * @param context Context which is passed on
      */
-    public ContactAdapter(BlockController blockController, String ownerName, Context context) {
+    public FriendsContactAdapter(BlockController blockController, String ownerName, User user, Context context) {
         this.context = context;
         this.ownerName = ownerName;
+        this.user = user;
         this.blockController = blockController;
     }
 
@@ -71,7 +71,7 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
     @Override
     public int getCount() {
         try {
-            return blockController.getBlocks(ownerName).size();
+        return blockController.getBlocks(ownerName).size();
         } catch (HashException e) {
             Toast.makeText(context, "Hash error while retrieving blocks", Toast.LENGTH_LONG).show();
             return 0;
@@ -111,15 +111,19 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
                 try {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setTitle("Confirm");
-                    builder.setMessage("Are you sure you want to revoke "
-                            + blockController.getBlocks(ownerName).get(position).getOwner()
+                    builder.setMessage("Are you sure you want to add "
+                            + blockController.backtrack(blockController.getBlocks(ownerName).get(position)).getOwner()
                             + " IBAN?");
                     builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             try {
-                                blockController.revokeBlock(blockController.getBlocks(ownerName).get(position));
-                            } catch (HashException e) {
-                                Toast.makeText(context, "Hash error while retrieving blocks", Toast.LENGTH_LONG).show();
+                                blockController.createKeyBlock(user,
+                                        blockController.backtrack(
+                                                blockController.getBlocks(ownerName).get(position)).getOwner(),
+                                        blockController.getBlocks(ownerName).get(
+                                                position).getPublicKey());
+                            } catch (Exception e) {
+                                //do nothing.
                             }
                             notifyDataSetChanged();
                             dialog.dismiss();
@@ -147,23 +151,23 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
      */
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+        View view = convertView;
+        if (view == null) {
+            LayoutInflater inflater =
+                    (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = inflater.inflate(R.layout.simple_list_item_2, null);
+        }
         try {
-            View view = convertView;
-            if (view == null) {
-                LayoutInflater inflater =
-                        (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = inflater.inflate(R.layout.simple_list_item_1, parent, false);
-            }
-            TextView nameItemText = (TextView) view.findViewById(R.id.list_item_name);
-            nameItemText.setText(blockController.getContactName(blockController.getBlocks(ownerName).get(position).getOwnHash()));
-            TextView ibanItemText = (TextView) view.findViewById(R.id.list_item_iban);
-            ibanItemText.setText(blockController.getBlocks(ownerName).get(position).getOwner().getIban());
-            ImageView pic = (ImageView) view.findViewById(R.id.trust_image);
-            pic.setImageResource(
-                    getImageNo(blockController.getBlocks(ownerName).get(position).getTrustValue()));
-            Button revokeButton = (Button) view.findViewById(R.id.revoke_btn);
-            revokeButton.setOnClickListener(createDialog(position));
-            return view;
+        TextView nameItemText = (TextView)view.findViewById(R.id.list_item_name2);
+        nameItemText.setText(blockController.getContactName(blockController.getBlocks(ownerName).get(position).getOwnHash()));
+        TextView ibanItemText = (TextView)view.findViewById(R.id.list_item_iban2);
+        ibanItemText.setText(blockController.getBlocks(ownerName).get(position).getOwner().getIban());
+        ImageView pic = (ImageView)view.findViewById(R.id.trust_image2);
+        pic.setImageResource(
+                getImageNo(blockController.getBlocks(ownerName).get(position).getTrustValue()));
+        Button addButton = (Button)view.findViewById(R.id.add_btn);
+        addButton.setOnClickListener(createDialog(position));
+        return view;
         } catch (HashException e) {
             Toast.makeText(context, "Hash error while retrieving blocks", Toast.LENGTH_LONG).show();
             return null;

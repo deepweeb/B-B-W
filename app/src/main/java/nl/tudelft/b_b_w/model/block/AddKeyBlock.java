@@ -21,10 +21,9 @@ public class AddKeyBlock extends KeyBlock {
         if (BuildConfig.DEBUG) {
             // verify integrity
             if (blockData.getBlockType() != BlockType.ADD_KEY
-                    || blockData.getSequenceNumber() <= FIRST_SEQUENCE_NUMBER
-                    || blockData.getPreviousHashChain().equals(NA))
+                    || blockData.getSequenceNumber() <= FIRST_SEQUENCE_NUMBER)
             {
-                throw new AssertionError("invalid revoke block");
+                throw new AssertionError("invalid add block " + this);
             }
         }
     }

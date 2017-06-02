@@ -32,8 +32,4 @@
             android:name=".view.DisplayContactFriendListActivity"
             android:label="DisplayContactFriendListActivity" />
     </application>
-    
-    <!--<instrumentation-->
-        <!--android:name=".view.Instrumentation"-->
-        <!--android:targetPackage="nl.tudelft.b_b_w.view."-->
 </manifest>

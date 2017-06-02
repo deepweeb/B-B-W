@@ -16,6 +16,7 @@ import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.controller.BlockController;
 import nl.tudelft.b_b_w.model.HashException;
 import nl.tudelft.b_b_w.model.block.Block;
+import nl.tudelft.b_b_w.model.User;
 
 /**
  * When the user wants to see a list of friends of the contact he just paired he enters into the
@@ -31,16 +32,19 @@ public class DisplayContactFriendListActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contacts);
+        setContentView(R.layout.activity_friends_contacts);
         SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
         final String ownerName = settings.getString("userNameTestSubject", "");
-        setTitle(ownerName + "'s contact list");
-        BlockController blockController = new BlockController(this);
         try {
+            final String userName = settings.getString("userName", "");
+            final String iban = settings.getString("iban", "");
+            User user = new User(userName, iban);
+            setTitle(ownerName + "'s contact list");
+            BlockController blockController = new BlockController(this);
             List<Block> list = blockController.getBlocks(ownerName);
             setUpGraph(list);
-            ContactAdapter adapter = new ContactAdapter(blockController, ownerName, this);
-            ListView lView = (ListView) findViewById(R.id.contacts);
+            FriendsContactAdapter adapter = new FriendsContactAdapter(blockController, ownerName, user, this);
+            ListView lView = (ListView) findViewById(R.id.contacts2);
             lView.setAdapter(adapter);
         } catch (HashException e) {
             Toast.makeText(this, "Hash error while retrieving blocks", Toast.LENGTH_LONG).show();

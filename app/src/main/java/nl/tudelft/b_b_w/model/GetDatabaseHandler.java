@@ -237,43 +237,6 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
     }
 
     /**
-     * Method to get the block after a specified block
-     *
-     * @param owner          the owner of the block before
-     * @param sequenceNumber the sequencenumber of the block before
-     * @return the block after the specified one
-     */
-
-    public final Block getBlockAfter(String owner, int sequenceNumber) {
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.query(TABLE_NAME,
-                COLUMNS,
-                KEY_OWNER + " = ? AND " + KEY_SEQ_NO + " > ?",
-                new String[]{
-                        owner, String.valueOf(sequenceNumber)
-                }, null, null, null, null);
-
-        if (cursor.getCount() < 1) {
-            throw new NotFoundException();
-        }
-
-        cursor.moveToFirst();
-
-        // extract block from cursor
-        Block block = extractBlock(cursor);
-
-        // Close database connection
-        db.close();
-
-        // Close cursor
-        cursor.close();
-
-        // return block
-        return block;
-    }
-
-    /**
      * Check if a block already exists in the database.
      * It is not possible to add a revoked key again.
      * @param owner owner of the block
@@ -302,42 +265,6 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         cursor.close();
 
         return exists;
-    }
-
-    /**
-     * Method to get the block before a specified block
-     *
-     * @param owner          the owner of the block after
-     * @param sequenceNumber the sequencenumber of the block after
-     * @return the block before the specified one
-     */
-    public final Block getBlockBefore(String owner, int sequenceNumber) {
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.query(TABLE_NAME,
-                COLUMNS,
-                KEY_OWNER + " = ? AND " + KEY_SEQ_NO + " < ?",
-                new String[]{
-                        owner, String.valueOf(sequenceNumber)
-                }, null, null, null, null);
-
-        if (cursor.getCount() < 1) {
-            throw new NotFoundException();
-        }
-
-        cursor.moveToFirst();
-
-        // Extract block from database
-        Block block = extractBlock(cursor);
-
-        // Close database connection
-        db.close();
-
-        // Close cursor
-        cursor.close();
-
-        // return block
-        return block;
     }
 
     /**

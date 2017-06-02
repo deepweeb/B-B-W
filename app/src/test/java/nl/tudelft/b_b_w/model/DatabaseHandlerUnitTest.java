@@ -250,61 +250,6 @@ public class DatabaseHandlerUnitTest {
     }
 
     /**
-     * getBlockAfter test
-     * Tests the block after a block
-     */
-    @Test
-    public void getBlockAfter() {
-        mutateDatabaseHandler.addBlock(_block);
-        final Block block2 = BlockFactory.getBlock(
-                TYPE_BLOCK,
-                owner,
-                getDatabaseHandler.lastSeqNumberOfChain(owner) + 1,
-                ownHash,
-                previousHashChain,
-                previousHashSender,
-                publicKey,
-                iban,
-                trustValue
-        );
-        mutateDatabaseHandler.addBlock(block2);
-        final Block expectBlock = BlockFactory.getBlock(
-                TYPE_BLOCK,
-                owner,
-                getDatabaseHandler.lastSeqNumberOfChain(owner),
-                ownHash,
-                previousHashChain,
-                previousHashSender,
-                publicKey,
-                iban,
-                trustValue
-        );
-        assertEquals(expectBlock, getDatabaseHandler.getBlockAfter(owner, sequenceNumber));
-    }
-
-    /**
-     * getBlockBefore test
-     * Tests the block before a block
-     */
-    @Test
-    public void getBlockBefore() {
-        mutateDatabaseHandler.addBlock(_block);
-        final Block block2 = BlockFactory.getBlock(
-                TYPE_BLOCK,
-                owner,
-                getDatabaseHandler.lastSeqNumberOfChain(owner) + 1,
-                ownHash,
-                previousHashChain,
-                previousHashSender,
-                publicKey,
-                iban,
-                trustValue
-        );
-        mutateDatabaseHandler.addBlock(block2);
-        assertEquals(getDatabaseHandler.getBlockBefore(owner, 2), _block);
-    }
-
-    /**
      * getAllBlocks test
      * Tests getting all blocks
      */

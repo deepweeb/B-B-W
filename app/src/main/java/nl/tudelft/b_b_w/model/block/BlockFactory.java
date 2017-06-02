@@ -7,11 +7,17 @@ import nl.tudelft.b_b_w.model.User;
  * BlockFactory class
  * Outputs a block
  */
-public class BlockFactory {
+public final class BlockFactory {
     /**
      * Sequence number of first block
      */
-    private static final int firstSequenceNumber = 1;
+    private static final int FIRST_SEQUENCE_NUMBER = 1;
+
+    /**
+     * Private constructor
+     * Ensures that the class can not be instantiated
+     */
+    private BlockFactory() {}
 
     /**
      * Create a new block given the block data.
@@ -35,6 +41,7 @@ public class BlockFactory {
      * Old block creation method with way too many parameters
      */
     @Deprecated
+    @SuppressWarnings("ParameterNumber")
     public static final Block getBlock(String type, String newOwner, int sequenceIndex, String hash,
                                        String previousHashChain, String previousHashSender,
                                        String publicKey, String iban, int trustValue) throws
@@ -50,7 +57,7 @@ public class BlockFactory {
         data.setSequenceNumber(sequenceIndex);
 
         // determine block type
-        if (sequenceIndex == firstSequenceNumber) {
+        if (sequenceIndex == FIRST_SEQUENCE_NUMBER) {
             data.setBlockType(BlockType.GENESIS);
         } else if (type.equals("REVOKE")) {
             data.setBlockType(BlockType.REVOKE_KEY);

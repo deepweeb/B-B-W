@@ -51,16 +51,17 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
     }
 
     /**
-     * Checks wheter a given key is already revoked
+     * Checks whether a given key is already revoked
      * @param owner the owner (NOT user) of the key
      * @param key the key in question
-     * @return
+     * @return boolean whether the given key is already revoked
      */
     public final boolean containsRevoke(String owner, String key) {
         List<Block> blocks = getAllBlocks(owner);
         for (Block block : blocks) {
-            if (block.getPublicKey().equals(key) && block.isRevoked())
+            if (block.getPublicKey().equals(key) && block.isRevoked()) {
                 return true;
+            }
         }
         return false;
     }

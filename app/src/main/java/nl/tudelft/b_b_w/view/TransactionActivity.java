@@ -75,7 +75,7 @@ public class TransactionActivity extends Activity {
                     EditText amountText = (EditText) findViewById(R.id.editText11);
                     final int amount = Integer.parseInt(amountText.getText().toString());
                     for (Block block : blockController.getBlocks(user.getName())) {
-                        if (blockController.backtrack(block).getOwner().equals(transactionName)) {
+                        if (blockController.backtrack(block).getOwner().getName().equals(transactionName)) {
                             blockController.successfulTransaction(block);
                             Toast.makeText(TransactionActivity.this, "Send €" + amount + " to "
                                     + transactionName + "!", Toast.LENGTH_SHORT).show();

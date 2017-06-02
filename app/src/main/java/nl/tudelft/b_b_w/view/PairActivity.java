@@ -96,10 +96,10 @@ public class PairActivity extends Activity {
 
         List<Block> list = blockController.getBlocks(owner.getName());
 
-        Toast.makeText(this, list.get(0).getPublicKey() + ", " +
-                list.get(ONE).getPublicKey() + ", " +
-                list.get(TWO).getPublicKey() + ", " +
-                list.get(THREE).getPublicKey(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, list.get(0).getPublicKey() + ", "
+                + list.get(ONE).getPublicKey() + ", "
+                + list.get(TWO).getPublicKey() + ", "
+                + list.get(THREE).getPublicKey(), Toast.LENGTH_SHORT).show();
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
@@ -148,17 +148,17 @@ public class PairActivity extends Activity {
 
         List<Block> list = blockController.getBlocks(owner.getName());
 
-        Toast.makeText(this, list.get(0).getPublicKey() + ", " +
-                list.get(ONE).getPublicKey() + ", " +
-                list.get(TWO).getPublicKey() + ", " +
-                list.get(THREE).getPublicKey() + ", " +
-                list.get(FOUR).getPublicKey(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, list.get(0).getPublicKey() + ", "
+                + list.get(ONE).getPublicKey() + ", "
+                + list.get(TWO).getPublicKey() + ", "
+                + list.get(THREE).getPublicKey() + ", "
+                + list.get(FOUR).getPublicKey(), Toast.LENGTH_SHORT).show();
 
-        Toast.makeText(this, list.get(0).getPublicKey() + ", " +
-                list.get(ONE).getPublicKey() + ", " +
-                list.get(TWO).getPublicKey() + ", " +
-                list.get(THREE).getPublicKey() + ", " +
-                list.get(FOUR).getPublicKey(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, list.get(0).getPublicKey() + ", "
+                + list.get(ONE).getPublicKey() + ", "
+                + list.get(TWO).getPublicKey() + ", "
+                + list.get(THREE).getPublicKey() + ", "
+                + list.get(FOUR).getPublicKey(), Toast.LENGTH_SHORT).show();
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();

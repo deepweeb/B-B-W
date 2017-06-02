@@ -91,10 +91,12 @@ public class BlockController implements BlockControllerInterface {
      */
     @Override
     public final void addBlock(Block block) {
-        if (getDatabaseHandler.containsRevoke(block.getOwner().getName(), block.getPublicKey()))
+        if (getDatabaseHandler.containsRevoke(block.getOwner().getName(), block.getPublicKey())) {
             throw new RuntimeException("Block already revoked");
-        if (blockExists(block.getOwner().getName(), block.getPublicKey(), block.isRevoked()))
+        }
+        else if (blockExists(block.getOwner().getName(), block.getPublicKey(), block.isRevoked())) {
             throw new RuntimeException("block already exists");
+        }
         mutateDatabaseHandler.addBlock(block);
     }
 
@@ -200,7 +202,9 @@ public class BlockController implements BlockControllerInterface {
     public final Block successfulTransaction(Block block) {
         final int maxCeil = 100;
         final int newTrust = block.getTrustValue() + TrustValues.SUCCESFUL_TRANSACTION.getValue();
-        if (newTrust > maxCeil) block.setTrustValue(maxCeil);
+        if (newTrust > maxCeil) {
+            block.setTrustValue(maxCeil);
+        }
         block.setTrustValue(newTrust);
         mutateDatabaseHandler.updateBlock(block);
         return block;
@@ -213,7 +217,9 @@ public class BlockController implements BlockControllerInterface {
     public final Block failedTransaction(Block block) {
         final int minCeil = 0;
         final int newTrust = block.getTrustValue() + TrustValues.FAILED_TRANSACTION.getValue();
-        if (newTrust < minCeil) block.setTrustValue(minCeil);
+        if (newTrust < minCeil) {
+            block.setTrustValue(minCeil);
+        }
         block.setTrustValue(newTrust);
         mutateDatabaseHandler.updateBlock(block);
         return block;
@@ -304,8 +310,9 @@ public class BlockController implements BlockControllerInterface {
     private Block createBlock(User owner, User contact, String publicKey, String iban,
                               BlockType blockType) throws HashException {
         Block latest = getLatestBlock(owner.getName());
-        if (latest == null)
+        if (latest == null) {
             throw new IllegalArgumentException("No genesis found for user " + owner);
+        }
         String previousBlockHash = latest.getOwnHash();
 
         // always link to genesis of contact blocks
@@ -343,8 +350,8 @@ public class BlockController implements BlockControllerInterface {
             loopBlock = getDatabaseHandler.getByHash(previousHashSender);
             if (loopBlock == null) {
                 throw new
-                        Resources.NotFoundException("Error - Block cannot be backtracked: " +
-                        block.toString());
+                        Resources.NotFoundException("Error - Block cannot be backtracked: "
+                        + block.toString());
             }
             previousHashSender = loopBlock.getPreviousHashSender();
         }

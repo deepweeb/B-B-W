@@ -7,11 +7,17 @@ import nl.tudelft.b_b_w.model.User;
  * BlockFactory class
  * Outputs a block
  */
-public class BlockFactory {
+public final class BlockFactory {
     /**
      * Sequence number of first block
      */
-    private static final int firstSequenceNumber = 1;
+    private static final int FIRST_SEQUENCE_NUMBER = 1;
+
+    /**
+     * Private constructor
+     * Ensures that the class can not be instantiated
+     */
+    private BlockFactory() {}
 
     /**
      * Create a new block given the block data.
@@ -50,7 +56,7 @@ public class BlockFactory {
         data.setSequenceNumber(sequenceIndex);
 
         // determine block type
-        if (sequenceIndex == firstSequenceNumber) {
+        if (sequenceIndex == FIRST_SEQUENCE_NUMBER) {
             data.setBlockType(BlockType.GENESIS);
         } else if (type.equals("REVOKE")) {
             data.setBlockType(BlockType.REVOKE_KEY);

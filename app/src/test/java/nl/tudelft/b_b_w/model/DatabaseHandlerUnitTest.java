@@ -44,6 +44,7 @@ public class DatabaseHandlerUnitTest {
     private final String previousHashSender = "N/A";
     private final String notAvailable = "N/A";
     private final String iban = "iban";
+    private final String jack = "Jack";
     private final String publicKey = "publicKey";
     private final String chainhash = "chainhash";
     private final int firstBlockIndex = 1;
@@ -205,10 +206,10 @@ public class DatabaseHandlerUnitTest {
     @Test
     public void getContactName1() throws HashException {
         final String hash = "ownHash2";
-        final String randomSenderHash = "N/A";
+        final String randomSenderHash = notAvailable;
         Block block2 = BlockFactory.getBlock(
                 typeBlock,
-                "Jack",
+                jack,
                 secondBlockIndex,
                 hash,
                 chainhash,

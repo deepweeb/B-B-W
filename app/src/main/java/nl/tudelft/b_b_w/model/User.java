@@ -50,13 +50,26 @@ public class User {
     }
 
     @Override
-    public boolean equals(Object object) {
-        if (object instanceof User) {
-            User other = (User) object;
-            return other.getIban().equals(getIban()) &&
-                    other.getName().equals(getName());
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        } else if (o == null || getClass() != o.getClass()) {
+            return false;
         }
-        return false;
+
+        User user = (User) o;
+
+        if (!name.equals(user.name)) {
+            return false;
+        }
+        return iban.equals(user.iban);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + iban.hashCode();
+        return result;
     }
 
     @Override

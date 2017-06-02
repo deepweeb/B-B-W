@@ -124,8 +124,12 @@ public abstract class Block {
      */
     @Override
     public final boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        else if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Block block = (Block) o;
 

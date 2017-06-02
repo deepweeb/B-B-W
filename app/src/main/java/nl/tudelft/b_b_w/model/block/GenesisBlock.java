@@ -26,15 +26,12 @@ public class GenesisBlock extends Block {
     public GenesisBlock(BlockData blockData) throws HashException {
         super(blockData);
 
-        // verify integration
-        if (BuildConfig.DEBUG) {
-            // verify integrity
-            if (blockData.getBlockType() != BlockType.GENESIS
-                    || blockData.getSequenceNumber() != firstSequenceNumber
-                    || !blockData.getPreviousHashChain().equals(notAvailable)
-                    || !blockData.getPreviousHashSender().equals(notAvailable)) {
-                throw new AssertionError("invalid genesis block " + this.toString());
-            }
+        // verify integration and integrity
+        if (BuildConfig.DEBUG && blockData.getBlockType() != BlockType.GENESIS
+            || blockData.getSequenceNumber() != firstSequenceNumber
+            || !blockData.getPreviousHashChain().equals(notAvailable)
+            || !blockData.getPreviousHashSender().equals(notAvailable)) {
+                throw new AssertionError("Invalid genesis block " + this.toString());
         }
     }
 }

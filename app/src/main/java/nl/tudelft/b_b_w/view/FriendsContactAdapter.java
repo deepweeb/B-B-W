@@ -26,7 +26,7 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
     private String ownerName;
     private User user;
     //Images for displaying trust
-    private Integer images[] = {R.drawable.pic5,
+    private Integer[] images = {R.drawable.pic5,
             R.drawable.pic4,
             R.drawable.pic3,
             R.drawable.pic2,

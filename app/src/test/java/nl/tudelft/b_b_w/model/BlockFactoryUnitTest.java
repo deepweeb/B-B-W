@@ -23,9 +23,9 @@ import static org.junit.Assert.assertEquals;
 @Config(constants = BuildConfig.class,sdk= 21,  manifest = "src/main/AndroidManifest.xml")
 public class BlockFactoryUnitTest {
 
-    private Block _block;
+    private Block testBlock;
     private BlockController blockController;
-    private final String TYPE_BLOCK = "BLOCK";
+    private final String typeBlock = "BLOCK";
     private final String owner = "owner";
     private final String ownHash = "ownHash";
     private final String previousHashChain = "N/A";
@@ -41,8 +41,8 @@ public class BlockFactoryUnitTest {
     @Before
     public void makeNewBlock() throws Exception {
         blockController = new BlockController(RuntimeEnvironment.application);
-        _block = BlockFactory.getBlock(
-                TYPE_BLOCK,
+        testBlock = BlockFactory.getBlock(
+                typeBlock,
                 owner,
                 blockController.getLatestSeqNumber(owner)+1,
                 ownHash,
@@ -61,7 +61,7 @@ public class BlockFactoryUnitTest {
     @Test
     public void testGetBlock() throws HashException {
         final Block newBlock = BlockFactory.getBlock(
-                TYPE_BLOCK,
+                typeBlock,
                 owner,
                 blockController.getLatestSeqNumber(owner)+1,
                 ownHash,
@@ -72,7 +72,7 @@ public class BlockFactoryUnitTest {
                 trustValue
         );
 
-        assertEquals(_block, newBlock);
+        assertEquals(testBlock, newBlock);
     }
 
     /**
@@ -83,7 +83,7 @@ public class BlockFactoryUnitTest {
     public void testGetRevokeBlock()throws HashException{
 
         final Block newBlock = BlockFactory.getBlock(
-                TYPE_BLOCK,
+                typeBlock,
                 owner,
                 blockController.getLatestSeqNumber(owner)+1,
                 ownHash,
@@ -94,7 +94,7 @@ public class BlockFactoryUnitTest {
                 trustValue
         );
 
-        assertEquals(_block, newBlock);
+        assertEquals(testBlock, newBlock);
     }
 
     /**

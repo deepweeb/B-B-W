@@ -30,7 +30,7 @@ public class MutateDatabaseHandler extends AbstractDatabaseHandler {
     public void addBlock(Block block) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = blockToContentValues(block);
-        values.put(KEY_SEQ_NO, lastSeqNumberOfChain(block.getOwner().getName())+1);
+        values.put(KEY_SEQ_NO, lastSeqNumberOfChain(block.getOwner().getName()) + 1);
 
         // Inserting Row
         long res = db.insert(TABLE_NAME, null, values);

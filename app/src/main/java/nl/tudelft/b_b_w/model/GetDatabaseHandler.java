@@ -17,9 +17,6 @@ import nl.tudelft.b_b_w.model.block.BlockType;
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class GetDatabaseHandler extends AbstractDatabaseHandler {
-    /** Not Available information */
-    private static final String NA = "N/A";
-
     /**
      * Constructor
      * creates a database connection

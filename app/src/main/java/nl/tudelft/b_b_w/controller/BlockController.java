@@ -20,19 +20,22 @@ import nl.tudelft.b_b_w.model.block.BlockType;
  * Performs the actions on the blockchain
  */
 public class BlockController implements BlockControllerInterface {
+    /**
+     * Old value for when you want to revoke a block
+     */
     @Deprecated
     private static final String REVOKE = "REVOKE";
 
 
     /**
-     * For when info is not available.
+     * For when info is not available
      */
-    private final String NA = "N/A";
+    private final String notAvailable = "N/A";
 
     /**
-     * Sequence number of the first block.
+     * Sequence number of the first block
      */
-    private final int FIRST_SEQUENCE_NUMBER = 1;
+    private final int firstSequenceNumber = 1;
 
     /**
      * Databasehandlers to use
@@ -243,11 +246,11 @@ public class BlockController implements BlockControllerInterface {
     public Block createGenesis(User owner) throws HashException {
         BlockData blockData = new BlockData();
         blockData.setBlockType(BlockType.GENESIS);
-        blockData.setSequenceNumber(FIRST_SEQUENCE_NUMBER);
+        blockData.setSequenceNumber(firstSequenceNumber);
         blockData.setOwner(owner);
         blockData.setIban(owner);
-        blockData.setPreviousHashChain(NA);
-        blockData.setPreviousHashSender(NA);
+        blockData.setPreviousHashChain(notAvailable);
+        blockData.setPreviousHashSender(notAvailable);
         blockData.setPublicKey(owner.generatePublicKey());
         blockData.setTrustValue(TrustValues.INITIALIZED.getValue());
         final Block block = BlockFactory.createBlock(blockData);
@@ -308,7 +311,7 @@ public class BlockController implements BlockControllerInterface {
         // always link to genesis of contact blocks
         String contactBlockHash;
         if (owner.equals(contact)) {
-            contactBlockHash = NA;
+            contactBlockHash = notAvailable;
         } else {
             contactBlockHash = getBlocks(contact.getName()).get(0).getOwnHash();
         }
@@ -336,7 +339,7 @@ public class BlockController implements BlockControllerInterface {
         String previousHashSender = block.getPreviousHashSender();
         Block loopBlock = block;
 
-        while (!previousHashSender.equals(NA)) {
+        while (!previousHashSender.equals(notAvailable)) {
             loopBlock = getDatabaseHandler.getByHash(previousHashSender);
             if (loopBlock == null) {
                 throw new

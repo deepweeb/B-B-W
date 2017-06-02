@@ -13,16 +13,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 abstract class AbstractDatabaseHandler extends SQLiteOpenHelper {
 
-    // All Static variables
-    // Database Version
-    private static final int DATABASE_VERSION = 1;
-
-    // Database Name
-    private static final String DATABASE_NAME = "blockChain";
-
     // Table name
     static final String TABLE_NAME = "blocks";
-
     // Contacts Table Columns names
     static final String KEY_OWNER = "owner";
     static final String KEY_SEQ_NO = "sequenceNumber";
@@ -33,9 +25,9 @@ abstract class AbstractDatabaseHandler extends SQLiteOpenHelper {
     static final String KEY_IBAN_KEY = "iban";
     static final String KEY_TRUST_VALUE = "trustValue";
     static final String KEY_REVOKE = "revoke";
-    private static final String KEY_CREATED_AT = "created_at";
-
-    /** Table indices */
+    /**
+     * Table indices
+     */
     static final int INDEX_OWNER = 0;
     static final int INDEX_SEQ_NO = 1;
     static final int INDEX_OWN_HASH = 2;
@@ -45,12 +37,17 @@ abstract class AbstractDatabaseHandler extends SQLiteOpenHelper {
     static final int INDEX_IBAN_KEY = 6;
     static final int INDEX_TRUST_VALUE = 7;
     static final int INDEX_REVOKE = 8;
-
     // Persistence helpers
     static final String[] COLUMNS = new String[]{
             KEY_OWNER, KEY_SEQ_NO, KEY_OWN_HASH, KEY_PREV_HASH_CHAIN, KEY_PREV_HASH_SENDER,
             KEY_PUBLIC_KEY, KEY_IBAN_KEY, KEY_TRUST_VALUE, KEY_REVOKE
     };
+    // All Static variables
+    // Database Version
+    private static final int DATABASE_VERSION = 1;
+    // Database Name
+    private static final String DATABASE_NAME = "blockChain";
+    private static final String KEY_CREATED_AT = "created_at";
 
     /**
      * Constructor

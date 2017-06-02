@@ -18,6 +18,7 @@ public class User {
 
     /**
      * Constructor for user class
+     *
      * @param _name given name
      * @param _iban given iban
      */
@@ -28,6 +29,7 @@ public class User {
 
     /**
      * getName function
+     *
      * @return name of user
      */
     public String getName() {
@@ -36,6 +38,7 @@ public class User {
 
     /**
      * getIban function
+     *
      * @return Iban of user
      */
     public String getIban() {
@@ -45,6 +48,7 @@ public class User {
     /**
      * generatePublicKey function
      * Generates a public key
+     *
      * @return generated publicKey
      */
     public String generatePublicKey() {
@@ -64,5 +68,33 @@ public class User {
         }
         byte[] digest = messageDigest.digest();
         return String.format("%064x", new java.math.BigInteger(1, digest));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        } else if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        User user = (User) o;
+
+        if (!name.equals(user.name)) {
+            return false;
+        }
+        return iban.equals(user.iban);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + iban.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

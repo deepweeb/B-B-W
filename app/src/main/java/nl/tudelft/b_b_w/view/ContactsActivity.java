@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -15,7 +16,8 @@ import java.util.List;
 
 import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.controller.BlockController;
-import nl.tudelft.b_b_w.model.Block;
+import nl.tudelft.b_b_w.model.HashException;
+import nl.tudelft.b_b_w.model.block.Block;
 
 /**
  * When the user wants to add a block he enters into the ContactsActivity, which contain
@@ -36,14 +38,19 @@ public class ContactsActivity extends Activity {
         SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
         final String ownerName = settings.getString("userName", "");
         BlockController blockController = new BlockController(this);
-        setUpGraph(blockController.getBlocks(ownerName));
+        try {
+            setUpGraph(blockController.getBlocks(ownerName));
+        } catch (HashException e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
         ContactAdapter adapter = new ContactAdapter(blockController, ownerName, this);
-        ListView lView = (ListView)findViewById(R.id.contacts);
+        ListView lView = (ListView) findViewById(R.id.contacts);
         lView.setAdapter(adapter);
     }
 
     /**
      * Setting up the graph
+     *
      * @param blocks The blocks where the values for the graph are extracted from
      */
     public void setUpGraph(List<Block> blocks) {
@@ -61,6 +68,7 @@ public class ContactsActivity extends Activity {
 
     /**
      * Button to go to the page where transactions are done
+     *
      * @param view The view of the app.
      */
     public final void onTransaction(View view) {

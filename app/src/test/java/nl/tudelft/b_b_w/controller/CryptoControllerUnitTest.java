@@ -1,11 +1,15 @@
 package nl.tudelft.b_b_w.controller;
 
 import org.junit.Before;
-import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
+/**
+ * Test class for CryptoController
+ */
 public class CryptoControllerUnitTest {
 
+    /**
+     * Class attributes
+     */
     private CryptoController cryptoController;
 
     /**
@@ -17,13 +21,4 @@ public class CryptoControllerUnitTest {
         this.cryptoController = new CryptoController();
     }
 
-    /**
-     * EncryptDecryptTest
-     * Checks whether the encryption and decryption method work
-     */
-    @Test
-    public void testEncryptDecryptTest() throws Exception {
-        final String random = "0CYk67Pt08m7DE9Bumbo";
-        assertEquals(random, this.cryptoController.decryptString(this.cryptoController.encryptString(random)));
-    }
 }

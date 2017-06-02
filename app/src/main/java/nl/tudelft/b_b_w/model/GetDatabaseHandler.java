@@ -1,19 +1,22 @@
 package nl.tudelft.b_b_w.model;
 
 import android.content.Context;
-import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.tudelft.b_b_w.model.block.Block;
+import nl.tudelft.b_b_w.model.block.BlockData;
+import nl.tudelft.b_b_w.model.block.BlockFactory;
+import nl.tudelft.b_b_w.model.block.BlockType;
+
 /**
  * Class to create and handle the Database for get requests
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class GetDatabaseHandler extends AbstractDatabaseHandler {
-
     /**
      * Constructor
      * creates a database connection
@@ -48,11 +51,29 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
     }
 
     /**
+     * Checks whether a given key is already revoked
+     *
+     * @param owner the owner (NOT user) of the key
+     * @param key   the key in question
+     * @return boolean whether the given key is already revoked
+     */
+    public final boolean containsRevoke(String owner, String key) {
+        List<Block> blocks = getAllBlocks(owner);
+        for (Block block : blocks) {
+            if (block.getPublicKey().equals(key) && block.isRevoked()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Function to backtrace the contact name given the hash that refer to their block
+     *
      * @param hash hash of the block which owner name we want to find from
      * @return name of owner
      */
-    public final String getContactName(String hash) {
+    public final String getContactName(String hash) throws HashException, HashMismatchException {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_NAME,
                 COLUMNS,
@@ -76,7 +97,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         cursor.close();
 
         if (block.getPreviousHashSender().equals("N/A")) {
-            return block.getOwner();
+            return block.getOwner().getName();
         } else {
             return getContactName(block.getPreviousHashSender());
         }
@@ -90,7 +111,8 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      * @param sequenceNumber The number of the block in the sequence
      * @return The block you were searching for
      */
-    public final Block getBlock(String owner, String publicKey, int sequenceNumber) {
+    public final Block getBlock(String owner, String publicKey, int sequenceNumber) throws
+            HashException, HashMismatchException {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_NAME,
                 COLUMNS,
@@ -129,7 +151,8 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      * @param sequenceNumber The number of the block in the sequence
      * @return true if the blockchain contains the specified block, otherwise false
      */
-    public final boolean containsBlock(String owner, String publicKey, int sequenceNumber) {
+    public final boolean containsBlock(String owner, String publicKey, int sequenceNumber)
+            throws HashException, HashMismatchException {
         return this.getBlock(owner, publicKey, sequenceNumber) != null;
     }
 
@@ -141,7 +164,8 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      * @param publicKey the publickey of the block you want
      * @return true if the blockchain contains the specified block, otherwise false
      */
-    public final boolean containsBlock(String owner, String publicKey) {
+    public final boolean containsBlock(String owner, String publicKey) throws HashException,
+            HashMismatchException {
         return this.getLatestBlock(owner) != null;
     }
 
@@ -178,21 +202,39 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
     /**
      * Helper method to construct a block from the database cursor.
+     *
      * @param cursor The cursor to extract from
      * @return A freshly constructed block
      */
-    private Block extractBlock(Cursor cursor) {
-        final String blockType = (cursor.getInt(INDEX_REVOKE) > 0) ? "REVOKE" : "BLOCK";
-        return BlockFactory.getBlock(
-                blockType,
-                cursor.getString(INDEX_OWNER),
-                cursor.getInt(INDEX_SEQ_NO),
-                cursor.getString(INDEX_OWN_HASH),
-                cursor.getString(INDEX_PREV_HASH_CHAIN),
-                cursor.getString(INDEX_PREV_HASH_SENDER),
-                cursor.getString(INDEX_PUBLIC_KEY),
-                cursor.getString(INDEX_IBAN_KEY),
-                cursor.getInt(INDEX_TRUST_VALUE));
+    private Block extractBlock(Cursor cursor) throws HashException {
+        String ownerName = cursor.getString(INDEX_OWNER);
+        String iban = cursor.getString(INDEX_IBAN_KEY);
+        User owner = new User(ownerName, iban);
+        BlockData blockData = new BlockData();
+        if (cursor.getInt(INDEX_SEQ_NO) == 1) {
+            blockData.setBlockType(BlockType.GENESIS);
+        } else if (cursor.getInt(INDEX_REVOKE) != 0) {
+            blockData.setBlockType(BlockType.REVOKE_KEY);
+        } else {
+            blockData.setBlockType(BlockType.ADD_KEY);
+        }
+        blockData.setOwner(owner);
+        blockData.setIban(owner);
+        blockData.setSequenceNumber(cursor.getInt(INDEX_SEQ_NO));
+        blockData.setPreviousHashChain(cursor.getString(INDEX_PREV_HASH_CHAIN));
+        blockData.setPreviousHashSender(cursor.getString(INDEX_PREV_HASH_SENDER));
+        blockData.setPublicKey(cursor.getString(INDEX_PUBLIC_KEY));
+        blockData.setTrustValue(cursor.getInt(INDEX_TRUST_VALUE));
+        Block block = BlockFactory.createBlock(blockData);
+
+        // verify
+        final String expectedHash = cursor.getString(INDEX_OWN_HASH);
+        final String calculatedHash = block.getOwnHash();
+        if (!expectedHash.equals(calculatedHash)) {
+            throw new HashMismatchException(expectedHash, calculatedHash);
+        }
+
+        return block;
     }
 
     /**
@@ -202,9 +244,9 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      * @param owner the owner of the block
      * @return the latest block
      */
-    public final Block getLatestBlock(String owner) {
-        int maxSeqNum = this.lastSeqNumberOfChain(owner);
-        SQLiteDatabase db = this.getReadableDatabase();
+    public final Block getLatestBlock(String owner) throws HashException, HashMismatchException {
+        final int maxSeqNum = this.lastSeqNumberOfChain(owner);
+        final SQLiteDatabase db = this.getReadableDatabase();
 
         if (maxSeqNum == 0) {
             return null;
@@ -239,8 +281,9 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
     /**
      * Check if a block already exists in the database.
      * It is not possible to add a revoked key again.
-     * @param owner owner of the block
-     * @param key public key in the block
+     *
+     * @param owner   owner of the block
+     * @param key     public key in the block
      * @param revoked whether the block is revoked
      * @return if the block already exists
      */
@@ -256,7 +299,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
                         String.valueOf(revoked ? 1 : 0)
                 }, null, null, null, null);
 
-        boolean exists = cursor.getCount() > 0;
+        final boolean exists = cursor.getCount() > 0;
 
         // Close database connection
         db.close();
@@ -291,8 +334,12 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
             cursor.moveToFirst();
             do {
                 // Extract block from database
-                Block block = extractBlock(cursor);
-                blocks.add(block);
+                try {
+                    Block block = extractBlock(cursor);
+                    blocks.add(block);
+                } catch (HashException e) {
+                    return new ArrayList<Block>();
+                }
             } while (cursor.moveToNext());
         }
 
@@ -307,6 +354,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
     /**
      * Check if the database is empty.
+     *
      * @return if the database is empty
      */
     public final boolean isDatabaseEmpty() {
@@ -327,10 +375,11 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
     /**
      * getByHashOwner function
      * Gets a block by its hash and owner value
+     *
      * @param hash given hash value
      * @return block that matches it
      */
-    public Block getByHash(String hash) {
+    public Block getByHash(String hash) throws HashException, HashMismatchException {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_NAME,

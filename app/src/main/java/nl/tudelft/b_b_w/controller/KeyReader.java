@@ -9,11 +9,11 @@ import java.io.IOException;
  */
 public class KeyReader {
 
+    private final String filePath = "app/privateKey.txt";
     /**
      * Class variables
      */
     private BufferedReader reader;
-    private final String filePath = "app/privateKey.txt";
 
     /**
      * Constructor method
@@ -37,9 +37,10 @@ public class KeyReader {
     /**
      * readKey method
      * Reads the private secret key from the file
+     *
      * @return private key
      */
-     final String readKey() {
+    final String readKey() {
         try {
             return this.reader.readLine();
         } catch (IOException e) {

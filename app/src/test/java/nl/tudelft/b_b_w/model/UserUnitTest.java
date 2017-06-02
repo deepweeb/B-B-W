@@ -36,7 +36,7 @@ public class UserUnitTest {
      * Testing the getName method.
      */
     @Test
-    public void getName(){
+    public void getName() {
         assertEquals(name, user.getName());
     }
 
@@ -44,7 +44,7 @@ public class UserUnitTest {
      * Testing the getIBAN method.
      */
     @Test
-    public void getIban(){
+    public void getIban() {
         assertEquals(iban, user.getIban());
     }
 
@@ -52,7 +52,7 @@ public class UserUnitTest {
      * Testing the generatePublicKey method.
      */
     @Test
-    public void generatePublicKey(){
+    public void generatePublicKey() {
         assertEquals(publicKey, user.generatePublicKey());
     }
 }

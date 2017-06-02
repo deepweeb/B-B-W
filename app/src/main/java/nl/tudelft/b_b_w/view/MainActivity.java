@@ -20,16 +20,17 @@ import nl.tudelft.b_b_w.model.User;
  * This is the page you will see when you enter the app.
  */
 public class MainActivity extends Activity {
-    private BlockController blockController;
     public static final String PREFS_NAME = "MyPrefsFile";
-
-
-    /** The user of this app, containing it's information */
+    private BlockController blockController;
+    /**
+     * The user of this app, containing it's information
+     */
     private User user;
 
     /**
      * This method sets up the page.
-     * @param savedInstanceState    passes in the old variables.
+     *
+     * @param savedInstanceState passes in the old variables.
      */
     @Override
     protected final void onCreate(Bundle savedInstanceState) {
@@ -92,12 +93,13 @@ public class MainActivity extends Activity {
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
-   }
+    }
 
 
     /**
      * When you want to visit the PairActivity page.
-     * @param view  The view
+     *
+     * @param view The view
      */
     public final void onPairPage(View view) {
         Intent intent = new Intent(this, PairActivity.class);
@@ -107,6 +109,7 @@ public class MainActivity extends Activity {
 
     /**
      * When you want to visit the ContactsPageActivity.
+     *
      * @param view The view
      */
     public final void onContactsPage(View view) {

@@ -245,7 +245,7 @@ public class BlockController implements BlockControllerInterface {
         String chainHash = NA;
         String senderHash = NA;
         String publicKey = user.generatePublicKey();
-        String iban = user.getIBAN();
+        String iban = user.getIban();
         ConversionController conversionController = new ConversionController(user.getName(), publicKey,
                 chainHash, senderHash, iban);
         String hash = conversionController.hashKey();

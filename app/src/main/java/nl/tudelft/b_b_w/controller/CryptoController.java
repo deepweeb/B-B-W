@@ -14,7 +14,7 @@ public class CryptoController {
 
     /**
      * Class attributes
-     * @param SECRET_KEY The key of the encryption
+     * @param secretKey The key of the encryption
      * @param textEncryptor The encryptor which uses AES Encryption in CBC mode with a maximum
      *                      permitted key length of 256bit.
      */

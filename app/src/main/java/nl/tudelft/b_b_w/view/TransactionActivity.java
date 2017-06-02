@@ -42,7 +42,7 @@ public class TransactionActivity extends Activity {
         TextView ownerItemText = (TextView)  findViewById(R.id.OwnerName);
         ownerItemText.setText(user.getName());
         TextView ibanItemText = (TextView)  findViewById(R.id.IbanTransferor);
-        ibanItemText.setText(user.getIBAN());
+        ibanItemText.setText(user.getIban());
     }
 
     public void onSend() {

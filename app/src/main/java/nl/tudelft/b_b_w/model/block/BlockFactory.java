@@ -41,7 +41,6 @@ public final class BlockFactory {
      * Old block creation method with way too many parameters
      */
     @Deprecated
-    @SuppressWarnings("ParameterNumber")
     public static final Block getBlock(String type, String newOwner, int sequenceIndex, String hash,
                                        String previousHashChain, String previousHashSender,
                                        String publicKey, String iban, int trustValue) throws

@@ -14,16 +14,15 @@ import android.widget.TextView;
 
 import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.controller.BlockController;
+import nl.tudelft.b_b_w.model.User;
 
-/**
- * Adapter to add the different blocks dynamically
- */
-public class ContactAdapter extends BaseAdapter implements ListAdapter {
+public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
 
     //Variables which we use for getting the block information
     private BlockController blockController;
     private Context context;
     private String ownerName;
+    private User user;
     //Images for displaying trust
     private Integer images[] = {R.drawable.pic5,
             R.drawable.pic4,
@@ -36,9 +35,10 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
      * @param blockController BlockController which is passed on
      * @param context Context which is passed on
      */
-    public ContactAdapter(BlockController blockController, String ownerName, Context context) {
+    public FriendsContactAdapter(BlockController blockController, String ownerName, User user, Context context) {
         this.context = context;
         this.ownerName = ownerName;
+        this.user = user;
         this.blockController = blockController;
     }
 
@@ -98,12 +98,21 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Confirm");
-                builder.setMessage("Are you sure you want to revoke "
+                builder.setMessage("Are you sure you want to add "
                         + blockController.backtrack(blockController.getBlocks(ownerName).get(position)).getOwner()
                         + " IBAN?");
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        blockController.revokeBlock(blockController.getBlocks(ownerName).get(position));
+                        try {
+                            blockController.createKeyBlock(user.getName(),
+                                    blockController.backtrack(
+                                            blockController.getBlocks(ownerName).get(position)).getOwner(),
+                                    blockController.getBlocks(ownerName).get(
+                                            position).getPublicKey(),
+                                    blockController.getBlocks(ownerName).get(position).getIban());
+                        } catch (Exception e) {
+                            //do nothing.
+                        }
                         notifyDataSetChanged();
                         dialog.dismiss();
                     }
@@ -131,17 +140,18 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
         if (view == null) {
             LayoutInflater inflater =
                     (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.simple_list_item_1, parent, false);
+            view = inflater.inflate(R.layout.simple_list_item_2, null);
         }
-        TextView nameItemText = (TextView)view.findViewById(R.id.list_item_name);
+        TextView nameItemText = (TextView)view.findViewById(R.id.list_item_name2);
         nameItemText.setText(blockController.getContactName(blockController.getBlocks(ownerName).get(position).getOwnHash()));
-        TextView ibanItemText = (TextView)view.findViewById(R.id.list_item_iban);
+        TextView ibanItemText = (TextView)view.findViewById(R.id.list_item_iban2);
         ibanItemText.setText(blockController.getBlocks(ownerName).get(position).getIban());
-        ImageView trustImage = (ImageView)view.findViewById(R.id.trust_image);
-        trustImage.setImageResource(
+        ImageView pic = (ImageView)view.findViewById(R.id.trust_image2);
+        pic.setImageResource(
                 getImageNo(blockController.getBlocks(ownerName).get(position).getTrustValue()));
-        Button revokeButton = (Button)view.findViewById(R.id.revoke_btn);
-        revokeButton.setOnClickListener(createDialog(position));
+        Button addButton = (Button)view.findViewById(R.id.add_btn);
+        addButton.setOnClickListener(createDialog(position));
         return view;
     }
+
 }

@@ -4,7 +4,14 @@ package nl.tudelft.b_b_w.model;
  * Exception for when hashes do not match
  */
 public class HashMismatchException extends HashException {
+    /**
+     * The expected hash value of a block
+     */
     private String expected;
+
+    /**
+     * The calculated hash value of a block
+     */
     private String calculated;
 
     /**

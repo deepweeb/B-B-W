@@ -9,6 +9,11 @@ import nl.tudelft.b_b_w.model.User;
  */
 public class BlockFactory {
     /**
+     * Sequence number of first block
+     */
+    private static final int firstSequenceNumber = 1;
+
+    /**
      * Create a new block given the block data.
      * @param data the data on which to base this block
      * @return the freshly created block
@@ -26,7 +31,9 @@ public class BlockFactory {
         }
     }
 
-    /** Old method with way too many parameters */
+    /**
+     * Old block creation method with way too many parameters
+     */
     @Deprecated
     public static final Block getBlock(String type, String newOwner, int sequenceIndex, String hash,
                                        String previousHashChain, String previousHashSender,
@@ -42,7 +49,7 @@ public class BlockFactory {
         data.setSequenceNumber(sequenceIndex);
 
         // determine block type
-        if (sequenceIndex == 1) {
+        if (sequenceIndex == firstSequenceNumber) {
             data.setBlockType(BlockType.GENESIS);
         } else if (type.equals("REVOKE")) {
             data.setBlockType(BlockType.REVOKE_KEY);

@@ -228,8 +228,8 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         Block block = BlockFactory.createBlock(blockData);
 
         // verify
-        String expectedHash = cursor.getString(INDEX_OWN_HASH);
-        String calculatedHash = block.getOwnHash();
+        final String expectedHash = cursor.getString(INDEX_OWN_HASH);
+        final String calculatedHash = block.getOwnHash();
         if (!expectedHash.equals(calculatedHash)) {
             throw new HashMismatchException(expectedHash, calculatedHash);
         }
@@ -245,8 +245,8 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      * @return the latest block
      */
     public final Block getLatestBlock(String owner) throws HashException, HashMismatchException {
-        int maxSeqNum = this.lastSeqNumberOfChain(owner);
-        SQLiteDatabase db = this.getReadableDatabase();
+        final int maxSeqNum = this.lastSeqNumberOfChain(owner);
+        final SQLiteDatabase db = this.getReadableDatabase();
 
         if (maxSeqNum == 0) {
             return null;
@@ -288,7 +288,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
     public final Block getBlockAfter(String owner, int sequenceNumber) throws HashException,
             HashMismatchException {
-        SQLiteDatabase db = this.getReadableDatabase();
+        final SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_NAME,
                 COLUMNS,
@@ -336,7 +336,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
                         String.valueOf(revoked ? 1 : 0)
                 }, null, null, null, null);
 
-        boolean exists = cursor.getCount() > 0;
+        final boolean exists = cursor.getCount() > 0;
 
         // Close database connection
         db.close();

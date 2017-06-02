@@ -26,14 +26,11 @@ public class RevokeKeyBlock extends KeyBlock {
     public RevokeKeyBlock(BlockData blockData) throws HashException {
         super(blockData);
 
-        // verify integration
-        if (BuildConfig.DEBUG) {
-            // verify integrity
-            if (blockData.getBlockType() != BlockType.REVOKE_KEY
-                    || blockData.getSequenceNumber() <= firstSequenceNumber
-                    || blockData.getPreviousHashChain().equals(notAvailable)) {
-                throw new AssertionError("invalid revoke block");
-            }
+        // verify integration and integrity
+        if (BuildConfig.DEBUG && blockData.getBlockType() != BlockType.REVOKE_KEY
+            || blockData.getSequenceNumber() <= firstSequenceNumber
+            || blockData.getPreviousHashChain().equals(notAvailable)) {
+                throw new AssertionError("Invalid revoke block");
         }
     }
 }

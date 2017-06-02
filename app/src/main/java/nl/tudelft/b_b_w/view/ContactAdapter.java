@@ -27,11 +27,13 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
     private Context context;
     private String ownerName;
     //Images for displaying trust
-    private Integer images[] = {R.drawable.pic5,
+    private Integer[] images = {
+            R.drawable.pic5,
             R.drawable.pic4,
             R.drawable.pic3,
             R.drawable.pic2,
-            R.drawable.pic1};
+            R.drawable.pic1
+    };
 
     /**
      * Default constructor to initiate the Adapter

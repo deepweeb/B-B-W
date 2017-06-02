@@ -251,7 +251,7 @@ public class BlockController implements BlockControllerInterface {
         blockData.setPreviousHashSender(NA);
         blockData.setPublicKey(owner.generatePublicKey());
         blockData.setTrustValue(TrustValues.INITIALIZED.getValue());
-        Block block = BlockFactory.createBlock(blockData);
+        final Block block = BlockFactory.createBlock(blockData);
         addBlock(block);
         return block;
     }
@@ -324,7 +324,7 @@ public class BlockController implements BlockControllerInterface {
         blockData.setIban(contact);
         blockData.setPublicKey(publicKey);
         blockData.setTrustValue(TrustValues.INITIALIZED.getValue());
-        Block block = BlockFactory.createBlock(blockData);
+        final Block block = BlockFactory.createBlock(blockData);
         addBlock(block);
         return block;
     }

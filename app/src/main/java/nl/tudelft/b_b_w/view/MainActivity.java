@@ -54,7 +54,6 @@ public class MainActivity extends Activity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Welcome!");
         builder.setMessage("Fill in your information");
-
         final EditText nameBox = new EditText(this);
         final EditText ibanBox = new EditText(this);
         nameBox.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);

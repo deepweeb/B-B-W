@@ -1,5 +1,7 @@
 package nl.tudelft.b_b_w.view;
 
+import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,7 +16,6 @@ import nl.tudelft.b_b_w.controller.BlockController;
 import nl.tudelft.b_b_w.model.Block;
 import nl.tudelft.b_b_w.model.User;
 
-import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
 
 /**
  * Pair activity lets you pair with a fixed number of preprogrammed contacts, for demo purposes.

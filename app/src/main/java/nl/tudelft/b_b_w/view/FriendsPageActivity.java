@@ -86,9 +86,9 @@ public class FriendsPageActivity extends Activity {
      */
     @Override
     protected final void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         blockController = new BlockController(this);
 
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends_page);
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);

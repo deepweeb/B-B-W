@@ -56,7 +56,7 @@ public class User {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        String text = name  + iban;
+        String text = name + iban;
         try {
             messageDigest.update(text.getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {

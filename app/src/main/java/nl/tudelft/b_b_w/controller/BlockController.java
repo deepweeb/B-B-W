@@ -24,10 +24,16 @@ public class BlockController implements BlockControllerInterface {
     @Deprecated
     private static final String REVOKE = "REVOKE";
 
+
     /**
      * For when info is not available.
      */
     private final String NA = "N/A";
+
+    /**
+     * Sequence number of the first block.
+     */
+    private final int FIRST_SEQUENCE_NUMBER = 1;
 
     /**
      * Databasehandlers to use
@@ -238,7 +244,7 @@ public class BlockController implements BlockControllerInterface {
     public Block createGenesis(User owner) throws HashException {
         BlockData blockData = new BlockData();
         blockData.setBlockType(BlockType.GENESIS);
-        blockData.setSequenceNumber(1);
+        blockData.setSequenceNumber(FIRST_SEQUENCE_NUMBER);
         blockData.setOwner(owner);
         blockData.setIban(owner);
         blockData.setPreviousHashChain(NA);

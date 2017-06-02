@@ -79,7 +79,7 @@ public class GenesisBlockUnitTest {
      * Test the hash function
      */
     @Test
-    public void hash() {
+    public void testHash() {
         assertEquals(hashGenesisA, genesisBlockA.getOwnHash().toLowerCase());
     }
 
@@ -87,7 +87,7 @@ public class GenesisBlockUnitTest {
      * Test previous hash sender not available A
      */
     @Test
-    public void ownerA() {
+    public void testOwnerA() {
         assertEquals(userA, genesisBlockA.getOwner());
     }
 
@@ -95,7 +95,7 @@ public class GenesisBlockUnitTest {
      * Test previous hash sender not available B
      */
     @Test
-    public void ownerB() {
+    public void testOwnerB() {
         assertEquals(userB, genesisBlockB.getOwner());
     }
 
@@ -103,7 +103,7 @@ public class GenesisBlockUnitTest {
      * Test previous hash sender not available
      */
     @Test
-    public void previousHashSender() {
+    public void testPreviousHashSender() {
         assertEquals(notAvailable, genesisBlockA.getPreviousHashSender());
     }
 
@@ -111,7 +111,7 @@ public class GenesisBlockUnitTest {
      * Test previous hash chain not available
      */
     @Test
-    public void previousHashChain() {
+    public void testPreviousHashChain() {
         assertEquals(notAvailable, genesisBlockA.getPreviousHashChain());
     }
 
@@ -127,7 +127,7 @@ public class GenesisBlockUnitTest {
      * Test public key A
      */
     @Test
-    public void publicKeyA() {
+    public void testPublicKeyA() {
         assertEquals(genesisBlockA.getPublicKey(), publicKeyA);
     }
 
@@ -135,7 +135,7 @@ public class GenesisBlockUnitTest {
      * Test public key B
      */
     @Test
-    public void publicKeyB() {
+    public void testPublicKeyB() {
         assertEquals(genesisBlockB.getPublicKey(), publicKeyB);
     }
 
@@ -151,7 +151,7 @@ public class GenesisBlockUnitTest {
      * Test if non-revoked
      */
     @Test
-    public void nonrevoked() {
+    public void testNonrevoked() {
         assertFalse(genesisBlockA.isRevoked());
     }
 
@@ -167,7 +167,7 @@ public class GenesisBlockUnitTest {
      * Test inequality
      */
     @Test
-    public void inequals() {
+    public void testInequals() {
         assertFalse(genesisBlockA.equals(genesisBlockB));
     }
 
@@ -175,7 +175,7 @@ public class GenesisBlockUnitTest {
      * Test verify block
      */
     @Test
-    public void verify() {
+    public void testVerify() {
         assertTrue(genesisBlockA.verifyBlock(genesisBlockA2));
     }
 
@@ -183,7 +183,7 @@ public class GenesisBlockUnitTest {
      * Test not verify block
      */
     @Test
-    public void unverify() {
+    public void testUnverify() {
         assertFalse(genesisBlockA.verifyBlock(genesisBlockB));
     }
 }

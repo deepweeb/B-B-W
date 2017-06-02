@@ -4,10 +4,12 @@ import nl.tudelft.b_b_w.BuildConfig;
 import nl.tudelft.b_b_w.model.HashException;
 
 /**
- * The first block of a chain
+ * The first block of a blockchain
  */
 public class GenesisBlock extends Block {
-    /** First used sequence number */
+    /**
+     * First used sequence number
+     */
     private final int firstSequenceNumber = 1;
 
     /**
@@ -30,8 +32,9 @@ public class GenesisBlock extends Block {
             if (blockData.getBlockType() != BlockType.GENESIS
                     || blockData.getSequenceNumber() != firstSequenceNumber
                     || !blockData.getPreviousHashChain().equals(notAvailable)
-                    || !blockData.getPreviousHashSender().equals(notAvailable))
+                    || !blockData.getPreviousHashSender().equals(notAvailable)) {
                 throw new AssertionError("invalid genesis block " + this.toString());
+            }
         }
     }
 }

@@ -11,9 +11,8 @@ import nl.tudelft.b_b_w.model.HashUnavailableException;
 import nl.tudelft.b_b_w.model.User;
 
 /**
- * Block represents
+ * Block represents a block of the blockchain
  */
-
 public abstract class Block {
     /**
      * All data is stored here
@@ -165,13 +164,21 @@ public abstract class Block {
      * @return equals or not
      */
     public boolean verifyBlock(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Block block = (Block) o;
 
-        if (isRevoked() != block.isRevoked()) return false;
-        if (!getOwner().getIban().equals(block.getOwner().getIban())) return false;
+        if (isRevoked() != block.isRevoked()) {
+            return false;
+        }
+        if (!getOwner().getIban().equals(block.getOwner().getIban())) {
+            return false;
+        }
         return getPublicKey().equals(block.getPublicKey());
     }
 
@@ -182,7 +189,6 @@ public abstract class Block {
      */
     private String calculateHash() throws HashException {
         try {
-            // ConversionController conversionController = new ConversionController();
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             String text = getOwner().getName() + getPublicKey() + getPreviousHashChain() + getPreviousHashSender() + getOwner().getIban();
             md.update(text.getBytes("UTF-8"));

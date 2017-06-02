@@ -7,11 +7,15 @@ import nl.tudelft.b_b_w.model.HashException;
  * Block for revoking a key
  */
 public class RevokeKeyBlock extends KeyBlock {
-    /** First used sequence number */
-    private final int FIRST_SEQUENCE_NUMBER = 1;
+    /**
+     * First used sequence number
+     */
+    private final int firstSequenceNumber = 1;
 
-    /** Not available information */
-    private final String NA = "N/A";
+    /**
+     * Not available information
+     */
+    private final String notAvailable = "N/A";
 
     /**
      * Create new revoke block
@@ -26,9 +30,10 @@ public class RevokeKeyBlock extends KeyBlock {
         if (BuildConfig.DEBUG) {
             // verify integrity
             if (blockData.getBlockType() != BlockType.REVOKE_KEY
-                    || blockData.getSequenceNumber() <= FIRST_SEQUENCE_NUMBER
-                    || blockData.getPreviousHashChain().equals(NA))
+                    || blockData.getSequenceNumber() <= firstSequenceNumber
+                    || blockData.getPreviousHashChain().equals(notAvailable)) {
                 throw new AssertionError("invalid revoke block");
+            }
         }
     }
 }

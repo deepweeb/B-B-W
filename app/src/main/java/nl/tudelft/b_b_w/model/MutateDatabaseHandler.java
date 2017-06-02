@@ -11,7 +11,6 @@ import nl.tudelft.b_b_w.model.block.Block;
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class MutateDatabaseHandler extends AbstractDatabaseHandler {
-
     /**
      * Constructor
      * creates a database connection

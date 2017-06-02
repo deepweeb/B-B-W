@@ -158,7 +158,7 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
         if (view == null) {
             LayoutInflater inflater =
                     (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.simple_list_item_2, null);
+            view = inflater.inflate(R.layout.simple_list_item_2, parent, false);
         }
         try {
             TextView nameItemText = (TextView) view.findViewById(R.id.list_item_name2);

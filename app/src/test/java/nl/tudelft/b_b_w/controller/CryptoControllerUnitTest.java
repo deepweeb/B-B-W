@@ -1,11 +1,15 @@
 package nl.tudelft.b_b_w.controller;
 
 import org.junit.Before;
-import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
+/**
+ * Test class for CryptoController
+ */
 public class CryptoControllerUnitTest {
 
+    /**
+     * Class attributes
+     */
     private CryptoController cryptoController;
 
     /**

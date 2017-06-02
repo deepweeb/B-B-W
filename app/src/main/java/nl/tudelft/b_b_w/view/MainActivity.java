@@ -74,7 +74,7 @@ public class MainActivity extends Activity {
                 SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("userName", user.getName());
-                editor.putString("iban", user.getIBAN());
+                editor.putString("iban", user.getIban());
                 editor.apply();
             }
         });

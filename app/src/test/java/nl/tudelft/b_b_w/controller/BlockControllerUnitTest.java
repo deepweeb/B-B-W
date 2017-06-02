@@ -33,9 +33,10 @@ import static org.junit.Assert.assertEquals;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class,sdk= 21,  manifest = "src/main/AndroidManifest.xml")
 public class BlockControllerUnitTest {
-    private final String na = "N/A";
+    private final String notAvailable = "N/A";
     private BlockController blockController;
     private final String publicKey = "publicKey";
+    private final String publicKeyC = "pkc";
 
     @Deprecated
     private final String typeBlock = "BLOCK";
@@ -118,7 +119,7 @@ public class BlockControllerUnitTest {
      */
     @Test(expected = RuntimeException.class)
     public final void testAddDupBlocks() throws HashException {
-        Block blockC = blockController.createKeyBlock(c, c, "pkc");
+        Block blockC = blockController.createKeyBlock(c, c, publicKeyC);
         blockController.addBlock(blockC);
         blockController.addBlock(blockC);
     }
@@ -208,13 +209,13 @@ public class BlockControllerUnitTest {
 
     /** Verify the block A-A1 was created */
     @Test
-    public final void verifyBlockA_A1Creation() {
+    public final void verifyBlockAA1Creation() {
         assertNotNull(blockWithOwnerAAddsKeyKa);
     }
 
     /** Verify the block A-B1 was created */
     @Test
-    public final void verifyBlockA_B1Creation() {
+    public final void verifyBlockAB1Creation() {
         assertNotNull(blockWithOwnerAAddsKeyKb);
     }
 

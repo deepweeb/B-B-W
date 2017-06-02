@@ -24,15 +24,13 @@ import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
 public class FriendsPageActivity extends Activity {
 
     /**
-     * Block controller
-     */
-    private BlockController blockController;
-
-    /**
      * Block argument to create a block
      */
     private static final String TYPE_BLOCK = "BLOCK";
-
+    /**
+     * Block controller
+     */
+    private BlockController blockController;
     /**
      * This is your own user
      */

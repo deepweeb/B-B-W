@@ -16,6 +16,7 @@ public enum TrustValues {
 
     /**
      * Constructor to initialize trustvalue
+     *
      * @param _value given trust value
      */
     TrustValues(int _value) {
@@ -24,6 +25,7 @@ public enum TrustValues {
 
     /**
      * Default getter method for trust value
+     *
      * @return trust value
      */
     public int getValue() {

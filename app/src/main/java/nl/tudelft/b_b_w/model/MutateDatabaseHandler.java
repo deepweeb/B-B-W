@@ -42,6 +42,7 @@ public class MutateDatabaseHandler extends AbstractDatabaseHandler {
     /**
      * updateBlock function
      * updates the values of the block
+     *
      * @param block block that needs to be updated
      * @throws RuntimeException if the block cannot be updated
      */
@@ -54,7 +55,7 @@ public class MutateDatabaseHandler extends AbstractDatabaseHandler {
         int result = db.update(TABLE_NAME,
                 values,
                 KEY_OWNER + " = ? AND " + KEY_PUBLIC_KEY + " = ? AND " + KEY_SEQ_NO + " = ?",
-                new String[] {
+                new String[]{
                         block.getOwner().getName(),
                         block.getPublicKey(),
                         String.valueOf(block.getSequenceNumber()),
@@ -68,6 +69,7 @@ public class MutateDatabaseHandler extends AbstractDatabaseHandler {
     /**
      * blockToContentValues function
      * Converts a block to ContentValues
+     *
      * @param block given block to convert
      * @return ContentValues converted from block
      */
@@ -86,7 +88,9 @@ public class MutateDatabaseHandler extends AbstractDatabaseHandler {
     }
 
 
-    /** Clear all blocks from the database */
+    /**
+     * Clear all blocks from the database
+     */
     public final void clearAllBlocks() {
         SQLiteDatabase db = this.getWritableDatabase();
         final String script = "DROP TABLE IF EXISTS " + TABLE_NAME + ";";

@@ -16,9 +16,11 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
-/** This class verifies the workings of the GenesisBlock */
+/**
+ * This class verifies the workings of the GenesisBlock
+ */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class,sdk= 21,  manifest = "src/main/AndroidManifest.xml")
+@Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml")
 public class GenesisBlockUnitTest {
     private final User userA = new User("Alice", "IBANA");
     private final User userB = new User("Bob", "IBANB");
@@ -45,6 +47,7 @@ public class GenesisBlockUnitTest {
 
     /**
      * Create example block data for block A and block B
+     *
      * @throws HashException
      */
     @Before

@@ -20,12 +20,12 @@ import nl.tudelft.b_b_w.model.User;
 
 public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
 
+    private final String retrievingHashError = "Hash error while retrieving blocks";
     //Variables which we use for getting the block information
     private BlockController blockController;
     private Context context;
     private String ownerName;
     private User user;
-    private final String retrievingHashError = "Hash error while retrieving blocks";
     //Images for displaying trust
     private Integer[] images = {R.drawable.pic5,
             R.drawable.pic4,
@@ -35,8 +35,9 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
 
     /**
      * Default constructor to initiate the Adapter
+     *
      * @param blockController BlockController which is passed on
-     * @param context Context which is passed on
+     * @param context         Context which is passed on
      */
     public FriendsContactAdapter(BlockController blockController, String ownerName, User user, Context context) {
         this.context = context;
@@ -46,7 +47,7 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public Object getItem(int position) {
@@ -72,7 +73,7 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
     @Override
     public int getCount() {
         try {
-        return blockController.getBlocks(ownerName).size();
+            return blockController.getBlocks(ownerName).size();
         } catch (HashException e) {
             Toast.makeText(context, retrievingHashError, Toast.LENGTH_LONG).show();
             return 0;
@@ -81,6 +82,7 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
 
     /**
      * Method to get the right image number
+     *
      * @param trust The trust value
      * @return Image number
      */
@@ -90,12 +92,13 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
 
     /**
      * Method to calculate the right index number of the array
+     *
      * @param trust the trust value
      * @return the index
      */
     private int calculateImageIndex(int trust) {
         final int trustInterval = 20;
-        double result = trust/ trustInterval - 0.5;
+        double result = trust / trustInterval - 0.5;
         if (result < 0) {
             result = 0;
         }
@@ -104,6 +107,7 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
 
     /**
      * Method to create a popup to confirm your revoke
+     *
      * @param position Current position of the view
      * @return The listener
      */

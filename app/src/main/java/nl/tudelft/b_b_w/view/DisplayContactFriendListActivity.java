@@ -15,8 +15,8 @@ import java.util.List;
 import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.controller.BlockController;
 import nl.tudelft.b_b_w.model.HashException;
-import nl.tudelft.b_b_w.model.block.Block;
 import nl.tudelft.b_b_w.model.User;
+import nl.tudelft.b_b_w.model.block.Block;
 
 /**
  * When the user wants to see a list of friends of the contact he just paired he enters into the
@@ -53,6 +53,7 @@ public class DisplayContactFriendListActivity extends Activity {
 
     /**
      * Setting up the graph
+     *
      * @param blocks The blocks where the values for the graph are extracted from
      */
     public void setUpGraph(List<Block> blocks) {

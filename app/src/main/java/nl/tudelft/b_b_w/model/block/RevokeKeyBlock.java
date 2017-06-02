@@ -28,9 +28,9 @@ public class RevokeKeyBlock extends KeyBlock {
 
         // verify integration and integrity
         if (BuildConfig.DEBUG && blockData.getBlockType() != BlockType.REVOKE_KEY
-            || blockData.getSequenceNumber() <= firstSequenceNumber
-            || blockData.getPreviousHashChain().equals(notAvailable)) {
-                throw new AssertionError("Invalid revoke block");
+                || blockData.getSequenceNumber() <= firstSequenceNumber
+                || blockData.getPreviousHashChain().equals(notAvailable)) {
+            throw new AssertionError("Invalid revoke block");
         }
     }
 }

@@ -29,17 +29,14 @@ import static org.junit.Assert.assertTrue;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class,sdk= 21,  manifest = "src/main/AndroidManifest.xml")
+@Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml")
 public class DatabaseHandlerUnitTest {
 
-    private GetDatabaseHandler getDatabaseHandler;
-    private MutateDatabaseHandler mutateDatabaseHandler;
     private final String typeBlock = "BLOCK";
     private final String typeRevoke = "REVOKE";
     private final String owner = "owner";
     private final String owner2 = "owner2";
     private final int sequenceNumber = 1;
-    private String ownHash;
     private final String previousHashChain = "N/A";
     private final String previousHashSender = "N/A";
     private final String notAvailable = "N/A";
@@ -50,17 +47,21 @@ public class DatabaseHandlerUnitTest {
     private final int firstBlockIndex = 1;
     private final int secondBlockIndex = firstBlockIndex + 1;
     private final int trustValue = TrustValues.INITIALIZED.getValue();
+    private GetDatabaseHandler getDatabaseHandler;
+    private MutateDatabaseHandler mutateDatabaseHandler;
+    private String ownHash;
     private Block block;
+
     /**
      * setUp method
      * Does this method before every test
      * Initializes the database handler
      */
     @Before
-    public void setUp() throws HashException{
+    public void setUp() throws HashException {
         this.getDatabaseHandler = new GetDatabaseHandler(RuntimeEnvironment.application);
         this.mutateDatabaseHandler = new MutateDatabaseHandler(RuntimeEnvironment.application);
-        block =  BlockFactory.getBlock(
+        block = BlockFactory.getBlock(
                 typeBlock,
                 owner,
                 firstBlockIndex,
@@ -79,7 +80,7 @@ public class DatabaseHandlerUnitTest {
      * Tests adding a block
      */
     @Test
-    public void addBlock() throws HashException{
+    public void addBlock() throws HashException {
         mutateDatabaseHandler.addBlock(block);
         assertEquals(block, getDatabaseHandler.getBlock(owner, publicKey, sequenceNumber));
     }
@@ -171,7 +172,6 @@ public class DatabaseHandlerUnitTest {
         assertEquals(2, getDatabaseHandler.getLatestSeqNum(owner, publicKey));
 
     }
-
 
 
     /**
@@ -311,14 +311,18 @@ public class DatabaseHandlerUnitTest {
         assertEquals(getDatabaseHandler.getReadableDatabase(), database);
     }
 
-    /** Test for if the database is empty. Should not be empty since we add blocks. */
+    /**
+     * Test for if the database is empty. Should not be empty since we add blocks.
+     */
     @Test
     public void checkDatabaseEmpty() {
         getDatabaseHandler = new GetDatabaseHandler(RuntimeEnvironment.application);
         assertTrue(getDatabaseHandler.isDatabaseEmpty());
     }
 
-    /** blockExists call for a regular block */
+    /**
+     * blockExists call for a regular block
+     */
     @Test
     public void checkExistsRegular() throws HashException {
         Block b = BlockFactory.getBlock(
@@ -337,7 +341,9 @@ public class DatabaseHandlerUnitTest {
         assertTrue(exists);
     }
 
-    /** blockExists call for a revoked block */
+    /**
+     * blockExists call for a revoked block
+     */
     @Test
     public void checkExistsRevoked() throws HashException {
         Block b = BlockFactory.getBlock(
@@ -356,7 +362,9 @@ public class DatabaseHandlerUnitTest {
         assertFalse(exists);
     }
 
-    /** Add, revoke, then add is not possible. */
+    /**
+     * Add, revoke, then add is not possible.
+     */
     @Test
     public void checkExistsAgain() throws HashException {
         Block b1 = BlockFactory.getBlock(
@@ -387,7 +395,9 @@ public class DatabaseHandlerUnitTest {
         assertTrue(exists);
     }
 
-    /** Add different key should not hit exist. */
+    /**
+     * Add different key should not hit exist.
+     */
     @Test
     public void checkExistsOtherKey() throws HashException {
         Block b1 = BlockFactory.getBlock(
@@ -402,7 +412,7 @@ public class DatabaseHandlerUnitTest {
                 trustValue
         );
         mutateDatabaseHandler.addBlock(b1);
-        boolean exists = getDatabaseHandler.blockExists(owner, publicKey+"2", false);
+        boolean exists = getDatabaseHandler.blockExists(owner, publicKey + "2", false);
         assertFalse(exists);
     }
 

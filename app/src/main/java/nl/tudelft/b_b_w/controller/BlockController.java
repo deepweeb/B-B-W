@@ -93,8 +93,7 @@ public class BlockController implements BlockControllerInterface {
     public final void addBlock(Block block) {
         if (getDatabaseHandler.containsRevoke(block.getOwner().getName(), block.getPublicKey())) {
             throw new RuntimeException("Block already revoked");
-        }
-        else if (blockExists(block.getOwner().getName(), block.getPublicKey(), block.isRevoked())) {
+        } else if (blockExists(block.getOwner().getName(), block.getPublicKey(), block.isRevoked())) {
             throw new RuntimeException("block already exists");
         }
         mutateDatabaseHandler.addBlock(block);
@@ -245,6 +244,7 @@ public class BlockController implements BlockControllerInterface {
 
     /**
      * Create genesis block for an owner
+     *
      * @param owner Owner of the block
      * @return the freshly created block
      * @throws Exception when the key hashing method does not work

@@ -44,12 +44,13 @@ public class ContactsActivity extends Activity {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
         ContactAdapter adapter = new ContactAdapter(blockController, ownerName, this);
-        ListView lView = (ListView)findViewById(R.id.contacts);
+        ListView lView = (ListView) findViewById(R.id.contacts);
         lView.setAdapter(adapter);
     }
 
     /**
      * Setting up the graph
+     *
      * @param blocks The blocks where the values for the graph are extracted from
      */
     public void setUpGraph(List<Block> blocks) {
@@ -67,6 +68,7 @@ public class ContactsActivity extends Activity {
 
     /**
      * Button to go to the page where transactions are done
+     *
      * @param view The view of the app.
      */
     public final void onTransaction(View view) {

@@ -28,10 +28,10 @@ public class GenesisBlock extends Block {
 
         // verify integration and integrity
         if (BuildConfig.DEBUG && blockData.getBlockType() != BlockType.GENESIS
-            || blockData.getSequenceNumber() != firstSequenceNumber
-            || !blockData.getPreviousHashChain().equals(notAvailable)
-            || !blockData.getPreviousHashSender().equals(notAvailable)) {
-                throw new AssertionError("Invalid genesis block " + this.toString());
+                || blockData.getSequenceNumber() != firstSequenceNumber
+                || !blockData.getPreviousHashChain().equals(notAvailable)
+                || !blockData.getPreviousHashSender().equals(notAvailable)) {
+            throw new AssertionError("Invalid genesis block " + this.toString());
         }
     }
 }

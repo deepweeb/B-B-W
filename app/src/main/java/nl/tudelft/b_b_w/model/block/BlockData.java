@@ -53,6 +53,7 @@ public class BlockData {
 
     /**
      * Get the block type
+     *
      * @return the block type
      */
     public BlockType getBlockType() {
@@ -61,6 +62,7 @@ public class BlockData {
 
     /**
      * Set the block type
+     *
      * @param blockType the block type
      */
     public void setBlockType(BlockType blockType) {
@@ -69,6 +71,7 @@ public class BlockData {
 
     /**
      * Get the sequence number
+     *
      * @return the sequence number
      */
     public int getSequenceNumber() {
@@ -77,6 +80,7 @@ public class BlockData {
 
     /**
      * Set the sequence number
+     *
      * @param sequenceNumber the sequence number
      */
     public void setSequenceNumber(int sequenceNumber) {
@@ -85,6 +89,7 @@ public class BlockData {
 
     /**
      * Get the owner
+     *
      * @return the owner
      */
     public User getOwner() {
@@ -93,6 +98,7 @@ public class BlockData {
 
     /**
      * Set the owner
+     *
      * @param owner the owner
      */
     public void setOwner(User owner) {
@@ -101,6 +107,7 @@ public class BlockData {
 
     /**
      * Set the IBAN
+     *
      * @param contact the contact
      */
     public void setIban(User contact) {
@@ -109,6 +116,7 @@ public class BlockData {
 
     /**
      * Get the previous hash in the chain of this block
+     *
      * @return
      */
     public String getPreviousHashChain() {
@@ -117,6 +125,7 @@ public class BlockData {
 
     /**
      * Set the previous hash in the chain of this block
+     *
      * @param previousHashChain the previous hash in the chain of this block
      */
     public void setPreviousHashChain(String previousHashChain) {
@@ -125,6 +134,7 @@ public class BlockData {
 
     /**
      * Get the previous hash of the sender of this block
+     *
      * @return the previous hash of the sender of this block
      */
     public String getPreviousHashSender() {
@@ -133,6 +143,7 @@ public class BlockData {
 
     /**
      * Set the previous hash of the sender of this block
+     *
      * @param previousHashSender the previous hash of the sender of this block
      */
     public void setPreviousHashSender(String previousHashSender) {
@@ -141,6 +152,7 @@ public class BlockData {
 
     /**
      * Get the public key stored in this block
+     *
      * @return the public key stored in this block
      */
     public String getPublicKey() {
@@ -149,6 +161,7 @@ public class BlockData {
 
     /**
      * Set the public key stored in this block
+     *
      * @param publicKey the public key stored in this block
      */
     public void setPublicKey(String publicKey) {
@@ -157,6 +170,7 @@ public class BlockData {
 
     /**
      * Get the trust value of this block
+     *
      * @return the trust value of this block
      */
     public int getTrustValue() {
@@ -165,6 +179,7 @@ public class BlockData {
 
     /**
      * Set the trust value of this block
+     *
      * @param trustValue the trust value of this block
      */
     public void setTrustValue(int trustValue) {

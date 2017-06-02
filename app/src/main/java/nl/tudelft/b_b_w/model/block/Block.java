@@ -24,7 +24,9 @@ public abstract class Block {
      */
     private String hash;
 
-    /** Set the blockdata for this block */
+    /**
+     * Set the blockdata for this block
+     */
     public Block(BlockData blockData) throws HashException {
         this.blockData = blockData;
         this.hash = calculateHash();
@@ -32,6 +34,7 @@ public abstract class Block {
 
     /**
      * Boolean indicating if this block is revoked.
+     *
      * @return if this block is a revoke block
      */
     public final boolean isRevoked() {
@@ -40,6 +43,7 @@ public abstract class Block {
 
     /**
      * Boolean indicating if this block is a genesis block.
+     *
      * @return if this block is a genesis block
      */
     public final boolean isGenesis() {
@@ -48,6 +52,7 @@ public abstract class Block {
 
     /**
      * Retrieve block data of this block
+     *
      * @return the block data
      */
     public final BlockData getBlockData() {
@@ -56,6 +61,7 @@ public abstract class Block {
 
     /**
      * Default getter for owner
+     *
      * @return owner of the block
      */
     public final User getOwner() {
@@ -64,6 +70,7 @@ public abstract class Block {
 
     /**
      * Default getter for own block hash
+     *
      * @return own hash
      */
     public final String getOwnHash() {
@@ -72,6 +79,7 @@ public abstract class Block {
 
     /**
      * Default getter for previous block hash of chain
+     *
      * @return previous hash of chain
      */
     public final String getPreviousHashChain() {
@@ -80,6 +88,7 @@ public abstract class Block {
 
     /**
      * Default getter for previous block hash of chain
+     *
      * @return previous hash of chain
      */
     public final String getPreviousHashSender() {
@@ -88,6 +97,7 @@ public abstract class Block {
 
     /**
      * Default getter for public key
+     *
      * @return public key of the block
      */
     public final String getPublicKey() {
@@ -96,6 +106,7 @@ public abstract class Block {
 
     /**
      * Default getter for sequence number
+     *
      * @return the sequence number of the block
      */
     public final int getSequenceNumber() {
@@ -105,6 +116,7 @@ public abstract class Block {
 
     /**
      * Default getter for trustValue
+     *
      * @return the trust value of the block
      */
     public final int getTrustValue() {
@@ -113,6 +125,7 @@ public abstract class Block {
 
     /**
      * Default setter for trustValue
+     *
      * @param trustValue trust value to set
      */
     public final void setTrustValue(int trustValue) {
@@ -126,8 +139,7 @@ public abstract class Block {
     public final boolean equals(Object o) {
         if (this == o) {
             return true;
-        }
-        else if (o == null || getClass() != o.getClass()) {
+        } else if (o == null || getClass() != o.getClass()) {
             return false;
         }
 
@@ -164,6 +176,7 @@ public abstract class Block {
 
     /**
      * Attributes are isRevoked, iban and public key
+     *
      * @param o given block
      * @return equals or not
      */
@@ -188,6 +201,7 @@ public abstract class Block {
 
     /**
      * Calculate the SHA-256 hash of this block
+     *
      * @return the base-64 encoded hash as a string
      * @throws HashException when the crypto functions are not available
      */

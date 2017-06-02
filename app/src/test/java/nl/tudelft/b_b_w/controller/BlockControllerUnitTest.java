@@ -31,23 +31,19 @@ import static org.junit.Assert.assertEquals;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class,sdk= 21,  manifest = "src/main/AndroidManifest.xml")
+@Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml")
 public class BlockControllerUnitTest {
     private final String notAvailable = "N/A";
-    private BlockController blockController;
     private final String publicKey = "publicKey";
     private final String publicKeyC = "pkc";
-
     @Deprecated
     private final String typeBlock = "BLOCK";
-
     @Deprecated
     private final String typeRevoke = "REVOKE";
-
     private final User a = new User("Alice", "ibanA");
     private final User b = new User("Bob", "ibanB");
     private final User c = new User("Clara", "ibanC");
-
+    private BlockController blockController;
     private Block genesisA;
     private Block genesisB;
     private Block blockWithOwnerAAddsKeyKa;
@@ -86,7 +82,9 @@ public class BlockControllerUnitTest {
         assertEquals(list, blockController.getBlocks(c.getName()));
     }
 
-    /** Non-existing contact */
+    /**
+     * Non-existing contact
+     */
     @Test
     public final void getContactNameTest() throws HashException {
         assertEquals("Unknown", blockController.getContactName("INVALID"));
@@ -191,41 +189,57 @@ public class BlockControllerUnitTest {
         assertEquals(TrustValues.REVOKED.getValue(), b.getTrustValue());
     }
 
-    /** Check that the genesis block is created */
+    /**
+     * Check that the genesis block is created
+     */
     @Test
-    public final void verifyGenesisCreation() { assertNotNull(genesisA); }
+    public final void verifyGenesisCreation() {
+        assertNotNull(genesisA);
+    }
 
-    /** Check that genesis has the correct index */
+    /**
+     * Check that genesis has the correct index
+     */
     @Test
     public final void verifyGenesisIndex() {
         assertEquals(1, genesisA.getSequenceNumber());
     }
 
-    /** Verify genesis owner A */
+    /**
+     * Verify genesis owner A
+     */
     @Test
     public final void verifyGenesisOwner() {
         assertEquals(a, genesisA.getOwner());
     }
 
-    /** Verify the block A-A1 was created */
+    /**
+     * Verify the block A-A1 was created
+     */
     @Test
     public final void verifyBlockAA1Creation() {
         assertNotNull(blockWithOwnerAAddsKeyKa);
     }
 
-    /** Verify the block A-B1 was created */
+    /**
+     * Verify the block A-B1 was created
+     */
     @Test
     public final void verifyBlockAB1Creation() {
         assertNotNull(blockWithOwnerAAddsKeyKb);
     }
 
-    /** Blocks without sender should not have a sender hash */
+    /**
+     * Blocks without sender should not have a sender hash
+     */
     @Test
     public final void verifyBlockChainHash() throws HashException {
         assertEquals("N/A", blockWithOwnerAAddsKeyKa.getPreviousHashSender());
     }
 
-    /** Is the revoked block indeed revoked? */
+    /**
+     * Is the revoked block indeed revoked?
+     */
     @Test
     public final void verifyRevoked() {
         assertTrue(blockWithOwnerBRevokesKeyKa.isRevoked());

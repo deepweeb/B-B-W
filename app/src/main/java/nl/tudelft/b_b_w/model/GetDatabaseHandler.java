@@ -52,8 +52,9 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
     /**
      * Checks whether a given key is already revoked
+     *
      * @param owner the owner (NOT user) of the key
-     * @param key the key in question
+     * @param key   the key in question
      * @return boolean whether the given key is already revoked
      */
     public final boolean containsRevoke(String owner, String key) {
@@ -68,6 +69,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
     /**
      * Function to backtrace the contact name given the hash that refer to their block
+     *
      * @param hash hash of the block which owner name we want to find from
      * @return name of owner
      */
@@ -150,7 +152,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
      * @return true if the blockchain contains the specified block, otherwise false
      */
     public final boolean containsBlock(String owner, String publicKey, int sequenceNumber)
-    throws HashException, HashMismatchException {
+            throws HashException, HashMismatchException {
         return this.getBlock(owner, publicKey, sequenceNumber) != null;
     }
 
@@ -200,6 +202,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
     /**
      * Helper method to construct a block from the database cursor.
+     *
      * @param cursor The cursor to extract from
      * @return A freshly constructed block
      */
@@ -278,8 +281,9 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
     /**
      * Check if a block already exists in the database.
      * It is not possible to add a revoked key again.
-     * @param owner owner of the block
-     * @param key public key in the block
+     *
+     * @param owner   owner of the block
+     * @param key     public key in the block
      * @param revoked whether the block is revoked
      * @return if the block already exists
      */
@@ -350,6 +354,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
     /**
      * Check if the database is empty.
+     *
      * @return if the database is empty
      */
     public final boolean isDatabaseEmpty() {
@@ -370,6 +375,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
     /**
      * getByHashOwner function
      * Gets a block by its hash and owner value
+     *
      * @param hash given hash value
      * @return block that matches it
      */

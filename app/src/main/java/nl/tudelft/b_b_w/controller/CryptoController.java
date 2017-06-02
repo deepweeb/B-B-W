@@ -14,9 +14,10 @@ public class CryptoController {
 
     /**
      * Class attributes
+     *
      * @param secretKey The key of the encryption
      * @param textEncryptor The encryptor which uses AES Encryption in CBC mode with a maximum
-     *                      permitted key length of 256bit.
+     * permitted key length of 256bit.
      */
     private String secretKey;
     private TextEncryptor textEncryptor;
@@ -32,6 +33,7 @@ public class CryptoController {
 
     /**
      * encryptString method
+     *
      * @param data given data
      * @return encryption of data
      * @throws GeneralSecurityException if string is larger than 256 bit
@@ -46,6 +48,7 @@ public class CryptoController {
 
     /**
      * decryptString method
+     *
      * @param data given encrypted data
      * @return decrypted data
      * @throws GeneralSecurityException if string is larger than 256 bit
@@ -61,6 +64,7 @@ public class CryptoController {
     /**
      * initKey method
      * Reads the key from the file
+     *
      * @return the read key
      */
     private String initKey() {

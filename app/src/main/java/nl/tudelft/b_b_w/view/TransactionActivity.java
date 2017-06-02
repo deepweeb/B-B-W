@@ -33,6 +33,7 @@ public class TransactionActivity extends Activity {
 
     /**
      * Default method which executes all tasks on creation
+     *
      * @param savedInstanceState The current state, which is kept in memory
      */
     @Override
@@ -56,9 +57,9 @@ public class TransactionActivity extends Activity {
      * Method which sets the text in fields.
      */
     public void setText() {
-        TextView ownerItemText = (TextView)  findViewById(R.id.OwnerName);
+        TextView ownerItemText = (TextView) findViewById(R.id.OwnerName);
         ownerItemText.setText(user.getName());
-        TextView ibanItemText = (TextView)  findViewById(R.id.IbanTransferor);
+        TextView ibanItemText = (TextView) findViewById(R.id.IbanTransferor);
         ibanItemText.setText(user.getIban());
     }
 
@@ -93,7 +94,7 @@ public class TransactionActivity extends Activity {
      * Method which fills in the dropDown with contacts.
      */
     public void addItemsOnSpinner() throws HashException {
-        dialog = (Spinner)findViewById(R.id.spinner1);
+        dialog = (Spinner) findViewById(R.id.spinner1);
         int listSize = blockController.getBlocks(user.getName()).size();
         String[] items = new String[listSize];
         for (int i = 0; i < listSize; i++) {

@@ -26,6 +26,6 @@ public class HashMismatchException extends HashException {
      * {@inheritDoc}
      */
     public String toString() {
-        return "Hash mismatch! Expected: "  + expected + ", calculated: " + calculated;
+        return "Hash mismatch! Expected: " + expected + ", calculated: " + calculated;
     }
 }

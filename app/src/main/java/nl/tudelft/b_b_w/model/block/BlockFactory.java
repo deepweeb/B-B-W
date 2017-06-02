@@ -17,10 +17,12 @@ public final class BlockFactory {
      * Private constructor
      * Ensures that the class can not be instantiated
      */
-    private BlockFactory() {}
+    private BlockFactory() {
+    }
 
     /**
      * Create a new block given the block data.
+     *
      * @param data the data on which to base this block
      * @return the freshly created block
      */

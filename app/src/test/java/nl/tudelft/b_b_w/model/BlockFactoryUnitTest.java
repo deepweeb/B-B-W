@@ -20,11 +20,9 @@ import static org.junit.Assert.assertEquals;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class,sdk= 21,  manifest = "src/main/AndroidManifest.xml")
+@Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml")
 public class BlockFactoryUnitTest {
 
-    private Block testBlock;
-    private BlockController blockController;
     private final String typeBlock = "BLOCK";
     private final String owner = "owner";
     private final String ownHash = "ownHash";
@@ -33,10 +31,14 @@ public class BlockFactoryUnitTest {
     private final String publicKey = "publicKey";
     private final String iban = "iban";
     private final int trustValue = TrustValues.INITIALIZED.getValue();
+    private Block testBlock;
+    private BlockController blockController;
+
     /**
      * This method runs before each test to initialize the test object
+     *
      * @throws Exception Catches error when the MessageDigest
-     * gets an error.
+     *                   gets an error.
      */
     @Before
     public void makeNewBlock() throws Exception {
@@ -44,7 +46,7 @@ public class BlockFactoryUnitTest {
         testBlock = BlockFactory.getBlock(
                 typeBlock,
                 owner,
-                blockController.getLatestSeqNumber(owner)+1,
+                blockController.getLatestSeqNumber(owner) + 1,
                 ownHash,
                 previousHashChain,
                 previousHashSender,
@@ -63,7 +65,7 @@ public class BlockFactoryUnitTest {
         final Block newBlock = BlockFactory.getBlock(
                 typeBlock,
                 owner,
-                blockController.getLatestSeqNumber(owner)+1,
+                blockController.getLatestSeqNumber(owner) + 1,
                 ownHash,
                 previousHashChain,
                 previousHashSender,
@@ -80,12 +82,12 @@ public class BlockFactoryUnitTest {
      * With a normal block
      */
     @Test
-    public void testGetRevokeBlock()throws HashException{
+    public void testGetRevokeBlock() throws HashException {
 
         final Block newBlock = BlockFactory.getBlock(
                 typeBlock,
                 owner,
-                blockController.getLatestSeqNumber(owner)+1,
+                blockController.getLatestSeqNumber(owner) + 1,
                 ownHash,
                 previousHashChain,
                 previousHashSender,
@@ -101,7 +103,7 @@ public class BlockFactoryUnitTest {
      * Tests whether the creation through a block factory works
      * With an empty type
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testGetBlockEmpty() throws HashException {
         BlockFactory.getBlock(
                 "",

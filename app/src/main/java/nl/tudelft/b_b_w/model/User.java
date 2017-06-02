@@ -14,6 +14,7 @@ public class User {
 
     /**
      * Constructor for user class
+     *
      * @param _name given name
      * @param _iban given iban
      */
@@ -24,6 +25,7 @@ public class User {
 
     /**
      * getName function
+     *
      * @return name of user
      */
     public String getName() {
@@ -32,6 +34,7 @@ public class User {
 
     /**
      * getIban function
+     *
      * @return Iban of user
      */
     public String getIban() {
@@ -41,12 +44,13 @@ public class User {
     /**
      * generatePublicKey function
      * Generates a public key
+     *
      * @return generated publicKey
      */
     public String generatePublicKey() {
         //TODO: Generate public key using ED25519 protocol
         //generate random number until this protocol is implemented
-        return String.valueOf((int)(Math.random() * 50 + 1));
+        return String.valueOf((int) (Math.random() * 50 + 1));
     }
 
     @Override
@@ -75,5 +79,5 @@ public class User {
     @Override
     public String toString() {
         return name;
-}
+    }
 }

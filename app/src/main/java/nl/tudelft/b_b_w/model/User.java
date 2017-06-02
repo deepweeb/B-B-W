@@ -10,16 +10,16 @@ public class User {
      * Properties of a user
      */
     private String name;
-    private String IBAN;
+    private String iban;
 
     /**
      * Constructor for user class
      * @param _name given name
-     * @param _IBAN given iban
+     * @param _iban given iban
      */
-    public User(String _name, String _IBAN) {
+    public User(String _name, String _iban) {
         this.name = _name;
-        this.IBAN = _IBAN;
+        this.iban = _iban;
     }
 
     /**
@@ -31,22 +31,21 @@ public class User {
     }
 
     /**
-     * getIBAN function
-     * @return IBAN of user
+     * getIban function
+     * @return Iban of user
      */
-    public String getIBAN() {
-        return IBAN;
+    public String getIban() {
+        return iban;
     }
 
     /**
      * generatePublicKey function
      * Generates a public key
-     * @return
+     * @return generated publicKey
      */
     public String generatePublicKey() {
         //TODO: Generate public key using ED25519 protocol
         //generate random number until this protocol is implemented
-        final String PUBLIC_KEY = String.valueOf((int )(Math.random() * 50 + 1));
-        return PUBLIC_KEY;
+        return String.valueOf((int)(Math.random() * 50 + 1));
     }
 }

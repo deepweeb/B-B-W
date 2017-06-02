@@ -95,7 +95,7 @@ public class FriendsPageActivity extends Activity {
         user = new User(settings.getString("userName", ""), settings.getString("iban", ""));
 
         contactName = contact.getName();
-        ibanNumber = contact.getIBAN();
+        ibanNumber = contact.getIban();
         publicKey = contact.generatePublicKey();
 
         userLatestBlockHash = blockController.getBlocks(user.getName()).get(blockController.getBlocks(user.getName()).size()-1).getOwnHash();

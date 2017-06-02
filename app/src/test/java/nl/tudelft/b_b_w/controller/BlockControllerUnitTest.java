@@ -80,7 +80,7 @@ public class BlockControllerUnitTest {
         try {
             User user = mock(User.class);
             when(user.getName()).thenReturn("A");
-            when(user.getIBAN()).thenReturn("ibanA");
+            when(user.getIban()).thenReturn("ibanA");
             when(user.generatePublicKey()).thenReturn(publicKey);
             genesisA = blockController.createGenesis(user);
             genesisB = blockController.createGenesis(new User("B", "ibanB"));

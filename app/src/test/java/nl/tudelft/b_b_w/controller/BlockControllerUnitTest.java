@@ -1,7 +1,5 @@
 package nl.tudelft.b_b_w.controller;
 
-import android.content.res.Resources;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,13 +12,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.tudelft.b_b_w.BuildConfig;
-import nl.tudelft.b_b_w.model.Block;
-import nl.tudelft.b_b_w.model.BlockFactory;
+import nl.tudelft.b_b_w.model.HashException;
 import nl.tudelft.b_b_w.model.TrustValues;
+import nl.tudelft.b_b_w.model.User;
+import nl.tudelft.b_b_w.model.block.Block;
+import nl.tudelft.b_b_w.model.block.BlockData;
+import nl.tudelft.b_b_w.model.block.BlockFactory;
+import nl.tudelft.b_b_w.model.block.BlockType;
 
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
-
-//import android.test.mock.MockContext;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -28,35 +31,40 @@ import static org.junit.Assert.assertEquals;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class,sdk= 21,  manifest = "src/main/AndroidManifest.xml")
+@Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml")
 public class BlockControllerUnitTest {
-
-    /**
-     * Attributes
-     */
-    private BlockController bc;
-    private final String owner = "owner";
-    private final int sequenceNumber = 1;
-    private final String ownHash = "ownHash";
-    private final String previousHashChain = "previousHashChain";
-    private final String previousHashSender = "previousHashSender";
-    private final String iban = "iban";
+    private final String notAvailable = "N/A";
     private final String publicKey = "publicKey";
-    private Block _block;
-    private final int trustValue = 0;
-    private final String TYPE_BLOCK = "BLOCK";
-    private final String TYPE_REVOKE = "REVOKE";
+    private final String publicKeyC = "pkc";
+    @Deprecated
+    private final String typeBlock = "BLOCK";
+    @Deprecated
+    private final String typeRevoke = "REVOKE";
+    private final User a = new User("Alice", "ibanA");
+    private final User b = new User("Bob", "ibanB");
+    private final User c = new User("Clara", "ibanC");
+    private BlockController blockController;
+    private Block genesisA;
+    private Block genesisB;
+    private Block blockWithOwnerAAddsKeyKa;
+    private Block blockWithOwnerAAddsKeyKb;
+    private Block blockWithOwnerBAddsKeyKa;
+    private Block blockWithOwnerBRevokesKeyKa;
 
     /**
      * Initialize BlockController before every test
      * And initialize a dummy block _block
      */
     @Before
-    public void setUp() {
-        this.bc = new BlockController(RuntimeEnvironment.application);
-        this._block = BlockFactory.getBlock(TYPE_BLOCK, owner, ownHash,
-                previousHashChain, previousHashSender, publicKey, iban, trustValue);
-        _block.setSeqNumberTo(sequenceNumber);
+    public final void setUp() throws HashException {
+        blockController = new BlockController(RuntimeEnvironment.application);
+        // construct an easy blockchain
+        genesisA = blockController.createGenesis(a);
+        genesisB = blockController.createGenesis(b);
+        blockWithOwnerAAddsKeyKa = blockController.createKeyBlock(a, a, "ka");
+        blockWithOwnerAAddsKeyKb = blockController.createKeyBlock(a, b, "kb");
+        blockWithOwnerBAddsKeyKa = blockController.createKeyBlock(b, a, "ka");
+        blockWithOwnerBRevokesKeyKa = blockController.createRevokeBlock(b, a, "ka", "ibanA");
     }
 
     /**
@@ -65,44 +73,22 @@ public class BlockControllerUnitTest {
      * @throws Exception RuntimeException
      */
     @Test
-    public void testAddBlock() throws Exception {
-        bc.addBlock(_block);
+    public final void testAddBlock() throws Exception {
+        Block genesisC = blockController.createGenesis(c);
+        Block blockC = blockController.createKeyBlock(c, c, "kc");
         List<Block> list = new ArrayList<>();
-        list.add(_block);
-        assertEquals(bc.getBlocks(owner), list);
-    }
-
-
-    /**
-     * getOwnerName test no 1
-     * Test getting the owner name given hash key.
-     */
-    @Test
-    public void getContactNameTest1() {
-
-        Block block2 = BlockFactory.getBlock(TYPE_BLOCK, owner, "ownHash2",
-                ownHash, "Hash44324", publicKey + "2", iban, trustValue);
-        block2.setSeqNumberTo(1);
-        bc.addBlock(_block);
-        bc.addBlock(block2);
-        assertEquals(owner, bc.getContactName(ownHash));
+        list.add(genesisC);
+        list.add(blockC);
+        assertEquals(list, blockController.getBlocks(c.getName()));
     }
 
     /**
-     * getOwnerName test no 2
-     * Test getting the owner name given hash key.
+     * Non-existing contact
      */
     @Test
-    public void getContactNameTest2() {
-
-        Block block2 = BlockFactory.getBlock(TYPE_BLOCK, owner, "ownHash2",
-                ownHash, "Hash44324", publicKey + "2", iban, trustValue);
-        block2.setSeqNumberTo(1);
-        bc.addBlock(_block);
-        bc.addBlock(block2);
-        assertEquals(owner + "'s friend #" + block2.getSequenceNumber(), bc.getContactName("ownHash2"));
+    public final void getContactNameTest() throws HashException {
+        assertEquals("Unknown", blockController.getContactName("INVALID"));
     }
-
 
     /**
      * Tests to return the latest block
@@ -110,12 +96,10 @@ public class BlockControllerUnitTest {
      * @throws Exception RuntimeException
      */
     @Test
-    public void testGetLatestBlock() throws Exception {
-        Block expected = BlockFactory.getBlock(TYPE_BLOCK, owner, ownHash,
-                previousHashChain, previousHashSender, publicKey, iban, trustValue);
-        expected.setSeqNumberTo(1);
-        bc.addBlock(_block);
-        assertEquals(expected, bc.getLatestBlock(owner));
+    public final void testGetLatestBlock() throws Exception {
+        blockController.createGenesis(c);
+        Block blockC = blockController.createKeyBlock(c, c, "kc");
+        assertEquals(blockC, blockController.getLatestBlock(c.getName()));
     }
 
     /**
@@ -124,84 +108,39 @@ public class BlockControllerUnitTest {
      * @throws Exception RuntimeException
      */
     @Test
-    public void testGetLatestSeqNumber() throws Exception {
-        final String newOwner = owner + "2";
-        final Block newBlock = BlockFactory.getBlock(TYPE_BLOCK, newOwner, ownHash,
-                previousHashChain, previousHashSender, publicKey, iban, trustValue);
-        bc.addBlock(_block);
-        bc.addBlock(newBlock);
-
-
-        assertEquals(1, bc.getLatestSeqNumber(owner));
-    }
-
-
-    /**
-     * Tests adding two blocks
-     *
-     * @throws Exception RuntimeException
-     */
-    @Test
-    public void testAddBlock2() throws Exception {
-        final String newOwner = owner + "2";
-        Block newBlock = BlockFactory.getBlock(TYPE_BLOCK, newOwner, ownHash,
-                previousHashChain, previousHashSender, publicKey, iban, trustValue);
-        newBlock.setSeqNumberTo(1);
-        bc.addBlock(_block);
-        bc.addBlock(newBlock);
-        List<Block> list = new ArrayList<>();
-        list.add(_block);
-        list.add(newBlock);
-
-        List<Block> newList = bc.getBlocks(owner);
-        newList.addAll(bc.getBlocks(newOwner));
-
-        assertEquals(list, newList);
+    public final void testGetLatestSeqNumber() throws Exception {
+        assertEquals(3, blockController.getLatestSeqNumber(a.getName()));
     }
 
     /**
-     * Tests adding a duplicate block
+     * Tests adding a duplicate block thrice
      */
     @Test(expected = RuntimeException.class)
-    public void testAddDupBlocks() {
-        bc.addBlock(_block);
-        bc.addBlock(_block);
+    public final void testAddDupBlocks() throws HashException {
+        Block blockC = blockController.createKeyBlock(c, c, publicKeyC);
+        blockController.addBlock(blockC);
+        blockController.addBlock(blockC);
     }
 
     /**
-     * Tests adding an already revoked block
+     * Tests adding an already revoked block: in this case block
      */
     @Test(expected = RuntimeException.class)
-    public void alreadyRevoked() {
-        final Block newBlock = BlockFactory.getBlock(TYPE_REVOKE, owner, ownHash,
-                previousHashChain, previousHashSender, publicKey, iban, trustValue);
-        bc.addBlockToChain(newBlock);
-        bc.addBlockToChain(_block);
+    public final void alreadyRevoked() throws HashException {
+        blockController.createKeyBlock(b, a, "ka");
     }
 
     /**
      * Tests filtering duplicates out of a list
      */
     @Test
-    public void testEmptyList() {
-        bc.addBlock(_block);
-        bc.revokeBlock(_block);
+    public final void testEmptyList() throws HashException {
+        Block genesisC = blockController.createGenesis(c);
+        blockController.createKeyBlock(c, c, "pkc");
+        blockController.createRevokeBlock(c, c, "pkc", "ibanC");
         List<Block> list = new ArrayList<>();
-        assertEquals(list, bc.getBlocks(owner));
-    }
-
-    /**
-     * Test removeBlock if the specified revoked block has no match
-     */
-    @Test
-    public void testRemoveWithNoMatch() throws Resources.NotFoundException {
-        bc.addBlock(_block);
-        final Block blc2 = BlockFactory.getBlock(TYPE_BLOCK, owner + "2", ownHash,
-                previousHashChain, previousHashSender, publicKey + "2", iban, trustValue);
-        bc.revokeBlock(blc2);
-        List<Block> list = new ArrayList<>();
-        list.add(_block);
-        assertEquals(list, bc.getBlocks(owner));
+        list.add(genesisC);
+        assertEquals(list, blockController.getBlocks(c.getName()));
     }
 
     /**
@@ -209,9 +148,10 @@ public class BlockControllerUnitTest {
      * Tests whether verifying the IBAN updates the trust value
      */
     @Test
-    public void testVerifyIBAN() {
-        bc.verifyIBAN(_block);
-        assertEquals(TrustValues.VERIFIED.getValue(), _block.getTrustValue());
+    public final void testVerifyIBAN() {
+        Block b = blockWithOwnerAAddsKeyKb;
+        blockController.verifyIBAN(b);
+        assertEquals(TrustValues.VERIFIED.getValue(), b.getTrustValue());
     }
 
     /**
@@ -219,9 +159,11 @@ public class BlockControllerUnitTest {
      * Tests whether a successful transaction updates the trust value
      */
     @Test
-    public void testSuccessfulTransaction() {
-        bc.successfulTransaction(_block);
-        assertEquals(TrustValues.SUCCESFUL_TRANSACTION.getValue(), _block.getTrustValue());
+    public final void testSuccessfulTransaction() {
+        Block b = blockWithOwnerAAddsKeyKb;
+        blockController.successfulTransaction(b);
+        assertEquals(TrustValues.INITIALIZED.getValue() + TrustValues.SUCCESFUL_TRANSACTION.getValue(),
+                b.getTrustValue());
     }
 
     /**
@@ -229,9 +171,11 @@ public class BlockControllerUnitTest {
      * Tests whether a successful transaction updates the trust value
      */
     @Test
-    public void testFailedTransaction() {
-        bc.failedTransaction(_block);
-        assertEquals(TrustValues.FAILED_TRANSACTION.getValue(), _block.getTrustValue());
+    public final void testFailedTransaction() {
+        Block b = blockWithOwnerAAddsKeyKb;
+        blockController.failedTransaction(b);
+        assertEquals(TrustValues.INITIALIZED.getValue() + TrustValues.FAILED_TRANSACTION.getValue(),
+                b.getTrustValue());
     }
 
     /**
@@ -239,17 +183,117 @@ public class BlockControllerUnitTest {
      * Tests whether a revoked transaction updates the trust value
      */
     @Test
-    public void testRevokedTrustValue() {
-        bc.revokedTrustValue(_block);
-        assertEquals(TrustValues.REVOKED.getValue(), _block.getTrustValue());
+    public final void testRevokedTrustValue() {
+        Block b = blockWithOwnerAAddsKeyKb;
+        blockController.revokedTrustValue(b);
+        assertEquals(TrustValues.REVOKED.getValue(), b.getTrustValue());
     }
 
+    /**
+     * Check that the genesis block is created
+     */
+    @Test
+    public final void verifyGenesisCreation() {
+        assertNotNull(genesisA);
+    }
+
+    /**
+     * Check that genesis has the correct index
+     */
+    @Test
+    public final void verifyGenesisIndex() {
+        assertEquals(1, genesisA.getSequenceNumber());
+    }
+
+    /**
+     * Verify genesis owner A
+     */
+    @Test
+    public final void verifyGenesisOwner() {
+        assertEquals(a, genesisA.getOwner());
+    }
+
+    /**
+     * Verify the block A-A1 was created
+     */
+    @Test
+    public final void verifyBlockAA1Creation() {
+        assertNotNull(blockWithOwnerAAddsKeyKa);
+    }
+
+    /**
+     * Verify the block A-B1 was created
+     */
+    @Test
+    public final void verifyBlockAB1Creation() {
+        assertNotNull(blockWithOwnerAAddsKeyKb);
+    }
+
+    /**
+     * Blocks without sender should not have a sender hash
+     */
+    @Test
+    public final void verifyBlockChainHash() throws HashException {
+        assertEquals("N/A", blockWithOwnerAAddsKeyKa.getPreviousHashSender());
+    }
+
+    /**
+     * Is the revoked block indeed revoked?
+     */
+    @Test
+    public final void verifyRevoked() {
+        assertTrue(blockWithOwnerBRevokesKeyKa.isRevoked());
+    }
+
+    /**
+     * backtrack test
+     * Tests whether backtracking from previousHashSender works
+     */
+    @Test
+    public void testBacktrack() throws HashException {
+        blockController.createGenesis(c);
+        Block fresh = blockController.createKeyBlock(c, c, "pkc");
+        assertEquals(fresh, blockController.backtrack(fresh));
+    }
+
+    /**
+     * verifyTrustworthiness test
+     * Tests whether a block is trustworthy
+     */
+    @Test
+    public void testVerifyTrustworthiness() throws HashException {
+        blockController.createGenesis(c);
+        Block b = blockController.createKeyBlock(c, c, "pk");
+        assertTrue(blockController.verifyTrustworthiness(b));
+    }
+
+    /**
+     * verifyTrustworthiness test
+     * Tests whether a block is trustworthy
+     * Forces a false
+     */
+    @Test
+    public void testVerifyTrustworthinessFalse() throws HashException {
+        blockController.createGenesis(c);
+        Block b1 = blockController.createKeyBlock(c, c, "pk1");
+        BlockData data = new BlockData();
+        data.setBlockType(BlockType.ADD_KEY);
+        data.setPublicKey("pk2");
+        data.setPreviousHashChain("DUMMY");
+        data.setPreviousHashSender("DUMMY");
+        data.setTrustValue(0);
+        data.setOwner(c);
+        data.setSequenceNumber(3);
+        Block b2 = BlockFactory.createBlock(data);
+
+        assertFalse(blockController.verifyTrustworthiness(b2));
+    }
 
     /**
      * Closes database connection after test
      */
     @After
-    public void tearDown() {
-        bc.clearAllBlocks();
+    public final void tearDown() {
+        blockController.clearAllBlocks();
     }
 }

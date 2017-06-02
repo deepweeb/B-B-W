@@ -14,11 +14,12 @@ public class CryptoController {
 
     /**
      * Class attributes
-     * @param SECRET_KEY The key of the encryption
+     *
+     * @param secretKey The key of the encryption
      * @param textEncryptor The encryptor which uses AES Encryption in CBC mode with a maximum
-     *                      permitted key length of 256bit.
+     * permitted key length of 256bit.
      */
-    private final String SECRET_KEY = "k7JKPUDoGhTSo4by";
+    private String secretKey;
     private TextEncryptor textEncryptor;
 
     /**
@@ -26,11 +27,13 @@ public class CryptoController {
      * Initializes the CryptoController by initializing the textEncryptor with the secret key
      */
     public CryptoController() {
-        this.textEncryptor = new TextEncryptor(SECRET_KEY);
+        this.secretKey = initKey();
+        this.textEncryptor = new TextEncryptor(secretKey);
     }
 
     /**
      * encryptString method
+     *
      * @param data given data
      * @return encryption of data
      * @throws GeneralSecurityException if string is larger than 256 bit
@@ -45,6 +48,7 @@ public class CryptoController {
 
     /**
      * decryptString method
+     *
      * @param data given encrypted data
      * @return decrypted data
      * @throws GeneralSecurityException if string is larger than 256 bit
@@ -55,5 +59,16 @@ public class CryptoController {
         } catch (GeneralSecurityException e) {
             throw new RuntimeException("Error - Could not decode string: " + e);
         }
+    }
+
+    /**
+     * initKey method
+     * Reads the key from the file
+     *
+     * @return the read key
+     */
+    private String initKey() {
+        KeyReader keyReader = new KeyReader();
+        return keyReader.readKey();
     }
 }

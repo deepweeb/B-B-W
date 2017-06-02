@@ -69,23 +69,6 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
         return false;
     }
 
-    public final boolean containsRevoke_fasterButNotWorking(String owner, String key) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_NAME,
-                _columns,
-                KEY_OWNER + " = ? AND " + KEY_PUBLIC_KEY + " = ? AND " + KEY_REVOKE + " = ?",
-                new String[]{
-                        owner,
-                        key,
-                        String.valueOf(1)
-                }, null, null, null, null);
-
-        // When returning an exception the whole program crashes,
-        // but we want to preserve the state.
-        cursor.moveToFirst();
-        return cursor.getCount() > 0;
-    }
-
     /**
      * Function to backtrace the contact name given the hash that refer to their block
      * @param hash hash of the block which owner name we want to find from
@@ -246,7 +229,7 @@ public class GetDatabaseHandler extends AbstractDatabaseHandler {
 
         // verify
         String expectedHash = cursor.getString(INDEX_OWN_HASH);
-        String calculatedHash = blockData.calculateHash();
+        String calculatedHash = block.getOwnHash();
         if (!expectedHash.equals(calculatedHash)) {
             throw new HashMismatchException(expectedHash, calculatedHash);
         }

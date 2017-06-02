@@ -96,7 +96,7 @@ public class GenesisBlockUnitTest {
     /** Test iban */
     @Test
     public void testIbanGenesis() {
-        assertEquals(genesisBlockA.getOwner().getIBAN(), a.getIBAN());
+        assertEquals(genesisBlockA.getOwner().getIban(), a.getIban());
     }
 
 

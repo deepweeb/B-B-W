@@ -1,6 +1,13 @@
 package nl.tudelft.b_b_w.model.block;
 
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import nl.tudelft.b_b_w.model.EncodingUnavailableException;
 import nl.tudelft.b_b_w.model.HashException;
+import nl.tudelft.b_b_w.model.HashUnavailableException;
 import nl.tudelft.b_b_w.model.User;
 
 /**
@@ -17,7 +24,7 @@ public abstract class Block {
     /** Set the blockdata for this block */
     public Block(BlockData blockData) throws HashException {
         this.blockData = blockData;
-        this.hash = blockData.calculateHash();
+        this.hash = calculateHash();
     }
 
     /** Does this block revoke a key? */
@@ -119,7 +126,7 @@ public abstract class Block {
 
         Block block = (Block) o;
 
-        return this.blockData.equals(block.blockData);
+        return getOwnHash().equals(block.getOwnHash());
     }
 
     /**
@@ -149,7 +156,6 @@ public abstract class Block {
     }
 
     /**
-     * Verifies whether the attributes of the given block are equal to this
      * Attributes are isRevoked, iban and public key
      * @param o given block
      * @return equals or not
@@ -163,6 +169,27 @@ public abstract class Block {
         if (isRevoked() != block.isRevoked()) return false;
         if (!getOwner().getIban().equals(block.getOwner().getIban())) return false;
         return getPublicKey().equals(block.getPublicKey());
+    }
+
+    /**
+     * Calculate the SHA-256 hash of this block
+     * @return the base-64 encoded hash as a string
+     * @throws HashException when the crypto functions are not available
+     */
+    private String calculateHash() throws HashException {
+        try {
+            // ConversionController conversionController = new ConversionController();
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            String text = getOwner().getName() + getPublicKey() + getPreviousHashChain() + getPreviousHashSender() + getOwner().getIban();
+            md.update(text.getBytes("UTF-8"));
+            byte[] digest = md.digest();
+            String hash = String.format("%064x", new BigInteger(1, digest));
+            return hash;
+        } catch (NoSuchAlgorithmException e) {
+            throw new HashUnavailableException();
+        } catch (UnsupportedEncodingException e) {
+            throw new EncodingUnavailableException();
+        }
     }
 
 }

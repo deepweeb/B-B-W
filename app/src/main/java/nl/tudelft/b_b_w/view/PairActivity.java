@@ -1,7 +1,5 @@
 package nl.tudelft.b_b_w.view;
 
-import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +13,8 @@ import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.controller.BlockController;
 import nl.tudelft.b_b_w.model.User;
 import nl.tudelft.b_b_w.model.block.Block;
+
+import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
 
 
 /**
@@ -104,7 +104,7 @@ public class PairActivity extends Activity {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("userNameTestSubject", owner.getName());
-        editor.putString("ibanTestSubject", owner.getIBAN());
+        editor.putString("ibanTestSubject", owner.getIban());
         editor.apply();
 
         startActivity(new Intent(this, FriendsPageActivity.class));
@@ -163,7 +163,7 @@ public class PairActivity extends Activity {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("userNameTestSubject", owner.getName());
-        editor.putString("ibanTestSubject", owner.getIBAN());
+        editor.putString("ibanTestSubject", owner.getIban());
 
         editor.apply();
 
@@ -195,7 +195,7 @@ public class PairActivity extends Activity {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("userNameTestSubject", owner.getName());
-        editor.putString("ibanTestSubject", owner.getIBAN());
+        editor.putString("ibanTestSubject", owner.getIban());
         editor.apply();
 
         Toast.makeText(this, list.get(0).getPublicKey(), Toast.LENGTH_SHORT).show();

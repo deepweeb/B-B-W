@@ -1,13 +1,5 @@
 package nl.tudelft.b_b_w.model.block;
 
-import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
-import nl.tudelft.b_b_w.model.EncodingUnavailableException;
-import nl.tudelft.b_b_w.model.HashException;
-import nl.tudelft.b_b_w.model.HashUnavailableException;
 import nl.tudelft.b_b_w.model.User;
 
 public class BlockData {
@@ -20,27 +12,6 @@ public class BlockData {
     private String publicKey;
     private String iban;
     private int trustValue;
-
-    /**
-     * Calculate the SHA-256 hash of this block
-     * @return the base-64 encoded hash as a string
-     * @throws HashException when the crypto functions are not available
-     */
-    public String calculateHash() throws HashException {
-        try {
-            // ConversionController conversionController = new ConversionController();
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            String text = ownerName + publicKey + previousHashChain + previousHashSender + iban;
-            md.update(text.getBytes("UTF-8"));
-            byte[] digest = md.digest();
-            String hash = String.format("%064x", new BigInteger(1, digest));
-            return hash;
-        } catch (NoSuchAlgorithmException e) {
-            throw new HashUnavailableException();
-        } catch (UnsupportedEncodingException e) {
-            throw new EncodingUnavailableException();
-        }
-    }
 
     public BlockType getBlockType() {
         return blockType;
@@ -96,21 +67,6 @@ public class BlockData {
 
     public int getTrustValue() {
         return trustValue;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        BlockData blockData = (BlockData) o;
-
-        try {
-            return calculateHash().equals(blockData.calculateHash());
-        } catch (HashException e) {
-            return false;
-        }
     }
 
     public void setTrustValue(int trustValue) {

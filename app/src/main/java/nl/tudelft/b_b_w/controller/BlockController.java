@@ -27,7 +27,7 @@ public class BlockController implements BlockControllerInterface {
     /**
      * For when info is not available.
      */
-    private static final String NA = "N/A";
+    private final String NA = "N/A";
 
     /**
      * Databasehandlers to use
@@ -326,7 +326,7 @@ public class BlockController implements BlockControllerInterface {
         String previousHashSender = block.getPreviousHashSender();
         Block loopBlock = block;
 
-        while (!previousHashSender.equals("N/A")) {
+        while (!previousHashSender.equals(NA)) {
             loopBlock = getDatabaseHandler.getByHash(previousHashSender);
             if (loopBlock == null) throw new
                     Resources.NotFoundException("Error - Block cannot be backtracked: " +

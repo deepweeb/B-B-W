@@ -23,7 +23,7 @@
         android:id="@+id/button14"
         android:layout_width="match_parent"
         android:layout_height="62dp"
-        android:onClick="onTemp"
+        android:onClick="onTransaction"
         android:text="Transaction" />
 
 </android.widget.LinearLayout>

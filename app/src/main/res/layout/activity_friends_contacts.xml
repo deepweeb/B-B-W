@@ -18,5 +18,4 @@
         android:layout_height="200dip"
         android:id="@+id/graph"
         android:layout_weight="1" />
-
 </android.widget.LinearLayout>

@@ -17,13 +17,4 @@ public class CryptoControllerUnitTest {
         this.cryptoController = new CryptoController();
     }
 
-    /**
-     * EncryptDecryptTest
-     * Checks whether the encryption and decryption method work
-     */
-    @Test
-    public void testEncryptDecryptTest() throws Exception {
-        final String random = "0CYk67Pt08m7DE9Bumbo";
-        assertEquals(random, this.cryptoController.decryptString(this.cryptoController.encryptString(random)));
-    }
 }

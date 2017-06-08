@@ -1,8 +1,7 @@
 package nl.tudelft.b_b_w.Objects;
 
 
-import nl.tudelft.b_b_w.model.block.BlockData;
-import nl.tudelft.b_b_w.model.block.BlockType;
+
 
 /**
  * This class represents a block object.
@@ -51,7 +50,7 @@ public class Block {
      * @return if this block is a revoke block
      */
     public final boolean isRevoked() {
-        return blockData.getBlockType() == BlockType.REVOKE_KEY;
+        return blockData.getBlockType().equals(BlockType.REVOKE_KEY);
     }
 
     /**
@@ -87,7 +86,7 @@ public class Block {
      *
      * @return public key of the block
      */
-    public final String getPublicKey() {
+    public final Public_Key getPublicKey() {
         return blockData.getPublicKey();
     }
 

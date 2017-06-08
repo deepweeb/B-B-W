@@ -50,6 +50,7 @@ public class BlockTest {
 
         block = new Block(contact, nameOwner, blockData);
 
+
     }
 
     /**

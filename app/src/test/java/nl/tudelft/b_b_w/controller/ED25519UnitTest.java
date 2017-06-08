@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.nio.charset.Charset;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 
 import static junit.framework.Assert.assertTrue;
@@ -65,28 +67,18 @@ public class ED25519UnitTest {
      * Test to check whether generating a signature from a message and private key works
      */
     @Test
-    public void testGenerateSignature() {
+    public void testGenerateSignature()
+            throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         EdDSAPrivateKey edDSAPrivateKey = ED25519.generatePrivateKey(TEST_SEED);
         Assert.assertArrayEquals(TEST_MESSAGE_SIGNATURE, ED25519.generateSignature(TEST_MESSAGE, edDSAPrivateKey));
-    }
-
-    /**
-     * Test to check whether generating a signature from a message and private key works
-     * Forces a SignatureException
-     */
-    @Test
-    public void testGenerateSignatureException() throws SignatureException {
-        EdDSAPrivateKey edDSAPrivateKey = ED25519.generatePrivateKey(TEST_SEED);
-        exception.expect(SignatureException.class);
-        exception.expectMessage("signature length is wrong");
-        ED25519.generateSignature(new byte[]{0}, edDSAPrivateKey);
     }
 
     /**
      * Test to check whether verifying a signature works
      */
     @Test
-    public void testVerifySignature() {
+    public void testVerifySignature()
+            throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         EdDSAPrivateKey edDSAPrivateKey = ED25519.generatePrivateKey(TEST_SEED);
         EdDSAPublicKey edDSAPublicKey = ED25519.getPublicKey(edDSAPrivateKey);
         final byte[] generatedSignature = ED25519.generateSignature(TEST_MESSAGE, edDSAPrivateKey);
@@ -98,11 +90,13 @@ public class ED25519UnitTest {
      * Forces a SignatureException
      */
     @Test
-    public void testVerifySignatureException() throws SignatureException {
+    public void testVerifySignatureException()
+            throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         EdDSAPrivateKey edDSAPrivateKey = ED25519.generatePrivateKey(TEST_SEED);
         EdDSAPublicKey edDSAPublicKey = ED25519.getPublicKey(edDSAPrivateKey);
         exception.expect(SignatureException.class);
         exception.expectMessage("signature length is wrong");
+
         ED25519.verifySignature(new byte[]{0}, TEST_MESSAGE, edDSAPublicKey);
     }
 

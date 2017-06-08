@@ -21,14 +21,13 @@ import java.security.SignatureException;
 public final class ED25519 {
 
     /**
-     * Specification of the protocol
-     */
-    private static EdDSAParameterSpec specification = EdDSANamedCurveTable.getByName("Ed25519");
-
-    /**
      * The amount of bytes the seed should have
      */
     private static final int SEED_LENGTH = 32;
+    /**
+     * Specification of the protocol
+     */
+    private static EdDSAParameterSpec specification = EdDSANamedCurveTable.getByName("Ed25519");
 
 
     /**
@@ -51,6 +50,7 @@ public final class ED25519 {
 
     /**
      * Generates a new private key
+     *
      * @param seed Given seed byte array
      * @return EdDSAPrivateKey object, which represents the private key
      */
@@ -77,16 +77,13 @@ public final class ED25519 {
      * @param privateKey private key to use in the encryption of the message
      * @return the generated signature
      */
-    public static byte[] generateSignature(byte[] message, EdDSAPrivateKey privateKey) {
-        try {
-            Signature signature = new EdDSAEngine(MessageDigest.getInstance(specification.getHashAlgorithm()));
-            signature.initSign(privateKey);
-            signature.update(message);
-            return signature.sign();
-        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public static byte[] generateSignature(byte[] message, EdDSAPrivateKey privateKey)
+            throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+
+        Signature signature = new EdDSAEngine(MessageDigest.getInstance(specification.getHashAlgorithm()));
+        signature.initSign(privateKey);
+        signature.update(message);
+        return signature.sign();
     }
 
     /**
@@ -97,17 +94,13 @@ public final class ED25519 {
      * @param publicKey      the public key to decrypt the signature from
      * @return boolean whether the decrypted signature is the same as the message
      */
-    public static boolean verifySignature(byte[] signatureBytes, byte[] message, EdDSAPublicKey publicKey) {
-        try {
-            Signature signature = new EdDSAEngine(MessageDigest.getInstance(specification.getHashAlgorithm()));
-            signature.initVerify(publicKey);
-            signature.update(message);
-            return signature.verify(signatureBytes);
-        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
+    public static boolean verifySignature(byte[] signatureBytes, byte[] message, EdDSAPublicKey publicKey)
+            throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
 
+        Signature signature = new EdDSAEngine(MessageDigest.getInstance(specification.getHashAlgorithm()));
+        signature.initVerify(publicKey);
+        signature.update(message);
+        return signature.verify(signatureBytes);
+    }
 
 }

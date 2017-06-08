@@ -11,6 +11,7 @@ import org.junit.rules.ExpectedException;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.Key;
 import java.security.spec.InvalidKeySpecException;
 
 import static junit.framework.Assert.fail;
@@ -24,8 +25,6 @@ public class KeyStorageUnitTest {
     /**
      * Class attributes
      */
-    private KeyReader keyReader;
-    private KeyWriter keyWriter;
     private EdDSAPublicKey edDSAPublicKey;
     private EdDSAPrivateKey edDSAPrivateKey;
 
@@ -40,8 +39,6 @@ public class KeyStorageUnitTest {
      */
     @Before
     public void initialize() {
-        this.keyReader = new KeyReader();
-        this.keyWriter = new KeyWriter();
         this.edDSAPrivateKey = ED25519.generatePrivateKey();
         this.edDSAPublicKey = ED25519.getPublicKey(this.edDSAPrivateKey);
     }
@@ -51,9 +48,9 @@ public class KeyStorageUnitTest {
      */
     @Test
     public void testPrivateKey() throws IOException {
-        keyWriter.writePrivateKey(this.edDSAPrivateKey);
+        KeyWriter.writePrivateKey(this.edDSAPrivateKey);
         try {
-            assertEquals(this.edDSAPrivateKey, keyReader.readPrivateKey());
+            assertEquals(this.edDSAPrivateKey, KeyReader.readPrivateKey());
         } catch (InvalidKeySpecException e) {
             fail();
         }
@@ -64,9 +61,9 @@ public class KeyStorageUnitTest {
      */
     @Test
     public void testPublicKey() throws IOException {
-        keyWriter.writePublicKey(this.edDSAPublicKey);
+        KeyWriter.writePublicKey(this.edDSAPublicKey);
         try {
-            assertEquals(this.edDSAPublicKey, keyReader.readPublicKey());
+            assertEquals(this.edDSAPublicKey, KeyReader.readPublicKey());
         } catch (InvalidKeySpecException e) {
             fail();
         }
@@ -79,20 +76,21 @@ public class KeyStorageUnitTest {
     public void testReadKeyException() throws IOException {
         exception.expect(IOException.class);
         exception.expectMessage("Failed to initalize path: ");
-        keyReader.readKey("");
+        KeyReader.readKey("");
     }
 
     /**
      * Test to force an Exception upon reading a key of an empty file
      */
     @Test
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void testReadKeyEmpty() throws IOException {
         final String empty = "empty";
         exception.expect(IOException.class);
         exception.expectMessage("File is empty: " + empty);
 
         new File(empty).createNewFile();
-        keyReader.readKey(empty);
+        KeyReader.readKey(empty);
     }
 
     /**
@@ -101,8 +99,8 @@ public class KeyStorageUnitTest {
     @Test
     public void testStringPublicKey() {
         try {
-            EdDSAPublicKey edDSAPublicKey1 = keyReader.readPublicKey(
-                    keyWriter.publicKeyToString(edDSAPublicKey));
+            EdDSAPublicKey edDSAPublicKey1 = KeyReader.readPublicKey(
+                    KeyWriter.publicKeyToString(edDSAPublicKey));
             assertEquals(edDSAPublicKey, edDSAPublicKey1);
         } catch (InvalidKeySpecException e) {
             e.printStackTrace();
@@ -114,6 +112,7 @@ public class KeyStorageUnitTest {
      * Remove test key files
      */
     @After
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void delete() {
         new File("private.key").delete();
         new File("public.key").delete();

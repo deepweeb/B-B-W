@@ -17,12 +17,13 @@ public class KeyWriter {
     /**
      * Class variables
      */
-    private FileOutputStream fileOutputStream;
+    private static FileOutputStream fileOutputStream;
 
     /**
-     * Constructor method
+     * Empty constructor method
+     * Ensures that the class cannot be instantiated
      */
-    public KeyWriter() {}
+    private KeyWriter() {}
 
     /**
      * initialize method
@@ -30,8 +31,8 @@ public class KeyWriter {
      *
      * @param filePath given file path
      */
-    private void initialize(String filePath) throws IOException{
-        this.fileOutputStream = new FileOutputStream(filePath);
+    private static void initialize(String filePath) throws IOException{
+        fileOutputStream = new FileOutputStream(filePath);
     }
 
     /**
@@ -41,10 +42,10 @@ public class KeyWriter {
      * @param path       given filepath
      * @param encodedKey given byte array containing the key
      */
-    private void writeKey(String path, byte[] encodedKey) throws IOException{
+    private static void writeKey(String path, byte[] encodedKey) throws IOException{
         initialize(path);
-        this.fileOutputStream.write(encodedKey);
-        this.fileOutputStream.close();
+        fileOutputStream.write(encodedKey);
+        fileOutputStream.close();
     }
 
     /**
@@ -53,7 +54,7 @@ public class KeyWriter {
      *
      * @param privateKey the private key to write away
      */
-    final void writePrivateKey(EdDSAPrivateKey privateKey) throws IOException{
+    public static void writePrivateKey(EdDSAPrivateKey privateKey) throws IOException{
         final String privateKeyPath = "private.key";
 
         PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
@@ -66,7 +67,7 @@ public class KeyWriter {
      *
      * @param publicKey the public key to write away
      */
-    final void writePublicKey(EdDSAPublicKey publicKey) throws IOException{
+    public static void writePublicKey(EdDSAPublicKey publicKey) throws IOException{
         final String publicKeyPath = "public.key";
 
         X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
@@ -80,7 +81,7 @@ public class KeyWriter {
      * @param publicKey the public key to write away
      * @return Hex representation of the byte array, which represents the public string
      */
-    final String publicKeyToString(EdDSAPublicKey publicKey) {
+    public static String publicKeyToString(EdDSAPublicKey publicKey) {
         X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
         return Utils.bytesToHex(x509EncodedKeySpec.getEncoded());
     }

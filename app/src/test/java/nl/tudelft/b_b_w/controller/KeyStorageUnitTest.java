@@ -50,7 +50,7 @@ public class KeyStorageUnitTest {
      * Tests whether writing and reading the private key works
      */
     @Test
-    public void testPrivateKey() {
+    public void testPrivateKey() throws IOException {
         keyWriter.writePrivateKey(this.edDSAPrivateKey);
         try {
             assertEquals(this.edDSAPrivateKey, keyReader.readPrivateKey());
@@ -63,7 +63,7 @@ public class KeyStorageUnitTest {
      * Tests whether writing and reading the public key works
      */
     @Test
-    public void testPublicKey() {
+    public void testPublicKey() throws IOException {
         keyWriter.writePublicKey(this.edDSAPublicKey);
         try {
             assertEquals(this.edDSAPublicKey, keyReader.readPublicKey());
@@ -76,8 +76,8 @@ public class KeyStorageUnitTest {
      * Test to force an Exception upon reading a key
      */
     @Test
-    public void testReadKeyException() {
-        exception.expect(RuntimeException.class);
+    public void testReadKeyException() throws IOException {
+        exception.expect(IOException.class);
         exception.expectMessage("Failed to initalize path: ");
         keyReader.readKey("");
     }
@@ -88,11 +88,26 @@ public class KeyStorageUnitTest {
     @Test
     public void testReadKeyEmpty() throws IOException {
         final String empty = "empty";
-        exception.expect(RuntimeException.class);
+        exception.expect(IOException.class);
         exception.expectMessage("File is empty: " + empty);
 
         new File(empty).createNewFile();
         keyReader.readKey(empty);
+    }
+
+    /**
+     * Test to check whether converting a public key to a string and back works
+     */
+    @Test
+    public void testStringPublicKey() {
+        try {
+            EdDSAPublicKey edDSAPublicKey1 = keyReader.readPublicKey(
+                    keyWriter.publicKeyToString(edDSAPublicKey));
+            assertEquals(edDSAPublicKey, edDSAPublicKey1);
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
     /**

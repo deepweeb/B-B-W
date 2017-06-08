@@ -2,6 +2,7 @@ package nl.tudelft.b_b_w.controller;
 
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
+import net.i2p.crypto.eddsa.Utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,11 +32,11 @@ public class KeyReader {
      *
      * @param filePath given file path
      */
-    private void initialize(String filePath) {
+    private void initialize(String filePath) throws IOException {
         try {
             this.fileInputStream = new FileInputStream(filePath);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to initalize path: " + filePath);
+            throw new IOException("Failed to initalize path: " + filePath);
         }
     }
 
@@ -46,22 +47,18 @@ public class KeyReader {
      * @param path given filepath
      * @return byte array containing the read key
      */
-    final byte[] readKey(String path) {
-        try {
-            initialize(path);
-            File file = new File(path);
-            byte[] encodedKey = new byte[(int) file.length()];
-            int read = this.fileInputStream.read(encodedKey);
-            this.fileInputStream.close();
+    final byte[] readKey(String path) throws IOException {
+        initialize(path);
+        File file = new File(path);
+        byte[] encodedKey = new byte[(int) file.length()];
+        int read = this.fileInputStream.read(encodedKey);
 
-            if (read <= 0) {
-                throw new RuntimeException("File is empty: " + path);
-            }
-
-            return encodedKey;
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to read from file: " + path);
+        if (read <= 0) {
+            throw new IOException("File is empty: " + path);
         }
+
+        this.fileInputStream.close();
+        return encodedKey;
     }
 
     /**
@@ -70,7 +67,7 @@ public class KeyReader {
      *
      * @return private key
      */
-    public final EdDSAPrivateKey readPrivateKey() throws InvalidKeySpecException{
+    public final EdDSAPrivateKey readPrivateKey() throws InvalidKeySpecException, IOException {
         final String privateKeyPath = "private.key";
         final byte[] encodedPrivateKey = readKey(privateKeyPath);
         return convertToPrivateKey(encodedPrivateKey);
@@ -82,10 +79,21 @@ public class KeyReader {
      *
      * @return public key
      */
-    public final EdDSAPublicKey readPublicKey() throws InvalidKeySpecException{
+    public final EdDSAPublicKey readPublicKey() throws InvalidKeySpecException, IOException {
         final String publicKeyPath = "public.key";
         final byte[] encodedPublicKey = readKey(publicKeyPath);
         return convertToPublicKey(encodedPublicKey);
+    }
+
+    /**
+     * readPublicKey method
+     * Reads the public key from the given string
+     *
+     * @param encodedPublicKey given hex representation of the byte array of the public key
+     * @return public key
+     */
+    public final EdDSAPublicKey readPublicKey(String encodedPublicKey) throws InvalidKeySpecException {
+        return convertToPublicKey(Utils.hexToBytes(encodedPublicKey));
     }
 
     /**

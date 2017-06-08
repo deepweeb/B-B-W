@@ -2,6 +2,7 @@ package nl.tudelft.b_b_w.controller;
 
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
+import net.i2p.crypto.eddsa.Utils;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -29,12 +30,8 @@ public class KeyWriter {
      *
      * @param filePath given file path
      */
-    private void initialize(String filePath) {
-        try {
-            this.fileOutputStream = new FileOutputStream(filePath);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to initalize path: " + filePath);
-        }
+    private void initialize(String filePath) throws IOException{
+        this.fileOutputStream = new FileOutputStream(filePath);
     }
 
     /**
@@ -44,14 +41,10 @@ public class KeyWriter {
      * @param path       given filepath
      * @param encodedKey given byte array containing the key
      */
-    final void writeKey(String path, byte[] encodedKey) {
-        try {
-            initialize(path);
-            this.fileOutputStream.write(encodedKey);
-            this.fileOutputStream.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to write to file: " + path);
-        }
+    private void writeKey(String path, byte[] encodedKey) throws IOException{
+        initialize(path);
+        this.fileOutputStream.write(encodedKey);
+        this.fileOutputStream.close();
     }
 
     /**
@@ -60,11 +53,10 @@ public class KeyWriter {
      *
      * @param privateKey the private key to write away
      */
-    final void writePrivateKey(EdDSAPrivateKey privateKey) {
+    final void writePrivateKey(EdDSAPrivateKey privateKey) throws IOException{
         final String privateKeyPath = "private.key";
 
-        PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(
-                privateKey.getEncoded());
+        PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
         writeKey(privateKeyPath, pkcs8EncodedKeySpec.getEncoded());
     }
 
@@ -74,12 +66,23 @@ public class KeyWriter {
      *
      * @param publicKey the public key to write away
      */
-    final void writePublicKey(EdDSAPublicKey publicKey) {
+    final void writePublicKey(EdDSAPublicKey publicKey) throws IOException{
         final String publicKeyPath = "public.key";
 
-        X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(
-                publicKey.getEncoded());
+        X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
         writeKey(publicKeyPath, x509EncodedKeySpec.getEncoded());
+    }
+
+    /**
+     * writePublicKey method
+     * Writes the public key to the given filepath
+     *
+     * @param publicKey the public key to write away
+     * @return Hex representation of the byte array, which represents the public string
+     */
+    final String publicKeyToString(EdDSAPublicKey publicKey) {
+        X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
+        return Utils.bytesToHex(x509EncodedKeySpec.getEncoded());
     }
 
 }

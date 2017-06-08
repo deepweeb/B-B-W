@@ -26,7 +26,7 @@ public class User {
      * @param name given name
      * @param iban given iban
      */
-    public User(String name, String iban, Public_Key publicKey, Chain chain) {
+    public User(String name, String iban, Public_Key publicKey) {
         this.name = name;
         this.iban = iban;
         this.publicKey = publicKey;

@@ -1,6 +1,6 @@
 package nl.tudelft.b_b_w.Objects;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Class for creating aan acquaintance,
@@ -14,7 +14,7 @@ public class Acquaintance {
      * Properties of a Acquaintance
      */
     private User user;
-    private List<Chain> multichain;
+    private ArrayList<Chain> multichain;
 
     /**
      * Constructor for user class
@@ -22,7 +22,7 @@ public class Acquaintance {
      * @param user given user
      * @param multichain given multichain
      */
-    public Acquaintance(User user, List<Chain> multichain) {
+    public Acquaintance(User user, ArrayList<Chain> multichain) {
         this.user = user;
         this.multichain = multichain;
     }
@@ -39,7 +39,7 @@ public class Acquaintance {
      * getMultichain function
      * @return  List<Chain> of the multichain of this.Acquaintance
      */
-    public List<Chain> getMultichain() {
+    public ArrayList<Chain> getMultichain() {
         return this.multichain;
     }
 

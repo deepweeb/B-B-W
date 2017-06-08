@@ -9,21 +9,21 @@ import nl.tudelft.b_b_w.model.block.BlockData;
 public class Block {
 
     private User contact;
-    private User chainOwner;
+    private String blockOwner;
     private BlockData blockData;
 
     /**
      * This method constructs an block object.
      * @param contact
      *                  a contact.
-     * @param chainOwner
+     * @param blockOwner
      *                  the owner of the chain.
      * @param blockData
      *                  some block data.
      */
-    public Block (User contact, User chainOwner, BlockData blockData){
+    public Block (User contact, String blockOwner, BlockData blockData){
         this.contact = contact;
-        this.chainOwner = chainOwner;
+        this.blockOwner = blockOwner;
         this.blockData = blockData;
     }
 
@@ -41,8 +41,8 @@ public class Block {
      * This method returns the chainOwner of the block object.
      * @return   chain owner.
      */
-    public User getChainOwner() {
-        return chainOwner;
+    public String getBlockOwner() {
+        return blockOwner;
     }
 
     /**

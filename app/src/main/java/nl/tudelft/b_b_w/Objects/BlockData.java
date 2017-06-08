@@ -6,7 +6,7 @@ import nl.tudelft.b_b_w.model.block.BlockType;
 /**
  * The BlockData class lets you gather data and finally construct a block
  */
-public class BlockData {
+public class BlockData extends nl.tudelft.b_b_w.model.block.BlockData {
     /**
      * The block type of the block
      */

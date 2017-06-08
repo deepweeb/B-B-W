@@ -18,6 +18,7 @@ public class BlockTest {
     private String ibanContact;
     private Public_Key publicKeyContact;
     private User contact;
+    private String hash;
 
     /**
      * The block owner attributes.
@@ -84,10 +85,15 @@ public class BlockTest {
     }
 
 
-    @Test
-    public void testGetPreviousHashSender() {
-        String prevHashSender = "Hassan";
-        block.getBlockData().setPreviousHashSender(prevHashSender);
-        assertEquals(prevHashSender, block.getPreviousHashSender());
-    }
+//    @Test
+//    public void testGetPreviousHashSender() {
+//        String prevHashSender = "Hassan";
+//        block.getBlockData().setPreviousHashSender(prevHashSender);
+//        assertEquals(prevHashSender, block.getPreviousHashSender());
+//    }
+
+
+
+
+
 }

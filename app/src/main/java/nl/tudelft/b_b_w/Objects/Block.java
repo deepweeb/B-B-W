@@ -1,8 +1,6 @@
 package nl.tudelft.b_b_w.Objects;
 
 
-
-
 /**
  * This class represents a block object.
  */
@@ -11,6 +9,11 @@ public class Block {
     private User contact;
     private String blockOwner;
     private BlockData blockData;
+
+    /**
+     * Hash of this block
+     */
+    private String hash;
 
     /**
      * This method constructs an block object.
@@ -99,6 +102,14 @@ public class Block {
         return blockData.getSequenceNumber();
     }
 
+    /**
+     * Default getter for own block hash
+     *
+     * @return own hash
+     */
+    public final String getOwnHash() {
+        return hash;
+    }
 
     /**
      * This method verifies a block
@@ -126,4 +137,25 @@ public class Block {
         }
         return getPublicKey().equals(block.getPublicKey());
     }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final String toString() {
+        return "Block{"
+                + "owner='" + blockData.getOwner() + '\''
+                + ", sequenceNumber=" + blockData.getSequenceNumber()
+                + ", ownHash='" + hash + '\''
+                + ", previousHashChain='" + blockData.getPreviousHashChain() + '\''
+                + ", previousHashSender='" + blockData.getPreviousHashSender() + '\''
+                + ", publicKey='" + blockData.getPublicKey() + '\''
+                + ", iban='" + blockData.getOwner().getIban() + '\''
+                + ", trustValue='" + blockData.getTrustValue() + '\''
+                + ", type='" + blockData.getBlockType() + '\''
+                + '}';
+    }
+
+
 }

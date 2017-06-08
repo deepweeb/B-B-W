@@ -19,7 +19,6 @@ public class User {
     private String name;
     private String iban;
     private Public_Key publicKey;
-    private Chain chain;
 
     /**
      * Constructor for user class
@@ -31,7 +30,6 @@ public class User {
         this.name = name;
         this.iban = iban;
         this.publicKey = publicKey;
-        this.chain = chain;
     }
 
     /**
@@ -61,40 +59,6 @@ public class User {
         return this.publicKey;
     }
 
-    /**
-     * getChain function
-     * @return Chain of this.user
-     */
-    public Chain getChain() {
-        return this.chain;
-    }
-
-    /**
-     * addContact function
-     * this function adds an acquaintance into the chain of this.user
-     */
-    public void addContact(Acquaintance contact) throws Exception {
-        this.chain.add(contact);
-    }
-
-    /**
-     * getChain function
-     * this function revoke an contact of the chain of this.user
-     */
-    public void revokeContact(User contact)
-    {
-        this.chain.remove(contact);
-    }
-
-    /**
-     * getChain function
-     *
-     * @return Chain of user
-     */
-    public void queryContact()
-    {
-        this.chain.queryContact();
-    }
 
     /**
      * This function checks whether two User objects are equal to each other.

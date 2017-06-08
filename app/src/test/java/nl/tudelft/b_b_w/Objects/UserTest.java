@@ -25,7 +25,6 @@ public class UserTest {
         name = "testName";
         iban = "NL642335674446";
         publicKey = new Public_Key();
-        chain = new Chain();
         user = new User(name, iban, publicKey, chain);
     }
 
@@ -44,25 +43,6 @@ public class UserTest {
         assertEquals(publicKey, user.getPublicKey());
     }
 
-    @Test
-    public void testGetChain() throws Exception {
-        assertEquals(chain, user.getChain());
-    }
-
-    @Test
-    public void testAddContact() throws Exception {
-
-    }
-
-    @Test
-    public void testRevokeContact() throws Exception {
-
-    }
-
-    @Test
-    public void testQueryContact() throws Exception {
-
-    }
 
     @Test
     public void testEquals() throws Exception {

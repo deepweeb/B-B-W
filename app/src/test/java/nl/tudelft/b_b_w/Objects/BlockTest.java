@@ -58,7 +58,7 @@ public class BlockTest {
      * @throws Exception
      */
     @Test
-    public void getContact() throws Exception {
+    public void testGetContact() throws Exception {
         assertEquals(contact, block.getContact());
     }
 
@@ -68,7 +68,7 @@ public class BlockTest {
      * @throws Exception
      */
     @Test
-    public void getBlockOwner() throws Exception {
+    public void testGetBlockOwner() throws Exception {
         assertEquals(nameOwner, block.getBlockOwner());
     }
 
@@ -78,8 +78,15 @@ public class BlockTest {
      * @throws Exception
      */
     @Test
-    public void getBlockData() throws Exception {
+    public void testGetBlockData() throws Exception {
         assertEquals(blockData, block.getBlockData());
     }
 
+
+    @Test
+    public void testGetPreviousHashSender() {
+        String prevHashSender = "Hassan";
+        block.getBlockData().setPreviousHashSender(prevHashSender);
+        assertEquals(prevHashSender, block.getPreviousHashSender());
+    }
 }

@@ -1,12 +1,12 @@
 package nl.tudelft.b_b_w.Objects;
 
-import nl.tudelft.b_b_w.model.User;
+
 import nl.tudelft.b_b_w.model.block.BlockType;
 
 /**
  * The BlockData class lets you gather data and finally construct a block
  */
-public class BlockData extends nl.tudelft.b_b_w.model.block.BlockData {
+public class BlockData {
     /**
      * The block type of the block
      */
@@ -40,7 +40,7 @@ public class BlockData extends nl.tudelft.b_b_w.model.block.BlockData {
     /**
      * The public key included in this block
      */
-    private String publicKey;
+    private Public_Key publicKey;
 
     /**
      * The IBAN of the owner of the block
@@ -94,7 +94,7 @@ public class BlockData extends nl.tudelft.b_b_w.model.block.BlockData {
      * @return the owner
      */
     public User getOwner() {
-        return new User(ownerName, iban);
+        return new User(ownerName, iban, publicKey);
     }
 
     /**
@@ -156,7 +156,7 @@ public class BlockData extends nl.tudelft.b_b_w.model.block.BlockData {
      *
      * @return the public key stored in this block
      */
-    public String getPublicKey() {
+    public Public_Key getPublicKey() {
         return publicKey;
     }
 
@@ -165,7 +165,7 @@ public class BlockData extends nl.tudelft.b_b_w.model.block.BlockData {
      *
      * @param publicKey the public key stored in this block
      */
-    public void setPublicKey(String publicKey) {
+    public void setPublicKey(Public_Key publicKey) {
         this.publicKey = publicKey;
     }
 

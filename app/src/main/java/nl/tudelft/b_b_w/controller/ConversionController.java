@@ -17,7 +17,7 @@ public class ConversionController {
     /**
      * Instantiating the necessary variables
      *
-     * @param _senderPublicKey PublicKey of the block
+     * @param _senderPublicKey Public_Key of the block
      * @param _owner           Owner of the block
      */
     public ConversionController(String _owner, String _senderPublicKey, String _previousBlockHash, String _contactBlockHash, String _contactIban) {

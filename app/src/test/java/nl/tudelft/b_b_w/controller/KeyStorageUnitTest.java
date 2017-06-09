@@ -22,16 +22,15 @@ import static org.junit.Assert.assertEquals;
 public class KeyStorageUnitTest {
 
     /**
-     * Class attributes
-     */
-    private EdDSAPublicKey edDSAPublicKey;
-    private EdDSAPrivateKey edDSAPrivateKey;
-
-    /**
      * Initialize rule to catch the thrown exception
      */
     @Rule
     public final ExpectedException exception = ExpectedException.none();
+    /**
+     * Class attributes
+     */
+    private EdDSAPublicKey edDSAPublicKey;
+    private EdDSAPrivateKey edDSAPrivateKey;
 
     /**
      * Instantiate the KeyReader and KeyWriter

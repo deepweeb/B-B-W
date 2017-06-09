@@ -25,7 +25,8 @@ public final class KeyReader {
      * Empty constructor method
      * Ensures that the Class cannot be instantiated
      */
-    private KeyReader() {}
+    private KeyReader() {
+    }
 
     /**
      * initialize method

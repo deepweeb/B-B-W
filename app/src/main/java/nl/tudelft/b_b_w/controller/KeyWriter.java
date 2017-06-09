@@ -23,7 +23,8 @@ public final class KeyWriter {
      * Empty constructor method
      * Ensures that the class cannot be instantiated
      */
-    private KeyWriter() {}
+    private KeyWriter() {
+    }
 
     /**
      * initialize method
@@ -31,7 +32,7 @@ public final class KeyWriter {
      *
      * @param filePath given file path
      */
-    private static void initialize(String filePath) throws IOException{
+    private static void initialize(String filePath) throws IOException {
         fileOutputStream = new FileOutputStream(filePath);
     }
 
@@ -42,7 +43,7 @@ public final class KeyWriter {
      * @param path       given filepath
      * @param encodedKey given byte array containing the key
      */
-    private static void writeKey(String path, byte[] encodedKey) throws IOException{
+    private static void writeKey(String path, byte[] encodedKey) throws IOException {
         initialize(path);
         fileOutputStream.write(encodedKey);
         fileOutputStream.close();
@@ -54,7 +55,7 @@ public final class KeyWriter {
      *
      * @param privateKey the private key to write away
      */
-    public static void writePrivateKey(EdDSAPrivateKey privateKey) throws IOException{
+    public static void writePrivateKey(EdDSAPrivateKey privateKey) throws IOException {
         final String privateKeyPath = "private.key";
 
         PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
@@ -67,7 +68,7 @@ public final class KeyWriter {
      *
      * @param publicKey the public key to write away
      */
-    public static void writePublicKey(EdDSAPublicKey publicKey) throws IOException{
+    public static void writePublicKey(EdDSAPublicKey publicKey) throws IOException {
         final String publicKeyPath = "public.key";
 
         X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());

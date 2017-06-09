@@ -169,7 +169,7 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
             ibanItemText.setText(blockController.getBlocks(ownerName).get(position).getOwner().getIban());
             ImageView pic = (ImageView) view.findViewById(R.id.trust_image);
             pic.setImageResource(
-                    getImageNo(blockController.getBlocks(ownerName).get(position).getTrustValue()));
+                    getImageNo((int) Math.ceil(blockController.getBlocks(ownerName).get(position).getTrustValue())));
             Button revokeButton = (Button) view.findViewById(R.id.revoke_btn);
             revokeButton.setOnClickListener(createDialog(position));
             return view;

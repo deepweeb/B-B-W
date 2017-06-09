@@ -119,7 +119,7 @@ public abstract class Block {
      *
      * @return the trust value of the block
      */
-    public final int getTrustValue() {
+    public final double getTrustValue() {
         return blockData.getTrustValue();
     }
 
@@ -128,7 +128,7 @@ public abstract class Block {
      *
      * @param trustValue trust value to set
      */
-    public final void setTrustValue(int trustValue) {
+    public final void setTrustValue(double trustValue) {
         blockData.setTrustValue(trustValue);
     }
 

@@ -200,7 +200,7 @@ public class BlockController implements BlockControllerInterface {
     @Override
     public final Block successfulTransaction(Block block) {
         final int maxCeil = 100;
-        final int newTrust = block.getTrustValue() + TrustValues.SUCCESFUL_TRANSACTION.getValue();
+        final double newTrust = block.getTrustValue() + TrustValues.SUCCESFUL_TRANSACTION.getValue();
         if (newTrust > maxCeil) {
             block.setTrustValue(maxCeil);
         }
@@ -215,7 +215,7 @@ public class BlockController implements BlockControllerInterface {
     @Override
     public final Block failedTransaction(Block block) {
         final int minCeil = 0;
-        final int newTrust = block.getTrustValue() + TrustValues.FAILED_TRANSACTION.getValue();
+        final double newTrust = block.getTrustValue() + TrustValues.FAILED_TRANSACTION.getValue();
         if (newTrust < minCeil) {
             block.setTrustValue(minCeil);
         }

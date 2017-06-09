@@ -171,7 +171,7 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
             ibanItemText.setText(blockController.getBlocks(ownerName).get(position).getOwner().getIban());
             ImageView pic = (ImageView) view.findViewById(R.id.trust_image2);
             pic.setImageResource(
-                    getImageNo(blockController.getBlocks(ownerName).get(position).getTrustValue()));
+                    getImageNo((int) Math.ceil(blockController.getBlocks(ownerName).get(position).getTrustValue())));
             Button addButton = (Button) view.findViewById(R.id.add_btn);
             addButton.setOnClickListener(createDialog(position));
             return view;

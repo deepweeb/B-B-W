@@ -74,7 +74,7 @@ class TrustController {
      * @return parameter belonging to the distribution value
      */
     private double getX(double y) {
-        return Math.log(1- y / 100) * -20;
+        return Math.log(1 - y / 100) * -20;
     }
 
     /**

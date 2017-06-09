@@ -1,50 +1,126 @@
 package nl.tudelft.b_b_w.controller;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+import net.i2p.crypto.eddsa.Utils;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 
 /**
- * Class to read the private key from the file
+ * Class to read the private and/ or public keys from the file
  */
-public class KeyReader {
+public final class KeyReader {
 
-    private final String filePath = "app/privateKey.txt";
     /**
      * Class variables
      */
-    private BufferedReader reader;
+    private static FileInputStream fileInputStream;
 
     /**
-     * Constructor method
+     * Empty constructor method
+     * Ensures that the Class cannot be instantiated
      */
-    public KeyReader() {
-        init();
+    private KeyReader() {
     }
 
     /**
-     * init method
-     * Initializes the BufferedReader
+     * initialize method
+     * Initializes the FileInputStream
+     *
+     * @param filePath given file path
      */
-    private void init() {
+    private static void initialize(String filePath) throws IOException {
         try {
-            this.reader = new BufferedReader(new FileReader(filePath));
+            fileInputStream = new FileInputStream(filePath);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to read file: " + filePath);
+            throw new IOException("Failed to initalize path: " + filePath);
         }
     }
 
     /**
      * readKey method
-     * Reads the private secret key from the file
+     * Reads the key from the given filepath
+     *
+     * @param path given filepath
+     * @return byte array containing the read key
+     */
+    public static byte[] readKey(String path) throws IOException {
+        initialize(path);
+        File file = new File(path);
+        byte[] encodedKey = new byte[(int) file.length()];
+        int read = fileInputStream.read(encodedKey);
+
+        if (read <= 0) {
+            throw new IOException("File is empty: " + path);
+        }
+
+        fileInputStream.close();
+        return encodedKey;
+    }
+
+    /**
+     * readPrivateKey method
+     * Reads the private key from the file
      *
      * @return private key
      */
-    final String readKey() {
-        try {
-            return this.reader.readLine();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to read line from file: " + filePath);
-        }
+    public static EdDSAPrivateKey readPrivateKey() throws InvalidKeySpecException, IOException {
+        final String privateKeyPath = "private.key";
+        final byte[] encodedPrivateKey = readKey(privateKeyPath);
+        return convertToPrivateKey(encodedPrivateKey);
+    }
+
+    /**
+     * readPublicKey method
+     * Reads the public key from the file
+     *
+     * @return public key
+     */
+    public static final EdDSAPublicKey readPublicKey() throws InvalidKeySpecException, IOException {
+        final String publicKeyPath = "public.key";
+        final byte[] encodedPublicKey = readKey(publicKeyPath);
+        return convertToPublicKey(encodedPublicKey);
+    }
+
+    /**
+     * readPublicKey method
+     * Reads the public key from the given string
+     *
+     * @param encodedPublicKey given hex representation of the byte array of the public key
+     * @return public key
+     */
+    public static EdDSAPublicKey readPublicKey(String encodedPublicKey) throws InvalidKeySpecException {
+        return convertToPublicKey(Utils.hexToBytes(encodedPublicKey));
+    }
+
+    /**
+     * convertToPrivateKey method
+     * Converts the private key byte array to a private key
+     *
+     * @param encodedPrivateKey given byte array that represents the private key
+     * @return EdDSAPrivateKey private key
+     * @throws InvalidKeySpecException when the KeySpec is not valid
+     */
+    private static EdDSAPrivateKey convertToPrivateKey(byte[] encodedPrivateKey) throws InvalidKeySpecException {
+        PKCS8EncodedKeySpec encoded = new PKCS8EncodedKeySpec(encodedPrivateKey);
+        return new EdDSAPrivateKey(encoded);
+    }
+
+    /**
+     * convertToPublicKey method
+     * Converts the public key byte array to a public key
+     *
+     * @param encodedPublicKey given byte array that represents the public key
+     * @return EdDSAPublicKey public key
+     * @throws InvalidKeySpecException when the KeySpec is not valid
+     */
+    private static EdDSAPublicKey convertToPublicKey(byte[] encodedPublicKey) throws InvalidKeySpecException {
+        X509EncodedKeySpec encoded = new X509EncodedKeySpec(encodedPublicKey);
+        return new EdDSAPublicKey(encoded);
     }
 }

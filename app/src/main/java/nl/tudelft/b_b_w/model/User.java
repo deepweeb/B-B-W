@@ -22,12 +22,25 @@ public class User {
     /**
      * Constructor for user class
      *
-     * @param _name given name
-     * @param _iban given iban
+     * @param name given name
+     * @param iban given iban
      */
-    public User(String _name, String _iban) {
-        this.name = _name;
-        this.iban = _iban;
+    public User(String name, String iban) {
+        this.name = name;
+        this.iban = iban;
+    }
+
+    /**
+     * Constructor for user class
+     *
+     * @param name given name
+     * @param iban given iban
+     *
+     */
+    public User(String name, String iban, EdDSAPublicKey publicKey) {
+        this.name = name;
+        this.iban = iban;
+        this.publicKey = publicKey;
     }
 
     /**

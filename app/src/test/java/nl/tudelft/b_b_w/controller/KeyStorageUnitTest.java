@@ -11,7 +11,6 @@ import org.junit.rules.ExpectedException;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.Key;
 import java.security.spec.InvalidKeySpecException;
 
 import static junit.framework.Assert.fail;

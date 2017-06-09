@@ -12,7 +12,7 @@ import java.security.spec.X509EncodedKeySpec;
 /**
  * Class to write the private and/ or keys to the file
  */
-public class KeyWriter {
+public final class KeyWriter {
 
     /**
      * Class variables

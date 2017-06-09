@@ -14,7 +14,7 @@ import java.security.spec.X509EncodedKeySpec;
 /**
  * Class to read the private and/ or public keys from the file
  */
-public class KeyReader {
+public final class KeyReader {
 
     /**
      * Class variables

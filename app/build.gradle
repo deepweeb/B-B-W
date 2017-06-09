@@ -54,7 +54,10 @@ apply plugin: 'checkstyle'
 apply plugin: "com.github.kt3k.coveralls"
 apply plugin: 'cobertura'
 
-cobertura.coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
+cobertura {
+    coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
+    coverageExcludes = ['src/main/java/nl.tudelft.b_b_w/view']
+}
 
 check.dependsOn 'checkstyle', 'findbugs', 'pmd'
 

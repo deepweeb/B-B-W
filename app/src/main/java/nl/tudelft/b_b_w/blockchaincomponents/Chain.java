@@ -1,4 +1,4 @@
-package nl.tudelft.b_b_w.Objects;
+package nl.tudelft.b_b_w.blockchaincomponents;
 
 import android.content.Context;
 
@@ -21,6 +21,7 @@ public class Chain {
     private User chainOwner;
     private ArrayList<Block> chain;
     private Context context;
+
     /**
      * Constructor for user class
      *
@@ -57,12 +58,9 @@ public class Chain {
      * @return name of this.user
      */
     public ArrayList<Block> queryContacts() {
-        try
-        {
+        try {
             return blockController.getChainOf(this.chainOwner);
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             throw e;
         }
     }
@@ -73,12 +71,9 @@ public class Chain {
      * @return name of this.user
      */
     public void remove(User contact) throws HashException {
-        try
-        {
+        try {
             blockController.revokeBlock(contact);
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             throw e;
         }
     }
@@ -89,12 +84,9 @@ public class Chain {
      * @return name of this.user
      */
     public ArrayList<Block> queryContacts() {
-        try
-        {
+        try {
             return blockController.getChainOf(this.chainOwner);
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             throw e;
         }
     }
@@ -106,18 +98,13 @@ public class Chain {
      * @return name of this.user
      */
     public void add(Acquaintance acquaintance) throws HashException {
-        try
-        {
+        try {
             blockController.addBlockToChain();
             blockController.addChains(acquaintance);
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             throw e;
         }
     }
-
-
 
 
 }

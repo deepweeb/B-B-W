@@ -1,4 +1,4 @@
-package nl.tudelft.b_b_w.Objects;
+package nl.tudelft.b_b_w.blockchaincomponents;
 
 /**
  * Class for creating a user
@@ -22,10 +22,9 @@ public class Hash {
 
     /**
      * This function checks whether two User objects are equal to each other.
-     * @param o
-     *          an object
-     * @return
-     *          true in case they are equals, otherwise false.
+     *
+     * @param o an object
+     * @return true in case they are equals, otherwise false.
      */
     @Override
     public boolean equals(Object o) {

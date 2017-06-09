@@ -1,4 +1,4 @@
-package nl.tudelft.b_b_w.Objects;
+package nl.tudelft.b_b_w.blockchaincomponents;
 
 import java.util.ArrayList;
 
@@ -19,7 +19,7 @@ public class Acquaintance {
     /**
      * Constructor for user class
      *
-     * @param user given user
+     * @param user       given user
      * @param multichain given multichain
      */
     public Acquaintance(User user, ArrayList<Chain> multichain) {
@@ -29,6 +29,7 @@ public class Acquaintance {
 
     /**
      * getUser function
+     *
      * @return user object of this.Acquaintance
      */
     public User getUser() {
@@ -37,13 +38,12 @@ public class Acquaintance {
 
     /**
      * getMultichain function
-     * @return  List<Chain> of the multichain of this.Acquaintance
+     *
+     * @return List<Chain> of the multichain of this.Acquaintance
      */
     public ArrayList<Chain> getMultichain() {
         return this.multichain;
     }
-
-
 
 
 }

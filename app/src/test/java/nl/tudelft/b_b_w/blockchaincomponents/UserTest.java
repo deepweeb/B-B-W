@@ -1,4 +1,4 @@
-package nl.tudelft.b_b_w.Objects;
+package nl.tudelft.b_b_w.blockchaincomponents;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,9 +17,12 @@ public class UserTest {
     private String name;
     private String iban;
     private Public_Key publicKey;
-    private Chain chain;
     private User user;
 
+
+    /**
+     * Setting up the test object
+     */
     @Before
     public void setUpUser(){
         name = "testName";
@@ -28,25 +31,29 @@ public class UserTest {
         user = new User(name, iban, publicKey);
     }
 
+    /**
+     * getName() getter method testing
+     */
     @Test
-    public void testGetName() throws Exception {
+    public void testGetName() {
         assertEquals(name, user.getName());
     }
 
+    /**
+     * getIban() getter method testing
+     */
     @Test
-    public void testGetIban() throws Exception {
+    public void testGetIban() {
         assertEquals(iban, user.getIban());
     }
 
+    /**
+     * getPublicKey() getter method testing
+     */
     @Test
-    public void testPublicKey() throws Exception {
+    public void testPublicKey() {
         assertEquals(publicKey, user.getPublicKey());
     }
 
-
-    @Test
-    public void testEquals() throws Exception {
-
-    }
 
 }

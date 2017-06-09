@@ -13,7 +13,6 @@ import java.util.List;
 
 import nl.tudelft.b_b_w.BuildConfig;
 import nl.tudelft.b_b_w.model.HashException;
-import nl.tudelft.b_b_w.model.TrustValues;
 import nl.tudelft.b_b_w.model.User;
 import nl.tudelft.b_b_w.model.block.Block;
 import nl.tudelft.b_b_w.model.block.BlockData;

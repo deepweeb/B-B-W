@@ -296,7 +296,7 @@ public class DatabaseHandlerUnitTest {
                 iban,
                 trustValue
         );
-        block.setTrustValue(TrustValues.SUCCESFUL_TRANSACTION.getValue());
+        block.setTrustValue(TrustValues.REVOKED.getValue());
         mutateDatabaseHandler.updateBlock(block);
         assertNotEquals(getDatabaseHandler.getBlock(owner, publicKey, sequenceNumber), block2);
     }

@@ -29,6 +29,10 @@ public class API {
         blockController.addBlockToChain(block);
     }
 
+    public void addBlockToDatabase(Block block) throws HashException {
+        blockController.addBlock(block);
+    }
+
     public void makeGenesis(User user) throws HashException {
         blockController.createGenesis(user);
     }

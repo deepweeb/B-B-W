@@ -25,7 +25,7 @@ public class UserTest {
         name = "testName";
         iban = "NL642335674446";
         publicKey = new Public_Key();
-        user = new User(name, iban, publicKey, chain);
+        user = new User(name, iban, publicKey);
     }
 
     @Test

@@ -55,8 +55,13 @@ apply plugin: "com.github.kt3k.coveralls"
 apply plugin: 'cobertura'
 
 cobertura {
+    coverageExcludes = [
+            ".*nl.tudelft.b_b_w.view.*",
+            ".*com.jjoe64.*",
+            ".*android.*"
+    ]
     coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
-    coverageExcludes = ["${project.rootDir}/app/src/main/java/nl.tudelft.b_b_w/view"]
+    coverageReportDir = new File("$buildDir/reports/cobertura")
 }
 
 check.dependsOn 'checkstyle', 'findbugs', 'pmd'
@@ -108,3 +113,5 @@ task pmd(type: Pmd) {
         html.enabled = true
     }
 }
+
+check.finalizedBy(project.tasks.cobertura)

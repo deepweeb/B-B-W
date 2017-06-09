@@ -45,7 +45,7 @@ public final class BlockFactory {
     @Deprecated
     public static final Block getBlock(String type, String newOwner, int sequenceIndex, String hash,
                                        String previousHashChain, String previousHashSender,
-                                       String publicKey, String iban, int trustValue) throws
+                                       String publicKey, String iban, double trustValue) throws
             HashException {
         // fill in values
         BlockData data = new BlockData();

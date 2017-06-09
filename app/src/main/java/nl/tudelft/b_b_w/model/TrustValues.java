@@ -7,7 +7,7 @@ public enum TrustValues {
     /**
      * Predefined trust values
      */
-    INITIALIZED(10), REVOKED(0), VERIFIED(20), SUCCESFUL_TRANSACTION(10), FAILED_TRANSACTION(-10);
+    INITIALIZED(10), REVOKED(0);
 
     /**
      * value of the predefined trust values

@@ -144,52 +144,6 @@ public class BlockControllerUnitTest {
     }
 
     /**
-     * verifyIBAN test
-     * Tests whether verifying the IBAN updates the trust value
-     */
-    @Test
-    public final void testVerifyIBAN() {
-        Block b = blockWithOwnerAAddsKeyKb;
-        blockController.verifyIBAN(b);
-        assertEquals(TrustValues.VERIFIED.getValue(), b.getTrustValue());
-    }
-
-    /**
-     * successfulTransaction test
-     * Tests whether a successful transaction updates the trust value
-     */
-    @Test
-    public final void testSuccessfulTransaction() {
-        Block b = blockWithOwnerAAddsKeyKb;
-        blockController.successfulTransaction(b);
-        assertEquals(TrustValues.INITIALIZED.getValue() + TrustValues.SUCCESFUL_TRANSACTION.getValue(),
-                b.getTrustValue());
-    }
-
-    /**
-     * failedTransaction test
-     * Tests whether a successful transaction updates the trust value
-     */
-    @Test
-    public final void testFailedTransaction() {
-        Block b = blockWithOwnerAAddsKeyKb;
-        blockController.failedTransaction(b);
-        assertEquals(TrustValues.INITIALIZED.getValue() + TrustValues.FAILED_TRANSACTION.getValue(),
-                b.getTrustValue());
-    }
-
-    /**
-     * revokedTrustValue test
-     * Tests whether a revoked transaction updates the trust value
-     */
-    @Test
-    public final void testRevokedTrustValue() {
-        Block b = blockWithOwnerAAddsKeyKb;
-        blockController.revokedTrustValue(b);
-        assertEquals(TrustValues.REVOKED.getValue(), b.getTrustValue());
-    }
-
-    /**
      * Check that the genesis block is created
      */
     @Test

@@ -1,5 +1,6 @@
 package nl.tudelft.b_b_w.controller;
 
+import nl.tudelft.b_b_w.model.TrustValues;
 import nl.tudelft.b_b_w.model.block.Block;
 
 /**
@@ -52,6 +53,18 @@ class TrustController {
         final double newValue = distributionFunction(getX(block.getTrustValue())
                 + REGULARIZATION_VERIFIED_IBAN);
         block.setTrustValue(newValue);
+        return block;
+    }
+
+    /**
+     * revokeBlock
+     * Sets the block value to the revoked trust value
+     *
+     * @param block given block to revoke
+     * @return block with the new trust value
+     */
+    Block revokeBlock(Block block) {
+        block.setTrustValue(TrustValues.REVOKED.getValue());
         return block;
     }
 

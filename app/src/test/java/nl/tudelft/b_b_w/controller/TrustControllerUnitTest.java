@@ -78,4 +78,13 @@ public class TrustControllerUnitTest {
         assertEquals(0, block.getTrustValue(), DELTA);
     }
 
+    /**
+     * Test to check whether revoking a block works
+     */
+    @Test
+    public void testRevokeBlock() {
+        block = trustController.revokeBlock(block);
+        assertEquals(0, block.getTrustValue(), DELTA);
+    }
+
 }

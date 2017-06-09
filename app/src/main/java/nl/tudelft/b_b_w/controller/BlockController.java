@@ -69,6 +69,7 @@ public class BlockController implements BlockControllerInterface {
         // Check if the block already exists
         String owner = block.getOwner().getName();
         Block latest = getDatabaseHandler.getLatestBlock(owner);
+        TrustController trustController = new TrustController();
 
         if (latest == null) {
             mutateDatabaseHandler.addBlock(block);
@@ -76,7 +77,7 @@ public class BlockController implements BlockControllerInterface {
             throw new RuntimeException("Error - Block is already revoked");
         } else {
             if (block.isRevoked()) {
-                latest = revokedTrustValue(latest);
+                latest = trustController.revokeBlock(latest);
                 mutateDatabaseHandler.updateBlock(latest);
                 mutateDatabaseHandler.addBlock(block);
             } else {
@@ -182,56 +183,6 @@ public class BlockController implements BlockControllerInterface {
             }
         }
         return res;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public final Block verifyIBAN(Block block) {
-        block.setTrustValue(TrustValues.VERIFIED.getValue());
-        mutateDatabaseHandler.updateBlock(block);
-        return block;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public final Block successfulTransaction(Block block) {
-        final int maxCeil = 100;
-        final double newTrust = block.getTrustValue() + TrustValues.SUCCESFUL_TRANSACTION.getValue();
-        if (newTrust > maxCeil) {
-            block.setTrustValue(maxCeil);
-        }
-        block.setTrustValue(newTrust);
-        mutateDatabaseHandler.updateBlock(block);
-        return block;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public final Block failedTransaction(Block block) {
-        final int minCeil = 0;
-        final double newTrust = block.getTrustValue() + TrustValues.FAILED_TRANSACTION.getValue();
-        if (newTrust < minCeil) {
-            block.setTrustValue(minCeil);
-        }
-        block.setTrustValue(newTrust);
-        mutateDatabaseHandler.updateBlock(block);
-        return block;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public final Block revokedTrustValue(Block block) {
-        block.setTrustValue(TrustValues.REVOKED.getValue());
-        mutateDatabaseHandler.updateBlock(block);
-        return block;
     }
 
     /**

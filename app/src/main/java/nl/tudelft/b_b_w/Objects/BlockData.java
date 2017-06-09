@@ -17,10 +17,6 @@ public class BlockData {
      */
     private int sequenceNumber;
 
-    /**
-     * THe owner name of this block
-     */
-    private String ownerName;
 
     /**
      * The hash of this block
@@ -36,16 +32,6 @@ public class BlockData {
      * The hash of the previous block of the sender of the block
      */
     private String previousHashSender;
-
-    /**
-     * The public key included in this block
-     */
-    private Public_Key publicKey;
-
-    /**
-     * The IBAN of the owner of the block
-     */
-    private String iban;
 
     /**
      * The trust value of this block

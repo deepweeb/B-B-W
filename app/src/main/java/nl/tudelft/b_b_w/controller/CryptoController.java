@@ -1,8 +1,5 @@
 package nl.tudelft.b_b_w.controller;
 
-
-import net.i2p.crypto.eddsa.EdDSAPublicKey;
-
 import org.encryptor4j.util.TextEncryptor;
 
 import java.security.GeneralSecurityException;

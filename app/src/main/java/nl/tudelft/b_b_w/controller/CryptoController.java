@@ -27,7 +27,7 @@ public class CryptoController {
      * Initializes the CryptoController by initializing the textEncryptor with the secret key
      */
     public CryptoController() {
-        this.secretKey = initKey();
+//        this.secretKey = initKey();
         this.textEncryptor = new TextEncryptor(secretKey);
     }
 
@@ -67,8 +67,8 @@ public class CryptoController {
      *
      * @return the read key
      */
-    private String initKey() {
-        KeyReader keyReader = new KeyReader();
-        return keyReader.readKey();
-    }
+//    private String initKey() {
+//        KeyReader keyReader = new KeyReader();
+//        return keyReader.readKey();
+//    }
 }

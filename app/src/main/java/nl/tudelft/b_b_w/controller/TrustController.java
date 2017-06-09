@@ -21,8 +21,8 @@ class TrustController {
      * @return the block with the new trust value
      */
     Block succesfulTransaction(Block block) {
-        final double newValue = distributionFunction(getX(block.getTrustValue()) +
-                REGULARIZATION_TRANSACTION);
+        final double newValue = distributionFunction(getX(block.getTrustValue())
+                + REGULARIZATION_TRANSACTION);
         block.setTrustValue(newValue);
         return block;
     }
@@ -35,8 +35,8 @@ class TrustController {
      * @return the block with the new trust value
      */
     Block failedTransaction(Block block) {
-        final double newValue = checkCeiling(distributionFunction(getX(block.getTrustValue()) -
-                REGULARIZATION_TRANSACTION));
+        final double newValue = checkCeiling(distributionFunction(getX(block.getTrustValue())
+                - REGULARIZATION_TRANSACTION));
         block.setTrustValue(newValue);
         return block;
     }
@@ -49,8 +49,8 @@ class TrustController {
      * @return the block with the new trust value
      */
     Block verifiedIBAN(Block block) {
-        final double newValue = distributionFunction(getX(block.getTrustValue()) +
-                REGULARIZATION_VERIFIED_IBAN);
+        final double newValue = distributionFunction(getX(block.getTrustValue())
+                + REGULARIZATION_VERIFIED_IBAN);
         block.setTrustValue(newValue);
         return block;
     }

@@ -1,5 +1,7 @@
 package nl.tudelft.b_b_w.view;
 
+import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,11 +12,9 @@ import android.widget.Toast;
 import java.util.List;
 
 import nl.tudelft.b_b_w.R;
-import nl.tudelft.b_b_w.controller.BlockController;
+import nl.tudelft.b_b_w.controller.API;
 import nl.tudelft.b_b_w.model.User;
 import nl.tudelft.b_b_w.model.block.Block;
-
-import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
 
 
 /**
@@ -32,7 +32,7 @@ public class PairActivity extends Activity {
     /**
      * The block controller.
      */
-    private BlockController blockController;
+    private API mAPI;
 
     /**
      * Its own block.
@@ -62,7 +62,7 @@ public class PairActivity extends Activity {
     protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pair);
-        blockController = new BlockController(this);
+        mAPI = new API(owner, this);
     }
 
 
@@ -75,7 +75,7 @@ public class PairActivity extends Activity {
         owner = new User("TestSubject1", "IBAN1");
 
         try {
-            blockController.createGenesis(owner);
+            mAPI.makeGenesis(owner);
         } catch (Exception e) {
             Toast.makeText(this, "Sorry, this contact is already added!",
                     Toast.LENGTH_SHORT).show();
@@ -85,16 +85,16 @@ public class PairActivity extends Activity {
         User subject1contact1 = new User("Subject1Contact1", "IBAN1Contact1");
         User subject1contact2 = new User("Subject1Contact2", "IBAN1Contact2");
         User subject1contact3 = new User("Subject1Contact3", "IBAN1Contact3");
-        blockController.createGenesis(subject1contact1);
-        blockController.createKeyBlock(owner, subject1contact1, "Contact1_PUBKEY");
+        mAPI.makeGenesis(subject1contact1);
+//        mAPI.addBlockToChain(owner, subject1contact1, "Contact1_PUBKEY");
 
-        blockController.createGenesis(subject1contact2);
-        blockController.createKeyBlock(owner, subject1contact2, "Contact2_PUBKEY");
+        mAPI.makeGenesis(subject1contact2);
+//        mAPI.createKeyBlock(owner, subject1contact2, "Contact2_PUBKEY");
 
-        blockController.createGenesis(subject1contact3);
-        blockController.createKeyBlock(owner, subject1contact3, "Contact3_PUBKEY");
+        mAPI.makeGenesis(subject1contact3);
+//        mAPI.createKeyBlock(owner, subject1contact3, "Contact3_PUBKEY");
 
-        List<Block> list = blockController.getBlocks(owner.getName());
+        List<Block> list = mAPI.getBlocks(owner);
 
         Toast.makeText(this, list.get(0).getPublicKey() + ", "
                 + list.get(ONE).getPublicKey() + ", "
@@ -122,7 +122,7 @@ public class PairActivity extends Activity {
         owner = new User("TestSubject2", "IBAN2");
 
         try {
-            blockController.createGenesis(owner);
+            mAPI.makeGenesis(owner);
         } catch (Exception e) {
             Toast.makeText(this, "Sorry, this contact is already added!",
                     Toast.LENGTH_SHORT).show();
@@ -134,19 +134,19 @@ public class PairActivity extends Activity {
         User subject2contact3 = new User("Subject2Contact3", "IBAN2Contact3");
         User subject2contact4 = new User("Subject2Contact4", "IBAN2Contact4");
 
-        blockController.createGenesis(subject2contact1);
-        blockController.createKeyBlock(owner, subject2contact1, "b");
+        mAPI.makeGenesis(subject2contact1);
+//        mAPI.addBlockToChain(owner, subject2contact1, "b");
 
-        blockController.createGenesis(subject2contact2);
-        blockController.createKeyBlock(owner, subject2contact2, "c");
+        mAPI.makeGenesis(subject2contact2);
+//        mAPI.createKeyBlock(owner, subject2contact2, "c");
 
-        blockController.createGenesis(subject2contact3);
-        blockController.createKeyBlock(owner, subject2contact3, "d");
+        mAPI.makeGenesis(subject2contact3);
+//        mAPI.createKeyBlock(owner, subject2contact3, "d");
 
-        blockController.createGenesis(subject2contact4);
-        blockController.createKeyBlock(owner, subject2contact4, "e");
+        mAPI.makeGenesis(subject2contact4);
+//        mAPI.createKeyBlock(owner, subject2contact4, "e");
 
-        List<Block> list = blockController.getBlocks(owner.getName());
+        List<Block> list = mAPI.getBlocks(owner);
 
         Toast.makeText(this, list.get(0).getPublicKey() + ", "
                 + list.get(ONE).getPublicKey() + ", "
@@ -178,17 +178,10 @@ public class PairActivity extends Activity {
      */
     public final void onTestSubject3(View view) throws Exception {
         owner = new User("TestSubject3", "IBAN3");
-
-        try {
-            block1 = blockController.createGenesis(owner);
-        } catch (Exception e) {
-            Toast.makeText(this, "Sorry, this contact is already added!",
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
+        mAPI.makeGenesis(owner);
 
 
-        List<Block> list = blockController.getBlocks(owner.getName());
+        List<Block> list = mAPI.getBlocks(owner);
 
         Toast.makeText(this, list.get(0).getPublicKey(), Toast.LENGTH_SHORT).show();
 

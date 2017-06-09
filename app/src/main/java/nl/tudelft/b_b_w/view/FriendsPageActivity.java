@@ -1,5 +1,7 @@
 package nl.tudelft.b_b_w.view;
 
+import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,12 +11,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import nl.tudelft.b_b_w.R;
-import nl.tudelft.b_b_w.controller.BlockController;
+import nl.tudelft.b_b_w.controller.API;
 import nl.tudelft.b_b_w.controller.ConversionController;
-import nl.tudelft.b_b_w.model.HashException;
 import nl.tudelft.b_b_w.model.User;
-
-import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
 
 /**
  * This class displays the Friend Page. Here we want to be able to see the
@@ -30,7 +29,7 @@ public class FriendsPageActivity extends Activity {
     /**
      * Block controller
      */
-    private BlockController blockController;
+    private API mAPI;
     /**
      * This is your own user
      */
@@ -79,35 +78,31 @@ public class FriendsPageActivity extends Activity {
 
     /**
      * On create method, here we request a database connection
-     *
-     * @param savedInstanceState
      */
     @Override
     protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        blockController = new BlockController(this);
+        mAPI = new API(user, this);
 
         setContentView(R.layout.activity_friends_page);
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        contact = new User(settings.getString("userNameTestSubject", ""), settings.getString("ibanTestSubject", ""));
+        contact = new User(settings.getString("userNameTestSubject", ""),
+                settings.getString("ibanTestSubject", ""));
         user = new User(settings.getString("userName", ""), settings.getString("iban", ""));
 
         contactName = contact.getName();
         ibanNumber = contact.getIban();
         publicKey = contact.generatePublicKey();
 
-        try {
-            userLatestBlockHash = blockController.getBlocks(user.getName()).get(blockController.getBlocks(user.getName()).size() - 1).getOwnHash();
-            contactGenesisBlockHash = blockController.getBlocks(contactName).get(0).getOwnHash();
-            //Displaying the information of the contact whose you are paired with
-            textViewIban = (TextView) findViewById(R.id.editIban);
-            textViewContact = (TextView) findViewById(R.id.senderName);
-            textViewIban.setText(ibanNumber);
-            textViewContact.setText(contactName);
-        } catch (HashException e) {
-            Toast.makeText(this, "Hash error while retrieving blocks", Toast.LENGTH_LONG).show();
-        }
+        userLatestBlockHash = mAPI.getBlocks(user).get(
+                mAPI.getBlocks(user).size() - 1).getOwnHash();
+        contactGenesisBlockHash = mAPI.getBlocks(contact).get(0).getOwnHash();
+        //Displaying the information of the contact whose you are paired with
+        textViewIban = (TextView) findViewById(R.id.editIban);
+        textViewContact = (TextView) findViewById(R.id.senderName);
+        textViewIban.setText(ibanNumber);
+        textViewContact.setText(contactName);
     }
 
     /**
@@ -127,12 +122,13 @@ public class FriendsPageActivity extends Activity {
      */
     public final void onAddThisPersonToContactList(View view) throws Exception {
 
-        ConversionController conversionController = new ConversionController(user.getName(), publicKey,
+        ConversionController conversionController = new ConversionController(user.getName(),
+                publicKey,
                 userLatestBlockHash, contactGenesisBlockHash, ibanNumber);
         String hash = conversionController.hashKey();
 
         try {
-            blockController.createKeyBlock(user, contact, publicKey);
+            mAPI.addBlockToChain(mAPI.getBlocks(contact).get(0));
         } catch (Exception e) {
             Toast.makeText(this, "Sorry, this contact is already added!",
                     Toast.LENGTH_SHORT).show();

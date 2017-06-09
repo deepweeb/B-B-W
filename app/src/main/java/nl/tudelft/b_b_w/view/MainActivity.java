@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import nl.tudelft.b_b_w.R;
-import nl.tudelft.b_b_w.controller.BlockController;
+import nl.tudelft.b_b_w.controller.API;
 import nl.tudelft.b_b_w.model.User;
 
 /**
@@ -21,7 +21,7 @@ import nl.tudelft.b_b_w.model.User;
  */
 public class MainActivity extends Activity {
     public static final String PREFS_NAME = "MyPrefsFile";
-    private BlockController blockController;
+    private API mAPI;
     /**
      * The user of this app, containing it's information
      */
@@ -36,9 +36,9 @@ public class MainActivity extends Activity {
     protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        blockController = new BlockController(this);
+        mAPI = new API(user, this);
         // add genesis if we don't have any blocks
-        if (user == null && blockController.isDatabaseEmpty()) {
+        if (user == null && mAPI.isDatabaseEmpty()) {
             user = getUser();
         } else {
             SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
@@ -89,7 +89,7 @@ public class MainActivity extends Activity {
      */
     private void addGenesis() {
         try {
-            blockController.createGenesis(user);
+            mAPI.makeGenesis(user);
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
         }

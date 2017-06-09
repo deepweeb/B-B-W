@@ -32,7 +32,7 @@ import static org.junit.Assert.assertEquals;
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml")
-public class BlockControllerUnitTest {
+public class APIUnitTest {
     private final String notAvailable = "N/A";
     private final String publicKey = "publicKey";
     private final String publicKeyC = "pkc";
@@ -43,7 +43,7 @@ public class BlockControllerUnitTest {
     private final User a = new User("Alice", "ibanA");
     private final User b = new User("Bob", "ibanB");
     private final User c = new User("Clara", "ibanC");
-    private BlockController blockController;
+    private API mAPI;
     private Block genesisA;
     private Block genesisB;
     private Block blockWithOwnerAAddsKeyKa;
@@ -52,19 +52,19 @@ public class BlockControllerUnitTest {
     private Block blockWithOwnerBRevokesKeyKa;
 
     /**
-     * Initialize BlockController before every test
+     * Initialize API before every test
      * And initialize a dummy block _block
      */
     @Before
     public final void setUp() throws HashException {
-        blockController = new BlockController(RuntimeEnvironment.application);
+        mAPI = new API(RuntimeEnvironment.application);
         // construct an easy blockchain
-        genesisA = blockController.createGenesis(a);
-        genesisB = blockController.createGenesis(b);
-        blockWithOwnerAAddsKeyKa = blockController.createKeyBlock(a, a, "ka");
-        blockWithOwnerAAddsKeyKb = blockController.createKeyBlock(a, b, "kb");
-        blockWithOwnerBAddsKeyKa = blockController.createKeyBlock(b, a, "ka");
-        blockWithOwnerBRevokesKeyKa = blockController.createRevokeBlock(b, a, "ka", "ibanA");
+        genesisA = mAPI.createGenesis(a);
+        genesisB = mAPI.createGenesis(b);
+        blockWithOwnerAAddsKeyKa = mAPI.createKeyBlock(a, a, "ka");
+        blockWithOwnerAAddsKeyKb = mAPI.createKeyBlock(a, b, "kb");
+        blockWithOwnerBAddsKeyKa = mAPI.createKeyBlock(b, a, "ka");
+        blockWithOwnerBRevokesKeyKa = mAPI.createRevokeBlock(b, a, "ka", "ibanA");
     }
 
     /**
@@ -74,12 +74,12 @@ public class BlockControllerUnitTest {
      */
     @Test
     public final void testAddBlock() throws Exception {
-        Block genesisC = blockController.createGenesis(c);
-        Block blockC = blockController.createKeyBlock(c, c, "kc");
+        Block genesisC = mAPI.createGenesis(c);
+        Block blockC = mAPI.createKeyBlock(c, c, "kc");
         List<Block> list = new ArrayList<>();
         list.add(genesisC);
         list.add(blockC);
-        assertEquals(list, blockController.getBlocks(c.getName()));
+        assertEquals(list, mAPI.getBlocks(c.getName()));
     }
 
     /**
@@ -87,7 +87,7 @@ public class BlockControllerUnitTest {
      */
     @Test
     public final void getContactNameTest() throws HashException {
-        assertEquals("Unknown", blockController.getContactName("INVALID"));
+        assertEquals("Unknown", mAPI.getContactName("INVALID"));
     }
 
     /**
@@ -97,9 +97,9 @@ public class BlockControllerUnitTest {
      */
     @Test
     public final void testGetLatestBlock() throws Exception {
-        blockController.createGenesis(c);
-        Block blockC = blockController.createKeyBlock(c, c, "kc");
-        assertEquals(blockC, blockController.getLatestBlock(c.getName()));
+        mAPI.createGenesis(c);
+        Block blockC = mAPI.createKeyBlock(c, c, "kc");
+        assertEquals(blockC, mAPI.getLatestBlock(c.getName()));
     }
 
     /**
@@ -109,7 +109,7 @@ public class BlockControllerUnitTest {
      */
     @Test
     public final void testGetLatestSeqNumber() throws Exception {
-        assertEquals(3, blockController.getLatestSeqNumber(a.getName()));
+        assertEquals(3, mAPI.getLatestSeqNumber(a.getName()));
     }
 
     /**
@@ -117,9 +117,9 @@ public class BlockControllerUnitTest {
      */
     @Test(expected = RuntimeException.class)
     public final void testAddDupBlocks() throws HashException {
-        Block blockC = blockController.createKeyBlock(c, c, publicKeyC);
-        blockController.addBlock(blockC);
-        blockController.addBlock(blockC);
+        Block blockC = mAPI.createKeyBlock(c, c, publicKeyC);
+        mAPI.addBlock(blockC);
+        mAPI.addBlock(blockC);
     }
 
     /**
@@ -127,7 +127,7 @@ public class BlockControllerUnitTest {
      */
     @Test(expected = RuntimeException.class)
     public final void alreadyRevoked() throws HashException {
-        blockController.createKeyBlock(b, a, "ka");
+        mAPI.createKeyBlock(b, a, "ka");
     }
 
     /**
@@ -135,12 +135,12 @@ public class BlockControllerUnitTest {
      */
     @Test
     public final void testEmptyList() throws HashException {
-        Block genesisC = blockController.createGenesis(c);
-        blockController.createKeyBlock(c, c, "pkc");
-        blockController.createRevokeBlock(c, c, "pkc", "ibanC");
+        Block genesisC = mAPI.createGenesis(c);
+        mAPI.createKeyBlock(c, c, "pkc");
+        mAPI.createRevokeBlock(c, c, "pkc", "ibanC");
         List<Block> list = new ArrayList<>();
         list.add(genesisC);
-        assertEquals(list, blockController.getBlocks(c.getName()));
+        assertEquals(list, mAPI.getBlocks(c.getName()));
     }
 
     /**
@@ -150,7 +150,7 @@ public class BlockControllerUnitTest {
     @Test
     public final void testVerifyIBAN() {
         Block b = blockWithOwnerAAddsKeyKb;
-        blockController.verifyIBAN(b);
+        mAPI.verifyIBAN(b);
         assertEquals(TrustValues.VERIFIED.getValue(), b.getTrustValue());
     }
 
@@ -161,7 +161,7 @@ public class BlockControllerUnitTest {
     @Test
     public final void testSuccessfulTransaction() {
         Block b = blockWithOwnerAAddsKeyKb;
-        blockController.successfulTransaction(b);
+        mAPI.successfulTransaction(b);
         assertEquals(TrustValues.INITIALIZED.getValue() + TrustValues.SUCCESFUL_TRANSACTION.getValue(),
                 b.getTrustValue());
     }
@@ -173,7 +173,7 @@ public class BlockControllerUnitTest {
     @Test
     public final void testFailedTransaction() {
         Block b = blockWithOwnerAAddsKeyKb;
-        blockController.failedTransaction(b);
+        mAPI.failedTransaction(b);
         assertEquals(TrustValues.INITIALIZED.getValue() + TrustValues.FAILED_TRANSACTION.getValue(),
                 b.getTrustValue());
     }
@@ -185,7 +185,7 @@ public class BlockControllerUnitTest {
     @Test
     public final void testRevokedTrustValue() {
         Block b = blockWithOwnerAAddsKeyKb;
-        blockController.revokedTrustValue(b);
+        mAPI.revokedTrustValue(b);
         assertEquals(TrustValues.REVOKED.getValue(), b.getTrustValue());
     }
 
@@ -251,9 +251,9 @@ public class BlockControllerUnitTest {
      */
     @Test
     public void testBacktrack() throws HashException {
-        blockController.createGenesis(c);
-        Block fresh = blockController.createKeyBlock(c, c, "pkc");
-        assertEquals(fresh, blockController.backtrack(fresh));
+        mAPI.createGenesis(c);
+        Block fresh = mAPI.createKeyBlock(c, c, "pkc");
+        assertEquals(fresh, mAPI.backtrack(fresh));
     }
 
     /**
@@ -262,9 +262,9 @@ public class BlockControllerUnitTest {
      */
     @Test
     public void testVerifyTrustworthiness() throws HashException {
-        blockController.createGenesis(c);
-        Block b = blockController.createKeyBlock(c, c, "pk");
-        assertTrue(blockController.verifyTrustworthiness(b));
+        mAPI.createGenesis(c);
+        Block b = mAPI.createKeyBlock(c, c, "pk");
+        assertTrue(mAPI.verifyTrustworthiness(b));
     }
 
     /**
@@ -274,8 +274,8 @@ public class BlockControllerUnitTest {
      */
     @Test
     public void testVerifyTrustworthinessFalse() throws HashException {
-        blockController.createGenesis(c);
-        Block b1 = blockController.createKeyBlock(c, c, "pk1");
+        mAPI.createGenesis(c);
+        Block b1 = mAPI.createKeyBlock(c, c, "pk1");
         BlockData data = new BlockData();
         data.setBlockType(BlockType.ADD_KEY);
         data.setPublicKey("pk2");
@@ -286,7 +286,7 @@ public class BlockControllerUnitTest {
         data.setSequenceNumber(3);
         Block b2 = BlockFactory.createBlock(data);
 
-        assertFalse(blockController.verifyTrustworthiness(b2));
+        assertFalse(mAPI.verifyTrustworthiness(b2));
     }
 
     /**
@@ -294,6 +294,6 @@ public class BlockControllerUnitTest {
      */
     @After
     public final void tearDown() {
-        blockController.clearAllBlocks();
+        mAPI.clearAllBlocks();
     }
 }

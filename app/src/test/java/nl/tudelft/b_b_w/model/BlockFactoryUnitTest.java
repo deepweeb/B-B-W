@@ -8,7 +8,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import nl.tudelft.b_b_w.BuildConfig;
-import nl.tudelft.b_b_w.controller.BlockController;
+import nl.tudelft.b_b_w.controller.API;
 import nl.tudelft.b_b_w.model.block.Block;
 import nl.tudelft.b_b_w.model.block.BlockFactory;
 
@@ -32,7 +32,7 @@ public class BlockFactoryUnitTest {
     private final String iban = "iban";
     private final int trustValue = TrustValues.INITIALIZED.getValue();
     private Block testBlock;
-    private BlockController blockController;
+    private API mAPI;
 
     /**
      * This method runs before each test to initialize the test object
@@ -42,11 +42,11 @@ public class BlockFactoryUnitTest {
      */
     @Before
     public void makeNewBlock() throws Exception {
-        blockController = new BlockController(RuntimeEnvironment.application);
+        mAPI = new API(RuntimeEnvironment.application);
         testBlock = BlockFactory.getBlock(
                 typeBlock,
                 owner,
-                blockController.getLatestSeqNumber(owner) + 1,
+                mAPI.getLatestSeqNumber(owner) + 1,
                 ownHash,
                 previousHashChain,
                 previousHashSender,
@@ -65,7 +65,7 @@ public class BlockFactoryUnitTest {
         final Block newBlock = BlockFactory.getBlock(
                 typeBlock,
                 owner,
-                blockController.getLatestSeqNumber(owner) + 1,
+                mAPI.getLatestSeqNumber(owner) + 1,
                 ownHash,
                 previousHashChain,
                 previousHashSender,
@@ -87,7 +87,7 @@ public class BlockFactoryUnitTest {
         final Block newBlock = BlockFactory.getBlock(
                 typeBlock,
                 owner,
-                blockController.getLatestSeqNumber(owner) + 1,
+                mAPI.getLatestSeqNumber(owner) + 1,
                 ownHash,
                 previousHashChain,
                 previousHashSender,

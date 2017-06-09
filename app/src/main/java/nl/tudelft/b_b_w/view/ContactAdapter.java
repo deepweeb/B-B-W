@@ -14,8 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import nl.tudelft.b_b_w.R;
-import nl.tudelft.b_b_w.controller.BlockController;
+import nl.tudelft.b_b_w.controller.API;
 import nl.tudelft.b_b_w.model.HashException;
+import nl.tudelft.b_b_w.model.User;
 
 /**
  * Adapter to add the different blocks dynamically
@@ -24,9 +25,9 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
 
     private final String retrievingHashError = "Hash error while retrieving blocks";
     //Variables which we use for getting the block information
-    private BlockController blockController;
+    private API mAPI;
     private Context context;
-    private String ownerName;
+    private User owner;
     //Images for displaying trust
     private Integer[] images = {
             R.drawable.pic5,
@@ -39,13 +40,13 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
     /**
      * Default constructor to initiate the Adapter
      *
-     * @param blockController BlockController which is passed on
-     * @param context         Context which is passed on
+     * @param API     API which is passed on
+     * @param context Context which is passed on
      */
-    public ContactAdapter(BlockController blockController, String ownerName, Context context) {
+    public ContactAdapter(API API, User owner, Context context) {
         this.context = context;
-        this.ownerName = ownerName;
-        this.blockController = blockController;
+        this.owner = owner;
+        this.mAPI = API;
     }
 
     /**
@@ -53,12 +54,7 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
      */
     @Override
     public Object getItem(int position) {
-        try {
-            return blockController.getBlocks(ownerName).get(position);
-        } catch (HashException e) {
-            Toast.makeText(context, retrievingHashError, Toast.LENGTH_LONG).show();
-            return null;
-        }
+        return mAPI.getBlocks(owner).get(position);
     }
 
     /**
@@ -74,12 +70,7 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
      */
     @Override
     public int getCount() {
-        try {
-            return blockController.getBlocks(ownerName).size();
-        } catch (HashException e) {
-            Toast.makeText(context, retrievingHashError, Toast.LENGTH_LONG).show();
-            return 0;
-        }
+        return mAPI.getBlocks(owner).size();
     }
 
     /**
@@ -117,35 +108,32 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle("Confirm");
-                    builder.setMessage("Are you sure you want to revoke "
-                            + blockController.getBlocks(ownerName).get(position).getOwner()
-                            + " IBAN?");
-                    builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            try {
-                                blockController.revokeBlock(blockController.getBlocks(ownerName).get(position));
-                            } catch (HashException e) {
-                                Toast.makeText(context, retrievingHashError, Toast.LENGTH_LONG).show();
-                            }
-                            notifyDataSetChanged();
-                            dialog.dismiss();
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Confirm");
+                builder.setMessage("Are you sure you want to revoke "
+                        + mAPI.getBlocks(owner).get(position).getOwner()
+                        + " IBAN?");
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            mAPI.revokeBlockFromChain(mAPI.getBlocks(owner).get(position));
+                        } catch (HashException e) {
+                            Toast.makeText(context, retrievingHashError,
+                                    Toast.LENGTH_LONG).show();
                         }
-                    });
-                    builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // Do nothing
-                            dialog.dismiss();
-                        }
-                    });
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                } catch (HashException e) {
-                    Toast.makeText(context, retrievingHashError, Toast.LENGTH_LONG).show();
-                }
+                        notifyDataSetChanged();
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do nothing
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         };
     }
@@ -156,26 +144,21 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
      */
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        try {
-            View view = convertView;
-            if (view == null) {
-                LayoutInflater inflater =
-                        (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = inflater.inflate(R.layout.simple_list_item_1, parent, false);
-            }
-            TextView nameItemText = (TextView) view.findViewById(R.id.list_item_name);
-            nameItemText.setText(blockController.getContactName(blockController.getBlocks(ownerName).get(position).getOwnHash()));
-            TextView ibanItemText = (TextView) view.findViewById(R.id.list_item_iban);
-            ibanItemText.setText(blockController.getBlocks(ownerName).get(position).getOwner().getIban());
-            ImageView pic = (ImageView) view.findViewById(R.id.trust_image);
-            pic.setImageResource(
-                    getImageNo(blockController.getBlocks(ownerName).get(position).getTrustValue()));
-            Button revokeButton = (Button) view.findViewById(R.id.revoke_btn);
-            revokeButton.setOnClickListener(createDialog(position));
-            return view;
-        } catch (HashException e) {
-            Toast.makeText(context, retrievingHashError, Toast.LENGTH_LONG).show();
-            return null;
+        View view = convertView;
+        if (view == null) {
+            LayoutInflater inflater =
+                    (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = inflater.inflate(R.layout.simple_list_item_1, parent, false);
         }
+        TextView nameItemText = (TextView) view.findViewById(R.id.list_item_name);
+        nameItemText.setText(mAPI.getBlocks(owner).get(position).getOwner().getName());
+        TextView ibanItemText = (TextView) view.findViewById(R.id.list_item_iban);
+        ibanItemText.setText(mAPI.getBlocks(owner).get(position).getOwner().getIban());
+        ImageView pic = (ImageView) view.findViewById(R.id.trust_image);
+        pic.setImageResource(
+                getImageNo(mAPI.getBlocks(owner).get(position).getTrustValue()));
+        Button revokeButton = (Button) view.findViewById(R.id.revoke_btn);
+        revokeButton.setOnClickListener(createDialog(position));
+        return view;
     }
 }

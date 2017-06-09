@@ -1,6 +1,8 @@
 package nl.tudelft.b_b_w.view;
 
 
+import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
+
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,12 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import nl.tudelft.b_b_w.R;
-import nl.tudelft.b_b_w.controller.BlockController;
+import nl.tudelft.b_b_w.controller.API;
 import nl.tudelft.b_b_w.model.HashException;
+import nl.tudelft.b_b_w.model.TrustValues;
 import nl.tudelft.b_b_w.model.User;
 import nl.tudelft.b_b_w.model.block.Block;
-
-import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
 
 /**
  * Page which handles transactions between user and a contact.
@@ -26,7 +27,7 @@ import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
 public class TransactionActivity extends Activity {
 
     //Variables which are frequently used
-    private BlockController blockController;
+    private API mAPI;
     private User user;
     private Spinner dialog;
     private String transactionName;
@@ -42,7 +43,7 @@ public class TransactionActivity extends Activity {
         setContentView(R.layout.activity_transaction);
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         user = new User(settings.getString("userName", ""), settings.getString("iban", ""));
-        blockController = new BlockController(this);
+        mAPI = new API(user, this);
         try {
             addItemsOnSpinner();
         } catch (HashException e) {
@@ -71,20 +72,15 @@ public class TransactionActivity extends Activity {
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    transactionName = String.valueOf(dialog.getSelectedItem());
-                    EditText amountText = (EditText) findViewById(R.id.editText11);
-                    final int amount = Integer.parseInt(amountText.getText().toString());
-                    for (Block block : blockController.getBlocks(user.getName())) {
-                        if (blockController.backtrack(block).getOwner().getName().equals(transactionName)) {
-                            blockController.successfulTransaction(block);
-                            Toast.makeText(TransactionActivity.this, "Send €" + amount + " to "
-                                    + transactionName + "!", Toast.LENGTH_SHORT).show();
-                        }
+                transactionName = String.valueOf(dialog.getSelectedItem());
+                EditText amountText = (EditText) findViewById(R.id.editText11);
+                final int amount = Integer.parseInt(amountText.getText().toString());
+                for (Block block : mAPI.getBlocks(user)) {
+                    if (block.getOwner().getName().equals(transactionName)) {
+                        mAPI.transaction(block, TrustValues.SUCCESFUL_TRANSACTION);
+                        Toast.makeText(TransactionActivity.this, "Send €" + amount + " to "
+                                + transactionName + "!", Toast.LENGTH_SHORT).show();
                     }
-                } catch (HashException e) {
-                    Toast.makeText(TransactionActivity.this, "Transaction failed: "
-                            + e, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -95,13 +91,13 @@ public class TransactionActivity extends Activity {
      */
     public void addItemsOnSpinner() throws HashException {
         dialog = (Spinner) findViewById(R.id.spinner1);
-        int listSize = blockController.getBlocks(user.getName()).size();
+        int listSize = mAPI.getBlocks(user).size();
         String[] items = new String[listSize];
         for (int i = 0; i < listSize; i++) {
-            items[i] = blockController.backtrack(
-                    blockController.getBlocks(user.getName()).get(i)).getOwner().getName();
+            items[i] = mAPI.getBlocks(user).get(i).getOwner().getName();
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, items);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, items);
         dialog.setAdapter(adapter);
     }
 }

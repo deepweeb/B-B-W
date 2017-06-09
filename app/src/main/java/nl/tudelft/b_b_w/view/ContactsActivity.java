@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -15,8 +14,8 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.util.List;
 
 import nl.tudelft.b_b_w.R;
-import nl.tudelft.b_b_w.controller.BlockController;
-import nl.tudelft.b_b_w.model.HashException;
+import nl.tudelft.b_b_w.controller.API;
+import nl.tudelft.b_b_w.model.User;
 import nl.tudelft.b_b_w.model.block.Block;
 
 /**
@@ -36,14 +35,10 @@ public class ContactsActivity extends Activity {
         setContentView(R.layout.activity_contacts);
         setTitle("Contacts");
         SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
-        final String ownerName = settings.getString("userName", "");
-        BlockController blockController = new BlockController(this);
-        try {
-            setUpGraph(blockController.getBlocks(ownerName));
-        } catch (HashException e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-        ContactAdapter adapter = new ContactAdapter(blockController, ownerName, this);
+        final User owner = new User(settings.getString("userName", ""), settings.getString("iban", ""));
+        API API = new API(owner, this);
+        setUpGraph(API.getBlocks(owner));
+        ContactAdapter adapter = new ContactAdapter(API, owner, this);
         ListView lView = (ListView) findViewById(R.id.contacts);
         lView.setAdapter(adapter);
     }

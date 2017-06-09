@@ -1,5 +1,7 @@
 package nl.tudelft.b_b_w.model;
 
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -15,6 +17,7 @@ public class User {
      */
     private String name;
     private String iban;
+    private EdDSAPublicKey publicKey;
 
     /**
      * Constructor for user class
@@ -43,6 +46,15 @@ public class User {
      */
     public String getIban() {
         return iban;
+    }
+
+    /**
+     * getPublicKey function
+     *
+     * @return public key of user
+     */
+    public EdDSAPublicKey getPublicKey() {
+        return this.publicKey;
     }
 
     /**

@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import nl.tudelft.b_b_w.model.User;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test class for CryptoController
@@ -20,10 +20,7 @@ public class CryptoControllerTest {
      * Class attributes
      */
     private CryptoController cryptoController;
-    private EdDSAPrivateKey privateKey;
-    private EdDSAPublicKey publicKey;
     private static final byte[] TEST_SEED = Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000");
-    private final String test = "Test string";
 
     /**
      * setUp method
@@ -31,8 +28,8 @@ public class CryptoControllerTest {
      */
     @Before
     public void setUp() {
-        this.privateKey = ED25519.generatePrivateKey(TEST_SEED);
-        this.publicKey = ED25519.getPublicKey(this.privateKey);
+        EdDSAPrivateKey privateKey = ED25519.generatePrivateKey(TEST_SEED);
+        EdDSAPublicKey publicKey = ED25519.getPublicKey(privateKey);
         final String name = "name";
         final String iban = "iban";
         this.cryptoController = new CryptoController(new User(name, iban, publicKey));
@@ -44,6 +41,7 @@ public class CryptoControllerTest {
      */
     @Test
     public void endecryptString() {
+        final String test = "Test string";
         assertEquals(test, cryptoController.decryptString(cryptoController.encryptString(test)));
     }
 

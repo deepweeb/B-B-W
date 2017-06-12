@@ -93,42 +93,6 @@ interface BlockControllerInterface {
     List<Block> removeBlock(List<Block> list, Block block);
 
     /**
-     * verifyIBAN method
-     * updates the trust value of the block to the set trust value for a verified IBAN
-     *
-     * @param block given block to update
-     * @return block that is updated
-     */
-    Block verifyIBAN(Block block);
-
-    /**
-     * successfulTransaction method
-     * updates the trust value of the block to the set trust value for a succesful transaction
-     *
-     * @param block given block to update
-     * @return block that is updated
-     */
-    Block successfulTransaction(Block block);
-
-    /**
-     * failedTransaction method
-     * updates the trust value of the block to the set trust value for a failed transaction
-     *
-     * @param block given block to update
-     * @return block that is updated
-     */
-    Block failedTransaction(Block block);
-
-    /**
-     * revokedTrustValue method
-     * updates the trust value of the block to the set trust value for a revoked block
-     *
-     * @param block given block to update
-     * @return block that is updated
-     */
-    Block revokedTrustValue(Block block);
-
-    /**
      * Check if the database is empty.
      *
      * @return if the database is empty

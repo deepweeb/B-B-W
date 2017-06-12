@@ -1,4 +1,4 @@
-package nl.tudelft.b_b_w.blockchaincomponents;
+package nl.tudelft.b_b_w.blockchain;
 
 
 /**

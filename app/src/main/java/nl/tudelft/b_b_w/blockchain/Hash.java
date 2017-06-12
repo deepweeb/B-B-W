@@ -1,4 +1,4 @@
-package nl.tudelft.b_b_w.blockchaincomponents;
+package nl.tudelft.b_b_w.blockchain;
 
 /**
  * Class for creating a Hash object
@@ -35,6 +35,10 @@ public class Hash {
      */
     @Override
     public boolean equals(Object o) {
-        return this.hashString.equals(o.toString());
+        if (o == null) {
+            return false;
+        } else {
+            return this.hashString.equals(o.toString());
+        }
     }
 }

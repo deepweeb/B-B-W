@@ -1,4 +1,4 @@
-package nl.tudelft.b_b_w.blockchaincomponents;
+package nl.tudelft.b_b_w.blockchain;
 
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
@@ -15,7 +15,6 @@ public class Acquaintance extends User{
     /**
      * Properties of a Acquaintance
      */
-    private User user;
     private ArrayList<Chain> multichain;
 
     /**

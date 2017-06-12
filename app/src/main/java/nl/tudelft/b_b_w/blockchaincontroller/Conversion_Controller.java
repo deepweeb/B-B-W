@@ -4,10 +4,10 @@ import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
 import java.security.MessageDigest;
 
-import nl.tudelft.b_b_w.blockchaincomponents.BlockData;
-import nl.tudelft.b_b_w.blockchaincomponents.Block_Type;
-import nl.tudelft.b_b_w.blockchaincomponents.Hash;
-import nl.tudelft.b_b_w.blockchaincomponents.User;
+import nl.tudelft.b_b_w.blockchain.BlockData;
+import nl.tudelft.b_b_w.blockchain.Block_Type;
+import nl.tudelft.b_b_w.blockchain.Hash;
+import nl.tudelft.b_b_w.blockchain.User;
 
 /**
  * Class to convert values into a hashed value. Use BlockData.calculateHash instead.

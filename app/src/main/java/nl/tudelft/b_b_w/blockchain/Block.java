@@ -1,9 +1,7 @@
-package nl.tudelft.b_b_w.blockchaincomponents;
+package nl.tudelft.b_b_w.blockchain;
 
 
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
-
-import java.security.acl.Owner;
 
 import nl.tudelft.b_b_w.blockchaincontroller.Conversion_Controller;
 
@@ -69,7 +67,7 @@ public class Block {
     public EdDSAPublicKey getOwnerPublicKey() {
         return owner.getPublicKey();
     }
-    
+
     /**************************************END******************************************/
 
 

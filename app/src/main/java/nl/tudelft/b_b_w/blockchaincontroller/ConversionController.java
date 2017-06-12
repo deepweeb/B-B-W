@@ -5,14 +5,14 @@ import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import java.security.MessageDigest;
 
 import nl.tudelft.b_b_w.blockchain.BlockData;
-import nl.tudelft.b_b_w.blockchain.Block_Type;
+import nl.tudelft.b_b_w.blockchain.BlockType;
 import nl.tudelft.b_b_w.blockchain.Hash;
 import nl.tudelft.b_b_w.blockchain.User;
 
 /**
  * Class to convert values into a hashed value. Use BlockData.calculateHash instead.
  */
-public class Conversion_Controller {
+public class ConversionController {
     // Variables which we need to create a hashed key
 
     private String ownerName;
@@ -23,7 +23,7 @@ public class Conversion_Controller {
     private String contactIban;
     private EdDSAPublicKey contactPublicKey;
 
-    private Block_Type blockType;
+    private BlockType blockType;
     private int sequenceNumber;
     private Hash previousHashChain;
     private Hash previousHashSender;
@@ -35,7 +35,7 @@ public class Conversion_Controller {
      * @param contact
      * @param blockData
      */
-    public Conversion_Controller(User owner, User contact, BlockData blockData)
+    public ConversionController(User owner, User contact, BlockData blockData)
     {
         this.ownerName = owner.getName();
         this.ownerIban = owner.getIban();

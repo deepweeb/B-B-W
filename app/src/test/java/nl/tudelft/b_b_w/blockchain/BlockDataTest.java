@@ -14,7 +14,7 @@ public class BlockDataTest {
      * The BlockData attributes
      */
     private BlockData blockData;
-    private Block_Type blockType;
+    private BlockType blockType;
     private int sequenceNumber;
     private Hash previousHashChain;
     private Hash previousHashSender;
@@ -26,7 +26,7 @@ public class BlockDataTest {
     @Before
     public void setUpBlockData(){
 
-        blockType = Block_Type.ADD_KEY;
+        blockType = BlockType.ADD_KEY;
         sequenceNumber = 5;
         previousHashChain = new Hash("ExampleHash1");
         previousHashSender = new Hash("ExampleHash2");

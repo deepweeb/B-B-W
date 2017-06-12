@@ -9,7 +9,7 @@ public class BlockData {
     /**
      * Properties of a BlockData object
      */
-    private Block_Type blockType;
+    private BlockType blockType;
     private int sequenceNumber;
     private Hash previousHashChain;
     private Hash previousHashSender;
@@ -24,7 +24,7 @@ public class BlockData {
      *                          iban number, public key, etc are.
      * @param trustValue given trust value of the contact
      */
-    public BlockData(Block_Type blockType, int sequenceNumber, Hash previousHashChain,
+    public BlockData(BlockType blockType, int sequenceNumber, Hash previousHashChain,
                      Hash previousHashSender, int trustValue) {
         this.blockType = blockType;
         this.sequenceNumber = sequenceNumber;
@@ -37,7 +37,7 @@ public class BlockData {
      * Get the block type of the BlockData
      * @return the block type
      */
-    public Block_Type getBlockType() {
+    public BlockType getBlockType() {
         return blockType;
     }
 

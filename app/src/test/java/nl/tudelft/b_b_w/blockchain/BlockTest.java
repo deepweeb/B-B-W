@@ -7,7 +7,7 @@ import net.i2p.crypto.eddsa.Utils;
 import org.junit.Before;
 import org.junit.Test;
 
-import nl.tudelft.b_b_w.blockchaincontroller.Conversion_Controller;
+import nl.tudelft.b_b_w.blockchaincontroller.ConversionController;
 import nl.tudelft.b_b_w.controller.ED25519;
 
 import static junit.framework.Assert.assertEquals;
@@ -37,7 +37,7 @@ public class BlockTest {
      * Properties of a BlockData object
      */
     private BlockData blockData;
-    private Block_Type blockType;
+    private BlockType blockType;
     private int sequenceNumber;
     private Hash previousHashChain;
     private Hash previousHashSender;
@@ -73,7 +73,7 @@ public class BlockTest {
         contact = new User(contactName, contactIban, contactPublicKey);
 
         //setting up block data
-        blockType = Block_Type.ADD_KEY;
+        blockType = BlockType.ADD_KEY;
         sequenceNumber = 1;
         previousHashChain = new Hash("Contact1PreviousHashChain");
         previousHashSender = new Hash("Contact1PreviousHashSender");
@@ -109,7 +109,7 @@ public class BlockTest {
 
     @Test
     public void getOwnHash() throws Exception {
-        Conversion_Controller conversionController = new Conversion_Controller(owner, contact, blockData);
+        ConversionController conversionController = new ConversionController(owner, contact, blockData);
         Hash testHash = conversionController.hashKey();
         assertEquals(testHash, block.getOwnHash());
     }

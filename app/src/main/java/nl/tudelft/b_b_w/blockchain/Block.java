@@ -3,7 +3,7 @@ package nl.tudelft.b_b_w.blockchain;
 
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
-import nl.tudelft.b_b_w.blockchaincontroller.Conversion_Controller;
+import nl.tudelft.b_b_w.blockchaincontroller.ConversionController;
 
 /**
  * This class represents a block object.
@@ -29,7 +29,7 @@ public class Block {
         this.contact = contact;
         this.blockData = blockData;
 
-        final Conversion_Controller conversionController = new Conversion_Controller(blockOwner, contact, blockData);
+        final ConversionController conversionController = new ConversionController(blockOwner, contact, blockData);
         this.ownHash = conversionController.hashKey();
     }
 

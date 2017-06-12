@@ -17,9 +17,7 @@ import android.widget.Toast;
 import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.controller.API;
 import nl.tudelft.b_b_w.model.HashException;
-import nl.tudelft.b_b_w.model.TrustValues;
 import nl.tudelft.b_b_w.model.User;
-import nl.tudelft.b_b_w.model.block.Block;
 
 /**
  * Page which handles transactions between user and a contact.
@@ -43,8 +41,8 @@ public class TransactionActivity extends Activity {
         setContentView(R.layout.activity_transaction);
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         user = new User(settings.getString("userName", ""), settings.getString("iban", ""));
-        mAPI = new API(user, this);
         try {
+            mAPI = new API(user, this);
             addItemsOnSpinner();
         } catch (HashException e) {
             Toast.makeText(TransactionActivity.this, "Transaction failed: "
@@ -75,13 +73,13 @@ public class TransactionActivity extends Activity {
                 transactionName = String.valueOf(dialog.getSelectedItem());
                 EditText amountText = (EditText) findViewById(R.id.editText11);
                 final int amount = Integer.parseInt(amountText.getText().toString());
-                for (Block block : mAPI.getBlocks(user)) {
-                    if (block.getOwner().getName().equals(transactionName)) {
-                        mAPI.transaction(block, TrustValues.SUCCESFUL_TRANSACTION);
-                        Toast.makeText(TransactionActivity.this, "Send €" + amount + " to "
-                                + transactionName + "!", Toast.LENGTH_SHORT).show();
-                    }
-                }
+//                for (Block block : mAPI.getBlocks(user)) {
+//                    if (block.getOwner().getName().equals(transactionName)) {
+//                        mAPI.transaction(block, TrustValues.SUCCESFUL_TRANSACTION);
+//                        Toast.makeText(TransactionActivity.this, "Send €" + amount + " to "
+//                                + transactionName + "!", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
             }
         });
     }

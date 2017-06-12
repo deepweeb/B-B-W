@@ -22,7 +22,6 @@ import nl.tudelft.b_b_w.model.block.BlockType;
 public class BlockController {
 
     private User chainOwner;
-    private Context context;
     private GetDatabaseHandler getDatabaseHandler;
     private MutateDatabaseHandler mutateDatabaseHandler;
     private final String notAvailable = "N/A";
@@ -30,42 +29,20 @@ public class BlockController {
 
     public BlockController(User chainOwner, Context context) {
         this.chainOwner = chainOwner;
-        this.context = context;
         this.getDatabaseHandler = new GetDatabaseHandler(context);
         this.mutateDatabaseHandler = new MutateDatabaseHandler(context);
     }
 
-    public final boolean blockExists(String owner, String key, boolean revoked) {
+    private final boolean blockExists(String owner, String key, boolean revoked) {
         return getDatabaseHandler.blockExists(owner, key, revoked);
     }
 
-    public final void addBlockToChain(Block block) throws HashException {
-        if (block.isRevoked()) {
-            createRevokeBlock(block.getOwner(), block.getOwner().generatePublicKey(), block.getOwner().getIban());
-        } else {
-            createKeyBlock(block.getOwner(), block.getOwner().generatePublicKey());
-        }
+    public final void addBlockToChain(User user) throws HashException {
+        createKeyBlock(chainOwner, user);
+    }
 
-
-//        // Check if the block already exists
-//        String owner = block.getOwner().getName();
-//        Block latest = getDatabaseHandler.getLatestBlock(owner);
-//
-//        if (latest == null) {
-//            mutateDatabaseHandler.addBlock(block);
-//        } else if (latest.isRevoked()) {
-//            throw new RuntimeException("Error - Block is already revoked");
-//        } else {
-//            if (block.isRevoked()) {
-//                TrustValueController trustValueController = new TrustValueController(context);
-//                latest = trustValueController.revokedTrustValue(latest);
-//                mutateDatabaseHandler.updateBlock(latest);
-//                mutateDatabaseHandler.addBlock(block);
-//            } else {
-//                throw new RuntimeException("Error - Block already exists");
-//            }
-//        }
-//        return getBlocks(owner);
+    public final void revokeBlockFromChain(User user) throws HashException {
+        createRevokeBlock(chainOwner, user);
     }
 
     public final void addBlock(Block block) {
@@ -153,13 +130,12 @@ public class BlockController {
      * The initial trust value is zero.
      *
      * @param contact   of whom is the information
-     * @param publicKey public key you want to store
      * @return the newly created block
      * @throws Exception when the hashing algorithm is not available
      */
-    public Block createKeyBlock(User contact, String publicKey) throws
+    public Block createKeyBlock(User owner, User contact) throws
             HashException {
-        return createBlock(chainOwner, contact, publicKey, contact.getIban(), BlockType.ADD_KEY);
+        return createBlock(owner, contact, BlockType.ADD_KEY);
     }
 
     /**
@@ -167,14 +143,12 @@ public class BlockController {
      * The initial trust value is zero.
      *
      * @param contact   of whom is the information
-     * @param publicKey public key you want to store
-     * @param iban      IBAN number to store in this block
      * @return the newly created block
      * @throws Exception when the hashing algorithm is not available
      */
-    public Block createRevokeBlock(User contact, String publicKey, String iban)
+    public Block createRevokeBlock(User owner, User contact)
             throws HashException {
-        return createBlock(chainOwner, contact, publicKey, iban, BlockType.REVOKE_KEY);
+        return createBlock(owner, contact, BlockType.REVOKE_KEY);
     }
 
     /**
@@ -183,13 +157,11 @@ public class BlockController {
      *
      * @param owner     owner of the block
      * @param contact   of whom is the information
-     * @param publicKey public key you want to store
-     * @param iban      IBAN number to store in this block
      * @param blockType type of the block
      * @return the newly created block
      * @throws Exception when the hashing algorithm is not available
      */
-    private Block createBlock(User owner, User contact, String publicKey, String iban,
+    private Block createBlock(User owner, User contact,
             BlockType blockType) throws HashException {
         Block latest = getLatestBlock(owner.getName());
         if (latest == null) {
@@ -213,12 +185,10 @@ public class BlockController {
         blockData.setPreviousHashSender(contactBlockHash);
         blockData.setOwner(owner);
         blockData.setIban(contact);
-        blockData.setPublicKey(publicKey);
+        blockData.setPublicKey(contact.generatePublicKey());
         blockData.setTrustValue(TrustValues.INITIALIZED.getValue());
         final Block block = BlockFactory.createBlock(blockData);
         addBlock(block);
         return block;
     }
-
-
 }

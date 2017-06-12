@@ -19,35 +19,31 @@ public class API {
     private BlockVerificationController blockVerificationController;
 
 
-    public API(User owner, Context context) {
+    public API(User owner, Context context) throws HashException {
         this.blockController = new BlockController(owner, context);
         this.trustValueController = new TrustValueController(context);
         this.blockVerificationController = new BlockVerificationController(context);
+        blockController.createGenesis(owner);
     }
 
-    public void addBlockToChain(Block block) throws HashException {
-        blockController.addBlockToChain(block);
+    public void addContactToChain(User contact) throws HashException {
+        blockController.addBlockToChain(contact);
     }
 
-    public void addBlockToDatabase(Block block) throws HashException {
-        blockController.addBlock(block);
+    public void revokeContactFromChain(User contact) throws HashException {
+        blockController.revokeBlockFromChain(contact);
     }
 
-    public void makeGenesis(User user) throws HashException {
-        blockController.createGenesis(user);
+    public void addContactToDatabase(User owner, User contact) throws HashException {
+        blockController.createKeyBlock(owner, contact);
     }
 
-    public void revokeBlockFromChain(Block block) throws HashException {
-        blockController.revokeBlock(block);
+    public void addRevokeContactToDatabase(User owner, User contact) throws HashException {
+        blockController.createRevokeBlock(owner, contact);
     }
 
-    public List<Block> getBlocks(User owner) {
-        try {
-            return blockController.getBlocks(owner.getName());
-        } catch (HashException e) {
-            //do nothing
-        }
-        return null;
+    public List<Block> getBlocks(User owner) throws HashException {
+        return blockController.getBlocks(owner.getName());
     }
 
     public boolean isDatabaseEmpty() {

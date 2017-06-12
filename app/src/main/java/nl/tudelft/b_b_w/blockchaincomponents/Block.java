@@ -25,7 +25,7 @@ public class Block {
      * @param contact given the User object of the contact which the block concerns
      * @param blockData the data of the block such as hash, trust, etc.
      */
-    public Block(String blockOwner, User contact, BlockData blockData) {
+    public Block(String blockOwner, User contact, BlockData blockData) throws Exception {
         this.blockOwner = blockOwner;
         this.contact = contact;
         this.blockData = blockData;
@@ -122,8 +122,8 @@ public class Block {
      * This method returns the trust value of the block
      * @return int trust value of block.
      */
-    public final Hash getTrustValue() {
-        return blockData.getTrustValue()
+    public final int getTrustValue() {
+        return blockData.getTrustValue();
     }
 
     /**************************************END******************************************/
@@ -137,15 +137,13 @@ public class Block {
     }
 
 
-    public final Hash generateHash() {
+    /**
+     * This method generate & returns the ownHash of the block
+     * @return Hash object of the block's own hash
+     */
+    public final Hash generateHash() throws Exception {
         ConversionController conversionController = new ConversionController(blockOwner, contact, blockData);
-
- public ConversionController(String blockOwner, User contact, BlockData blockData)
-        return ownHash;
+        return conversionController.hashKey();
     }
-
-
-
-
 
 }

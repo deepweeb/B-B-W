@@ -12,7 +12,7 @@ import nl.tudelft.b_b_w.controller.ED25519;
 import static junit.framework.Assert.assertEquals;
 
 /**
- * Created by NOSLEEP on 12-Jun-17.
+ * Test class for the Chain class
  */
 public class ChainTest {
 

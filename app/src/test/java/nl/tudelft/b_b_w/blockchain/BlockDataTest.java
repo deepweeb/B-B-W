@@ -18,7 +18,7 @@ public class BlockDataTest {
     private int sequenceNumber;
     private Hash previousHashChain;
     private Hash previousHashSender;
-    private int trustValue;
+    private double trustValue;
 
     /**
      * Setting up the test object

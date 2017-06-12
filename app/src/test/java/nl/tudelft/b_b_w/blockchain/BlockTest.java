@@ -41,7 +41,7 @@ public class BlockTest {
     private int sequenceNumber;
     private Hash previousHashChain;
     private Hash previousHashSender;
-    private int trustValue;
+    private double trustValue;
 
     /**
      * The block.
@@ -68,7 +68,7 @@ public class BlockTest {
         contactIban = "Contact1Iban";
         //object to generate public key
         EdDSAPrivateKey edDSAPrivateKey2 =
-                ED25519.generatePrivateKey(Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000"));
+                ED25519.generatePrivateKey(Utils.hexToBytes("6900000000000000000000000000000000000000000000000000000000000005"));
         contactPublicKey = ED25519.getPublicKey(edDSAPrivateKey2);
         contact = new User(contactName, contactIban, contactPublicKey);
 

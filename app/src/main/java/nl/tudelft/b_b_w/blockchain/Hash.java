@@ -29,9 +29,7 @@ public class Hash {
     }
 
     /**
-     * This function checks whether two User objects are equal to each other.
-     * @param o an object
-     * @return true in case they are equals, otherwise false.
+     * @inheritDoc
      */
     @Override
     public boolean equals(Object o) {
@@ -42,6 +40,9 @@ public class Hash {
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public int hashCode() {
     return 0;

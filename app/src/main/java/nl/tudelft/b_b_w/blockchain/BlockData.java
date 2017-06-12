@@ -13,7 +13,7 @@ public class BlockData {
     private int sequenceNumber;
     private Hash previousHashChain;
     private Hash previousHashSender;
-    private int trustValue;
+    private double trustValue;
 
     /**
      * Constructor for the BlockData class
@@ -25,7 +25,7 @@ public class BlockData {
      * @param trustValue given trust value of the contact
      */
     public BlockData(BlockType blockType, int sequenceNumber, Hash previousHashChain,
-                     Hash previousHashSender, int trustValue) {
+                     Hash previousHashSender, double trustValue) {
         this.blockType = blockType;
         this.sequenceNumber = sequenceNumber;
         this.previousHashChain = previousHashChain;
@@ -70,7 +70,7 @@ public class BlockData {
      * Get the trust value of this block
      * @return the trust value of this block
      */
-    public int getTrustValue() {
+    public double getTrustValue() {
         return trustValue;
     }
 

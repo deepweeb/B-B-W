@@ -28,9 +28,7 @@ public class Block {
         this.owner = blockOwner;
         this.contact = contact;
         this.blockData = blockData;
-
-        final ConversionController conversionController = new ConversionController(blockOwner, contact, blockData);
-        this.ownHash = conversionController.hashKey();
+        this.ownHash = new ConversionController(blockOwner, contact, blockData).hashKey();
     }
 
     /***********************************************************************************

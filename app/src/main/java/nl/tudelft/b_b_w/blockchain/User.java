@@ -44,7 +44,7 @@ public class User {
 
     /**
      * publicKey function
-     * @return Public_Key object of this.user
+     * @return EdDSAPublicKey object of this.user
      */
     public EdDSAPublicKey getPublicKey() {
         return this.publicKey;

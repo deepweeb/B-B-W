@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 /**
  * Class for creating an acquaintance,
- * this is someone who you paired with but is not in your contact list yet.
+ * This is someone who you paired with but is not in your contact list yet.
  * This is a data transfer object.
  */
 

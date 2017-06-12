@@ -13,8 +13,8 @@ import nl.tudelft.b_b_w.blockchain.User;
  * Class to convert values into a hashed value. Use BlockData.calculateHash instead.
  */
 public class ConversionController {
-    // Variables which we need to create a hashed key
 
+    // Variables which we need to create a hashed key
     private String ownerName;
     private String ownerIban;
     private EdDSAPublicKey ownerPublicKey;
@@ -27,7 +27,7 @@ public class ConversionController {
     private int sequenceNumber;
     private Hash previousHashChain;
     private Hash previousHashSender;
-    private int trustValue;
+    private double trustValue;
 
     /**
      *

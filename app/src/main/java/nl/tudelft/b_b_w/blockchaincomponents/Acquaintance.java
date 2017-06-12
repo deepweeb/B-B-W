@@ -5,7 +5,7 @@ import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import java.util.ArrayList;
 
 /**
- * Class for creating aan acquaintance,
+ * Class for creating an acquaintance,
  * this is someone who you paired with but is not in your contact list yet.
  * This is a data transfer object.
  */
@@ -28,22 +28,11 @@ public class Acquaintance extends User{
     }
 
     /**
-     * getUser function
-     *
-     * @return user object of this.Acquaintance
-     */
-    public User getUser() {
-        return this.user;
-    }
-
-    /**
      * getMultichain function
-     *
      * @return List<Chain> of the multichain of this.Acquaintance
      */
     public ArrayList<Chain> getMultichain() {
         return this.multichain;
     }
-
 
 }

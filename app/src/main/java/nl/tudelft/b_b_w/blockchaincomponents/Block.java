@@ -3,18 +3,19 @@ package nl.tudelft.b_b_w.blockchaincomponents;
 
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
-import nl.tudelft.b_b_w.controller.ConversionController;
+import java.security.acl.Owner;
+
+import nl.tudelft.b_b_w.blockchaincontroller.Conversion_Controller;
 
 /**
  * This class represents a block object.
  */
 public class Block {
 
-
     /**
      * Properties of a Block object
      */
-    private String blockOwner;
+    private User owner;
     private User contact;
     private BlockData blockData;
     private Hash ownHash;
@@ -25,21 +26,51 @@ public class Block {
      * @param contact given the User object of the contact which the block concerns
      * @param blockData the data of the block such as hash, trust, etc.
      */
-    public Block(String blockOwner, User contact, BlockData blockData) throws Exception {
-        this.blockOwner = blockOwner;
+    public Block(User blockOwner, User contact, BlockData blockData) throws Exception {
+        this.owner = blockOwner;
         this.contact = contact;
         this.blockData = blockData;
-        this.ownHash = generateHash();
+
+        final Conversion_Controller conversionController = new Conversion_Controller(blockOwner, contact, blockData);
+        this.ownHash = conversionController.hashKey();
     }
 
+    /***********************************************************************************
+     * This part below contains methods to get the attributes of the owner.
+     */
+    /**
+     * This method returns the chainOwner User of the block object.
+     * @return user object of the chain owner
+     */
+    public User getBlockOwner() {
+        return owner;
+    }
 
     /**
-     * This method returns the chainOwner of the block object.
-     * @return name of the chain owner
+     * This method returns the name of the owner of the block object.
+     * @return the owner's name.
      */
-    public String getBlockOwner() {
-        return blockOwner;
+    public String getOwnerName() {
+        return owner.getName();
     }
+
+    /**
+     * This method returns the iban of the owner of the block object.
+     * @return the owner's iban String.
+     */
+    public String getOwnerIban() {
+        return owner.getIban();
+    }
+
+    /**
+     * This method returns the iban of the owner of the block object.
+     * @return the owner's iban String.
+     */
+    public EdDSAPublicKey getOwnerPublicKey() {
+        return owner.getPublicKey();
+    }
+    
+    /**************************************END******************************************/
 
 
     /***********************************************************************************
@@ -134,16 +165,6 @@ public class Block {
      */
     public final Hash getOwnHash() {
         return ownHash;
-    }
-
-
-    /**
-     * This method generate & returns the ownHash of the block
-     * @return Hash object of the block's own hash
-     */
-    public final Hash generateHash() throws Exception {
-        ConversionController conversionController = new ConversionController(blockOwner, contact, blockData);
-        return conversionController.hashKey();
     }
 
 }

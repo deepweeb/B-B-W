@@ -7,10 +7,14 @@ import net.i2p.crypto.eddsa.Utils;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import nl.tudelft.b_b_w.controller.ED25519;
 
+import static junit.framework.Assert.assertEquals;
+
 /**
- * Created by NOSLEEP on 08-Jun-17.
+ * Testing class for Acquaintance.java
  */
 public class AcquaintanceTest {
 
@@ -20,7 +24,8 @@ public class AcquaintanceTest {
     private String name;
     private String iban;
     private EdDSAPublicKey publicKey;
-    private User user;
+    private ArrayList<Chain> multiChain;
+
     private Acquaintance acquaintance;
 
     /**
@@ -32,18 +37,15 @@ public class AcquaintanceTest {
         iban = "NL642335674446";
         EdDSAPrivateKey edDSAPrivateKey = ED25519.generatePrivateKey(Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000"));
         publicKey = ED25519.getPublicKey(edDSAPrivateKey);
-        user = new User(name, iban, publicKey);
-        private User user;
-    }
 
-    @Test
-    public void getUser() throws Exception {
+        multiChain = new ArrayList<Chain>();
+        acquaintance = new Acquaintance(name, iban, publicKey, multiChain);
 
     }
 
     @Test
     public void getMultichain() throws Exception {
-
+        assertEquals(multiChain, acquaintance.getMultichain());
     }
 
 }

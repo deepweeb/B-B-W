@@ -1,37 +1,47 @@
 package nl.tudelft.b_b_w.blockchaincomponents;
 
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+import net.i2p.crypto.eddsa.Utils;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import nl.tudelft.b_b_w.blockchaincontroller.Conversion_Controller;
+import nl.tudelft.b_b_w.controller.ED25519;
 
 import static junit.framework.Assert.assertEquals;
 
 /**
- * This test class tests the functionality of the object.
+ * Junit Testing class of the Block class
  */
 public class BlockTest {
+    /**
+     * Properties of the owner of the block
+     */
+    private User owner;
+    private String ownerName;
+    private String ownerIban;
+    private EdDSAPublicKey ownerPublicKey;
 
 
     /**
-     * The contact user attributes.
+     * Properties of the contact/ block sender
      */
-    private String nameContact;
-    private String ibanContact;
-    private Public_Key publicKeyContact;
     private User contact;
-    private String hash;
+    private String contactName;
+    private String contactIban;
+    private EdDSAPublicKey contactPublicKey;
 
     /**
-     * The block owner attributes.
-     */
-    private String nameOwner;
-    private String ibanOwner;
-    private Public_Key publicKeyOwner;
-    private User blockOwner;
-
-    /**
-     * The block data.
+     * Properties of a BlockData object
      */
     private BlockData blockData;
+    private Block_Type blockType;
+    private int sequenceNumber;
+    private Hash previousHashChain;
+    private Hash previousHashSender;
+    private int trustValue;
 
     /**
      * The block.
@@ -42,58 +52,65 @@ public class BlockTest {
      * Set up the before testing.
      */
     @Before
-    public void setUpBlock() {
-        nameContact = "Naqib";
-        ibanContact = "NL642335674446";
-        publicKeyContact = new Public_Key();
-        contact = new User(nameContact, ibanContact, publicKeyContact);
-        nameOwner = "blockOwnie";
+    public void setUpBlock() throws Exception {
 
-        block = new Block(contact, nameOwner, blockData);
+        //setting up owner
+        ownerName = "BlockOwner1";
+        ownerIban = "Owner1Iban";
+        //object to generate public key
+        EdDSAPrivateKey edDSAPrivateKey1 =
+                ED25519.generatePrivateKey(Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000"));
+        ownerPublicKey = ED25519.getPublicKey(edDSAPrivateKey1);
+        owner = new User(ownerName, ownerIban, ownerPublicKey);
 
+        //setting up contact
+        contactName = "Contact1";
+        contactIban = "Contact1Iban";
+        //object to generate public key
+        EdDSAPrivateKey edDSAPrivateKey2 =
+                ED25519.generatePrivateKey(Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000"));
+        contactPublicKey = ED25519.getPublicKey(edDSAPrivateKey2);
+        contact = new User(contactName, contactIban, contactPublicKey);
 
+        //setting up block data
+        blockType = Block_Type.ADD_KEY;
+        sequenceNumber = 1;
+        previousHashChain = new Hash("Contact1PreviousHashChain");
+        previousHashSender = new Hash("Contact1PreviousHashSender");
+        trustValue = 0;
+        blockData = new BlockData(blockType, sequenceNumber, previousHashChain, previousHashSender, trustValue);
+
+        //setting up block
+        block = new Block(owner, contact, blockData);
     }
 
-    /**
-     * Test whether the getContact method returns the correct attribute.
-     *
-     * @throws Exception
-     */
     @Test
-    public void testGetContact() throws Exception {
+    public void getterTests() throws Exception {
+
+        //testing block owner getters
+        assertEquals(owner, block.getBlockOwner());
+        assertEquals(ownerName, block.getOwnerName());
+        assertEquals(ownerIban, block.getOwnerIban());
+        assertEquals(ownerPublicKey, block.getOwnerPublicKey());
+
+        //testing contact of the block getters
         assertEquals(contact, block.getContact());
-    }
+        assertEquals(contactName, block.getContactName());
+        assertEquals(contactIban, block.getContactIban());
+        assertEquals(contactPublicKey, block.getContactPublicKey());
 
-    /**
-     * Test whether the getBlockOwner method returns the correct attribute.
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testGetBlockOwner() throws Exception {
-        assertEquals(nameOwner, block.getBlockOwner());
-    }
-
-    /**
-     * Test whether the getBlockData method returns the correct attribute.
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testGetBlockData() throws Exception {
+        //testing get data getters
         assertEquals(blockData, block.getBlockData());
+        assertEquals(sequenceNumber, block.getSequenceNumber());
+        assertEquals(previousHashChain, block.getPreviousHashChain());
+        assertEquals(previousHashSender, block.getPreviousHashSender());
+        assertEquals(trustValue, block.getTrustValue());
     }
 
-
-//    @Test
-//    public void testGetPreviousHashSender() {
-//        String prevHashSender = "Hassan";
-//        block.getBlockData().setPreviousHashSender(prevHashSender);
-//        assertEquals(prevHashSender, block.getPreviousHashSender());
-//    }
-
-
-
-
-
+    @Test
+    public void getOwnHash() throws Exception {
+        Conversion_Controller conversionController = new Conversion_Controller(owner, contact, blockData);
+        Hash testHash = conversionController.hashKey();
+        assertEquals(testHash, block.getOwnHash());
+    }
 }

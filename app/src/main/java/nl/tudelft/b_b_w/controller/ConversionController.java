@@ -1,50 +1,31 @@
 package nl.tudelft.b_b_w.controller;
 
-import net.i2p.crypto.eddsa.EdDSAPublicKey;
-
 import java.security.MessageDigest;
-
-import nl.tudelft.b_b_w.blockchaincomponents.BlockData;
-import nl.tudelft.b_b_w.blockchaincomponents.Block_Type;
-import nl.tudelft.b_b_w.blockchaincomponents.Hash;
-import nl.tudelft.b_b_w.blockchaincomponents.User;
 
 /**
  * Class to convert values into a hashed value. Use BlockData.calculateHash instead.
  */
+@Deprecated
 public class ConversionController {
     // Variables which we need to create a hashed key
     private String blockOwner;
-    private String contactName;
+    private String senderPublicKey;
+    private String previousBlockHash;
+    private String contactBlockHash;
     private String contactIban;
-    private EdDSAPublicKey contactPublicKey;
-
-    private Block_Type blockType;
-    private int sequenceNumber;
-    private Hash previousHashChain;
-    private Hash previousHashSender;
-    private int trustValue;
 
     /**
+     * Instantiating the necessary variables
      *
-     * @param blockOwner
-     * @param contact
-     * @param blockData
+     * @param _senderPublicKey PublicKey of the block
+     * @param _owner           Owner of the block
      */
-    public ConversionController(String blockOwner, User contact, BlockData blockData)
-    {
-        this.blockOwner = blockOwner;
-
-        this.contactName = contact.getName();
-        this.contactIban = contact.getIban();
-        this.contactPublicKey = contact.getPublicKey();
-
-        this.blockType = blockData.getBlockType();
-        this.sequenceNumber = blockData.getSequenceNumber();
-        this.previousHashChain = blockData.getPreviousHashChain();
-        this.previousHashSender = blockData.getPreviousHashSender();
-        this.trustValue = blockData.getTrustValue();
-
+    public ConversionController(String _owner, String _senderPublicKey, String _previousBlockHash, String _contactBlockHash, String _contactIban) {
+        blockOwner = _owner;
+        senderPublicKey = _senderPublicKey;
+        previousBlockHash = _previousBlockHash;
+        contactBlockHash = _contactBlockHash;
+        contactIban = _contactIban;
     }
 
     /**
@@ -53,19 +34,12 @@ public class ConversionController {
      *
      * @return the Hashed Key
      */
-    public final Hash hashKey() throws Exception {
+    public final String hashKey() throws Exception {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
-        String text = blockOwner +
-                contactName +
-                contactIban +
-                contactPublicKey.toString() +
-                blockType.name() +
-                String.valueOf(sequenceNumber) +
-                previousHashChain.toString() +
-                previousHashSender.toString() +
-                String.valueOf(trustValue);
+        String text = blockOwner + senderPublicKey + previousBlockHash + contactBlockHash + contactIban;
         md.update(text.getBytes("UTF-8"));
         byte[] digest = md.digest();
-        return new Hash(String.format("%064x", new java.math.BigInteger(1, digest)));
+        String hash = String.format("%064x", new java.math.BigInteger(1, digest));
+        return hash;
     }
 }

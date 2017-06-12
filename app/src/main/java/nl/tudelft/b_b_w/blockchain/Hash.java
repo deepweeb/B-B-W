@@ -41,4 +41,9 @@ public class Hash {
             return this.hashString.equals(o.toString());
         }
     }
+
+    @Override
+    public int hashCode() {
+    return 0;
+    }
 }

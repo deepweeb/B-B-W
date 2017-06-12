@@ -61,17 +61,17 @@ public class ConversionController {
      */
     public final Hash hashKey() throws Exception {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
-        String text =  ownerName +
-                ownerIban +
-                ownerPublicKey.toString() +
-                contactName +
-                contactIban +
-                contactPublicKey.toString() +
-                blockType.name() +
-                String.valueOf(sequenceNumber) +
-                previousHashChain.toString() +
-                previousHashSender.toString() +
-                String.valueOf(trustValue);
+        String text =  ownerName
+                + ownerIban
+                + ownerPublicKey.toString()
+                + contactName
+                + contactIban
+                + contactPublicKey.toString()
+                + blockType.name()
+                + String.valueOf(sequenceNumber)
+                + previousHashChain.toString()
+                + previousHashSender.toString()
+                + String.valueOf(trustValue);
         md.update(text.getBytes("UTF-8"));
         byte[] digest = md.digest();
         return new Hash(String.format("%064x", new java.math.BigInteger(1, digest)));

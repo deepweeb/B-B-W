@@ -149,7 +149,7 @@ public class Block {
      * This method returns the trust value of the block
      * @return int trust value of block.
      */
-    public final int getTrustValue() {
+    public final double getTrustValue() {
         return blockData.getTrustValue();
     }
 

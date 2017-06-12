@@ -1,5 +1,7 @@
 package nl.tudelft.b_b_w.blockchaincomponents;
 
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+
 import java.util.ArrayList;
 
 /**
@@ -8,7 +10,7 @@ import java.util.ArrayList;
  * This is a data transfer object.
  */
 
-public class Acquaintance {
+public class Acquaintance extends User{
 
     /**
      * Properties of a Acquaintance
@@ -18,12 +20,10 @@ public class Acquaintance {
 
     /**
      * Constructor for user class
-     *
-     * @param user       given user
      * @param multichain given multichain
      */
-    public Acquaintance(User user, ArrayList<Chain> multichain) {
-        this.user = user;
+    public Acquaintance(String name, String iban, EdDSAPublicKey publicKey, ArrayList<Chain> multichain) {
+        super(name, iban, publicKey);
         this.multichain = multichain;
     }
 

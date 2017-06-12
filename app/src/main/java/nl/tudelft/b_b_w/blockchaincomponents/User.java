@@ -1,7 +1,9 @@
 package nl.tudelft.b_b_w.blockchaincomponents;
 
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+
 /**
- * Class for creating a user
+ * Class for creating a user object
  */
 public class User {
 
@@ -10,7 +12,7 @@ public class User {
      */
     private String name;
     private String iban;
-    private Public_Key publicKey;
+    private EdDSAPublicKey publicKey;
 
     /**
      * Constructor for user class
@@ -18,7 +20,7 @@ public class User {
      * @param iban given iban
      * @param publicKey given publicKey object
      */
-    public User(String name, String iban, Public_Key publicKey) {
+    public User(String name, String iban, EdDSAPublicKey publicKey) {
         this.name = name;
         this.iban = iban;
         this.publicKey = publicKey;
@@ -44,7 +46,7 @@ public class User {
      * publicKey function
      * @return Public_Key object of this.user
      */
-    public Public_Key getPublicKey() {
+    public EdDSAPublicKey getPublicKey() {
         return this.publicKey;
     }
 

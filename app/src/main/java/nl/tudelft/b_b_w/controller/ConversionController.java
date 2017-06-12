@@ -1,18 +1,25 @@
 package nl.tudelft.b_b_w.controller;
 
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+
 import java.security.MessageDigest;
+
+import nl.tudelft.b_b_w.blockchaincomponents.BlockData;
+import nl.tudelft.b_b_w.blockchaincomponents.User;
 
 /**
  * Class to convert values into a hashed value. Use BlockData.calculateHash instead.
  */
-@Deprecated
 public class ConversionController {
     // Variables which we need to create a hashed key
     private String blockOwner;
-    private String senderPublicKey;
+    private String contactName;
+    private String contactIban;
+    private EdDSAPublicKey contactPublicKey;
+
     private String previousBlockHash;
     private String contactBlockHash;
-    private String contactIban;
+
 
     /**
      * Instantiating the necessary variables
@@ -20,9 +27,13 @@ public class ConversionController {
      * @param _senderPublicKey Public_Key of the block
      * @param _owner           Owner of the block
      */
-    public ConversionController(String _owner, String _senderPublicKey, String _previousBlockHash, String _contactBlockHash, String _contactIban) {
-        blockOwner = _owner;
-        senderPublicKey = _senderPublicKey;
+    public ConversionController(String blockOwner, User contact, BlockData blockData)
+    {
+        blockOwner = blockOwner;
+        contactName = contact.getName();
+        contactIban = contact.getIban();
+        contactPublicKey = contact.getPublicKey();
+
         previousBlockHash = _previousBlockHash;
         contactBlockHash = _contactBlockHash;
         contactIban = _contactIban;

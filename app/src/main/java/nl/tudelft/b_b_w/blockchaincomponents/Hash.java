@@ -1,7 +1,7 @@
 package nl.tudelft.b_b_w.blockchaincomponents;
 
 /**
- * Class for creating a user
+ * Class for creating a Hash object
  */
 
 public class Hash {
@@ -9,25 +9,32 @@ public class Hash {
     /**
      * Properties of a hash
      */
-    private String hash;
+    private String hashString;
 
+    /**
+     * Constructor for Hash class
+     * @param hash given a hash String
+     */
     public Hash(String hash) {
-        this.hash = hash;
+        this.hashString = hash;
     }
 
+    /**
+     * toString() getter implementation
+     * @return String representation of the hash
+     */
     @Override
     public String toString() {
-        return this.hash;
+        return this.hashString;
     }
 
     /**
      * This function checks whether two User objects are equal to each other.
-     *
      * @param o an object
      * @return true in case they are equals, otherwise false.
      */
     @Override
     public boolean equals(Object o) {
-        return this.hash.equals(o.toString());
+        return this.hashString.equals(o.toString());
     }
 }

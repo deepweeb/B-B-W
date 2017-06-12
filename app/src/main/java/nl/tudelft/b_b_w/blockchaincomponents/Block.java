@@ -1,60 +1,93 @@
 package nl.tudelft.b_b_w.blockchaincomponents;
 
 
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+
+import nl.tudelft.b_b_w.controller.ConversionController;
+
 /**
  * This class represents a block object.
  */
 public class Block {
 
-    private User contact;
-    private String blockOwner;
-    private BlockData blockData;
 
     /**
-     * This method constructs an block object.
-     *
-     * @param contact    a contact.
-     * @param blockOwner the owner of the chain.
-     * @param blockData  some block data.
+     * Properties of a Block object
      */
-    public Block(User contact, String blockOwner, BlockData blockData) {
-        this.contact = contact;
+    private String blockOwner;
+    private User contact;
+    private BlockData blockData;
+    private Hash ownHash;
+
+    /**
+     * Constructor for the BlockData class
+     * @param blockOwner given the name of the owner of the chain this block belongs to
+     * @param contact given the User object of the contact which the block concerns
+     * @param blockData the data of the block such as hash, trust, etc.
+     */
+    public Block(String blockOwner, User contact, BlockData blockData) {
         this.blockOwner = blockOwner;
+        this.contact = contact;
         this.blockData = blockData;
+        this.ownHash = generateHash();
     }
+
+
+    /**
+     * This method returns the chainOwner of the block object.
+     * @return name of the chain owner
+     */
+    public String getBlockOwner() {
+        return blockOwner;
+    }
+
+
+    /***********************************************************************************
+     * This part below contains methods to get the attributes of the contact.
+      */
 
     /**
      * This method returns the contact of the block object.
-     *
      * @return the contact object.
      */
     public User getContact() {
         return contact;
     }
 
-
     /**
-     * This method returns the chainOwner of the block object.
-     *
-     * @return chain owner.
+     * This method returns the name of the contact of the block object.
+     * @return the contact's name.
      */
-    public String getBlockOwner() {
-        return blockOwner;
+    public String getContactName() {
+        return contact.getName();
     }
 
     /**
-     * Boolean indicating if this block is revoked.
-     *
-     * @return if this block is a revoke block
+     * This method returns the iban of the contact of the block object.
+     * @return the contact's iban String.
      */
-    public final boolean isRevoked() {
-        return blockData.getBlockType().equals(BlockType.REVOKE_KEY);
+    public String getContactIban() {
+        return contact.getIban();
     }
+
+    /**
+     * This method returns the iban of the contact of the block object.
+     * @return the contact's iban String.
+     */
+    public EdDSAPublicKey getContactPublicKey() {
+        return contact.getPublicKey();
+    }
+
+    /**************************************END******************************************/
+
+
+    /***********************************************************************************
+    * This part below contains methods to get the attributes of the contact.
+    */
 
     /**
      * This method returns the data of the block object.
-     *
-     * @return the block data.
+     * @return the BlockData object of the Block.
      */
     public BlockData getBlockData() {
         return blockData;
@@ -62,17 +95,15 @@ public class Block {
 
 
     /**
-     * Default getter for own block hash
-     *
-     * @return own hash
+     * This method returns the sequence number of the block
+     * @return the sequence number of the block
      */
-    public final Hash getOwnHash() {
-        return blockData.getOwnHash();
+    public final int getSequenceNumber() {
+        return blockData.getSequenceNumber();
     }
 
     /**
-     * Default getter for previous block hash of chain
-     *
+     * This method returns the hash of the previous block of the chain
      * @return previous hash of chain
      */
     public final Hash getPreviousHashChain() {
@@ -80,33 +111,39 @@ public class Block {
     }
 
     /**
-     * Default getter for previous block hash of chain
-     *
-     * @return previous hash of chain
+     * This method returns the hash of the block of the contact/  block sender.
+     * @return hash of sender block
      */
     public final Hash getPreviousHashSender() {
         return blockData.getPreviousHashSender();
     }
 
+    /**
+     * This method returns the trust value of the block
+     * @return int trust value of block.
+     */
+    public final Hash getTrustValue() {
+        return blockData.getTrustValue()
+    }
+
+    /**************************************END******************************************/
 
     /**
-     * Default getter for sequence number
-     *
-     * @return the sequence number of the block
+     * This method returns the hash of the block
+     * @return Hash object of the block's hash
      */
-    public final int getSequenceNumber() {
-        return blockData.getSequenceNumber();
+    public final Hash getOwnHash() {
+        return ownHash;
     }
 
 
-    /**
-     * Default getter for public key
-     *
-     * @return public key of the block
-     */
-    public final Public_Key getPublicKey() {
-        return contact.getPublicKey();
+    public final Hash generateHash() {
+        ConversionController conversionController = new ConversionController(blockOwner, contact, blockData);
+
+ public ConversionController(String blockOwner, User contact, BlockData blockData)
+        return ownHash;
     }
+
 
 
 

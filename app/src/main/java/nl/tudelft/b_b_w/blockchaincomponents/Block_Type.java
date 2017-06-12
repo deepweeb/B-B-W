@@ -4,7 +4,7 @@ package nl.tudelft.b_b_w.blockchaincomponents;
 /**
  * This is a enumeration for the type of block.
  */
-public enum BlockType {
+public enum Block_Type {
 
     /**
      * Genesis block type

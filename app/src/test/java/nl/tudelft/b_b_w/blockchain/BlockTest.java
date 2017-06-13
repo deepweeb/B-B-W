@@ -7,7 +7,6 @@ import net.i2p.crypto.eddsa.Utils;
 import org.junit.Before;
 import org.junit.Test;
 
-import nl.tudelft.b_b_w.blockchaincontroller.ConversionController;
 import nl.tudelft.b_b_w.controller.ED25519;
 
 import static junit.framework.Assert.assertEquals;
@@ -107,10 +106,4 @@ public class BlockTest {
         assertEquals(trustValue, block.getTrustValue());
     }
 
-    @Test
-    public void getOwnHash() throws Exception {
-        ConversionController conversionController = new ConversionController(owner, contact, blockData);
-        Hash testHash = conversionController.hashKey();
-        assertEquals(testHash, block.getOwnHash());
-    }
 }

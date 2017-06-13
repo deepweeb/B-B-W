@@ -18,6 +18,7 @@ public class Chain {
 
     /**
      * Constructor for user class
+     *
      * @param chainOwner given name
      */
     public Chain(User chainOwner) {
@@ -26,6 +27,7 @@ public class Chain {
 
     /**
      * getChainOwner() function
+     *
      * @return owner User object of the Chain
      */
     public User getChainOwner() {
@@ -34,6 +36,7 @@ public class Chain {
 
     /**
      * getChain() function
+     *
      * @return ArrayList of Blocks that represent this user's chain
      */
     public ArrayList<Block> getChain() {

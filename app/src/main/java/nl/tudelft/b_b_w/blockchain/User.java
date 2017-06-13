@@ -16,8 +16,9 @@ public class User {
 
     /**
      * Constructor for user class
-     * @param name given name
-     * @param iban given iban
+     *
+     * @param name      given name
+     * @param iban      given iban
      * @param publicKey given publicKey object
      */
     public User(String name, String iban, EdDSAPublicKey publicKey) {
@@ -28,6 +29,7 @@ public class User {
 
     /**
      * getName function
+     *
      * @return name of this.user
      */
     public String getName() {
@@ -36,6 +38,7 @@ public class User {
 
     /**
      * getIban function
+     *
      * @return iban number of this.user
      */
     public String getIban() {
@@ -44,6 +47,7 @@ public class User {
 
     /**
      * publicKey function
+     *
      * @return EdDSAPublicKey object of this.user
      */
     public EdDSAPublicKey getPublicKey() {

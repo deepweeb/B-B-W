@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * This is a data transfer object.
  */
 
-public class Acquaintance extends User{
+public class Acquaintance extends User {
 
     /**
      * Properties of a Acquaintance
@@ -19,6 +19,7 @@ public class Acquaintance extends User{
 
     /**
      * Constructor for user class
+     *
      * @param multichain given multichain
      */
     public Acquaintance(String name, String iban, EdDSAPublicKey publicKey, ArrayList<Chain> multichain) {
@@ -28,6 +29,7 @@ public class Acquaintance extends User{
 
     /**
      * getMultichain function
+     *
      * @return List<Chain> of the multichain of this.Acquaintance
      */
     public ArrayList<Chain> getMultichain() {

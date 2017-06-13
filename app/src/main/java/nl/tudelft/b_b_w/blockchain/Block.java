@@ -32,7 +32,7 @@ public class Block {
      * @param contact    given the User object of the contact which the block concerns
      * @param blockData  the data of the block such as hash, trust, etc.
      */
-    public Block(User blockOwner, User contact, BlockData blockData) throws Exception {
+    public Block(User blockOwner, User contact, BlockData blockData) throws HashException {
         this.owner = blockOwner;
         this.contact = contact;
         this.blockData = blockData;

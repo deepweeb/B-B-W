@@ -5,7 +5,6 @@ import android.content.Context;
 import java.util.List;
 
 import nl.tudelft.b_b_w.model.HashException;
-import nl.tudelft.b_b_w.model.TrustValues;
 import nl.tudelft.b_b_w.model.User;
 import nl.tudelft.b_b_w.model.block.Block;
 
@@ -48,18 +47,23 @@ public class API {
         return blockVerificationController.isDatabaseEmpty();
     }
 
-    public void transaction(Block block, TrustValues type) {
-        switch (type) {
-            case SUCCESFUL_TRANSACTION: trustValueController.successfulTransaction(block);
-                break;
-            case FAILED_TRANSACTION: trustValueController.failedTransaction(block);
-                break;
-            case VERIFIED: trustValueController.verifyIBAN(block);
-                break;
-            case REVOKED: trustValueController.revokedTrustValue(block);
-                break;
-            default: //do nothing
-                break;
-        }
+    public void successfulTransaction(Block block) {
+        Block updatedBlock = TrustController.succesfulTransaction(block);
+        blockController.addBlock(updatedBlock);
+    }
+
+    public void failedTransaction(Block block) {
+        Block updatedBlock = TrustController.failedTransaction(block);
+        blockController.addBlock(updatedBlock);
+    }
+
+    public void verifyIBAN(Block block) {
+        Block updatedBlock = TrustController.verifiedIBAN(block);
+        blockController.addBlock(updatedBlock);
+    }
+
+    public void revokedBlock(Block block) {
+        Block updatedBlock = TrustController.revokeBlock(block);
+        blockController.addBlock(updatedBlock);
     }
 }

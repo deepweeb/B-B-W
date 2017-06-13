@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.controller.API;
-import nl.tudelft.b_b_w.controller.ConversionController;
+import nl.tudelft.b_b_w.model.HashException;
 import nl.tudelft.b_b_w.model.User;
 
 /**
@@ -82,7 +82,11 @@ public class FriendsPageActivity extends Activity {
     @Override
     protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAPI = new API(user, this);
+        try {
+            mAPI = new API(user, this);
+        } catch (HashException e) {
+            //do nothing
+        }
 
         setContentView(R.layout.activity_friends_page);
 
@@ -95,9 +99,13 @@ public class FriendsPageActivity extends Activity {
         ibanNumber = contact.getIban();
         publicKey = contact.generatePublicKey();
 
-        userLatestBlockHash = mAPI.getBlocks(user).get(
-                mAPI.getBlocks(user).size() - 1).getOwnHash();
-        contactGenesisBlockHash = mAPI.getBlocks(contact).get(0).getOwnHash();
+        try {
+            userLatestBlockHash = mAPI.getBlocks(user).get(
+                    mAPI.getBlocks(user).size() - 1).getOwnHash();
+            contactGenesisBlockHash = mAPI.getBlocks(contact).get(0).getOwnHash();
+        } catch (HashException e) {
+            //do nothing
+        }
         //Displaying the information of the contact whose you are paired with
         textViewIban = (TextView) findViewById(R.id.editIban);
         textViewContact = (TextView) findViewById(R.id.senderName);
@@ -121,14 +129,8 @@ public class FriendsPageActivity extends Activity {
      * @param view The view
      */
     public final void onAddThisPersonToContactList(View view) throws Exception {
-
-        ConversionController conversionController = new ConversionController(user.getName(),
-                publicKey,
-                userLatestBlockHash, contactGenesisBlockHash, ibanNumber);
-        String hash = conversionController.hashKey();
-
         try {
-            mAPI.addBlockToChain(mAPI.getBlocks(contact).get(0));
+//            mAPI.addBlockToChain(mAPI.getBlocks(contact).get(0));
         } catch (Exception e) {
             Toast.makeText(this, "Sorry, this contact is already added!",
                     Toast.LENGTH_SHORT).show();

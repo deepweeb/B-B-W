@@ -12,14 +12,14 @@ public enum TrustValues {
     /**
      * value of the predefined trust values
      */
-    private int value;
+    private double value;
 
     /**
      * Constructor to initialize trustvalue
      *
      * @param _value given trust value
      */
-    TrustValues(int _value) {
+    TrustValues(double _value) {
         this.value = _value;
     }
 
@@ -28,7 +28,7 @@ public enum TrustValues {
      *
      * @return trust value
      */
-    public int getValue() {
+    public double getValue() {
         return this.value;
     }
 }

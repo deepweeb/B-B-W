@@ -49,7 +49,7 @@ public class BlockData {
     /**
      * The trust value of this block
      */
-    private int trustValue;
+    private double trustValue;
 
     /**
      * Get the block type
@@ -173,7 +173,7 @@ public class BlockData {
      *
      * @return the trust value of this block
      */
-    public int getTrustValue() {
+    public double getTrustValue() {
         return trustValue;
     }
 
@@ -182,7 +182,7 @@ public class BlockData {
      *
      * @param trustValue the trust value of this block
      */
-    public void setTrustValue(int trustValue) {
+    public void setTrustValue(double trustValue) {
         this.trustValue = trustValue;
     }
 }

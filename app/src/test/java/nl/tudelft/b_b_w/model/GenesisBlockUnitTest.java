@@ -147,7 +147,7 @@ public class GenesisBlockUnitTest {
      */
     @Test
     public void testTrustGenesis() {
-        assertEquals(TrustValues.INITIALIZED.getValue(), genesisBlockA.getTrustValue());
+        assertEquals(TrustValues.INITIALIZED.getValue(), genesisBlockA.getTrustValue(), 1E-15);
     }
 
     /**

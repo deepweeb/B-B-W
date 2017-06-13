@@ -75,7 +75,7 @@ abstract class AbstractDatabaseHandler extends SQLiteOpenHelper {
                 + KEY_PREV_HASH_SENDER + " TEXT NOT NULL,"
                 + KEY_PUBLIC_KEY + " TEXT NOT NULL,"
                 + KEY_IBAN_KEY + " TEXT NOT NULL,"
-                + KEY_TRUST_VALUE + " INTEGER NOT NULL,"
+                + KEY_TRUST_VALUE + " DECIMAL(8,3) NOT NULL,"
                 + KEY_REVOKE + " BOOLEAN DEFAULT FALSE NOT NULL,"
                 + KEY_CREATED_AT + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,"
                 + " PRIMARY KEY (owner, publicKey, sequenceNumber)"

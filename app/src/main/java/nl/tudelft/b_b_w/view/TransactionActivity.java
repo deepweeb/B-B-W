@@ -76,6 +76,7 @@ public class TransactionActivity extends Activity {
 //                for (Block block : mAPI.getBlocks(user)) {
 //                    if (block.getOwner().getName().equals(transactionName)) {
 //                        mAPI.transaction(block, TrustValues.SUCCESFUL_TRANSACTION);
+                //TODO update trust value of block using new api
 //                        Toast.makeText(TransactionActivity.this, "Send €" + amount + " to "
 //                                + transactionName + "!", Toast.LENGTH_SHORT).show();
 //                    }

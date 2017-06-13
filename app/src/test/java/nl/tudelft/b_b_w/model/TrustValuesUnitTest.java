@@ -13,7 +13,7 @@ public class TrustValuesUnitTest {
      */
     @Test
     public void testTrustValuesInitialized() {
-        assertEquals(20, TrustValues.INITIALIZED.getValue());
+        assertEquals(10, TrustValues.INITIALIZED.getValue());
     }
 
     /**
@@ -23,32 +23,5 @@ public class TrustValuesUnitTest {
     @Test
     public void testTrustValuesRevoke() {
         assertEquals(0, TrustValues.REVOKED.getValue());
-    }
-
-    /**
-     * testTrustValuesVerified
-     * tests whether the trust value of the verified is correct
-     */
-    @Test
-    public void testTrustValuesVerified() {
-        assertEquals(50, TrustValues.VERIFIED.getValue());
-    }
-
-    /**
-     * testTrustValuesSuccessfulTransaction
-     * tests whether the trust value of the successful transaction is correct
-     */
-    @Test
-    public void testTrustValuesSuccessfulTransaction() {
-        assertEquals(10, TrustValues.SUCCESFUL_TRANSACTION.getValue());
-    }
-
-    /**
-     * testTrustValuesFailedTransaction
-     * tests whether the trust value of the failed transaction is correct
-     */
-    @Test
-    public void testTrustValuesFailedTransaction() {
-        assertEquals(-10, TrustValues.FAILED_TRANSACTION.getValue());
     }
 }

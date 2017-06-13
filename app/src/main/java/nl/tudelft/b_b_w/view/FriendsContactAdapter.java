@@ -11,9 +11,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.controller.API;
+import nl.tudelft.b_b_w.model.HashException;
 import nl.tudelft.b_b_w.model.User;
 
 public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
@@ -99,7 +101,7 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
      * @param position Current position of the view
      * @return The listener
      */
-    private View.OnClickListener createDialog(final int position) {
+    private View.OnClickListener createDialog(final int position) throws HashException {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,15 +146,20 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
                     (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.simple_list_item_2, parent, false);
         }
-        TextView nameItemText = (TextView) view.findViewById(R.id.list_item_name2);
-        nameItemText.setText(mAPI.getBlocks(user).get(position).getOwnHash());
-        TextView ibanItemText = (TextView) view.findViewById(R.id.list_item_iban2);
-        ibanItemText.setText(mAPI.getBlocks(user).get(position).getOwner().getIban());
-        ImageView pic = (ImageView) view.findViewById(R.id.trust_image2);
-        pic.setImageResource(
-                getImageNo(mAPI.getBlocks(user).get(position).getTrustValue()));
-        Button addButton = (Button) view.findViewById(R.id.add_btn);
-        addButton.setOnClickListener(createDialog(position));
-        return view;
+        try {
+            TextView nameItemText = (TextView) view.findViewById(R.id.list_item_name2);
+            nameItemText.setText(blockController.getContactName(blockController.getBlocks(ownerName).get(position).getOwnHash()));
+            TextView ibanItemText = (TextView) view.findViewById(R.id.list_item_iban2);
+            ibanItemText.setText(blockController.getBlocks(ownerName).get(position).getOwner().getIban());
+            ImageView pic = (ImageView) view.findViewById(R.id.trust_image2);
+            pic.setImageResource(
+                    getImageNo((int) Math.round(blockController.getBlocks(ownerName).get(position).getTrustValue())));
+            Button addButton = (Button) view.findViewById(R.id.add_btn);
+            addButton.setOnClickListener(createDialog(position));
+            return view;
+        } catch (HashException e) {
+            Toast.makeText(context, retrievingHashError, Toast.LENGTH_LONG).show();
+            return null;
+        }
     }
 }

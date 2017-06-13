@@ -15,13 +15,11 @@ import nl.tudelft.b_b_w.model.block.Block;
 public class API {
 
     private BlockController blockController;
-    private TrustValueController trustValueController;
     private BlockVerificationController blockVerificationController;
 
 
     public API(User owner, Context context) throws HashException {
         this.blockController = new BlockController(owner, context);
-        this.trustValueController = new TrustValueController(context);
         this.blockVerificationController = new BlockVerificationController(context);
         blockController.createGenesis(owner);
     }

@@ -103,7 +103,12 @@ public class BlockController {
         return res;
     }
 
+    public final boolean isDatabaseEmpty() {
+        return getDatabaseHandler.isDatabaseEmpty();
+    }
+
     /**
+
      * Create genesis block for an owner
      *
      * @param owner Owner of the block

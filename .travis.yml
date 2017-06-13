@@ -38,8 +38,6 @@ matrix:
   include: # More Emulator API levels to build in parallel
     - env: API=24
     - env: API=23
-    - env: API=22
-    - env: API=21
 #  allow_failures:
     - env: API=22
     - env: API=21
@@ -50,8 +48,6 @@ before_install:
   - echo 'count=0' > /home/travis/.android/repositories.cfg # Avoid warning
 
 install:
-  # Ensures that travis does not timeout
-  - travis_wait 60
   # List and delete unnecessary components to free space
   - sdkmanager --list || true  - sdkmanager --uninstall "system-images;android-15;default;armeabi-v7a"
   - sdkmanager --uninstall "system-images;android-16;default;armeabi-v7a"
@@ -100,6 +96,8 @@ before_script:
   - sleep 30
   - adb shell input keyevent 82 &
   - sleep 15
+  # Ensures that travis does not timeout
+  - travis_wait
 
 script:
   # Build and run all device checks

@@ -3,7 +3,14 @@ package nl.tudelft.b_b_w.blockchain;
 
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
-import nl.tudelft.b_b_w.blockchaincontroller.ConversionController;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import nl.tudelft.b_b_w.model.EncodingUnavailableException;
+import nl.tudelft.b_b_w.model.HashException;
+import nl.tudelft.b_b_w.model.HashUnavailableException;
 
 /**
  * This class represents a block object.
@@ -28,7 +35,7 @@ public class Block {
         this.owner = blockOwner;
         this.contact = contact;
         this.blockData = blockData;
-        this.ownHash = new ConversionController(blockOwner, contact, blockData).hashKey();
+        this.ownHash = calculateHash();
     }
 
     /***********************************************************************************
@@ -122,6 +129,15 @@ public class Block {
 
 
     /**
+     * This method returns the BlockType of the block object.
+     * @return the BlockType object of the Block.
+     */
+    public BlockType getBlockType() {
+        return blockData.getBlockType();
+    }
+
+
+    /**
      * This method returns the sequence number of the block
      * @return the sequence number of the block
      */
@@ -161,6 +177,39 @@ public class Block {
      */
     public final Hash getOwnHash() {
         return ownHash;
+    }
+
+
+    /**
+     * Calculate the SHA-256 hash of this block
+     *
+     * @return the base-64 encoded hash as a string
+     * @throws HashException when the crypto functions are not available
+     */
+    private Hash calculateHash() throws HashException {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            String text =  this.getOwnerName()
+                    + this.getOwnerIban()
+                    + this.getOwnerPublicKey().toString()
+                    + this.getContactName()
+                    + this.getContactIban()
+                    + this.getContactPublicKey().toString()
+                    + this.getBlockType().name()
+                    + String.valueOf(this.getSequenceNumber())
+                    + this.getPreviousHashChain().toString()
+                    + this.getPreviousHashSender().toString()
+                    + String.valueOf(this.getTrustValue());
+            md.update(text.getBytes("UTF-8"));
+            byte[] digest = md.digest();
+            Hash hash = new Hash(String.format("%064x", new BigInteger(1, digest)));
+            System.out.println(hash.toString());
+            return hash;
+        } catch (NoSuchAlgorithmException e) {
+            throw new HashUnavailableException();
+        } catch (UnsupportedEncodingException e) {
+            throw new EncodingUnavailableException();
+        }
     }
 
 }

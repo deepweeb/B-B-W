@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import nl.tudelft.b_b_w.controller.ED25519;
+import nl.tudelft.b_b_w.model.TrustValues;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -76,7 +77,7 @@ public class BlockTest {
         sequenceNumber = 1;
         previousHashChain = new Hash("Contact1PreviousHashChain");
         previousHashSender = new Hash("Contact1PreviousHashSender");
-        trustValue = 0;
+        trustValue = TrustValues.INITIALIZED.getValue();
         blockData = new BlockData(blockType, sequenceNumber, previousHashChain, previousHashSender, trustValue);
 
         //setting up block

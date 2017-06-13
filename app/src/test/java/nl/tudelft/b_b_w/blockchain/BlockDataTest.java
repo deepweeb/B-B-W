@@ -3,6 +3,8 @@ package nl.tudelft.b_b_w.blockchain;
 import org.junit.Before;
 import org.junit.Test;
 
+import nl.tudelft.b_b_w.model.TrustValues;
+
 import static junit.framework.Assert.assertEquals;
 
 /**
@@ -30,7 +32,7 @@ public class BlockDataTest {
         sequenceNumber = 5;
         previousHashChain = new Hash("ExampleHash1");
         previousHashSender = new Hash("ExampleHash2");
-        trustValue = 1;
+        trustValue = TrustValues.INITIALIZED.getValue();
 
         blockData = new BlockData(blockType, sequenceNumber, previousHashChain, previousHashSender, trustValue);
     }

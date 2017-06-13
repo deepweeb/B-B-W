@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.controller.BlockController;
-import nl.tudelft.b_b_w.controller.ConversionController;
 import nl.tudelft.b_b_w.model.HashException;
 import nl.tudelft.b_b_w.model.User;
 
@@ -126,10 +125,6 @@ public class FriendsPageActivity extends Activity {
      * @param view The view
      */
     public final void onAddThisPersonToContactList(View view) throws Exception {
-
-        ConversionController conversionController = new ConversionController(user.getName(), publicKey,
-                userLatestBlockHash, contactGenesisBlockHash, ibanNumber);
-        String hash = conversionController.hashKey();
 
         try {
             blockController.createKeyBlock(user, contact, publicKey);

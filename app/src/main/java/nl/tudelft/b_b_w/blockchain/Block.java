@@ -214,8 +214,7 @@ public class Block {
                     + this.getBlockType().name()
                     + String.valueOf(this.getSequenceNumber())
                     + this.getPreviousHashChain().toString()
-                    + this.getPreviousHashSender().toString()
-                    + String.valueOf(this.getTrustValue());
+                    + this.getPreviousHashSender().toString();
             md.update(text.getBytes("UTF-8"));
             byte[] digest = md.digest();
             Hash hash = new Hash(String.format("%064x", new BigInteger(1, digest)));

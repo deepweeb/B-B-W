@@ -44,6 +44,8 @@ public class BlockTest {
     private Hash previousHashSender;
     private double trustValue;
 
+    private Hash testOwnHash;
+
     /**
      * The block.
      */
@@ -81,6 +83,8 @@ public class BlockTest {
         trustValue = TrustValues.INITIALIZED.getValue();
         blockData = new BlockData(blockType, sequenceNumber, previousHashChain, previousHashSender, trustValue);
 
+        testOwnHash = new Hash("6acccb15c5f2619d9e2f61c35a9e20e64573717290d7324bb07b2eedda1bc965");
+
         //setting up block
         block = new Block(owner, contact, blockData);
     }
@@ -108,6 +112,12 @@ public class BlockTest {
         assertEquals(previousHashChain, block.getPreviousHashChain());
         assertEquals(previousHashSender, block.getPreviousHashSender());
         assertEquals(trustValue, block.getTrustValue());
+
+        //testing setter for trust value
+        block.setTrustValue(10);
+        assertEquals(10.0, block.getTrustValue());
+
+        assertEquals(testOwnHash, block.getOwnHash());
     }
 
 }

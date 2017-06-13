@@ -82,5 +82,14 @@ public class BlockDataTest {
         assertEquals(trustValue, blockData.getTrustValue());
     }
 
-
+    /**
+     * setTrustValue() setter method testing
+     * @throws Exception
+     */
+    @Test
+    public void setTrustValueTest() throws Exception {
+        final double testTrustValue = 99;
+        blockData.setTrustValue(testTrustValue);
+        assertEquals(testTrustValue, blockData.getTrustValue());
+    }
 }

@@ -192,6 +192,16 @@ public class Block {
         return blockData.getTrustValue();
     }
 
+    /**
+     * This method set the trust value of the block
+     *
+     * @param trustValue of the block
+     */
+    public final void setTrustValue(double trustValue) {
+        blockData.setTrustValue(trustValue);
+    }
+
+
     /**************************************END******************************************/
 
     /**

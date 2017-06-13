@@ -146,6 +146,14 @@ public class Block {
     public BlockType getBlockType() {
         return blockData.getBlockType();
     }
+    /**
+     * Boolean indicating if this block is revoked.
+     *
+     * @return if this block is a revoke block
+     */
+    public final boolean isRevoked() {
+        return blockData.getBlockType() == BlockType.REVOKE_KEY;
+    }
 
 
     /**

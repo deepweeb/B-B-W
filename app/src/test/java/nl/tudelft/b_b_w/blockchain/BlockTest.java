@@ -11,6 +11,7 @@ import nl.tudelft.b_b_w.controller.ED25519;
 import nl.tudelft.b_b_w.model.TrustValues;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 
 /**
  * Junit Testing class of the Block class
@@ -101,6 +102,8 @@ public class BlockTest {
 
         //testing get data getters
         assertEquals(blockData, block.getBlockData());
+        assertEquals(blockType, block.getBlockType());
+        assertFalse(block.isRevoked());
         assertEquals(sequenceNumber, block.getSequenceNumber());
         assertEquals(previousHashChain, block.getPreviousHashChain());
         assertEquals(previousHashSender, block.getPreviousHashSender());

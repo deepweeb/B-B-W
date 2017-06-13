@@ -244,4 +244,31 @@ public class Block {
         }
     }
 
+
+    /**
+     * Attributes are isRevoked, iban and public key
+     *
+     * @param o given block
+     * @return equals or not
+     */
+    public boolean verifyBlock(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Block block = (Block) o;
+
+        if (isRevoked() != block.isRevoked()) {
+            return false;
+        }
+        if (!getContactIban().equals(block.getContactIban())) {
+            return false;
+        }
+        return getContactPublicKey().equals(block.getContactPublicKey());
+    }
+
+
 }

@@ -13,6 +13,7 @@ public class Hash {
 
     /**
      * Constructor for Hash class
+     *
      * @param hash given a hash String
      */
     public Hash(String hash) {
@@ -21,6 +22,7 @@ public class Hash {
 
     /**
      * toString() getter implementation
+     *
      * @return String representation of the hash
      */
     @Override
@@ -28,16 +30,21 @@ public class Hash {
         return this.hashString;
     }
 
+
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
-    public boolean equals(Object o) {
-        if (o == null) {
+    public final boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        } else if (o == null || getClass() != o.getClass()) {
             return false;
-        } else {
-            return this.hashString.equals(o.toString());
         }
+
+        Hash hash = (Hash) o;
+
+        return toString().equals(hash.toString());
     }
 
     /**
@@ -45,6 +52,6 @@ public class Hash {
      */
     @Override
     public int hashCode() {
-    return 0;
+        return hashString.hashCode();
     }
 }

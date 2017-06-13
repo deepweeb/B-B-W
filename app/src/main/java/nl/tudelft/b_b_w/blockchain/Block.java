@@ -27,9 +27,10 @@ public class Block {
 
     /**
      * Constructor for the BlockData class
+     *
      * @param blockOwner given the name of the owner of the chain this block belongs to
-     * @param contact given the User object of the contact which the block concerns
-     * @param blockData the data of the block such as hash, trust, etc.
+     * @param contact    given the User object of the contact which the block concerns
+     * @param blockData  the data of the block such as hash, trust, etc.
      */
     public Block(User blockOwner, User contact, BlockData blockData) throws Exception {
         this.owner = blockOwner;
@@ -43,6 +44,7 @@ public class Block {
      */
     /**
      * This method returns the chainOwner User of the block object.
+     *
      * @return user object of the chain owner
      */
     public User getBlockOwner() {
@@ -51,6 +53,7 @@ public class Block {
 
     /**
      * This method returns the name of the owner of the block object.
+     *
      * @return the owner's name.
      */
     public String getOwnerName() {
@@ -59,6 +62,7 @@ public class Block {
 
     /**
      * This method returns the iban of the owner of the block object.
+     *
      * @return the owner's iban String.
      */
     public String getOwnerIban() {
@@ -67,7 +71,8 @@ public class Block {
 
     /**
      * This method returns the iban of the owner of the block object.
-     * @return the owner's iban String.
+     *
+     * @return the owner's Iban String.
      */
     public EdDSAPublicKey getOwnerPublicKey() {
         return owner.getPublicKey();
@@ -78,10 +83,11 @@ public class Block {
 
     /***********************************************************************************
      * This part below contains methods to get the attributes of the contact.
-      */
+     */
 
     /**
      * This method returns the contact of the block object.
+     *
      * @return the contact object.
      */
     public User getContact() {
@@ -90,6 +96,7 @@ public class Block {
 
     /**
      * This method returns the name of the contact of the block object.
+     *
      * @return the contact's name.
      */
     public String getContactName() {
@@ -98,6 +105,7 @@ public class Block {
 
     /**
      * This method returns the iban of the contact of the block object.
+     *
      * @return the contact's iban String.
      */
     public String getContactIban() {
@@ -106,6 +114,7 @@ public class Block {
 
     /**
      * This method returns the iban of the contact of the block object.
+     *
      * @return the contact's iban String.
      */
     public EdDSAPublicKey getContactPublicKey() {
@@ -116,11 +125,12 @@ public class Block {
 
 
     /***********************************************************************************
-    * This part below contains methods to get the attributes of the contact.
-    */
+     * This part below contains methods to get the attributes of the contact.
+     */
 
     /**
      * This method returns the data of the block object.
+     *
      * @return the BlockData object of the Block.
      */
     public BlockData getBlockData() {
@@ -130,6 +140,7 @@ public class Block {
 
     /**
      * This method returns the BlockType of the block object.
+     *
      * @return the BlockType object of the Block.
      */
     public BlockType getBlockType() {
@@ -139,6 +150,7 @@ public class Block {
 
     /**
      * This method returns the sequence number of the block
+     *
      * @return the sequence number of the block
      */
     public final int getSequenceNumber() {
@@ -147,6 +159,7 @@ public class Block {
 
     /**
      * This method returns the hash of the previous block of the chain
+     *
      * @return previous hash of chain
      */
     public final Hash getPreviousHashChain() {
@@ -155,6 +168,7 @@ public class Block {
 
     /**
      * This method returns the hash of the block of the contact/  block sender.
+     *
      * @return hash of sender block
      */
     public final Hash getPreviousHashSender() {
@@ -163,6 +177,7 @@ public class Block {
 
     /**
      * This method returns the trust value of the block
+     *
      * @return int trust value of block.
      */
     public final double getTrustValue() {
@@ -173,6 +188,7 @@ public class Block {
 
     /**
      * This method returns the hash of the block
+     *
      * @return Hash object of the block's hash
      */
     public final Hash getOwnHash() {
@@ -189,7 +205,7 @@ public class Block {
     private Hash calculateHash() throws HashException {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
-            String text =  this.getOwnerName()
+            String text = this.getOwnerName()
                     + this.getOwnerIban()
                     + this.getOwnerPublicKey().toString()
                     + this.getContactName()
@@ -203,7 +219,6 @@ public class Block {
             md.update(text.getBytes("UTF-8"));
             byte[] digest = md.digest();
             Hash hash = new Hash(String.format("%064x", new BigInteger(1, digest)));
-            System.out.println(hash.toString());
             return hash;
         } catch (NoSuchAlgorithmException e) {
             throw new HashUnavailableException();

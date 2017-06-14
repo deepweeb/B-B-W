@@ -31,6 +31,7 @@ import static junit.framework.Assert.assertEquals;
 @Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml")
 public class UserAddQueryTest {
     private User alice;
+    final String notAvailable = "N/A";
 
     @Before
     public void init() {
@@ -44,7 +45,7 @@ public class UserAddQueryTest {
     public void testSimpleAdd() throws Exception {
         // create genesis block
         Block genesis = new Block(alice, alice, new BlockData(
-                BlockType.GENESIS, 1, new Hash("N/A"), new Hash("N/A"), TrustValues.INITIALIZED.getValue()
+                BlockType.GENESIS, 1, new Hash(notAvailable), new Hash(notAvailable), TrustValues.INITIALIZED.getValue()
         ));
 
         // add one genesis block
@@ -74,13 +75,13 @@ public class UserAddQueryTest {
 
         // create genesis blocks
         Block genesisA = new Block(alice, alice, new BlockData(
-                BlockType.GENESIS, 1, new Hash("N/A"), new Hash("N/A"),
+                BlockType.GENESIS, 1, new Hash(notAvailable), new Hash(notAvailable),
                 TrustValues.INITIALIZED.getValue()));
         Block genesisB = new Block(bob, bob, new BlockData(
-                BlockType.GENESIS, 1, new Hash("N/A"), new Hash("N/A"),
+                BlockType.GENESIS, 1, new Hash(notAvailable), new Hash(notAvailable),
                 TrustValues.INITIALIZED.getValue()));
         Block genesisC = new Block(carol, carol, new BlockData(
-                BlockType.GENESIS, 1, new Hash("N/A"), new Hash("N/A"),
+                BlockType.GENESIS, 1, new Hash(notAvailable), new Hash(notAvailable),
                 TrustValues.INITIALIZED.getValue()));
 
         // add users

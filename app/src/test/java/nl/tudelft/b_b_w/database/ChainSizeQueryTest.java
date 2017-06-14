@@ -27,6 +27,8 @@ import static junit.framework.Assert.assertEquals;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml")
 public class ChainSizeQueryTest {
+    final String notAvailable = "N/A";
+
     /**
      * Example users to test with
      */
@@ -68,7 +70,7 @@ public class ChainSizeQueryTest {
     public void testSimpleChain() throws Exception {
         // add block
         Block genesis = new Block(alice, alice, new BlockData(
-                BlockType.GENESIS, 1, new Hash("N/A"), new Hash("N/A"),
+                BlockType.GENESIS, 1, new Hash(notAvailable), new Hash(notAvailable),
                 TrustValues.INITIALIZED.getValue()));
 
         // add user
@@ -91,13 +93,13 @@ public class ChainSizeQueryTest {
     public void testMultipleGenesis() throws Exception {
         // add genesis
         Block genesisA = new Block(alice, alice, new BlockData(
-                BlockType.GENESIS, 1, new Hash("N/A"), new Hash("N/A"),
+                BlockType.GENESIS, 1, new Hash(notAvailable), new Hash(notAvailable),
                 TrustValues.INITIALIZED.getValue()));
         Block genesisB = new Block(bob, bob, new BlockData(
-                BlockType.GENESIS, 1, new Hash("N/A"), new Hash("N/A"),
+                BlockType.GENESIS, 1, new Hash(notAvailable), new Hash(notAvailable),
                 TrustValues.INITIALIZED.getValue()));
         Block genesisC = new Block(carol, carol, new BlockData(
-                BlockType.GENESIS, 1, new Hash("N/A"), new Hash("N/A"),
+                BlockType.GENESIS, 1, new Hash(notAvailable), new Hash(notAvailable),
                 TrustValues.INITIALIZED.getValue()));
 
         // add them

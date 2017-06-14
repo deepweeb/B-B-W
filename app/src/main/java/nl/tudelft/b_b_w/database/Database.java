@@ -1,7 +1,6 @@
 package nl.tudelft.b_b_w.database;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -199,46 +198,6 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase database = getWritableDatabase();
         query.execute(database);
 
-        debugDisplayDatabase();
-
         database.close();
-    }
-
-    // FOR DEBUGGING PURPOSE
-    public void debugDisplayDatabase() {
-
-        //printing out the blocks
-        SQLiteDatabase database = getWritableDatabase();
-        Cursor c = database.rawQuery("SELECT * FROM blocks;", new String[]{});
-        if (c.getCount() > 0) {
-            c.moveToFirst();
-            do {
-                // Extract block from database
-                System.out.println(
-                        c.getInt(0) + " | "
-                                + c.getString(1) + " | "
-                                + c.getString(2) + " | "
-                                + c.getString(3) + " | "
-                                + c.getString(4) + " | "
-                                + c.getString(5) + " | "
-                                + c.getString(6) + " | "
-                                + c.getDouble(7));
-            } while (c.moveToNext());
-        }
-        c.close();
-
-        //printing out the users
-        c = database.rawQuery("SELECT * FROM users;", new String[]{});
-        if (c.getCount() > 0) {
-            c.moveToFirst();
-            do {
-                // Extract block from database
-                System.out.println(
-                        c.getString(0) + " | "
-                                + c.getString(1) + " | "
-                                + c.getString(2));
-            } while (c.moveToNext());
-        }
-        c.close();
     }
 }

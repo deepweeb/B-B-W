@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import nl.tudelft.b_b_w.model.block.Block;
 
 /**
- * Class for creating a chain
+ * Class for creating a chainList
  */
 
 public class Chain {
@@ -14,7 +14,7 @@ public class Chain {
      * Properties of a Chain object
      */
     private User chainOwner;
-    private ArrayList<Block> chain;
+    private ArrayList<Block> chainList;
 
     /**
      * Constructor for user class
@@ -35,20 +35,20 @@ public class Chain {
     }
 
     /**
-     * getChain() function
+     * getChainList() function
      *
-     * @return ArrayList of Blocks that represent this user's chain
+     * @return ArrayList of Blocks that represent this user's chainList
      */
-    public ArrayList<Block> getChain() {
-        return this.chain;
+    public ArrayList<Block> getChainList() {
+        return this.chainList;
     }
 
     /**
-     * setChain() function
-     * Set the ArrayList<Block>  of this chain to the value of the parameter
+     * setChainList() function
+     * Set the ArrayList<Block>  of this chainList to the value of the parameter
      */
-    public void setChain(ArrayList<Block> arrayList) {
-        this.chain = arrayList;
+    public void setChainList(ArrayList<Block> arrayList) {
+        this.chainList = arrayList;
     }
 
 }

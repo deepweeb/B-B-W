@@ -1,6 +1,7 @@
 package nl.tudelft.b_b_w.database;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -9,52 +10,125 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class Database extends SQLiteOpenHelper {
     /**
-     * Main table name
+     * Block table name
      */
-    static final String TABLE_NAME = "blocks";
+    public static final String BLOCK_TABLE_NAME = "blocks";
 
     /**
-     * Column names
+     * User table name
      */
-    static final String KEY_OWNER = "owner";
-    static final String KEY_SEQ_NO = "sequenceNumber";
-    static final String KEY_PREV_HASH_SENDER = "previousHashSender";
-    static final String KEY_OWN_HASH = "ownHash";
-    static final String KEY_PREV_HASH_CHAIN = "previousHashChain";
-    static final String KEY_PUBLIC_KEY = "publicKey";
-    static final String KEY_IBAN_KEY = "iban";
-    static final String KEY_TRUST_VALUE = "trustValue";
-    static final String KEY_REVOKE = "revoke";
-    static final String KEY_CREATED_AT = "created_at";
+    public static final String USER_TABLE_NAME = "users";
+
+    /**
+     * String for when text is not null in the block table
+     */
+    private final String textNotNull = " TEXT NOT NULL,";
+
+    /**
+     * String for when text is not null in the block table
+     */
+    private final String integerNotNull = " INTEGER NOT NULL,";
+
+    /**
+     * SQL code to create the blocks table
+     */
+    private final String createBlockTable = "CREATE TABLE IF NOT EXISTS " + BLOCK_TABLE_NAME + "("
+            + KEY_SEQ_NO + integerNotNull
+            + KEY_OWNER + textNotNull
+            + KEY_CONTACT + textNotNull
+            + KEY_HASH + textNotNull
+            + KEY_PREV_HASH_CHAIN + textNotNull
+            + KEY_PREV_HASH_SENDER + textNotNull
+            + KEY_REVOKE + " BOOLEAN DEFAULT FALSE NOT NULL,"
+            + KEY_TRUST_VALUE + integerNotNull
+            + " PRIMARY KEY (" + KEY_HASH + ")"
+            + ")";
+    /**
+     * SQL code to create the user table
+     */
+    private final String createUserTable = "CREATE TABLE IF NOT EXISTS " + USER_TABLE_NAME + "("
+            + KEY_NAME + textNotNull
+            + KEY_IBAN + textNotNull
+            + KEY_PUBLICKEY + textNotNull
+            + " PRIMARY KEY (" + KEY_PUBLICKEY + ")"
+            + ")";
+
+    /**
+     * Column names for blocks
+     */
+    public static final String KEY_SEQ_NO = "sequenceNumber";
+    public static final String KEY_OWNER = "owner";
+    public static final String KEY_CONTACT = "contact";
+    public static final String KEY_HASH = "ownHash";
+    public static final String KEY_PREV_HASH_CHAIN = "previousHashChain";
+    public static final String KEY_PREV_HASH_SENDER = "previousHashSender";
+    public static final String KEY_REVOKE = "revoke";
+    public static final String KEY_TRUST_VALUE = "trustValue";
 
     /**
      * All columns
      */
-    static final String[] COLUMNS = new String[] {
-            KEY_OWNER, KEY_SEQ_NO, KEY_OWN_HASH, KEY_PREV_HASH_CHAIN, KEY_PREV_HASH_SENDER,
-            KEY_PUBLIC_KEY, KEY_IBAN_KEY, KEY_TRUST_VALUE, KEY_REVOKE
+    private static final String[] BLOCK_COLUMNS = new String[] {
+            KEY_SEQ_NO, KEY_OWNER, KEY_CONTACT, KEY_HASH, KEY_PREV_HASH_CHAIN, KEY_PREV_HASH_SENDER,
+            KEY_REVOKE, KEY_TRUST_VALUE
     };
 
     /**
-     * Column indices
+     * All columns
      */
-    static final int INDEX_OWNER = 0;
-    static final int INDEX_SEQ_NO = 1;
-    static final int INDEX_OWN_HASH = 2;
-    static final int INDEX_PREV_HASH_CHAIN = 3;
-    static final int INDEX_PREV_HASH_SENDER = 4;
-    static final int INDEX_PUBLIC_KEY = 5;
-    static final int INDEX_IBAN_KEY = 6;
-    static final int INDEX_TRUST_VALUE = 7;
-    static final int INDEX_REVOKE = 8;
-
-    static final int DATABASE_VERSION = 1;
-    static final String DATABASE_NAME = "blockChain";
+    public static final String[] getBlockColumns() {
+        return BLOCK_COLUMNS;
+    }
 
     /**
-     * Context to retrieve the database
+     * Column indices for blocks
      */
-    private Context context;
+    public static final int INDEX_SEQ_NO = 0;
+    public static final int INDEX_OWNER = 1;
+    public static final int INDEX_CONTACT = 2;
+    public static final int INDEX_HASH = 3;
+    public static final int INDEX_PREV_HASH_CHAIN = 4;
+    public static final int INDEX_PREV_HASH_SENDER = 5;
+    public static final int INDEX_REVOKE = 6;
+    public static final int INDEX_TRUST_VALUE = 7;
+
+    /**
+     * Column names for users
+     */
+    public static final String KEY_NAME = "name";
+    public static final String KEY_IBAN = "iban";
+    public static final String KEY_PUBLICKEY = "publicKey";
+
+    /**
+     * Column indices for users
+     */
+    public static final int INDEX_NAME = 0;
+    public static final int INDEX_IBAN = 1;
+    public static final int INDEX_PUBLICKEY = 2;
+
+    /**
+     * Columns in the user table
+     */
+    private static final String[] USER_COLUMNS = new String[] {
+            KEY_NAME, KEY_IBAN, KEY_PUBLICKEY
+    };
+
+    /**
+     * Columns in the user table
+     */
+    public static final String[] getUserColumns() {
+        return USER_COLUMNS;
+    }
+
+    /**
+     * Our version is one
+     */
+    public static final int DATABASE_VERSION = 1;
+
+    /**
+     * How our database is called
+     */
+    public static final String DATABASE_NAME = "blockChain";
 
     /**
      * Create a new connection to the database
@@ -72,20 +146,8 @@ public class Database extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
-        final String createBlocksTable = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "("
-                + KEY_OWNER + " TEXT NOT NULL,"
-                + KEY_SEQ_NO + " INTEGER NOT NULL,"
-                + KEY_OWN_HASH + " TEXT NOT NULL,"
-                + KEY_PREV_HASH_CHAIN + " TEXT NOT NULL,"
-                + KEY_PREV_HASH_SENDER + " TEXT NOT NULL,"
-                + KEY_PUBLIC_KEY + " TEXT NOT NULL,"
-                + KEY_IBAN_KEY + " TEXT NOT NULL,"
-                + KEY_TRUST_VALUE + " INTEGER NOT NULL,"
-                + KEY_REVOKE + " BOOLEAN DEFAULT FALSE NOT NULL,"
-                + KEY_CREATED_AT + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,"
-                + " PRIMARY KEY (owner, publicKey, sequenceNumber)"
-                + ")";
-        db.execSQL(createBlocksTable);
+        db.execSQL(createBlockTable);
+        db.execSQL(createUserTable);
     }
 
     /**
@@ -110,7 +172,7 @@ public class Database extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        final String upgradeScript = "DROP TABLE IF EXISTS " + TABLE_NAME + ";"
+        final String upgradeScript = "DROP TABLE IF EXISTS " + BLOCK_TABLE_NAME + ";"
                 + "DROP TABLE IF EXISTS option;";
 
         // TODO: check if the db version is lower than the latest
@@ -121,9 +183,12 @@ public class Database extends SQLiteOpenHelper {
     /**
      * Perform a read query
      * @param query the query to execute
+     * TODO: think about if we need to open a new connection every time if it is too slow
      */
     public void read(Query query) {
-        query.execute(getReadableDatabase());
+        SQLiteDatabase database = getReadableDatabase();
+        query.execute(database);
+        database.close();
     }
 
     /**
@@ -131,6 +196,49 @@ public class Database extends SQLiteOpenHelper {
      * @param query the query to execute
      */
     public void write(Query query) {
-        query.execute(getWritableDatabase());
+        SQLiteDatabase database = getWritableDatabase();
+        query.execute(database);
+
+        debugDisplayDatabase();
+
+        database.close();
+    }
+
+    // FOR DEBUGGING PURPOSE
+    public void debugDisplayDatabase() {
+
+        //printing out the blocks
+        SQLiteDatabase database = getWritableDatabase();
+        Cursor c = database.rawQuery("SELECT * FROM blocks;", new String[]{});
+        if (c.getCount() > 0) {
+            c.moveToFirst();
+            do {
+                // Extract block from database
+                System.out.println(
+                        c.getInt(0) + " | "
+                                + c.getString(1) + " | "
+                                + c.getString(2) + " | "
+                                + c.getString(3) + " | "
+                                + c.getString(4) + " | "
+                                + c.getString(5) + " | "
+                                + c.getString(6) + " | "
+                                + c.getDouble(7));
+            } while (c.moveToNext());
+        }
+        c.close();
+
+        //printing out the users
+        c = database.rawQuery("SELECT * FROM users;", new String[]{});
+        if (c.getCount() > 0) {
+            c.moveToFirst();
+            do {
+                // Extract block from database
+                System.out.println(
+                        c.getString(0) + " | "
+                                + c.getString(1) + " | "
+                                + c.getString(2));
+            } while (c.moveToNext());
+        }
+        c.close();
     }
 }

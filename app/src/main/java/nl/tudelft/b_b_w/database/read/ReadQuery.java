@@ -1,9 +1,9 @@
-package nl.tudelft.b_b_w.database;
+package nl.tudelft.b_b_w.database.read;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import static nl.tudelft.b_b_w.database.Database.TABLE_NAME;
+import nl.tudelft.b_b_w.database.Query;
 
 /**
  * A query to perform a read operation on the database
@@ -25,7 +25,7 @@ public abstract class ReadQuery extends Query {
     @Override
     public void execute(SQLiteDatabase database) {
         Cursor cursor = database.query(
-                TABLE_NAME,
+                getTableName(),
                 getSelectedColumns(),
                 getWhere(),
                 getWhereVariables(),
@@ -50,7 +50,27 @@ public abstract class ReadQuery extends Query {
         return null;
     }
 
+    /**
+     * The table name on which this query operates
+     * @return the table name
+     */
+    protected abstract String getTableName();
+
+    /**
+     * The columns to be returned by this query
+     * @return an array of column names
+     */
     protected abstract String[] getSelectedColumns();
+
+    /**
+     * The condition on which entries are filtered
+     * @return the condition (WHERE-clause in SQL)
+     */
     protected abstract String getWhere();
+
+    /**
+     * Variables that should be escaped inside the WHERE-clause
+     * @return a list of variables used by the WHERE-clause
+     */
     protected abstract String[] getWhereVariables();
 }

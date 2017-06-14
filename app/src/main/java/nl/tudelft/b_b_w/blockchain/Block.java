@@ -3,14 +3,8 @@ package nl.tudelft.b_b_w.blockchain;
 
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
-import nl.tudelft.b_b_w.model.EncodingUnavailableException;
-import nl.tudelft.b_b_w.model.HashException;
-import nl.tudelft.b_b_w.model.HashUnavailableException;
 
 /**
  * This class represents a block object.
@@ -32,7 +26,7 @@ public class Block {
      * @param contact    given the User object of the contact which the block concerns
      * @param blockData  the data of the block such as hash, trust, etc.
      */
-    public Block(User blockOwner, User contact, BlockData blockData) throws Exception {
+    public Block(User blockOwner, User contact, BlockData blockData) {
         this.owner = blockOwner;
         this.contact = contact;
         this.blockData = blockData;
@@ -213,14 +207,12 @@ public class Block {
         return ownHash;
     }
 
-
     /**
      * Calculate the SHA-256 hash of this block
      *
      * @return the base-64 encoded hash as a string
-     * @throws HashException when the crypto functions are not available
      */
-    private Hash calculateHash() throws HashException {
+    private Hash calculateHash() {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             String text = this.getOwnerName()
@@ -237,10 +229,8 @@ public class Block {
             byte[] digest = md.digest();
             Hash hash = new Hash(String.format("%064x", new BigInteger(1, digest)));
             return hash;
-        } catch (NoSuchAlgorithmException e) {
-            throw new HashUnavailableException();
-        } catch (UnsupportedEncodingException e) {
-            throw new EncodingUnavailableException();
+        } catch (Exception e) {
+            return new Hash(e.getMessage());
         }
     }
 
@@ -268,6 +258,22 @@ public class Block {
             return false;
         }
         return getContactPublicKey().equals(block.getContactPublicKey());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Block)) return false;
+
+        Block block = (Block) o;
+
+        return ownHash.equals(block.ownHash);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return ownHash.hashCode();
     }
 
 

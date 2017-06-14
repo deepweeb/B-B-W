@@ -77,7 +77,7 @@ public class TransactionActivity extends Activity {
                     final int amount = Integer.parseInt(amountText.getText().toString());
                     for (Block block : blockController.getBlocks(user.getName())) {
                         if (blockController.backtrack(block).getOwner().getName().equals(transactionName)) {
-                            blockController.successfulTransaction(block);
+                            //TODO update trust value of block using new api
                             Toast.makeText(TransactionActivity.this, "Send €" + amount + " to "
                                     + transactionName + "!", Toast.LENGTH_SHORT).show();
                         }

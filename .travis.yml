@@ -101,7 +101,7 @@ before_script:
 
 script:
   # Build and run all device checks
-  ./gradlew build connectedCheck check lint test
+  ./gradlew build connectedCheck check lint travis_wait 30 test
 
 after_script:
   # Show tests and lint results

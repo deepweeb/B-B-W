@@ -86,8 +86,6 @@ install:
   - ./gradlew clean
   # Check components status
   - sdkmanager --list || true
-  # Check style
-  # - ./gradlew checkstyle
 
 before_script:
   # Wait for emulator fully-booted and disable animations

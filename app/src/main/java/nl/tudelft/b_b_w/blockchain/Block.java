@@ -140,6 +140,7 @@ public class Block {
     public BlockType getBlockType() {
         return blockData.getBlockType();
     }
+
     /**
      * Boolean indicating if this block is revoked.
      *
@@ -222,7 +223,7 @@ public class Block {
                     + this.getContactIban()
                     + this.getContactPublicKey().toString()
                     + this.getBlockType().name()
-                    + String.valueOf(this.getSequenceNumber())
+                    + this.getSequenceNumber()
                     + this.getPreviousHashChain().toString()
                     + this.getPreviousHashSender().toString();
             md.update(text.getBytes("UTF-8"));
@@ -262,8 +263,12 @@ public class Block {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Block)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Block)) {
+            return false;
+        }
 
         Block block = (Block) o;
 

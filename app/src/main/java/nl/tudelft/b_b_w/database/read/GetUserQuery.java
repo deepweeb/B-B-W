@@ -44,7 +44,7 @@ public class GetUserQuery extends ReadQuery {
     }
 
     /**
-     * Loop through all items under the cursor converting them to blocks
+     * Convert the item resulting from this query to a user, or null if there is no result
      * @param cursor the cursor resulting from the query
      */
     @Override

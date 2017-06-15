@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="nl.tudelft.b_b_w.view.ContactsActivity"
+    tools:context="nl.tudelft.bbw.view.ContactsActivity"
     android:orientation="vertical">
 
     <ListView

@@ -54,6 +54,7 @@ public class API {
 
     /**
      * This method adds an updaed block to the chain after a successful transaction.
+     *
      * @param block the block that succeeded the transaction.
      */
     public void successfulTransaction(Block block) {
@@ -63,6 +64,7 @@ public class API {
 
     /**
      * This method adds an updated block to the chain after a failed transaction.
+     *
      * @param block the block that failed the transaction.
      */
     public void failedTransaction(Block block) {
@@ -72,6 +74,7 @@ public class API {
 
     /**
      * This method in the API verifies the iban.
+     *
      * @param block the block that has to be verified.
      */
     public void verifyIBAN(Block block) {
@@ -81,6 +84,7 @@ public class API {
 
     /**
      * This method in the API revokes a given block.
+     *
      * @param block the block that has to be revoked.
      */
     public void revokedBlock(Block block) {

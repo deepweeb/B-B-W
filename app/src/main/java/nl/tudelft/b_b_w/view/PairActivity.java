@@ -40,7 +40,7 @@ public class PairActivity extends Activity {
      * The block controller.
      */
     private API mAPI;
-    
+
 
     /**
      * The name of the owner of each block in the chain.

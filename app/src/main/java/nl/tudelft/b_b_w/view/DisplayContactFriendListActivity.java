@@ -20,6 +20,7 @@ import nl.tudelft.b_b_w.blockchain.Block;
 import nl.tudelft.b_b_w.blockchain.User;
 import nl.tudelft.b_b_w.controller.API;
 import nl.tudelft.b_b_w.controller.ED25519;
+import nl.tudelft.b_b_w.model.BlockAlreadyExistsException;
 import nl.tudelft.b_b_w.model.HashException;
 
 /**
@@ -45,18 +46,22 @@ public class DisplayContactFriendListActivity extends Activity {
                 ED25519.generatePrivateKey(Utils.hexToBytes(
                         "0000000000000000000000000000000000000000000000000000000000000000"));
         EdDSAPublicKey ownerPublicKey = ED25519.getPublicKey(edDSAPrivateKey1);
-        User user = new User(userName, iban, ownerPublicKey );
+        User user = new User(userName, iban, ownerPublicKey);
         setTitle(ownerName + "'s contact list");
         API API = null;
         try {
             API = new API(user, this);
         } catch (HashException e) {
             e.printStackTrace();
+        } catch (BlockAlreadyExistsException e) {
+            e.printStackTrace();
         }
         List<Block> list = null;
         try {
             list = API.getBlocks(user);
         } catch (HashException e) {
+            e.printStackTrace();
+        } catch (BlockAlreadyExistsException e) {
             e.printStackTrace();
         }
         setUpGraph(list);

@@ -5,6 +5,7 @@ import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import net.i2p.crypto.eddsa.Utils;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.KeyStore;
@@ -17,6 +18,8 @@ import java.security.cert.X509Certificate;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
+import nl.tudelft.b_b_w.model.User;
+
 /**
  * Class to write the private and/ or keys to the file
  */
@@ -26,6 +29,7 @@ public final class KeyWriter {
      * Class variables
      */
     private static FileOutputStream fileOutputStream;
+    static final String TEMP_EXTENSION = ".bak";
 
     /**
      * Empty constructor method
@@ -52,7 +56,7 @@ public final class KeyWriter {
      * @param encodedKey given byte array containing the key
      */
     private static void writeKey(String path, byte[] encodedKey) throws IOException {
-        initialize(path);
+        initialize(path + TEMP_EXTENSION);
         fileOutputStream.write(encodedKey);
         fileOutputStream.close();
     }
@@ -68,6 +72,7 @@ public final class KeyWriter {
 
         PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
         writeKey(privateKeyPath, pkcs8EncodedKeySpec.getEncoded());
+        encryptFile(privateKeyPath, ED25519.getPublicKey(privateKey));
     }
 
     /**
@@ -81,6 +86,7 @@ public final class KeyWriter {
 
         X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
         writeKey(publicKeyPath, x509EncodedKeySpec.getEncoded());
+        encryptFile(publicKeyPath, publicKey);
     }
 
     /**
@@ -94,5 +100,17 @@ public final class KeyWriter {
         X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
         return Utils.bytesToHex(x509EncodedKeySpec.getEncoded());
     }
-    
+
+    /**
+     * encryptFile method
+     * Encrypts the file using the string representation of the public key as password
+     *
+     * @param path given path to file
+     * @param publicKey given public key to use as password
+     */
+    private static void encryptFile(String path, EdDSAPublicKey publicKey) {
+        CryptoController cryptoController = new CryptoController(publicKeyToString(publicKey));
+        cryptoController.encryptFile(path);
+    }
+
 }

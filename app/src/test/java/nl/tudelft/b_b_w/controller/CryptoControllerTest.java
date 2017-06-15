@@ -4,8 +4,12 @@ import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import net.i2p.crypto.eddsa.Utils;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
 
 import nl.tudelft.b_b_w.model.User;
 
@@ -32,7 +36,7 @@ public class CryptoControllerTest {
         EdDSAPublicKey publicKey = ED25519.getPublicKey(privateKey);
         final String name = "name";
         final String iban = "iban";
-        this.cryptoController = new CryptoController(new User(name, iban, publicKey));
+        this.cryptoController = new CryptoController(KeyWriter.publicKeyToString(publicKey));
     }
 
     /**

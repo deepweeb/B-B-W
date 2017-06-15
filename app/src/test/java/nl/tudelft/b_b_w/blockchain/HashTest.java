@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
 /**
@@ -36,13 +37,18 @@ public class HashTest {
     }
 
     /**
-     * equals() method testing
-     * @throws Exception
+     * equals() and hashCode() method testing.
      */
     @Test
-    public void equalsTest() throws Exception {
-        final Hash testHash = new Hash("testHash123456789");
-        assertTrue(hash.equals(testHash));
+    public void testEquals_Symmetric() {
+        Hash x = new Hash("testHash");  // equals and hashCode check name field value
+        Hash y = new Hash("testHash");
+        assertTrue(x.equals(y) && y.equals(x));
+        assertTrue(x.hashCode() == y.hashCode());
+        assertTrue(x.equals(x));
+        assertFalse(x.equals(hashString));
     }
+
+
 
 }

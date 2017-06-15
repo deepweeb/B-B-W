@@ -102,7 +102,6 @@ public class MainActivity extends Activity {
     }
 
 
-
     /**
      * When you want to visit the PairActivity page.
      *

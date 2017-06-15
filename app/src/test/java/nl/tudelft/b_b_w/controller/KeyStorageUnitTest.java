@@ -11,6 +11,13 @@ import org.junit.rules.ExpectedException;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SignatureException;
+import java.security.UnrecoverableEntryException;
+import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
 
 import static junit.framework.Assert.fail;
@@ -95,16 +102,23 @@ public class KeyStorageUnitTest {
      * Test to check whether converting a public key to a string and back works
      */
     @Test
-    public void testStringPublicKey() {
-        try {
-            EdDSAPublicKey edDSAPublicKey1 = KeyReader.readPublicKey(
-                    KeyWriter.publicKeyToString(edDSAPublicKey));
-            assertEquals(edDSAPublicKey, edDSAPublicKey1);
-        } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
-            fail();
-        }
+    public void testStringPublicKey() throws InvalidKeySpecException {
+        EdDSAPublicKey edDSAPublicKey1 = KeyReader.readPublicKey(
+                KeyWriter.publicKeyToString(edDSAPublicKey));
+        assertEquals(edDSAPublicKey, edDSAPublicKey1);
     }
+
+    /**
+     * Test to check whether saving a private key in the android keystore works
+     */
+    @Test
+//    public void testKeyStore() throws CertificateException, NoSuchAlgorithmException,
+//            KeyStoreException, IOException, UnrecoverableEntryException, InvalidKeyException,
+//            NoSuchProviderException, SignatureException, InvalidKeySpecException {
+//        final String alias = "owner";
+//        KeyWriter.writeToKeyStore(edDSAPrivateKey, alias);
+//        assertEquals(edDSAPrivateKey, KeyReader.readFromKeyStore(alias));
+//    }
 
     /**
      * Remove test key files

@@ -4,9 +4,19 @@ import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import net.i2p.crypto.eddsa.Utils;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableEntryException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -122,5 +132,29 @@ public final class KeyReader {
     private static EdDSAPublicKey convertToPublicKey(byte[] encodedPublicKey) throws InvalidKeySpecException {
         X509EncodedKeySpec encoded = new X509EncodedKeySpec(encodedPublicKey);
         return new EdDSAPublicKey(encoded);
+    }
+
+    /**
+     * readFromKeyStore method
+     * Reads the private key from the android keystore
+     *
+     * @param alias given alias to read the private key from
+     * @throws KeyStoreException if there occurs an error in the keystore
+     * @throws IOException if there occurs an error in the input stream
+     * @throws CertificateException if there occurs an error in the creation of the certificate
+     * @throws NoSuchAlgorithmException If the given algorithm is invalid, this case 'X.509'
+     * @throws UnrecoverableEntryException if the entry could not be read
+     */
+    public static EdDSAPrivateKey readFromKeyStore(String alias) throws KeyStoreException,
+            IOException, CertificateException, NoSuchAlgorithmException, UnrecoverableEntryException {
+        KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
+        keyStore.load(null);
+        KeyStore.Entry entry = keyStore.getEntry(alias, null);
+
+        if (!(entry instanceof KeyStore.PrivateKeyEntry)) {
+            throw new RuntimeException("Private key could not be read");
+        }
+
+        return ED25519.generatePrivateKey(((KeyStore.PrivateKeyEntry) entry).getPrivateKey().getEncoded());
     }
 }

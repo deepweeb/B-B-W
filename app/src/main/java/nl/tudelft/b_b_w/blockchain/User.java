@@ -1,5 +1,6 @@
 package nl.tudelft.b_b_w.blockchain;
 
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
 /**
@@ -13,6 +14,7 @@ public class User {
     private String name;
     private String iban;
     private EdDSAPublicKey publicKey;
+    private EdDSAPrivateKey privateKey;
 
     /**
      * Constructor for user class
@@ -52,6 +54,20 @@ public class User {
      */
     public EdDSAPublicKey getPublicKey() {
         return this.publicKey;
+    }
+
+    /**
+     * getPrivateKey function
+     * @return private key of user
+     */
+    public EdDSAPrivateKey getPrivateKey() { return this.privateKey; }
+
+    /**
+     * setPrivateKey function
+     * @param edDSAPrivateKey given private key to set it to
+     */
+    public void setPrivateKey(EdDSAPrivateKey edDSAPrivateKey) {
+        this.privateKey = edDSAPrivateKey;
     }
 
 }

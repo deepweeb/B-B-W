@@ -14,9 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import nl.tudelft.b_b_w.R;
+import nl.tudelft.b_b_w.blockchain.Block;
 import nl.tudelft.b_b_w.controller.API;
+import nl.tudelft.b_b_w.controller.ED25519;
 import nl.tudelft.b_b_w.model.HashException;
-import nl.tudelft.b_b_w.model.User;
+import nl.tudelft.b_b_w.blockchain.User;
 
 public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
 
@@ -102,18 +104,22 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
      * @return The listener
      */
     private View.OnClickListener createDialog(final int position) throws HashException {
+        final Block block = mAPI.getBlocks(user).get(position);
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Confirm");
                 builder.setMessage("Are you sure you want to add "
-                        + mAPI.getBlocks(user).get(position).getOwner()
+                        + block.getBlockOwner()
                         + " IBAN?");
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         try {
-                            mAPI.addBlockToChain(mAPI.getBlocks(user).get(position));
+                            final byte[] message = block.getContactPublicKey().getEncoded();
+                            final byte[] signature = ED25519.generateSignature(
+                                    message, user.getPrivateKey());
+                            mAPI.addContactToChain(block.getContact(), signature, message);
                         } catch (Exception e) {
                             //do nothing.
                         }

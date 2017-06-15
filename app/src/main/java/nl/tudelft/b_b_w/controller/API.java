@@ -23,8 +23,8 @@ public class API {
         blockController.createGenesis(owner);
     }
 
-    public void addContactToChain(User contact) throws HashException {
-        blockController.addBlockToChain(contact);
+    public void addContactToChain(User contact, byte[] signature, byte[] message) throws HashException {
+        blockController.addBlockToChain(contact, signature, message);
     }
 
     public void revokeContactFromChain(User contact) throws HashException {

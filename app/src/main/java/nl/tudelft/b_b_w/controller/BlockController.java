@@ -1,7 +1,11 @@
 package nl.tudelft.b_b_w.controller;
 
+import android.app.ActivityManager;
 import android.content.Context;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +32,12 @@ public class BlockController {
         this.database = new Database(context);
     }
 
-    public final void addBlockToChain(User user) throws HashException {
-        createKeyBlock(chainOwner, user);
+    public final void addBlockToChain(User user, byte[] signature, byte[] message) throws HashException {
+        if (verifySignature(signature, message)) {
+            createKeyBlock(chainOwner, user);
+        } else {
+            throw new RuntimeException("Block cannot be verified");
+        }
     }
 
     public final void revokeBlockFromChain(User user) throws HashException {
@@ -153,5 +161,13 @@ public class BlockController {
         final Block block = new Block(owner, contact, blockData);
         addBlock(block);
         return block;
+    }
+
+    boolean verifySignature(byte[] signature, byte[] message) {
+        try {
+            return ED25519.verifySignature(signature, message, chainOwner.getPublicKey());
+        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }

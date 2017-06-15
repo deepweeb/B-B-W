@@ -21,6 +21,7 @@ public class UserTest {
      */
     private String name;
     private String iban;
+    private EdDSAPrivateKey privateKey;
     private EdDSAPublicKey publicKey;
     private User user;
 
@@ -31,8 +32,8 @@ public class UserTest {
     public void setUpUser(){
         name = "testName";
         iban = "NL642335674446";
-        EdDSAPrivateKey edDSAPrivateKey = ED25519.generatePrivateKey(Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000"));
-        publicKey = ED25519.getPublicKey(edDSAPrivateKey);
+        privateKey = ED25519.generatePrivateKey(Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000"));
+        publicKey = ED25519.getPublicKey(privateKey);
         user = new User(name, iban, publicKey);
     }
 
@@ -61,6 +62,15 @@ public class UserTest {
     @Test
     public void getPublicKeyTest() throws Exception {
         assertEquals(publicKey, user.getPublicKey());
+    }
+
+    /**
+     * Test method for getting and setting the private key
+     */
+    @Test
+    public void privateKey() {
+        user.setPrivateKey(privateKey);
+        assertEquals(privateKey, user.getPrivateKey());
     }
 
 }

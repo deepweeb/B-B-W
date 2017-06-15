@@ -7,6 +7,8 @@ import net.i2p.crypto.eddsa.Utils;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import nl.tudelft.b_b_w.controller.ED25519;
 
 import static junit.framework.Assert.assertEquals;
@@ -23,6 +25,7 @@ public class ChainTest {
     private String ownerName;
     private String ownerIban;
     private EdDSAPublicKey ownerPublicKey;
+    private ArrayList<Block> testChain;
 
     //chain object to be tested
     private Chain chain;
@@ -38,7 +41,7 @@ public class ChainTest {
                 ED25519.generatePrivateKey(Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000"));
         ownerPublicKey = ED25519.getPublicKey(edDSAPrivateKey1);
         owner = new User(ownerName, ownerIban, ownerPublicKey);
-
+        testChain = new ArrayList<Block>();
         chain = new Chain(owner);
 
     }
@@ -48,5 +51,16 @@ public class ChainTest {
         assertEquals(owner, chain.getChainOwner());
     }
 
+    @Test
+    public void getChainList() throws Exception {
+        assertEquals(testChain, chain.getChainList());
+    }
+
+    @Test
+    public void setChainList() throws Exception {
+        testChain.add(new Block(owner));
+        chain.setChainList(testChain);
+        assertEquals(testChain, chain.getChainList());
+    }
 
 }

@@ -1,5 +1,7 @@
 package nl.tudelft.b_b_w.view;
 
+import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,11 +12,10 @@ import android.widget.Toast;
 import java.util.List;
 
 import nl.tudelft.b_b_w.R;
-import nl.tudelft.b_b_w.controller.BlockController;
-import nl.tudelft.b_b_w.model.Block;
+import nl.tudelft.b_b_w.controller.API;
 import nl.tudelft.b_b_w.model.User;
+import nl.tudelft.b_b_w.model.block.Block;
 
-import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
 
 /**
  * Pair activity lets you pair with a fixed number of preprogrammed contacts, for demo purposes.
@@ -31,7 +32,7 @@ public class PairActivity extends Activity {
     /**
      * The block controller.
      */
-    private BlockController blockController;
+    private API mAPI;
 
     /**
      * Its own block.
@@ -49,18 +50,19 @@ public class PairActivity extends Activity {
     /**
      * The name of the owner of each block in the chain.
      */
-    private String ownerName;
+    private User owner;
 
 
     /**
      * The on create method sets up the activity.
+     *
      * @param savedInstanceState brings the variables.
      */
     @Override
     protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pair);
-        blockController = new BlockController(this);
+//        mAPI = new API(owner, this);
     }
 
 
@@ -70,38 +72,39 @@ public class PairActivity extends Activity {
      * @param view The view of the program.
      */
     public final void onTestSubject1(View view) throws Exception {
-
-        ownerName = "TestSubject1";
-        final String ibanTestSub1 = "IBAN1";
+        owner = new User("TestSubject1", "IBAN1");
 
         try {
-            blockController.createGenesis(new User(ownerName, ibanTestSub1));
+//            mAPI.makeGenesis(owner);
         } catch (Exception e) {
             Toast.makeText(this, "Sorry, this contact is already added!",
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
-        blockController.createGenesis(new User("Subject1Contact1", "IBAN1Contact1"));
-        blockController.createKeyBlock(ownerName, "Subject1Contact1", "Contact1_PUBKEY", "IBAN1Contact1");
+        User subject1contact1 = new User("Subject1Contact1", "IBAN1Contact1");
+        User subject1contact2 = new User("Subject1Contact2", "IBAN1Contact2");
+        User subject1contact3 = new User("Subject1Contact3", "IBAN1Contact3");
+//        mAPI.makeGenesis(subject1contact1);
+//        mAPI.addBlockToChain(owner, subject1contact1, "Contact1_PUBKEY");
 
-        blockController.createGenesis(new User("Subject1Contact2", "IBAN1Contact2"));
-        blockController.createKeyBlock(ownerName, "Subject1Contact2", "Contact2_PUBKEY", "IBAN1Contact2");
+//        mAPI.makeGenesis(subject1contact2);
+//        mAPI.createKeyBlock(owner, subject1contact2, "Contact2_PUBKEY");
 
-        blockController.createGenesis(new User("Subject1Contact3", "IBAN1Contact3"));
-        blockController.createKeyBlock(ownerName, "Subject1Contact3", "Contact3_PUBKEY", "IBAN1Contact3");
+//        mAPI.makeGenesis(subject1contact3);
+//        mAPI.createKeyBlock(owner, subject1contact3, "Contact3_PUBKEY");
 
-        List<Block> list = blockController.getBlocks(ownerName);
+        List<Block> list = mAPI.getBlocks(owner);
 
-        Toast.makeText(this, list.get(0).getPublicKey() + ", " +
-                list.get(ONE).getPublicKey() + ", " +
-                list.get(TWO).getPublicKey() + ", " +
-                list.get(THREE).getPublicKey(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, list.get(0).getPublicKey() + ", "
+                + list.get(ONE).getPublicKey() + ", "
+                + list.get(TWO).getPublicKey() + ", "
+                + list.get(THREE).getPublicKey(), Toast.LENGTH_SHORT).show();
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString("userNameTestSubject", ownerName);
-        editor.putString("ibanTestSubject", ibanTestSub1);
+        editor.putString("userNameTestSubject", owner.getName());
+        editor.putString("ibanTestSubject", owner.getIban());
         editor.apply();
 
         startActivity(new Intent(this, FriendsPageActivity.class));
@@ -116,41 +119,51 @@ public class PairActivity extends Activity {
     public final void onTestSubject2(View view) throws Exception {
 
         Block block5;
-        ownerName = "TestSubject2";
-        final String ibanTestSub2 = "IBAN2";
+        owner = new User("TestSubject2", "IBAN2");
 
         try {
-            blockController.createGenesis(new User(ownerName, ibanTestSub2));
+//            mAPI.makeGenesis(owner);
         } catch (Exception e) {
             Toast.makeText(this, "Sorry, this contact is already added!",
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
-        blockController.createGenesis(new User("Subject2Contact1", "IBAN2Contact1"));
-        blockController.createKeyBlock(ownerName, "Subject2Contact1", "b", "IBAN2Contact1");
+        User subject2contact1 = new User("Subject2Contact1", "IBAN2Contact1");
+        User subject2contact2 = new User("Subject2Contact2", "IBAN2Contact2");
+        User subject2contact3 = new User("Subject2Contact3", "IBAN2Contact3");
+        User subject2contact4 = new User("Subject2Contact4", "IBAN2Contact4");
 
-        blockController.createGenesis(new User("Subject2Contact2", "IBAN2Contact2"));
-        blockController.createKeyBlock(ownerName, "Subject2Contact2", "c", "IBAN2Contact2");
+//        mAPI.makeGenesis(subject2contact1);
+//
+//        mAPI.makeGenesis(subject2contact2);
+//        mAPI.createKeyBlock(owner, subject2contact2, "c");
 
-        blockController.createGenesis(new User("Subject2Contact3", "IBAN2Contact3"));
-        blockController.createKeyBlock(ownerName, "Subject2Contact3", "d", "IBAN2Contact3");
+//        mAPI.makeGenesis(subject2contact3);
+//        mAPI.createKeyBlock(owner, subject2contact3, "d");
 
-        blockController.createGenesis(new User("Subject2Contact4", "IBAN2Contact4"));
-        blockController.createKeyBlock(ownerName, "Subject2Contact4", "e", "IBAN2Contact4");
+//        mAPI.makeGenesis(subject2contact4);
+//        mAPI.createKeyBlock(owner, subject2contact4, "e");
 
-        List<Block> list = blockController.getBlocks(ownerName);
+        List<Block> list = mAPI.getBlocks(owner);
 
-        Toast.makeText(this, list.get(0).getPublicKey() + ", " +
-                list.get(ONE).getPublicKey() + ", " +
-                list.get(TWO).getPublicKey() + ", " +
-                list.get(THREE).getPublicKey() + ", " +
-                list.get(FOUR).getPublicKey(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, list.get(0).getPublicKey() + ", "
+                + list.get(ONE).getPublicKey() + ", "
+                + list.get(TWO).getPublicKey() + ", "
+                + list.get(THREE).getPublicKey() + ", "
+                + list.get(FOUR).getPublicKey(), Toast.LENGTH_SHORT).show();
+
+        Toast.makeText(this, list.get(0).getPublicKey() + ", "
+                + list.get(ONE).getPublicKey() + ", "
+                + list.get(TWO).getPublicKey() + ", "
+                + list.get(THREE).getPublicKey() + ", "
+                + list.get(FOUR).getPublicKey(), Toast.LENGTH_SHORT).show();
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString("userNameTestSubject", ownerName);
-        editor.putString("ibanTestSubject", ibanTestSub2);
+        editor.putString("userNameTestSubject", owner.getName());
+        editor.putString("ibanTestSubject", owner.getIban());
+
         editor.apply();
 
         startActivity(new Intent(this, FriendsPageActivity.class));
@@ -158,38 +171,25 @@ public class PairActivity extends Activity {
 
     /**
      * This method creates another test subject (third). It is hardcoded and will be change later on.
-     * We do this to simulate a transaction.aa
+     * We do this to simulate a transaction.
      *
      * @param view The view of the program.
      */
-    public final void onTestSubject3(View view) {
+    public final void onTestSubject3(View view) throws Exception {
+        owner = new User("TestSubject3", "IBAN3");
 
-
-        ownerName = "TestSubject3";
-        final String ibanTestSub3 = "IBAN3";
-
-        try {
-            block1 = blockController.createGenesis(new User(ownerName, ibanTestSub3));
-        } catch (Exception e) {
-            Toast.makeText(this, "Sorry, this contact is already added!",
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-
-        List<Block> list = blockController.getBlocks(ownerName);
+        List<Block> list = mAPI.getBlocks(owner);
 
         Toast.makeText(this, list.get(0).getPublicKey(), Toast.LENGTH_SHORT).show();
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString("userNameTestSubject", ownerName);
-        editor.putString("ibanTestSubject", ibanTestSub3);
+        editor.putString("userNameTestSubject", owner.getName());
+        editor.putString("ibanTestSubject", owner.getIban());
         editor.apply();
 
+        Toast.makeText(this, list.get(0).getPublicKey(), Toast.LENGTH_SHORT).show();
+
         startActivity(new Intent(this, FriendsPageActivity.class));
-
     }
-
-
 }

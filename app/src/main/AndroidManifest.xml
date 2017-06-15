@@ -21,7 +21,10 @@
             android:label="@string/title_activity_friends_page" />
         <activity
             android:name=".view.PairActivity"
-            android:label="@string/title_activity_pair"></activity>
+            android:label="@string/title_activity_pair" />
+        <activity
+            android:name=".view.TransactionActivity"
+            android:label="TransactionActivity" />
         <activity
             android:name=".view.ContactsActivity"
             android:label="ContactsActivity"></activity>
@@ -29,5 +32,4 @@
             android:name=".view.DisplayContactFriendListActivity"
             android:label="DisplayContactFriendListActivity" />
     </application>
-
 </manifest>

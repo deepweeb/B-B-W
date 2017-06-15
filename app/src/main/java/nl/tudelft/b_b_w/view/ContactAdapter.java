@@ -11,43 +11,50 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import nl.tudelft.b_b_w.R;
-import nl.tudelft.b_b_w.controller.BlockController;
+import nl.tudelft.b_b_w.controller.API;
+import nl.tudelft.b_b_w.model.HashException;
+import nl.tudelft.b_b_w.model.User;
 
 /**
  * Adapter to add the different blocks dynamically
  */
 public class ContactAdapter extends BaseAdapter implements ListAdapter {
 
+    private final String retrievingHashError = "Hash error while retrieving blocks";
     //Variables which we use for getting the block information
-    private BlockController blcController;
+    private API mAPI;
     private Context context;
-    private String ownerName;
+    private User owner;
     //Images for displaying trust
-    private Integer images[] = {R.drawable.pic5,
+    private Integer[] images = {
+            R.drawable.pic5,
             R.drawable.pic4,
             R.drawable.pic3,
             R.drawable.pic2,
-            R.drawable.pic1};
+            R.drawable.pic1
+    };
 
     /**
      * Default constructor to initiate the Adapter
-     * @param bc BlockController which is passed on
+     *
+     * @param API     API which is passed on
      * @param context Context which is passed on
      */
-    public ContactAdapter(BlockController bc, String ownerName, Context context) {
+    public ContactAdapter(API API, User owner, Context context) {
         this.context = context;
-        this.ownerName = ownerName;
-        this.blcController = bc;
+        this.owner = owner;
+        this.mAPI = API;
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public Object getItem(int position) {
-        return blcController.getBlocks(ownerName).get(position);
+        return mAPI.getBlocks(owner).get(position);
     }
 
     /**
@@ -63,12 +70,12 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
      */
     @Override
     public int getCount() {
-        return blcController.getBlocks(ownerName).size();
+        return mAPI.getBlocks(owner).size();
     }
-
 
     /**
      * Method to get the right image number
+     *
      * @param trust The trust value
      * @return Image number
      */
@@ -78,18 +85,22 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
 
     /**
      * Method to calculate the right index number of the array
+     *
      * @param trust the trust value
      * @return the index
      */
     private int calculateImageIndex(int trust) {
         final int trustInterval = 20;
-        int result = trust/ trustInterval - 1;
-        if (result < 0) result = 0;
-        return result;
+        double result = trust / trustInterval - 0.5;
+        if (result < 0) {
+            result = 0;
+        }
+        return (int) result;
     }
 
     /**
      * Method to create a popup to confirm your revoke
+     *
      * @param position Current position of the view
      * @return The listener
      */
@@ -100,11 +111,16 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Confirm");
                 builder.setMessage("Are you sure you want to revoke "
-                        + blcController.getBlocks(ownerName).get(position).getOwner()
+                        + mAPI.getBlocks(owner).get(position).getOwner()
                         + " IBAN?");
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        blcController.revokeBlock(blcController.getBlocks(ownerName).get(position));
+                        try {
+                            mAPI.revokeBlockFromChain(mAPI.getBlocks(owner).get(position));
+                        } catch (HashException e) {
+                            Toast.makeText(context, retrievingHashError,
+                                    Toast.LENGTH_LONG).show();
+                        }
                         notifyDataSetChanged();
                         dialog.dismiss();
                     }
@@ -131,17 +147,17 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
         View view = convertView;
         if (view == null) {
             LayoutInflater inflater =
-                    (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.simple_list_item_1, null);
+                    (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = inflater.inflate(R.layout.simple_list_item_1, parent, false);
         }
-        TextView nameItemText = (TextView)view.findViewById(R.id.list_item_name);
-        nameItemText.setText(blcController.getContactName(blcController.getBlocks(ownerName).get(position).getOwnHash()));
-        TextView ibanItemText = (TextView)view.findViewById(R.id.list_item_iban);
-        ibanItemText.setText(blcController.getBlocks(ownerName).get(position).getIban());
-        ImageView pic = (ImageView)view.findViewById(R.id.trust_image);
+        TextView nameItemText = (TextView) view.findViewById(R.id.list_item_name);
+        nameItemText.setText(mAPI.getBlocks(owner).get(position).getOwner().getName());
+        TextView ibanItemText = (TextView) view.findViewById(R.id.list_item_iban);
+        ibanItemText.setText(mAPI.getBlocks(owner).get(position).getOwner().getIban());
+        ImageView pic = (ImageView) view.findViewById(R.id.trust_image);
         pic.setImageResource(
-                getImageNo(blcController.getBlocks(ownerName).get(position).getTrustValue()));
-        Button revokeButton = (Button)view.findViewById(R.id.revoke_btn);
+                getImageNo(mAPI.getBlocks(owner).get(position).getTrustValue()));
+        Button revokeButton = (Button) view.findViewById(R.id.revoke_btn);
         revokeButton.setOnClickListener(createDialog(position));
         return view;
     }

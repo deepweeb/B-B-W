@@ -7,26 +7,28 @@ public enum TrustValues {
     /**
      * Predefined trust values
      */
-    INITIALIZED(20), REVOKED(0), VERIFIED(50), SUCCESFUL_TRANSACTION(10), FAILED_TRANSACTION(-10);
+    INITIALIZED(10), REVOKED(0);
 
     /**
      * value of the predefined trust values
      */
-    private int value;
+    private double value;
 
     /**
      * Constructor to initialize trustvalue
+     *
      * @param _value given trust value
      */
-    TrustValues(int _value) {
+    TrustValues(double _value) {
         this.value = _value;
     }
 
     /**
      * Default getter method for trust value
+     *
      * @return trust value
      */
-    public int getValue() {
+    public double getValue() {
         return this.value;
     }
 }

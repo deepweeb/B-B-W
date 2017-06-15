@@ -12,8 +12,9 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.util.List;
 
 import nl.tudelft.b_b_w.R;
-import nl.tudelft.b_b_w.controller.BlockController;
-import nl.tudelft.b_b_w.model.Block;
+import nl.tudelft.b_b_w.controller.API;
+import nl.tudelft.b_b_w.model.User;
+import nl.tudelft.b_b_w.model.block.Block;
 
 /**
  * When the user wants to see a list of friends of the contact he just paired he enters into the
@@ -29,20 +30,24 @@ public class DisplayContactFriendListActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contacts);
+        setContentView(R.layout.activity_friends_contacts);
         SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
         final String ownerName = settings.getString("userNameTestSubject", "");
-        setTitle(ownerName+ "'s contact list");
-        BlockController blockController = new BlockController(this);
-        List<Block> list = blockController.getBlocks(ownerName);
-        setUpGraph(list);
-        ContactAdapter adapter = new ContactAdapter(blockController, ownerName, this);
-        ListView lView = (ListView)findViewById(R.id.contacts);
-        lView.setAdapter(adapter);
+            final String userName = settings.getString("userName", "");
+            final String iban = settings.getString("iban", "");
+            User user = new User(userName, iban);
+            setTitle(ownerName + "'s contact list");
+            API API = new API(user, this);
+            List<Block> list = API.getBlocks(user);
+            setUpGraph(list);
+            FriendsContactAdapter adapter = new FriendsContactAdapter(API, ownerName, user, this);
+            ListView lView = (ListView) findViewById(R.id.contacts2);
+            lView.setAdapter(adapter);
     }
 
     /**
      * Setting up the graph
+     *
      * @param blocks The blocks where the values for the graph are extracted from
      */
     public void setUpGraph(List<Block> blocks) {

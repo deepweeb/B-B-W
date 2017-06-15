@@ -9,13 +9,18 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testApplicationId "nl.tudelft.b_b_w.view"
+        testInstrumentationRunner "nl.tudelft.b_b_w.view.Instrumentation"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    lintOptions {
+        abortOnError false
+        disable 'InvalidPackage'
     }
 }
 
@@ -25,12 +30,89 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    androidTestCompile('com.android.support.test.espresso:espresso-intents:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'org.encryptor4j:encryptor4j:0.1.1'
     testCompile 'junit:junit:4.12'
-    testCompile "org.mockito:mockito-core:2.0.5-beta"
+    testCompile 'org.mockito:mockito-core:2.8.9'
     testCompile 'org.robolectric:robolectric:3.0'
+    androidTestCompile 'junit:junit:4.12'
+    androidTestCompile 'info.cukes:cucumber-android:1.2.2@jar'
+    androidTestCompile 'info.cukes:cucumber-picocontainer:1.2.2'
+    androidTestCompile 'org.mockito:mockito-android:2.7.22'
     compile 'com.jjoe64:graphview:4.2.1'
+    compile 'net.i2p.crypto:eddsa:0.2.0'
 }
+
+
+apply plugin: 'pmd'
+apply plugin: 'findbugs'
+apply plugin: 'checkstyle'
+apply plugin: "com.github.kt3k.coveralls"
+apply plugin: 'cobertura'
+
+cobertura {
+    coverageExcludes = [
+            ".*nl.tudelft.b_b_w.view.*",
+            ".*com.jjoe64.*",
+            ".*android.*"
+    ]
+    coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
+    coverageReportDir = new File("$buildDir/reports/cobertura")
+}
+
+check.dependsOn 'checkstyle', 'findbugs', 'pmd'
+
+
+task checkstyle(type: Checkstyle) {
+    configFile file("${project.rootDir}/config/checkstyle/checkstyle.xml")
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    classpath = files()
+}
+
+task findbugs(type: FindBugs) {
+    ignoreFailures = true
+    effort = "max"
+    reportLevel = "high"
+    excludeFilter = new File("${project.rootDir}/config/findbugs/findbugs-filter.xml")
+    classes = files("$project.buildDir/intermediates/classes/")
+
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    reports {
+//        xml {
+//            destination "$project.buildDir/reports/findbugs/findbugs.xml"
+//            xml.withMessages true
+//        }
+        xml.enabled false
+        html.enabled true
+    }
+
+    classpath = files()
+}
+
+task pmd(type: Pmd) {
+    ruleSetFiles = files("${project.rootDir}/config/pmd/pmd-ruleset.xml")
+    ignoreFailures = true
+    ruleSets = [ "java-basic", "java-strings", "java-braces" ]
+
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
+
+check.finalizedBy(project.tasks.cobertura)

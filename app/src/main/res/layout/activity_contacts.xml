@@ -10,13 +10,20 @@
         android:id="@+id/contacts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:headerDividersEnabled="false"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:headerDividersEnabled="false" />
 
     <com.jjoe64.graphview.GraphView
         android:layout_width="match_parent"
         android:layout_height="200dip"
         android:id="@+id/graph"
         android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/button14"
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:onClick="onTransaction"
+        android:text="Transaction" />
 
 </android.widget.LinearLayout>

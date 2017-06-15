@@ -6,6 +6,8 @@ import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 
+import nl.tudelft.b_b_w.model.TrustValues;
+
 /**
  * This class represents a block object.
  */
@@ -22,7 +24,7 @@ public class Block {
     /**
      * Constructor for the BlockData class
      *
-     * @param blockOwner given the name of the owner of the chain this block belongs to
+     * @param blockOwner given the User object of the owner of the chain this block belongs to
      * @param contact    given the User object of the contact which the block concerns
      * @param blockData  the data of the block such as hash, trust, etc.
      */
@@ -30,6 +32,17 @@ public class Block {
         this.owner = blockOwner;
         this.contact = contact;
         this.blockData = blockData;
+        this.ownHash = calculateHash();
+    }
+
+    /**
+     * Constructor for the Genesis block
+     * @param blockOwner given the User object of the one you want to make an genesis block of.
+     */
+    public Block(User blockOwner) {
+        this.owner = blockOwner;
+        this.contact = blockOwner;
+        this.blockData = new BlockData(BlockType.GENESIS, 1, Hash.NOT_AVAILABLE, Hash.NOT_AVAILABLE, TrustValues.INITIALIZED.getValue());
         this.ownHash = calculateHash();
     }
 

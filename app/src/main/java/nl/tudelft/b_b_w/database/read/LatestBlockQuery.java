@@ -48,7 +48,7 @@ public class LatestBlockQuery extends ReadQuery {
     }
 
     /**
-     * Get our query result
+     * Get our query result. Null when the user does not have any blocks.
      * @return the latest block of a chain
      */
     public Block getLatestBlock() {
@@ -68,13 +68,17 @@ public class LatestBlockQuery extends ReadQuery {
     }
 
     /**
-     * Parse the query result by converting the result to a block
+     * Parse the query result by converting the result to a block. Null when no result.
      * @param cursor the cursor resulting from the query
      */
     @Override
     public void parse(Cursor cursor) {
-        cursor.moveToFirst();
-        latestBlock = toBlock(database, cursor);
+        if (cursor.getCount() <= 0) {
+            latestBlock = null;
+        } else {
+            cursor.moveToFirst();
+            latestBlock = toBlock(database, cursor);
+        }
     }
 
     /**

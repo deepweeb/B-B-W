@@ -19,6 +19,7 @@ import nl.tudelft.b_b_w.database.write.BlockAddQuery;
 import nl.tudelft.b_b_w.database.write.UserAddQuery;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 
 /**
  * Tests for the UserExistQuery class
@@ -94,6 +95,29 @@ public class LatestBlockQueryTest {
         LatestBlockQuery latestQuery = new LatestBlockQuery(database, alice);
         database.read(latestQuery);
         assertEquals(aRevokesB, latestQuery.getLatestBlock());
+    }
+
+    @Test
+    public void testLatestB() {
+        LatestBlockQuery latestQuery = new LatestBlockQuery(database, bob);
+        database.read(latestQuery);
+        assertEquals(bAddsC, latestQuery.getLatestBlock());
+    }
+
+    @Test
+    public void testLatestC() {
+        LatestBlockQuery latestQuery = new LatestBlockQuery(database, carol);
+        database.read(latestQuery);
+        assertEquals(genesisC, latestQuery.getLatestBlock());
+    }
+
+    @Test
+    public void testLatestNonexistent() {
+        User sinterklaas = new User("Sinterklaas", "gratis",
+                ED25519.getPublicKey(ED25519.generatePrivateKey()));
+        LatestBlockQuery latestQuery = new LatestBlockQuery(database, sinterklaas);
+        database.read(latestQuery);
+        assertNull(latestQuery.getLatestBlock());
     }
 
 }

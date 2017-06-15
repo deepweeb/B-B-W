@@ -1,4 +1,4 @@
-package nl.tudelft.b_b_w.database;
+package nl.tudelft.b_b_w.database.read;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +14,7 @@ import nl.tudelft.b_b_w.blockchain.BlockType;
 import nl.tudelft.b_b_w.blockchain.Hash;
 import nl.tudelft.b_b_w.blockchain.User;
 import nl.tudelft.b_b_w.controller.ED25519;
+import nl.tudelft.b_b_w.database.Database;
 import nl.tudelft.b_b_w.database.read.ChainSizeQuery;
 import nl.tudelft.b_b_w.database.write.BlockAddQuery;
 import nl.tudelft.b_b_w.database.write.UserAddQuery;

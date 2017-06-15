@@ -5,6 +5,10 @@ package nl.tudelft.b_b_w.blockchain;
  */
 
 public class Hash {
+    /**
+     * Hash for when chain links are not available
+     */
+    public static final Hash NOT_AVAILABLE = new Hash("N/A");
 
     /**
      * Properties of a hash

@@ -50,12 +50,14 @@ public class BlockTest {
      * The block.
      */
     private Block block;
+    private Block genesisBlock;
 
     /**
      * Set up the before testing.
      */
     @Before
     public void setUpBlock() throws Exception {
+
 
         //setting up owner
         ownerName = "BlockOwner1";
@@ -65,6 +67,9 @@ public class BlockTest {
                 ED25519.generatePrivateKey(Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000"));
         ownerPublicKey = ED25519.getPublicKey(edDSAPrivateKey1);
         owner = new User(ownerName, ownerIban, ownerPublicKey);
+
+        //Setting up Genesis block
+        genesisBlock = new Block(owner);
 
         //setting up contact
         contactName = "Contact1";
@@ -77,13 +82,12 @@ public class BlockTest {
 
         //setting up block data
         blockType = BlockType.ADD_KEY;
-        sequenceNumber = 1;
-        previousHashChain = new Hash("Contact1PreviousHashChain");
+        sequenceNumber = genesisBlock.getSequenceNumber()+ 1;
+        previousHashChain = genesisBlock.getPreviousHashChain();
         previousHashSender = new Hash("Contact1PreviousHashSender");
         trustValue = TrustValues.INITIALIZED.getValue();
         blockData = new BlockData(blockType, sequenceNumber, previousHashChain, previousHashSender, trustValue);
-
-        testOwnHash = new Hash("6acccb15c5f2619d9e2f61c35a9e20e64573717290d7324bb07b2eedda1bc965");
+        testOwnHash = new Hash("2592b8a970eae4b8c20846737de79645ca9498cb74940f3a7e68947efa0cbbb4");
 
         //setting up block
         block = new Block(owner, contact, blockData);
@@ -93,6 +97,7 @@ public class BlockTest {
     public void getterTests() throws Exception {
 
         //testing block owner getters
+        assertEquals(owner, genesisBlock.getBlockOwner());
         assertEquals(owner, block.getBlockOwner());
         assertEquals(ownerName, block.getOwnerName());
         assertEquals(ownerIban, block.getOwnerIban());

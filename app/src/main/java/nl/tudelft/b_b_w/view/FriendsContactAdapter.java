@@ -51,7 +51,13 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
      */
     @Override
     public Object getItem(int position) {
-        return mAPI.getBlocks(user).get(position);
+
+        try {
+             return mAPI.getBlocks(user).get(position);
+        } catch (HashException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -67,7 +73,12 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
      */
     @Override
     public int getCount() {
-        return mAPI.getBlocks(user).size();
+        try {
+            return mAPI.getBlocks(user).size();
+        } catch (HashException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -107,9 +118,13 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Confirm");
-                builder.setMessage("Are you sure you want to add "
-                        + mAPI.getBlocks(user).get(position).getOwner()
-                        + " IBAN?");
+                try {
+                    builder.setMessage("Are you sure you want to add "
+                            + mAPI.getBlocks(user).get(position).getOwner()
+                            + " IBAN?");
+                } catch (HashException e) {
+                    e.printStackTrace();
+                }
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         try {

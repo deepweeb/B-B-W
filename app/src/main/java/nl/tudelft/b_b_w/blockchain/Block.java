@@ -18,20 +18,20 @@ public class Block {
      */
     private User owner;
     private User contact;
-    private BlockData blockData;
+    private BlockData data;
     private Hash ownHash;
 
     /**
      * Constructor for the BlockData class
      *
-     * @param blockOwner given the User object of the owner of the chain this block belongs to
+     * @param owner given the User object of the owner of the chain this block belongs to
      * @param contact    given the User object of the contact which the block concerns
-     * @param blockData  the data of the block such as hash, trust, etc.
+     * @param data  the data of the block such as hash, trust, etc.
      */
-    public Block(User blockOwner, User contact, BlockData blockData) {
-        this.owner = blockOwner;
+    public Block(User owner, User contact, BlockData data) {
+        this.owner = owner;
         this.contact = contact;
-        this.blockData = blockData;
+        this.data = data;
         this.ownHash = calculateHash();
     }
 
@@ -42,7 +42,7 @@ public class Block {
     public Block(User blockOwner) {
         this.owner = blockOwner;
         this.contact = blockOwner;
-        this.blockData = new BlockData(BlockType.GENESIS, 1, Hash.NOT_AVAILABLE, Hash.NOT_AVAILABLE, TrustValues.INITIALIZED.getValue());
+        this.data = new BlockData(BlockType.GENESIS, 1, Hash.NOT_AVAILABLE, Hash.NOT_AVAILABLE, TrustValues.INITIALIZED.getValue());
         this.ownHash = calculateHash();
     }
 
@@ -141,7 +141,7 @@ public class Block {
      * @return the BlockData object of the Block.
      */
     public BlockData getBlockData() {
-        return blockData;
+        return data;
     }
 
 
@@ -151,7 +151,7 @@ public class Block {
      * @return the BlockType object of the Block.
      */
     public BlockType getBlockType() {
-        return blockData.getBlockType();
+        return data.getBlockType();
     }
 
     /**
@@ -160,7 +160,7 @@ public class Block {
      * @return if this block is a revoke block
      */
     public final boolean isRevoked() {
-        return blockData.getBlockType() == BlockType.REVOKE_KEY;
+        return data.getBlockType() == BlockType.REVOKE_KEY;
     }
 
 
@@ -170,7 +170,7 @@ public class Block {
      * @return the sequence number of the block
      */
     public final int getSequenceNumber() {
-        return blockData.getSequenceNumber();
+        return data.getSequenceNumber();
     }
 
     /**
@@ -179,7 +179,7 @@ public class Block {
      * @return previous hash of chain
      */
     public final Hash getPreviousHashChain() {
-        return blockData.getPreviousHashChain();
+        return data.getPreviousHashChain();
     }
 
     /**
@@ -188,7 +188,7 @@ public class Block {
      * @return hash of sender block
      */
     public final Hash getPreviousHashSender() {
-        return blockData.getPreviousHashSender();
+        return data.getPreviousHashSender();
     }
 
     /**
@@ -197,7 +197,7 @@ public class Block {
      * @return int trust value of block.
      */
     public final double getTrustValue() {
-        return blockData.getTrustValue();
+        return data.getTrustValue();
     }
 
     /**
@@ -206,7 +206,7 @@ public class Block {
      * @param trustValue of the block
      */
     public final void setTrustValue(double trustValue) {
-        blockData.setTrustValue(trustValue);
+        data.setTrustValue(trustValue);
     }
 
 
@@ -274,6 +274,9 @@ public class Block {
         return getContactPublicKey().equals(block.getContactPublicKey());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -289,10 +292,20 @@ public class Block {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         return ownHash.hashCode();
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return "Block#" + getSequenceNumber() + "{owner=" + owner.getName() + ",contact="
+                + contact.getName() + "}";
+    }
 }

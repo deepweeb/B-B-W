@@ -98,12 +98,11 @@ public class BlockExistQueryTest {
 
     @Test
     public void testRevokeInexists() {
-        Block bRevokesC = new Block(alice, bob, new BlockData(BlockType.ADD_KEY, 3,
+        Block bRevokesC = new Block(bob, carol, new BlockData(BlockType.REVOKE_KEY, 3,
                 genesisB.getOwnHash(), genesisC.getOwnHash(), 0));
         BlockExistQuery query = new BlockExistQuery(bRevokesC);
         database.read(query);
         assertFalse(query.blockExists());
-
     }
 
     @Test
@@ -117,7 +116,7 @@ public class BlockExistQueryTest {
     // B can add A
     @Test
     public void testBAddsA() {
-        Block bAddsA = new Block(alice, bob, new BlockData(BlockType.ADD_KEY, 3,
+        Block bAddsA = new Block(bob, alice, new BlockData(BlockType.ADD_KEY, 3,
                 genesisC.getOwnHash(), Hash.NOT_AVAILABLE, 0));
 
         // query
@@ -129,12 +128,12 @@ public class BlockExistQueryTest {
     // B cannot add C
     @Test
     public void testBAddsC() {
-        Block bAddsC2 = new Block(alice, bob, new BlockData(BlockType.ADD_KEY, 3,
+        Block bAddsC2 = new Block(bob, carol, new   BlockData(BlockType.ADD_KEY, 3,
                 genesisC.getOwnHash(), Hash.NOT_AVAILABLE, 0));
 
         // query
         BlockExistQuery query = new BlockExistQuery(bAddsC2);
         database.read(query);
-        assertFalse(query.blockExists());
+        assertTrue(query.blockExists());
     }
 }

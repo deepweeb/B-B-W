@@ -1,9 +1,13 @@
 package nl.tudelft.b_b_w.database.write;
 
 import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 
 import nl.tudelft.b_b_w.blockchain.Block;
 import nl.tudelft.b_b_w.blockchain.BlockType;
+import nl.tudelft.b_b_w.controller.KeyWriter;
+import nl.tudelft.b_b_w.database.DatabaseException;
 
 import static nl.tudelft.b_b_w.database.Database.BLOCK_TABLE_NAME;
 import static nl.tudelft.b_b_w.database.Database.KEY_CONTACT;
@@ -40,8 +44,8 @@ public class UpdateTrustQuery extends WriteQuery {
     public ContentValues getContentValues() {
         ContentValues values = new ContentValues();
         values.put(KEY_SEQ_NO, block.getSequenceNumber());
-        values.put(KEY_OWNER, block.getOwnerPublicKey().toString());
-        values.put(KEY_CONTACT, block.getContactPublicKey().toString());
+        values.put(KEY_OWNER, KeyWriter.publicKeyToString(block.getOwnerPublicKey()));
+        values.put(KEY_CONTACT, KeyWriter.publicKeyToString(block.getContactPublicKey()));
         values.put(KEY_HASH, block.getOwnHash().toString());
         values.put(KEY_PREV_HASH_CHAIN, block.getPreviousHashChain().toString());
         values.put(KEY_PREV_HASH_SENDER, block.getPreviousHashSender().toString());
@@ -57,5 +61,20 @@ public class UpdateTrustQuery extends WriteQuery {
     @Override
     protected String getTableName() {
         return BLOCK_TABLE_NAME;
+    }
+
+    /**
+     * Instead of the default execute, we want to perform an update instead of an insert operation
+     * @param database the database to perform the query on
+     */
+    @Override
+    public void execute(SQLiteDatabase database) throws DatabaseException {
+        ContentValues values = getContentValues();
+        try {
+            database.update(getTableName(), values, KEY_HASH + "= ?",
+                    new String[] {block.getOwnHash().toString()});
+        } catch (SQLiteException e) {
+            throw new DatabaseException("block already exists");
+        }
     }
 }

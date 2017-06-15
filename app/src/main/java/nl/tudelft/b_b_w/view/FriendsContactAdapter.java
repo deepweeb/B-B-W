@@ -78,7 +78,7 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
         } catch (HashException e) {
             e.printStackTrace();
         }
-        return null;
+        return -1;
     }
 
     /**
@@ -120,7 +120,7 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
                 builder.setTitle("Confirm");
                 try {
                     builder.setMessage("Are you sure you want to add "
-                            + mAPI.getBlocks(user).get(position).getOwner()
+                            + mAPI.getBlocks(user).get(position).getBlockOwner()
                             + " IBAN?");
                 } catch (HashException e) {
                     e.printStackTrace();
@@ -128,7 +128,7 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         try {
-                            mAPI.addBlockToChain(mAPI.getBlocks(user).get(position));
+                            mAPI.addContactToChain(mAPI.getBlocks(user).get(position));
                         } catch (Exception e) {
                             //do nothing.
                         }

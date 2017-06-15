@@ -2,7 +2,9 @@ package nl.tudelft.b_b_w.database.write;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 
+import nl.tudelft.b_b_w.database.DatabaseException;
 import nl.tudelft.b_b_w.database.Query;
 
 /**
@@ -27,8 +29,12 @@ public abstract class WriteQuery extends Query {
      * The default execution of a write query adds some content values to a table
      * @param database the database to perform the query on
      */
-    public void execute(SQLiteDatabase database) {
+    public void execute(SQLiteDatabase database) throws DatabaseException {
         ContentValues values = getContentValues();
-        database.insertOrThrow(getTableName(), null, values);
+        try {
+            database.insertOrThrow(getTableName(), null, values);
+        } catch (SQLiteException e) {
+            throw new DatabaseException("block already exists");
+        }
     }
 }

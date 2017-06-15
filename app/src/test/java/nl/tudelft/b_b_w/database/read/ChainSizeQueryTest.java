@@ -11,14 +11,11 @@ import nl.tudelft.b_b_w.BuildConfig;
 import nl.tudelft.b_b_w.blockchain.Block;
 import nl.tudelft.b_b_w.blockchain.BlockData;
 import nl.tudelft.b_b_w.blockchain.BlockType;
-import nl.tudelft.b_b_w.blockchain.Hash;
 import nl.tudelft.b_b_w.blockchain.User;
 import nl.tudelft.b_b_w.controller.ED25519;
 import nl.tudelft.b_b_w.database.Database;
-import nl.tudelft.b_b_w.database.read.ChainSizeQuery;
 import nl.tudelft.b_b_w.database.write.BlockAddQuery;
 import nl.tudelft.b_b_w.database.write.UserAddQuery;
-import nl.tudelft.b_b_w.model.TrustValues;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -70,9 +67,7 @@ public class ChainSizeQueryTest {
     @Test
     public void testSimpleChain() throws Exception {
         // add block
-        Block genesis = new Block(alice, alice, new BlockData(
-                BlockType.GENESIS, 1, new Hash(notAvailable), new Hash(notAvailable),
-                TrustValues.INITIALIZED.getValue()));
+        Block genesis = new Block(alice);
 
         // add user
         database.write(new UserAddQuery(alice));
@@ -87,36 +82,26 @@ public class ChainSizeQueryTest {
         assertEquals(1, chainsize);
     }
 
-    /**
-     * Test chain size with three users in a chain
-     */
     @Test
-    public void testMultipleGenesis() throws Exception {
-        // add genesis
-        Block genesisA = new Block(alice, alice, new BlockData(
-                BlockType.GENESIS, 1, new Hash(notAvailable), new Hash(notAvailable),
-                TrustValues.INITIALIZED.getValue()));
-        Block genesisB = new Block(bob, bob, new BlockData(
-                BlockType.GENESIS, 1, new Hash(notAvailable), new Hash(notAvailable),
-                TrustValues.INITIALIZED.getValue()));
-        Block genesisC = new Block(carol, carol, new BlockData(
-                BlockType.GENESIS, 1, new Hash(notAvailable), new Hash(notAvailable),
-                TrustValues.INITIALIZED.getValue()));
+    public void testLargeChain() {
+        Block genesisA = new Block(alice);
+        Block genesisB = new Block(bob);
+        Block genesisC = new Block(carol);
+        Block aAddB = new Block(alice, bob, new BlockData(BlockType.ADD_KEY, 2,
+                genesisA.getOwnHash(), genesisB.getOwnHash(), 0));
+        Block aAddC = new Block(alice, carol, new BlockData(BlockType.ADD_KEY, 3,
+                aAddB.getOwnHash(), genesisC.getOwnHash(), 0));
 
-        // add them
         database.write(new BlockAddQuery(genesisA));
         database.write(new BlockAddQuery(genesisB));
         database.write(new BlockAddQuery(genesisC));
+        database.write(new BlockAddQuery(aAddB));
+        database.write(new BlockAddQuery(aAddC));
 
-        // verify all chains have size 1
-        ChainSizeQuery sizeA = new ChainSizeQuery(alice);
-        ChainSizeQuery sizeB = new ChainSizeQuery(bob);
-        ChainSizeQuery sizeC = new ChainSizeQuery(carol);
-        database.read(sizeA);
-        database.read(sizeB);
-        database.read(sizeC);
-        assertEquals(1, sizeA.getSize());
-        assertEquals(1, sizeB.getSize());
-        assertEquals(1, sizeC.getSize());
+        // size should be three
+        ChainSizeQuery sizeQuery = new ChainSizeQuery(alice);
+        database.read(sizeQuery);
+        int chainsize = sizeQuery.getSize();
+        assertEquals(3, chainsize);
     }
 }

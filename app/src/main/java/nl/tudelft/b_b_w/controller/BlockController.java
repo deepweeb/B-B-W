@@ -163,6 +163,14 @@ public class BlockController {
         return block;
     }
 
+    /**
+     * verifySignature method
+     * Verifies the signature given a signature and message byte array
+     *
+     * @param signature given signature to use
+     * @param message given message to verify
+     * @return boolean if the signature of the block is verified
+     */
     boolean verifySignature(byte[] signature, byte[] message) {
         try {
             return ED25519.verifySignature(signature, message, chainOwner.getPublicKey());

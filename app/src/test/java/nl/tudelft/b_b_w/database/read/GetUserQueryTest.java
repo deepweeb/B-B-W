@@ -14,6 +14,7 @@ import nl.tudelft.b_b_w.blockchain.User;
 import nl.tudelft.b_b_w.controller.ED25519;
 import nl.tudelft.b_b_w.controller.KeyWriter;
 import nl.tudelft.b_b_w.database.Database;
+import nl.tudelft.b_b_w.database.write.UserAddQuery;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
@@ -41,6 +42,7 @@ public class GetUserQueryTest {
 
     @Test
     public void testExistentUser() {
+        database.write(new UserAddQuery(alice));
         GetUserQuery query = new GetUserQuery(aliceKey);
         database.read(query);
         User user = query.getUser();

@@ -9,12 +9,18 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+import net.i2p.crypto.eddsa.Utils;
+
 import java.util.List;
 
 import nl.tudelft.b_b_w.R;
+import nl.tudelft.b_b_w.blockchain.Block;
+import nl.tudelft.b_b_w.blockchain.User;
 import nl.tudelft.b_b_w.controller.API;
-import nl.tudelft.b_b_w.model.User;
-import nl.tudelft.b_b_w.model.block.Block;
+import nl.tudelft.b_b_w.controller.ED25519;
+import nl.tudelft.b_b_w.model.HashException;
 
 /**
  * When the user wants to see a list of friends of the contact he just paired he enters into the
@@ -33,16 +39,30 @@ public class DisplayContactFriendListActivity extends Activity {
         setContentView(R.layout.activity_friends_contacts);
         SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
         final String ownerName = settings.getString("userNameTestSubject", "");
-            final String userName = settings.getString("userName", "");
-            final String iban = settings.getString("iban", "");
-            User user = new User(userName, iban);
-            setTitle(ownerName + "'s contact list");
-            API API = new API(user, this);
-            List<Block> list = API.getBlocks(user);
-            setUpGraph(list);
-            FriendsContactAdapter adapter = new FriendsContactAdapter(API, ownerName, user, this);
-            ListView lView = (ListView) findViewById(R.id.contacts2);
-            lView.setAdapter(adapter);
+        final String userName = settings.getString("userName", "");
+        final String iban = settings.getString("iban", "");
+        EdDSAPrivateKey edDSAPrivateKey1 =
+                ED25519.generatePrivateKey(Utils.hexToBytes(
+                        "0000000000000000000000000000000000000000000000000000000000000000"));
+        EdDSAPublicKey ownerPublicKey = ED25519.getPublicKey(edDSAPrivateKey1);
+        User user = new User(userName, iban, ownerPublicKey );
+        setTitle(ownerName + "'s contact list");
+        API API = null;
+        try {
+            API = new API(user, this);
+        } catch (HashException e) {
+            e.printStackTrace();
+        }
+        List<Block> list = null;
+        try {
+            list = API.getBlocks(user);
+        } catch (HashException e) {
+            e.printStackTrace();
+        }
+        setUpGraph(list);
+        FriendsContactAdapter adapter = new FriendsContactAdapter(API, ownerName, user, this);
+        ListView lView = (ListView) findViewById(R.id.contacts2);
+        lView.setAdapter(adapter);
     }
 
     /**

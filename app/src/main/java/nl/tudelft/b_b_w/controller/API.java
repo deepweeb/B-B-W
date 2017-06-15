@@ -40,7 +40,7 @@ public class API {
     }
 
     public List<Block> getBlocks(User owner) throws HashException {
-        return blockController.getBlocks(owner.getName());
+        return blockController.getBlocks(owner);
     }
 
     public boolean isDatabaseEmpty() {

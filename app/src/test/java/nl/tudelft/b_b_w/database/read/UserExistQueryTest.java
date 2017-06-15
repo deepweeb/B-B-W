@@ -1,4 +1,4 @@
-package nl.tudelft.b_b_w.database;
+package nl.tudelft.b_b_w.database.read;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +10,7 @@ import org.robolectric.annotation.Config;
 import nl.tudelft.b_b_w.BuildConfig;
 import nl.tudelft.b_b_w.blockchain.User;
 import nl.tudelft.b_b_w.controller.ED25519;
-import nl.tudelft.b_b_w.database.read.UserExistQuery;
+import nl.tudelft.b_b_w.database.Database;
 import nl.tudelft.b_b_w.database.write.UserAddQuery;
 
 import static junit.framework.Assert.assertFalse;

@@ -54,4 +54,11 @@ public class User {
         return this.publicKey;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        return name;
+    }
+
 }

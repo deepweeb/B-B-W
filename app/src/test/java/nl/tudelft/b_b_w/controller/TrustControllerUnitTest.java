@@ -1,5 +1,11 @@
 package nl.tudelft.b_b_w.controller;
 
+import static org.junit.Assert.assertEquals;
+
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+import net.i2p.crypto.eddsa.Utils;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,11 +14,10 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import nl.tudelft.b_b_w.BuildConfig;
+import nl.tudelft.b_b_w.blockchain.Block;
+import nl.tudelft.b_b_w.blockchain.User;
+import nl.tudelft.b_b_w.model.BlockAlreadyExistsException;
 import nl.tudelft.b_b_w.model.HashException;
-import nl.tudelft.b_b_w.model.User;
-import nl.tudelft.b_b_w.model.block.Block;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Test class for CryptoController
@@ -33,12 +38,16 @@ public class TrustControllerUnitTest {
      * Initialized the TrustController, BlockController and a test block
      */
     @Before
-    public void initialize() throws HashException {
+    public void initialize() throws HashException, BlockAlreadyExistsException {
         this.trustController = new TrustController();
         final String name = "name";
         final String iban = "iban";
-        final User user = new User(name, iban);
-        this.block = new BlockController(RuntimeEnvironment.application).createGenesis(user);
+        EdDSAPrivateKey edDSAPrivateKey1 =
+                ED25519.generatePrivateKey(Utils.hexToBytes(
+                        "0000000000000000000000000000000000000000000000000000000000000000"));
+        EdDSAPublicKey ownerPublicKey = ED25519.getPublicKey(edDSAPrivateKey1);
+        final User user = new User(name, iban, ownerPublicKey);
+        this.block = new BlockController(user, RuntimeEnvironment.application).createGenesis(user);
     }
 
     /**

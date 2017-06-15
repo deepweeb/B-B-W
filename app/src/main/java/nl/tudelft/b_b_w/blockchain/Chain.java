@@ -2,8 +2,6 @@ package nl.tudelft.b_b_w.blockchain;
 
 import java.util.ArrayList;
 
-import nl.tudelft.b_b_w.model.block.Block;
-
 /**
  * Class for creating a chainList
  */
@@ -23,6 +21,7 @@ public class Chain {
      */
     public Chain(User chainOwner) {
         this.chainOwner = chainOwner;
+        chainList = new ArrayList<Block>();
     }
 
     /**

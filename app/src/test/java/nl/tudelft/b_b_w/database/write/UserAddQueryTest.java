@@ -1,5 +1,6 @@
-package nl.tudelft.b_b_w.database;
+package nl.tudelft.b_b_w.database.write;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -16,9 +17,8 @@ import nl.tudelft.b_b_w.blockchain.BlockType;
 import nl.tudelft.b_b_w.blockchain.Hash;
 import nl.tudelft.b_b_w.blockchain.User;
 import nl.tudelft.b_b_w.controller.ED25519;
+import nl.tudelft.b_b_w.database.Database;
 import nl.tudelft.b_b_w.database.read.GetChainQuery;
-import nl.tudelft.b_b_w.database.write.BlockAddQuery;
-import nl.tudelft.b_b_w.database.write.UserAddQuery;
 import nl.tudelft.b_b_w.model.TrustValues;
 
 import static junit.framework.Assert.assertEquals;
@@ -28,29 +28,30 @@ import static junit.framework.Assert.assertEquals;
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml")
-public class BlockAddQueryTest {
+public class UserAddQueryTest {
+    private User alice;
     final String notAvailable = "N/A";
+
+    @Before
+    public void init() {
+        alice = new User("Alice", "IBANA", ED25519.getPublicKey(ED25519.generatePrivateKey()));
+    }
 
     /**
      * Add one block
      */
     @Test
     public void testSimpleAdd() throws Exception {
-        Database database = new Database(RuntimeEnvironment.application);
-        User alice = new User("Alice", "IBANA", ED25519.getPublicKey(ED25519.generatePrivateKey()));
-
         // create genesis block
         Block genesis = new Block(alice, alice, new BlockData(
-                BlockType.GENESIS, 1, new Hash(notAvailable), new Hash(notAvailable),
-                TrustValues.INITIALIZED.getValue()));
-
-        // add user to database
-        UserAddQuery addUser = new UserAddQuery(alice);
-        database.write(addUser);
+                BlockType.GENESIS, 1, new Hash(notAvailable), new Hash(notAvailable), TrustValues.INITIALIZED.getValue()
+        ));
 
         // add one genesis block
         BlockAddQuery query = new BlockAddQuery(genesis);
+        Database database = new Database(RuntimeEnvironment.application);
         database.write(query);
+        database.write(new UserAddQuery(alice));
 
         // verify
         GetChainQuery chainQuery = new GetChainQuery(database, alice);
@@ -67,18 +68,11 @@ public class BlockAddQueryTest {
     @Test
     public void testMultipleGenesis() throws Exception {
         Database database = new Database(RuntimeEnvironment.application);
-
-        // example users
         User alice = new User("Alice", "IBANA", ED25519.getPublicKey(ED25519.generatePrivateKey()));
         User bob = new User("Bob", "IBANB", ED25519.getPublicKey(ED25519.generatePrivateKey()));
         User carol = new User("Carol", "IBANC", ED25519.getPublicKey(ED25519.generatePrivateKey()));
 
-        // add users
-        database.write(new UserAddQuery(alice));
-        database.write(new UserAddQuery(bob));
-        database.write(new UserAddQuery(carol));
-
-        // create genesis block
+        // create genesis blocks
         Block genesisA = new Block(alice, alice, new BlockData(
                 BlockType.GENESIS, 1, new Hash(notAvailable), new Hash(notAvailable),
                 TrustValues.INITIALIZED.getValue()));
@@ -88,6 +82,11 @@ public class BlockAddQueryTest {
         Block genesisC = new Block(carol, carol, new BlockData(
                 BlockType.GENESIS, 1, new Hash(notAvailable), new Hash(notAvailable),
                 TrustValues.INITIALIZED.getValue()));
+
+        // add users
+        database.write(new UserAddQuery(alice));
+        database.write(new UserAddQuery(bob));
+        database.write(new UserAddQuery(carol));
 
         // add one genesis block
         BlockAddQuery queryA = new BlockAddQuery(genesisA);

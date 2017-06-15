@@ -4,14 +4,8 @@ import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import net.i2p.crypto.eddsa.Utils;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
-import java.io.IOException;
-
-import nl.tudelft.b_b_w.model.User;
 
 import static org.junit.Assert.assertEquals;
 
@@ -20,11 +14,11 @@ import static org.junit.Assert.assertEquals;
  */
 public class CryptoControllerTest {
 
+    private static final byte[] TEST_SEED = Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000");
     /**
      * Class attributes
      */
     private CryptoController cryptoController;
-    private static final byte[] TEST_SEED = Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000");
 
     /**
      * setUp method

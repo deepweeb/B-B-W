@@ -15,17 +15,17 @@ import java.security.GeneralSecurityException;
 
 public class CryptoController {
 
+    private static final String ENCRYPTION_EXTENSION = ".enc";
     /**
      * Class attributes
-     *
+     * <p>
      * textEncryptor is the text encryptor uses AES encryption in CBC mode
      * fileEncryptor is the file encryptor uses AES encryption in CTR mode
-     *
+     * <p>
      * with a maximum permitted key length of 256bit.
      */
     private TextEncryptor textEncryptor;
     private FileEncryptor fileEncryptor;
-    private static final String ENCRYPTION_EXTENSION = ".enc";
 
     /**
      * Constructor method
@@ -77,7 +77,7 @@ public class CryptoController {
             fileEncryptor.encrypt(new File(path + KeyWriter.TEMP_EXTENSION),
                     new File(path + ENCRYPTION_EXTENSION));
             new File(path + KeyWriter.TEMP_EXTENSION).delete();
-        } catch (GeneralSecurityException| IOException e) {
+        } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException("Error - Could not encrypt file: " + path);
         }
     }
@@ -92,12 +92,10 @@ public class CryptoController {
         try {
             fileEncryptor.decrypt(new File(path + ENCRYPTION_EXTENSION), new File(path));
             new File(path + ENCRYPTION_EXTENSION).delete();
-        } catch (GeneralSecurityException| IOException e) {
+        } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException("Error - Could not decrypt file: " + path);
         }
     }
-
-
 
 
 }

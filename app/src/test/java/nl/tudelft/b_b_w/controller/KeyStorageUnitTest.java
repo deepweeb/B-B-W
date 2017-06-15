@@ -11,16 +11,8 @@ import org.junit.rules.ExpectedException;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SignatureException;
-import java.security.UnrecoverableEntryException;
-import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
 
-import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
 
 /**

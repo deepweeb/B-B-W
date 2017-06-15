@@ -4,32 +4,21 @@ import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import net.i2p.crypto.eddsa.Utils;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-
-import nl.tudelft.b_b_w.model.User;
 
 /**
  * Class to write the private and/ or keys to the file
  */
 public final class KeyWriter {
 
+    static final String TEMP_EXTENSION = ".bak";
     /**
      * Class variables
      */
     private static FileOutputStream fileOutputStream;
-    static final String TEMP_EXTENSION = ".bak";
 
     /**
      * Empty constructor method
@@ -105,7 +94,7 @@ public final class KeyWriter {
      * encryptFile method
      * Encrypts the file using the string representation of the public key as password
      *
-     * @param path given path to file
+     * @param path      given path to file
      * @param publicKey given public key to use as password
      */
     private static void encryptFile(String path, EdDSAPublicKey publicKey) {

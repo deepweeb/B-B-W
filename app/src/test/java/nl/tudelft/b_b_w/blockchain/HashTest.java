@@ -40,7 +40,7 @@ public class HashTest {
      * equals() and hashCode() method testing.
      */
     @Test
-    public void testEquals_Symmetric() {
+    public void testEqualsSymmetric() {
         Hash x = new Hash("testHash");  // equals and hashCode check name field value
         Hash y = new Hash("testHash");
         assertTrue(x.equals(y) && y.equals(x));

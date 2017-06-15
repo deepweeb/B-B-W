@@ -138,7 +138,7 @@ public class BlockTest {
      * equals() and hashCode() method testing.
      */
     @Test
-    public void testEquals_Symmetric() {
+    public void testEqualsSymmetric() {
         Block x = new Block(owner);  // equals and hashCode check name field value
         assertTrue(genesisBlock.equals(x) && x.equals(genesisBlock));
         assertTrue(genesisBlock.hashCode() == x.hashCode());

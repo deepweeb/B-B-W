@@ -93,6 +93,16 @@ public class BlockExistQueryTest {
     }
 
     @Test
+    public void testRevokeInexists() {
+        Block bRevokesC = new Block(alice, bob, new BlockData(BlockType.ADD_KEY, 3,
+                genesisB.getOwnHash(), genesisC.getOwnHash(), 0));
+        BlockExistQuery query = new BlockExistQuery(bRevokesC);
+        database.read(query);
+        assertFalse(query.blockExists());
+
+    }
+
+    @Test
     public void testGenesisInexists() {
         User luat = new User("Luat", "ibanLuat", ED25519.getPublicKey(ED25519.generatePrivateKey()));
         BlockExistQuery query = new BlockExistQuery(new Block(luat));

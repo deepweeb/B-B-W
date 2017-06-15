@@ -12,6 +12,7 @@ import nl.tudelft.b_b_w.model.TrustValues;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Junit Testing class of the Block class
@@ -122,7 +123,27 @@ public class BlockTest {
         block.setTrustValue(10);
         assertEquals(10.0, block.getTrustValue());
 
+
         assertEquals(testOwnHash, block.getOwnHash());
+
+
+        //verify method testing
+        assertTrue(block.verifyBlock(block));
+        assertFalse(block.verifyBlock(testOwnHash));
+        assertFalse(block.verifyBlock(genesisBlock));
+        assertFalse(block.verifyBlock(genesisBlock));
+    }
+
+    /**
+     * equals() and hashCode() method testing.
+     */
+    @Test
+    public void testEquals_Symmetric() {
+        Block x = new Block(owner);  // equals and hashCode check name field value
+        assertTrue(genesisBlock.equals(x) && x.equals(genesisBlock));
+        assertTrue(genesisBlock.hashCode() == x.hashCode());
+        assertTrue(x.equals(x));
+        assertFalse(x.equals(owner));
     }
 
 }

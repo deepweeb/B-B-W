@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.controller.API;
+import nl.tudelft.b_b_w.model.BlockAlreadyExistsException;
 import nl.tudelft.b_b_w.model.HashException;
 import nl.tudelft.b_b_w.blockchain.User;
 
@@ -53,8 +54,10 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
     public Object getItem(int position) {
 
         try {
-             return mAPI.getBlocks(user).get(position);
+            return mAPI.getBlocks(user).get(position);
         } catch (HashException e) {
+            e.printStackTrace();
+        } catch (BlockAlreadyExistsException e) {
             e.printStackTrace();
         }
         return null;
@@ -76,6 +79,8 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
         try {
             return mAPI.getBlocks(user).size();
         } catch (HashException e) {
+            e.printStackTrace();
+        } catch (BlockAlreadyExistsException e) {
             e.printStackTrace();
         }
         return -1;
@@ -118,20 +123,28 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Confirm");
+
                 try {
                     builder.setMessage("Are you sure you want to add "
                             + mAPI.getBlocks(user).get(position).getBlockOwner()
                             + " IBAN?");
                 } catch (HashException e) {
                     e.printStackTrace();
+                } catch (BlockAlreadyExistsException e) {
+                    e.printStackTrace();
                 }
+
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+
                         try {
-                            mAPI.addContactToChain(mAPI.getBlocks(user).get(position));
-                        } catch (Exception e) {
-                            //do nothing.
+                            mAPI.addContactToChain(mAPI.getBlocks(user).get(position).getContact());
+                        } catch (HashException e) {
+                            e.printStackTrace();
+                        } catch (BlockAlreadyExistsException e) {
+                            e.printStackTrace();
                         }
+
                         notifyDataSetChanged();
                         dialog.dismiss();
                     }

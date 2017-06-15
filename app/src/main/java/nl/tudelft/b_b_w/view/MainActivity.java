@@ -12,9 +12,16 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+import net.i2p.crypto.eddsa.Utils;
+
 import nl.tudelft.b_b_w.R;
+import nl.tudelft.b_b_w.blockchain.User;
 import nl.tudelft.b_b_w.controller.API;
-import nl.tudelft.b_b_w.model.User;
+import nl.tudelft.b_b_w.controller.ED25519;
+import nl.tudelft.b_b_w.model.BlockAlreadyExistsException;
+import nl.tudelft.b_b_w.model.HashException;
 
 /**
  * This is the page you will see when you enter the app.
@@ -36,13 +43,23 @@ public class MainActivity extends Activity {
     protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mAPI = new API(user, this);
+        try {
+            mAPI = new API(user, this);
+        } catch (HashException e) {
+            e.printStackTrace();
+        } catch (BlockAlreadyExistsException e) {
+            e.printStackTrace();
+        }
         // add genesis if we don't have any blocks
         if (user == null && mAPI.isDatabaseEmpty()) {
             user = getUser();
         } else {
             SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-            user = new User(settings.getString("userName", ""), settings.getString("iban", ""));
+            EdDSAPrivateKey edDSAPrivateKey1 =
+                    ED25519.generatePrivateKey(Utils.hexToBytes(
+                            "0000000000000000000000000000000000000000000000000000000000000000"));
+            EdDSAPublicKey ownerPublicKey = ED25519.getPublicKey(edDSAPrivateKey1);
+            user = new User(settings.getString("userName", ""), settings.getString("iban", ""), ownerPublicKey);
         }
     }
 

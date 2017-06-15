@@ -11,7 +11,12 @@ import nl.tudelft.b_b_w.blockchain.BlockType;
 import nl.tudelft.b_b_w.blockchain.Hash;
 import nl.tudelft.b_b_w.blockchain.User;
 import nl.tudelft.b_b_w.database.Database;
+import nl.tudelft.b_b_w.database.read.BlockExistQuery;
 import nl.tudelft.b_b_w.database.read.GetChainQuery;
+import nl.tudelft.b_b_w.database.read.LatestBlockQuery;
+import nl.tudelft.b_b_w.database.write.BlockAddQuery;
+import nl.tudelft.b_b_w.database.write.UpdateTrustQuery;
+import nl.tudelft.b_b_w.model.BlockAlreadyExistsException;
 import nl.tudelft.b_b_w.model.HashException;
 import nl.tudelft.b_b_w.model.TrustValues;
 
@@ -28,25 +33,32 @@ public class BlockController {
         this.database = new Database(context);
     }
 
-    public final void addBlockToChain(User user) throws HashException {
+    public final void addBlockToChain(User user) throws HashException, BlockAlreadyExistsException {
         createKeyBlock(chainOwner, user);
     }
 
-    public final void revokeBlockFromChain(User user) throws HashException {
+    public final void revokeBlockFromChain(User user) throws HashException,
+            BlockAlreadyExistsException {
         createRevokeBlock(chainOwner, user);
     }
 
-    public final void addBlock(Block block) {
-        if (getDatabaseHandler.containsRevoke(block, block.getPublicKey())) {
-            throw new RuntimeException("Block already revoked");
-        } else if (blockExists(block.getOwner().getName(), block.getPublicKey(), block.isRevoked())) {
-            throw new RuntimeException("block already exists");
+    public final void addBlock(Block block) throws BlockAlreadyExistsException {
+        if (blockExists(block)) {
+            throw new BlockAlreadyExistsException();
         }
-        mutateDatabaseHandler.addBlock(block);
+        BlockAddQuery query = new BlockAddQuery(block);
+        database.write(query);
     }
 
-    public final boolean blockExists(String owner, String key, boolean revoked) {
-        return getDatabaseHandler.blockExists(owner, key, revoked);
+    public final boolean blockExists(Block block) {
+        BlockExistQuery query = new BlockExistQuery(block);
+        database.read(query);
+        return query.blockExists();
+    }
+
+    public final void updateBlock(Block block) {
+        UpdateTrustQuery query = new UpdateTrustQuery(block);
+        database.write(query);
     }
 
     public final List<Block> getBlocks(User owner) throws HashException {
@@ -67,17 +79,19 @@ public class BlockController {
 
     private List<Block> removeBlock(List<Block> list, Block block) {
         final List<Block> res = new ArrayList<>();
-        for (Block blc : list) {
-            if (!(blc.getOwnerName().equals(block.getOwnerName()) && blc.getOwnHash().equals(block.
-                    getPublicKey()))) {
-                res.add(blc);
+        for (Block listBlock : list) {
+            if (!(listBlock.getBlockOwner().equals(block.getBlockOwner())
+                    && listBlock.getContact().equals(block.getContact()))) {
+                res.add(listBlock);
             }
         }
         return res;
     }
 
-    private final Block getLatestBlock(String owner) throws HashException {
-        return null;//getDatabaseHandler.getLatestBlock(owner);
+    private final Block getLatestBlock(User owner) throws HashException {
+        LatestBlockQuery query = new LatestBlockQuery(database, owner);
+        database.read(query);
+        return query.getLatestBlock();
     }
 
     /**
@@ -87,10 +101,8 @@ public class BlockController {
      * @return the freshly created block
      * @throws HashException when the key hashing method does not work
      */
-    public Block createGenesis(User owner) throws HashException {
-        BlockData blockData = new BlockData(BlockType.GENESIS, firstSequenceNumber,
-                notAvailable, notAvailable, TrustValues.INITIALIZED.getValue());
-        Block genesisBlock = new Block(owner, owner, blockData);
+    public Block createGenesis(User owner) throws HashException, BlockAlreadyExistsException {
+        Block genesisBlock = new Block(owner);
         addBlock(genesisBlock);
         return genesisBlock;
     }
@@ -104,7 +116,7 @@ public class BlockController {
      * @throws HashException when the hashing algorithm is not available
      */
     public Block createKeyBlock(User owner, User contact) throws
-            HashException {
+            HashException, BlockAlreadyExistsException {
         return createBlock(owner, contact, BlockType.ADD_KEY);
     }
 
@@ -117,7 +129,7 @@ public class BlockController {
      * @throws HashException when the hashing algorithm is not available
      */
     public Block createRevokeBlock(User owner, User contact)
-            throws HashException {
+            throws HashException, BlockAlreadyExistsException {
         return createBlock(owner, contact, BlockType.REVOKE_KEY);
     }
 
@@ -132,8 +144,8 @@ public class BlockController {
      * @throws HashException when the hashing algorithm is not available
      */
     private Block createBlock(User owner, User contact,
-            BlockType blockType) throws HashException {
-        Block latest = getLatestBlock(owner.getName());
+            BlockType blockType) throws HashException, BlockAlreadyExistsException {
+        Block latest = getLatestBlock(owner);
         if (latest == null) {
             throw new IllegalArgumentException("No genesis found for user " + owner);
         }

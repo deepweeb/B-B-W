@@ -1,6 +1,10 @@
 package nl.tudelft.b_b_w.controller;
 
-import org.junit.After;
+import static junit.framework.Assert.assertEquals;
+
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,17 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.tudelft.b_b_w.BuildConfig;
+import nl.tudelft.b_b_w.blockchain.Block;
+import nl.tudelft.b_b_w.blockchain.BlockData;
+import nl.tudelft.b_b_w.blockchain.BlockType;
+import nl.tudelft.b_b_w.blockchain.User;
+import nl.tudelft.b_b_w.model.BlockAlreadyExistsException;
 import nl.tudelft.b_b_w.model.HashException;
-import nl.tudelft.b_b_w.model.User;
-import nl.tudelft.b_b_w.model.block.Block;
-import nl.tudelft.b_b_w.model.block.BlockData;
-import nl.tudelft.b_b_w.model.block.BlockFactory;
-import nl.tudelft.b_b_w.model.block.BlockType;
-
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
+import nl.tudelft.b_b_w.model.TrustValues;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -32,55 +32,68 @@ import static org.junit.Assert.assertEquals;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml")
 public class BlockControllerUnitTest {
-//    private final String notAvailable = "N/A";
-//    private final String publicKey = "publicKey";
-//    private final String publicKeyC = "pkc";
-//    @Deprecated
-//    private final String typeBlock = "BLOCK";
-//    @Deprecated
-//    private final String typeRevoke = "REVOKE";
-//    private final User a = new User("Alice", "ibanA");
-//    private final User b = new User("Bob", "ibanB");
-//    private final User c = new User("Clara", "ibanC");
-//    private BlockController blockController;
-//    private Block genesisA;
-//    private Block genesisB;
-//    private Block blockWithOwnerAAddsKeyKa;
-//    private Block blockWithOwnerAAddsKeyKb;
-//    private Block blockWithOwnerBAddsKeyKa;
-//    private Block blockWithOwnerBRevokesKeyKa;
-//
-//    /**
-//     * Initialize BlockController before every test
-//     * And initialize a dummy block _block
-//     */
-//    @Before
-//    public final void setUp() throws HashException {
-//        blockController = new BlockController(RuntimeEnvironment.application);
-//        // construct an easy blockchain
-//        genesisA = blockController.createGenesis(a);
-//        genesisB = blockController.createGenesis(b);
-//        blockWithOwnerAAddsKeyKa = blockController.createKeyBlock(a, a, "ka");
-//        blockWithOwnerAAddsKeyKb = blockController.createKeyBlock(a, b, "kb");
-//        blockWithOwnerBAddsKeyKa = blockController.createKeyBlock(b, a, "ka");
-//        blockWithOwnerBRevokesKeyKa = blockController.createRevokeBlock(b, a, "ka", "ibanA");
-//    }
-//
-//    /**
-//     * Tests adding a block
-//     *
-//     * @throws Exception RuntimeException
-//     */
-//    @Test
-//    public final void testAddBlock() throws Exception {
-//        Block genesisC = blockController.createGenesis(c);
-//        Block blockC = blockController.createKeyBlock(c, c, "kc");
-//        List<Block> list = new ArrayList<>();
-//        list.add(genesisC);
-//        list.add(blockC);
-//        assertEquals(list, blockController.getBlocks(c.getName()));
-//    }
-//
+    private String ownerName;
+    private String ownerIban;
+    private EdDSAPublicKey ownerPublicKey;
+    private User owner;
+    private BlockController blockController;
+    private User userB;
+    private User userC;
+    private Block genesisA;
+    private Block genesisB;
+    private Block genesisC;
+
+    /**
+     * Initialize BlockController before every test
+     * And initialize a dummy block _block
+     */
+    @Before
+    public final void setUp() throws HashException, BlockAlreadyExistsException {
+        //setting up owner
+        ownerName = "BlockOwner1";
+        ownerIban = "Owner1Iban";
+        //object to generate public key
+        EdDSAPrivateKey edDSAPrivateKey1 =
+                ED25519.generatePrivateKey();
+        ownerPublicKey = ED25519.getPublicKey(edDSAPrivateKey1);
+        owner = new User(ownerName, ownerIban, ownerPublicKey);
+
+        blockController = new BlockController(owner, RuntimeEnvironment.application);
+
+        //Setting up Genesis block
+        genesisA = blockController.createGenesis(owner);
+
+        EdDSAPrivateKey edDSAPrivateKey2 =
+                ED25519.generatePrivateKey();
+        EdDSAPublicKey publicKeyB = ED25519.getPublicKey(edDSAPrivateKey2);
+        userB = new User("B", "ibanB", publicKeyB);
+
+        EdDSAPrivateKey edDSAPrivateKey3 =
+                ED25519.generatePrivateKey();
+        EdDSAPublicKey publicKeyC = ED25519.getPublicKey(edDSAPrivateKey3);
+        userC = new User("C", "ibanC", publicKeyC);
+
+        // construct an easy blockchain
+        genesisB = blockController.createGenesis(userB);
+        genesisC = blockController.createGenesis(userC);
+    }
+
+    /**
+     * Tests adding a block
+     *
+     * @throws Exception RuntimeException
+     */
+    @Test
+    public final void testAddBlock() throws Exception {
+        blockController.createKeyBlock(owner, userB);
+        List<Block> list = new ArrayList<>();
+        list.add(genesisA);
+        list.add(new Block(owner, userB, new BlockData(BlockType.ADD_KEY, 2, genesisB.getOwnHash(), genesisA.getOwnHash(),
+                TrustValues.INITIALIZED.getValue())));
+        System.out.print(list.toString());
+        assertEquals(list, blockController.getBlocks(owner));
+    }
+
 //    /**
 //     * Non-existing contact
 //     */

@@ -3,14 +3,10 @@ package nl.tudelft.b_b_w.blockchain;
 
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
-import nl.tudelft.b_b_w.model.EncodingUnavailableException;
 import nl.tudelft.b_b_w.model.HashException;
-import nl.tudelft.b_b_w.model.HashUnavailableException;
 
 /**
  * This class represents a block object.
@@ -147,6 +143,15 @@ public class Block {
         return blockData.getBlockType();
     }
 
+    /**
+     * Boolean indicating if this block is revoked.
+     *
+     * @return if this block is a revoke block
+     */
+    public final boolean isRevoked() {
+        return blockData.getBlockType() == BlockType.REVOKE_KEY;
+    }
+
 
     /**
      * This method returns the sequence number of the block
@@ -184,6 +189,16 @@ public class Block {
         return blockData.getTrustValue();
     }
 
+    /**
+     * This method set the trust value of the block
+     *
+     * @param trustValue of the block
+     */
+    public final void setTrustValue(double trustValue) {
+        blockData.setTrustValue(trustValue);
+    }
+
+
     /**************************************END******************************************/
 
     /**
@@ -195,14 +210,12 @@ public class Block {
         return ownHash;
     }
 
-
     /**
      * Calculate the SHA-256 hash of this block
      *
      * @return the base-64 encoded hash as a string
-     * @throws HashException when the crypto functions are not available
      */
-    private Hash calculateHash() throws HashException {
+    private Hash calculateHash() {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             String text = this.getOwnerName()
@@ -212,19 +225,63 @@ public class Block {
                     + this.getContactIban()
                     + this.getContactPublicKey().toString()
                     + this.getBlockType().name()
-                    + String.valueOf(this.getSequenceNumber())
+                    + this.getSequenceNumber()
                     + this.getPreviousHashChain().toString()
-                    + this.getPreviousHashSender().toString()
-                    + String.valueOf(this.getTrustValue());
+                    + this.getPreviousHashSender().toString();
             md.update(text.getBytes("UTF-8"));
             byte[] digest = md.digest();
             Hash hash = new Hash(String.format("%064x", new BigInteger(1, digest)));
             return hash;
-        } catch (NoSuchAlgorithmException e) {
-            throw new HashUnavailableException();
-        } catch (UnsupportedEncodingException e) {
-            throw new EncodingUnavailableException();
+        } catch (Exception e) {
+            return new Hash(e.getMessage());
         }
     }
+
+
+    /**
+     * Attributes are isRevoked, iban and public key
+     *
+     * @param o given block
+     * @return equals or not
+     */
+    public boolean verifyBlock(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Block block = (Block) o;
+
+        if (isRevoked() != block.isRevoked()) {
+            return false;
+        }
+        if (!getContactIban().equals(block.getContactIban())) {
+            return false;
+        }
+        return getContactPublicKey().equals(block.getContactPublicKey());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Block)) {
+            return false;
+        }
+
+        Block block = (Block) o;
+
+        return ownHash.equals(block.ownHash);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return ownHash.hashCode();
+    }
+
 
 }

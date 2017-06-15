@@ -80,5 +80,13 @@ public class BlockData {
         return trustValue;
     }
 
+    /**
+     * Set the trust value of this block
+     *
+     * @param trustValue of the block
+     */
+    public void setTrustValue(double trustValue) {
+        this.trustValue = trustValue;
+    }
 
 }

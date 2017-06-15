@@ -116,7 +116,10 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         try {
+                            // Generate message, which is a byte array representing the public key
+                            // of the contact
                             final byte[] message = block.getContactPublicKey().getEncoded();
+                            // Generate signature
                             final byte[] signature = ED25519.generateSignature(
                                     message, user.getPrivateKey());
                             mAPI.addContactToChain(block.getContact(), signature, message);

@@ -76,16 +76,17 @@ public class LatestBlockQueryTest {
         database.write(new BlockAddQuery(genesisC));
 
         // add specific blocks
-        aAddsB = new Block(alice, bob, new BlockData(BlockType.ADD_KEY, 2,
+        aAddsB = new Block(alice, bob, new BlockData(BlockType.ADD_KEY, genesisA.getSequenceNumber()+1,
                 genesisA.getOwnHash(), genesisB.getOwnHash(), 0));
-        aRevokesB = new Block(alice, bob, new BlockData(BlockType.REVOKE_KEY, 3,
+        aRevokesB = new Block(alice, bob, new BlockData(BlockType.REVOKE_KEY, aAddsB.getSequenceNumber()+1,
                 aAddsB.getOwnHash(), Hash.NOT_AVAILABLE, 0));
-        bAddsC = new Block(bob, carol, new BlockData(BlockType.ADD_KEY, 2,
+        bAddsC = new Block(bob, carol, new BlockData(BlockType.ADD_KEY, genesisB.getSequenceNumber()+1,
                 genesisB.getOwnHash(), genesisC.getOwnHash(), 0));
 
         database.write(new BlockAddQuery(aAddsB));
         database.write(new BlockAddQuery(aRevokesB));
         database.write(new BlockAddQuery(bAddsC));
+
     }
 
     @Test

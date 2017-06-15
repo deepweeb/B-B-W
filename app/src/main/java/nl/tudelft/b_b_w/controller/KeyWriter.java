@@ -94,33 +94,5 @@ public final class KeyWriter {
         X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
         return Utils.bytesToHex(x509EncodedKeySpec.getEncoded());
     }
-
-    /**
-     * writeToKeyStore method
-     * Writes the private key to the android keystore
-     *
-     * @param privateKey given private key
-     * @param owner      given owner of the private key
-     * @throws KeyStoreException        if there occurs an error in the keystore
-     * @throws IOException              if there occurs an error in the input stream
-     * @throws CertificateException     if there occurs an error in the creation of the certificate
-     * @throws NoSuchAlgorithmException If the given algorithm is invalid, this case 'X.509'
-     */
-    public static void writeToKeyStore(EdDSAPrivateKey privateKey, String owner) throws KeyStoreException,
-            IOException, CertificateException, NoSuchAlgorithmException {
-        Certificate certificate = generateCertificate(privateKey);
-        KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
-        keyStore.load(null);
-        keyStore.setKeyEntry(owner, privateKey, null, new Certificate[]{certificate});
-    }
-
-    private static X509Certificate generateCertificate(EdDSAPrivateKey privateKey)
-            throws CertificateException {
-
-        CertificateFactory fac = CertificateFactory.getInstance("X.509");
-        ByteArrayInputStream in = new ByteArrayInputStream(privateKey.getEncoded());
-        return (X509Certificate) fac.generateCertificate(in);
-
-    }
-
+    
 }

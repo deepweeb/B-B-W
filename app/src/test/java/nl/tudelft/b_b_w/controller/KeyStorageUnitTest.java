@@ -109,18 +109,6 @@ public class KeyStorageUnitTest {
     }
 
     /**
-     * Test to check whether saving a private key in the android keystore works
-     */
-    @Test
-//    public void testKeyStore() throws CertificateException, NoSuchAlgorithmException,
-//            KeyStoreException, IOException, UnrecoverableEntryException, InvalidKeyException,
-//            NoSuchProviderException, SignatureException, InvalidKeySpecException {
-//        final String alias = "owner";
-//        KeyWriter.writeToKeyStore(edDSAPrivateKey, alias);
-//        assertEquals(edDSAPrivateKey, KeyReader.readFromKeyStore(alias));
-//    }
-
-    /**
      * Remove test key files
      */
     @After

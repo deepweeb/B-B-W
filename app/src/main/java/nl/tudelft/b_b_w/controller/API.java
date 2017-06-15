@@ -5,8 +5,8 @@ import android.content.Context;
 import java.util.List;
 
 import nl.tudelft.b_b_w.model.HashException;
-import nl.tudelft.b_b_w.model.User;
-import nl.tudelft.b_b_w.model.block.Block;
+import nl.tudelft.b_b_w.blockchain.User;
+import nl.tudelft.b_b_w.blockchain.Block;
 
 /**
  * Performs the actions on the blockchain

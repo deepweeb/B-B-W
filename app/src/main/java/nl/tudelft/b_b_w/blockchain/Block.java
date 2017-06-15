@@ -6,8 +6,6 @@ import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 
-import nl.tudelft.b_b_w.model.HashException;
-
 /**
  * This class represents a block object.
  */
@@ -28,7 +26,7 @@ public class Block {
      * @param contact    given the User object of the contact which the block concerns
      * @param blockData  the data of the block such as hash, trust, etc.
      */
-    public Block(User blockOwner, User contact, BlockData blockData) throws HashException {
+    public Block(User blockOwner, User contact, BlockData blockData) {
         this.owner = blockOwner;
         this.contact = contact;
         this.blockData = blockData;

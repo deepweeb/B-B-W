@@ -9,26 +9,23 @@ import nl.tudelft.b_b_w.blockchain.Block;
 import nl.tudelft.b_b_w.blockchain.BlockData;
 import nl.tudelft.b_b_w.blockchain.BlockType;
 import nl.tudelft.b_b_w.blockchain.Hash;
-import nl.tudelft.b_b_w.model.GetDatabaseHandler;
-import nl.tudelft.b_b_w.model.HashException;
-import nl.tudelft.b_b_w.model.MutateDatabaseHandler;
-import nl.tudelft.b_b_w.model.TrustValues;
 import nl.tudelft.b_b_w.blockchain.User;
-import nl.tudelft.b_b_w.model.block.BlockFactory;
+import nl.tudelft.b_b_w.database.Database;
+import nl.tudelft.b_b_w.database.read.GetChainQuery;
+import nl.tudelft.b_b_w.model.HashException;
+import nl.tudelft.b_b_w.model.TrustValues;
 
 
 public class BlockController {
 
     private User chainOwner;
-    private GetDatabaseHandler getDatabaseHandler;
-    private MutateDatabaseHandler mutateDatabaseHandler;
+    private Database database;
     private final Hash notAvailable = new Hash("N/A");
     private final int firstSequenceNumber = 1;
 
     public BlockController(User chainOwner, Context context) {
         this.chainOwner = chainOwner;
-        this.getDatabaseHandler = new GetDatabaseHandler(context);
-        this.mutateDatabaseHandler = new MutateDatabaseHandler(context);
+        this.database = new Database(context);
     }
 
     public final void addBlockToChain(User user) throws HashException {
@@ -40,7 +37,7 @@ public class BlockController {
     }
 
     public final void addBlock(Block block) {
-        if (getDatabaseHandler.containsRevoke(block.getOwner().getName(), block.getPublicKey())) {
+        if (getDatabaseHandler.containsRevoke(block, block.getPublicKey())) {
             throw new RuntimeException("Block already revoked");
         } else if (blockExists(block.getOwner().getName(), block.getPublicKey(), block.isRevoked())) {
             throw new RuntimeException("block already exists");
@@ -52,9 +49,11 @@ public class BlockController {
         return getDatabaseHandler.blockExists(owner, key, revoked);
     }
 
-    public final List<Block> getBlocks(String owner) throws HashException {
+    public final List<Block> getBlocks(User owner) throws HashException {
         // retrieve all blocks in the database and then sort it in order of sequence number
-        List<Block> blocks = getDatabaseHandler.getAllBlocks(owner);
+        GetChainQuery query = new GetChainQuery(database, owner);
+        database.read(query);
+        List<Block> blocks = query.getChain();
         List<Block> res = new ArrayList<>();
         for (Block block : blocks) {
             if (block.getBlockType() == BlockType.REVOKE_KEY) {
@@ -144,7 +143,7 @@ public class BlockController {
         if (owner.equals(contact)) {
             contactBlockHash = notAvailable;
         } else {
-            contactBlockHash = getBlocks(contact.getName()).get(0).getOwnHash();
+            contactBlockHash = getBlocks(contact).get(0).getOwnHash();
         }
         int seqNumber = latest.getSequenceNumber() + 1;
 

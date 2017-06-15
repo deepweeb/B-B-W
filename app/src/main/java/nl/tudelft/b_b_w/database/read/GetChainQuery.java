@@ -1,5 +1,10 @@
 package nl.tudelft.b_b_w.database.read;
 
+import static nl.tudelft.b_b_w.database.Database.BLOCK_TABLE_NAME;
+import static nl.tudelft.b_b_w.database.Database.KEY_OWNER;
+import static nl.tudelft.b_b_w.database.Database.KEY_SEQ_NO;
+import static nl.tudelft.b_b_w.database.Database.getBlockColumns;
+
 import android.database.Cursor;
 
 import java.util.ArrayList;
@@ -9,11 +14,6 @@ import nl.tudelft.b_b_w.blockchain.Block;
 import nl.tudelft.b_b_w.blockchain.User;
 import nl.tudelft.b_b_w.controller.KeyWriter;
 import nl.tudelft.b_b_w.database.Database;
-
-import static nl.tudelft.b_b_w.database.Database.BLOCK_TABLE_NAME;
-import static nl.tudelft.b_b_w.database.Database.KEY_OWNER;
-import static nl.tudelft.b_b_w.database.Database.KEY_SEQ_NO;
-import static nl.tudelft.b_b_w.database.Database.getBlockColumns;
 
 /**
  * Query to get a chain of blocks of a user. This includes the genesis block.
@@ -37,16 +37,18 @@ public class GetChainQuery extends ReadQuery {
 
     /**
      * Construct a chain query for a user
+     *
      * @param database the database to use for user queries
-     * @param owner the owner of the chain
+     * @param owner    the owner of the chain
      */
     public GetChainQuery(Database database, User owner) {
-        this.database  =  database;
+        this.database = database;
         this.owner = owner;
     }
 
     /**
      * Loop through all items under the cursor converting them to blocks
+     *
      * @param cursor the cursor resulting from the query
      */
     @Override
@@ -64,7 +66,6 @@ public class GetChainQuery extends ReadQuery {
 
     /**
      * We want all information to reconstruct the blocks accurately
-     * @return
      */
     @Override
     protected String[] getSelectedColumns() {
@@ -73,7 +74,6 @@ public class GetChainQuery extends ReadQuery {
 
     /**
      * We want to filter on owners
-     * @return
      */
     @Override
     protected String getWhere() {
@@ -82,15 +82,15 @@ public class GetChainQuery extends ReadQuery {
 
     /**
      * The only variable for this query is the owner name of the chain
-     * @return
      */
     @Override
     protected String[] getWhereVariables() {
-        return new String[] { KeyWriter.publicKeyToString(owner.getPublicKey()) };
+        return new String[]{KeyWriter.publicKeyToString(owner.getPublicKey())};
     }
 
     /**
      * Retrieves the output of this query: a chain of blocks
+     *
      * @return a list of blocks
      */
     public List<Block> getChain() {
@@ -99,6 +99,7 @@ public class GetChainQuery extends ReadQuery {
 
     /**
      * We want the results sorted on sequence number
+     *
      * @return the name of the sequence number column
      */
     @Override
@@ -108,6 +109,7 @@ public class GetChainQuery extends ReadQuery {
 
     /**
      * Get Chain Query always operates on the block table
+     *
      * @return the block table name
      */
     @Override

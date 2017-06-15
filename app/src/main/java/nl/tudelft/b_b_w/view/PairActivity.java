@@ -21,7 +21,6 @@ import nl.tudelft.b_b_w.controller.ED25519;
 import nl.tudelft.b_b_w.model.BlockAlreadyExistsException;
 import nl.tudelft.b_b_w.model.HashException;
 
-import static android.R.id.list;
 import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
 
 
@@ -35,18 +34,13 @@ public class PairActivity extends Activity {
     private static final int ONE = 1;
     private static final int TWO = 2;
     private static final int THREE = 3;
-    private static final int FOUR = 4;
+
 
     /**
      * The block controller.
      */
     private API mAPI;
-
-    /**
-     * Its own block.
-     */
-    private Block block1;
-
+    
 
     /**
      * The name of the owner of each block in the chain.
@@ -111,10 +105,10 @@ public class PairActivity extends Activity {
 
         List<Block> list = mAPI.getBlocks(owner);
 
-        Toast.makeText(this, list.get(0).getPublicKey() + ", "
-                + list.get(ONE).getPublicKey() + ", "
-                + list.get(TWO).getPublicKey() + ", "
-                + list.get(THREE).getPublicKey(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, list.get(0).getContactPublicKey() + ", "
+                + list.get(ONE).getContactPublicKey() + ", "
+                + list.get(TWO).getContactPublicKey() + ", "
+                + list.get(THREE).getContactPublicKey(), Toast.LENGTH_SHORT).show();
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();

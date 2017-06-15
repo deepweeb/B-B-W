@@ -10,7 +10,6 @@ import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
@@ -86,8 +85,11 @@ public class MainActivity extends Activity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                user = new User(nameBox.getText().toString(), ibanBox.getText().toString());
-                addGenesis();
+                EdDSAPrivateKey edDSAPrivateKey1 =
+                        ED25519.generatePrivateKey(Utils.hexToBytes(
+                                "0000000000000000000000000000000000000000000000000000000000000000"));
+                EdDSAPublicKey ownerPublicKey = ED25519.getPublicKey(edDSAPrivateKey1);
+                user = new User(nameBox.getText().toString(), ibanBox.getText().toString(), ownerPublicKey);
                 SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("userName", user.getName());
@@ -99,18 +101,6 @@ public class MainActivity extends Activity {
         return user;
     }
 
-    /**
-     * Add a genesis block so that the database is not empty.
-     * The genesis block has as previous chain hash "GENESIS" since it has no previous,
-     * and as sender hash "N/A" as is usual with blocks without sender.
-     */
-    private void addGenesis() {
-        try {
-            mAPI.makeGenesis(user);
-        } catch (Exception e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-    }
 
 
     /**

@@ -11,7 +11,6 @@ import nl.tudelft.b_b_w.BuildConfig;
 import nl.tudelft.b_b_w.blockchain.User;
 import nl.tudelft.b_b_w.controller.ED25519;
 import nl.tudelft.b_b_w.database.Database;
-import nl.tudelft.b_b_w.database.read.GetUserQuery;
 
 import static junit.framework.Assert.assertNull;
 

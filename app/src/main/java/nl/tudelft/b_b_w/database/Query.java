@@ -17,6 +17,7 @@ import static nl.tudelft.b_b_w.database.Database.INDEX_PREV_HASH_CHAIN;
 import static nl.tudelft.b_b_w.database.Database.INDEX_PREV_HASH_SENDER;
 import static nl.tudelft.b_b_w.database.Database.INDEX_REVOKE;
 import static nl.tudelft.b_b_w.database.Database.INDEX_SEQ_NO;
+import static nl.tudelft.b_b_w.database.Database.INDEX_TRUST_VALUE;
 
 /**
  * A query you can apply on the database.
@@ -62,7 +63,7 @@ public abstract class Query {
             database.read(ownerQuery);
             database.read(contactQuery);
 
-            BlockData blockData = new BlockData(type, 1, previousHashChain, previousHashSender, 0);
+            BlockData blockData = new BlockData(type, cursor.getInt(INDEX_SEQ_NO), previousHashChain, previousHashSender, cursor.getInt(INDEX_TRUST_VALUE));
             Block block = new Block(ownerQuery.getUser(), contactQuery.getUser(), blockData);
 
             // verify

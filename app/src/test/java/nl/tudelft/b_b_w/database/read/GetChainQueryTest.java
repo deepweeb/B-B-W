@@ -18,7 +18,6 @@ import nl.tudelft.b_b_w.blockchain.Hash;
 import nl.tudelft.b_b_w.blockchain.User;
 import nl.tudelft.b_b_w.controller.ED25519;
 import nl.tudelft.b_b_w.database.Database;
-import nl.tudelft.b_b_w.database.read.GetChainQuery;
 import nl.tudelft.b_b_w.database.write.BlockAddQuery;
 import nl.tudelft.b_b_w.database.write.UserAddQuery;
 import nl.tudelft.b_b_w.model.TrustValues;

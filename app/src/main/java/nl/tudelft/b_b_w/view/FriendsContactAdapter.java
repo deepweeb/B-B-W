@@ -52,15 +52,8 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
      */
     @Override
     public Object getItem(int position) {
+        return mAPI.getBlocks(user).get(position);
 
-        try {
-            return mAPI.getBlocks(user).get(position);
-        } catch (HashException e) {
-            e.printStackTrace();
-        } catch (BlockAlreadyExistsException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     /**
@@ -76,14 +69,7 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
      */
     @Override
     public int getCount() {
-        try {
-            return mAPI.getBlocks(user).size();
-        } catch (HashException e) {
-            e.printStackTrace();
-        } catch (BlockAlreadyExistsException e) {
-            e.printStackTrace();
-        }
-        return -1;
+        return mAPI.getBlocks(user).size();
     }
 
     /**
@@ -124,15 +110,9 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Confirm");
 
-                try {
-                    builder.setMessage("Are you sure you want to add "
-                            + mAPI.getBlocks(user).get(position).getBlockOwner()
-                            + " IBAN?");
-                } catch (HashException e) {
-                    e.printStackTrace();
-                } catch (BlockAlreadyExistsException e) {
-                    e.printStackTrace();
-                }
+                builder.setMessage("Are you sure you want to add "
+                        + mAPI.getBlocks(user).get(position).getBlockOwner()
+                        + " IBAN?");
 
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -176,12 +156,12 @@ public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
         }
         try {
             TextView nameItemText = (TextView) view.findViewById(R.id.list_item_name2);
-            nameItemText.setText(blockController.getContactName(blockController.getBlocks(ownerName).get(position).getOwnHash()));
+            nameItemText.setText((CharSequence) mAPI.getBlocks(user).get(position).getOwnHash());
             TextView ibanItemText = (TextView) view.findViewById(R.id.list_item_iban2);
-            ibanItemText.setText(blockController.getBlocks(ownerName).get(position).getOwner().getIban());
+            ibanItemText.setText(mAPI.getBlocks(user).get(position).getOwnerIban());
             ImageView pic = (ImageView) view.findViewById(R.id.trust_image2);
             pic.setImageResource(
-                    getImageNo((int) Math.round(blockController.getBlocks(ownerName).get(position).getTrustValue())));
+                    getImageNo((int) Math.round(mAPI.getBlocks(user).get(position).getTrustValue())));
             Button addButton = (Button) view.findViewById(R.id.add_btn);
             addButton.setOnClickListener(createDialog(position));
             return view;

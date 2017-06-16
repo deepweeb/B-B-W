@@ -18,8 +18,8 @@ public class CryptoController {
     /**
      * Class attributes
      * <p>
-     * textEncryptor is the text encryptor uses AES encryption in CBC mode
-     * fileEncryptor is the file encryptor uses AES encryption in CTR mode
+     * textEncryptor is the text encryptor which uses AES encryption in CBC mode
+     * fileEncryptor is the file encryptor which uses AES encryption in CTR mode
      * <p>
      * with a maximum permitted key length of 256bit.
      */
@@ -37,6 +37,7 @@ public class CryptoController {
 
     /**
      * encryptString method
+     * encrypts the string using the AES encryption in CBC mode
      *
      * @param data given data
      * @return encryption of data
@@ -52,6 +53,7 @@ public class CryptoController {
 
     /**
      * decryptString method
+     * decrypts the string using the AES encryption in CBC mode
      *
      * @param data given encrypted data
      * @return decrypted data
@@ -67,6 +69,7 @@ public class CryptoController {
 
     /**
      * encryptFile method
+     * encrypts the string using the AES encryption in CTR mode
      *
      * @param path given filepath to encrypt
      */
@@ -83,6 +86,7 @@ public class CryptoController {
 
     /**
      * decryptFile method
+     * decrypts the string using the AES encryption in CTR mode
      *
      * @param path given filepath to decrypt
      */

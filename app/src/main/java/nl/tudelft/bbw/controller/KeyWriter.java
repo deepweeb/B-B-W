@@ -18,6 +18,8 @@ public final class KeyWriter {
      * Class variables
      */
     private static FileOutputStream fileOutputStream;
+    public static String PATH_PRIVATE_KEY = "private.key";
+    public static String PATH_PUBLIC_KEY = "public.key";
 
     /**
      * Empty constructor method
@@ -56,10 +58,8 @@ public final class KeyWriter {
      * @param privateKey the private key to write away
      */
     public static void writePrivateKey(EdDSAPrivateKey privateKey) throws IOException {
-        final String privateKeyPath = "private.key";
-
         PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
-        writeKey(privateKeyPath, pkcs8EncodedKeySpec.getEncoded());
+        writeKey(PATH_PRIVATE_KEY, pkcs8EncodedKeySpec.getEncoded());
     }
 
     /**
@@ -69,10 +69,8 @@ public final class KeyWriter {
      * @param publicKey the public key to write away
      */
     public static void writePublicKey(EdDSAPublicKey publicKey) throws IOException {
-        final String publicKeyPath = "public.key";
-
         X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
-        writeKey(publicKeyPath, x509EncodedKeySpec.getEncoded());
+        writeKey(PATH_PUBLIC_KEY, x509EncodedKeySpec.getEncoded());
     }
 
     /**

@@ -70,8 +70,7 @@ public final class KeyReader {
      * @return private key
      */
     public static EdDSAPrivateKey readPrivateKey() throws InvalidKeySpecException, IOException {
-        final String privateKeyPath = "private.key";
-        final byte[] encodedPrivateKey = readKey(privateKeyPath);
+        final byte[] encodedPrivateKey = readKey(KeyWriter.PATH_PRIVATE_KEY);
         return convertToPrivateKey(encodedPrivateKey);
     }
 
@@ -82,8 +81,7 @@ public final class KeyReader {
      * @return public key
      */
     public static final EdDSAPublicKey readPublicKey() throws InvalidKeySpecException, IOException {
-        final String publicKeyPath = "public.key";
-        final byte[] encodedPublicKey = readKey(publicKeyPath);
+        final byte[] encodedPublicKey = readKey(KeyWriter.PATH_PUBLIC_KEY);
         return convertToPublicKey(encodedPublicKey);
     }
 

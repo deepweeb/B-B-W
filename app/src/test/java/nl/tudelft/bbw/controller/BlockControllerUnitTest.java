@@ -28,6 +28,7 @@ import nl.tudelft.bbw.exception.HashException;
 
 import static org.junit.Assert.assertEquals;
 
+
 /**
  * Unit test for the BlockController class
  */
@@ -83,7 +84,6 @@ public class BlockControllerUnitTest {
         List<Block> list = new ArrayList<>();
         list.add(genesisA);
         list.add(blockController.addBlockToChain(userB, signature, message));
-        System.out.print(list.toString());
         assertEquals(list, blockController.getBlocks(owner));
     }
 

@@ -19,8 +19,8 @@ public final class KeyWriter {
      * Class variables
      */
     private static FileOutputStream fileOutputStream;
-    public static String PATH_PRIVATE_KEY = "private.key";
-    public static String PATH_PUBLIC_KEY = "public.key";
+    final public static String PATH_PRIVATE_KEY = "private.key";
+    final public static String PATH_PUBLIC_KEY = "public.key";
 
     /**
      * Empty constructor method

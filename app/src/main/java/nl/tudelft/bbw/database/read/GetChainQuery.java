@@ -1,10 +1,5 @@
 package nl.tudelft.bbw.database.read;
 
-import static nl.tudelft.bbw.database.Database.BLOCK_TABLE_NAME;
-import static nl.tudelft.bbw.database.Database.KEY_OWNER;
-import static nl.tudelft.bbw.database.Database.KEY_SEQ_NO;
-import static nl.tudelft.bbw.database.Database.getBlockColumns;
-
 import android.database.Cursor;
 
 import java.util.ArrayList;
@@ -14,6 +9,12 @@ import nl.tudelft.bbw.blockchain.Block;
 import nl.tudelft.bbw.blockchain.User;
 import nl.tudelft.bbw.controller.KeyWriter;
 import nl.tudelft.bbw.database.Database;
+
+import static nl.tudelft.bbw.database.Database.BLOCK_TABLE_NAME;
+import static nl.tudelft.bbw.database.Database.KEY_OWNER;
+import static nl.tudelft.bbw.database.Database.KEY_SEQ_NO;
+import static nl.tudelft.bbw.database.Database.getBlockColumns;
+
 
 /**
  * Query to get a chain of blocks of a user. This includes the genesis block.

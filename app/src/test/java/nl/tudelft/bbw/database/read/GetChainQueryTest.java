@@ -23,6 +23,7 @@ import nl.tudelft.bbw.database.write.UserAddQuery;
 
 import nl.tudelft.bbw.blockchain.TrustValues;
 
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 

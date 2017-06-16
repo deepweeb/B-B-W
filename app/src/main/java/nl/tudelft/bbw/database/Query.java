@@ -1,5 +1,4 @@
 package nl.tudelft.bbw.database;
-
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -10,6 +9,7 @@ import nl.tudelft.bbw.blockchain.Hash;
 import nl.tudelft.bbw.controller.KeyReader;
 import nl.tudelft.bbw.database.read.GetUserQuery;
 
+
 import static nl.tudelft.bbw.database.Database.INDEX_CONTACT;
 import static nl.tudelft.bbw.database.Database.INDEX_HASH;
 import static nl.tudelft.bbw.database.Database.INDEX_OWNER;
@@ -18,6 +18,7 @@ import static nl.tudelft.bbw.database.Database.INDEX_PREV_HASH_SENDER;
 import static nl.tudelft.bbw.database.Database.INDEX_REVOKE;
 import static nl.tudelft.bbw.database.Database.INDEX_SEQ_NO;
 import static nl.tudelft.bbw.database.Database.INDEX_TRUST_VALUE;
+
 
 /**
  * A query you can apply on the database.

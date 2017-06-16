@@ -23,7 +23,6 @@ import nl.tudelft.bbw.blockchain.Block;
 import nl.tudelft.bbw.blockchain.TrustValues;
 import nl.tudelft.bbw.blockchain.User;
 import nl.tudelft.bbw.controller.ED25519;
-import nl.tudelft.bbw.controller.KeyWriter;
 import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
 import nl.tudelft.bbw.exception.HashException;
 

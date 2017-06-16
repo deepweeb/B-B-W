@@ -13,8 +13,7 @@ import static org.junit.Assert.assertEquals;
  * Test class for CryptoController
  */
 public class CryptoControllerTest {
-
-    private static final byte[] TEST_SEED = Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000");
+    
     /**
      * Class attributes
      */
@@ -26,7 +25,7 @@ public class CryptoControllerTest {
      */
     @Before
     public void setUp() {
-        EdDSAPrivateKey privateKey = ED25519.generatePrivateKey(TEST_SEED);
+        EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
         EdDSAPublicKey publicKey = ED25519.getPublicKey(privateKey);
         final String name = "name";
         final String iban = "iban";

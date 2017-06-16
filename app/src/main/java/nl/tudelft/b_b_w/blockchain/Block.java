@@ -290,14 +290,25 @@ public class Block {
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Block)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Block))
+        {
+            return false;
+        }
 
         Block block = (Block) o;
 
-        if (owner != null ? !owner.equals(block.owner) : block.owner != null) return false;
-        if (contact != null ? !contact.equals(block.contact) : block.contact != null) return false;
-        if (data != null ? !data.equals(block.data) : block.data != null) return false;
+        if (owner != null ? !owner.equals(block.owner) : block.owner != null) {
+            return false;
+        }
+        if (contact != null ? !contact.equals(block.contact) : block.contact != null) {
+            return false;
+        }
+        if (data != null ? !data.equals(block.data) : block.data != null) {
+            return false;
+        }
         return ownHash != null ? ownHash.equals(block.ownHash) : block.ownHash == null;
 
     }

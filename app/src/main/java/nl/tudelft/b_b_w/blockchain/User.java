@@ -66,13 +66,21 @@ public class User {
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof User)) {
+            return false;
+        }
 
         User user = (User) o;
 
-        if (name != null ? !name.equals(user.name) : user.name != null) return false;
-        if (iban != null ? !iban.equals(user.iban) : user.iban != null) return false;
+        if (name != null ? !name.equals(user.name) : user.name != null) {
+            return false;
+        }
+        if (iban != null ? !iban.equals(user.iban) : user.iban != null) {
+            return false;
+        }
         return publicKey != null ? publicKey.equals(user.publicKey) : user.publicKey == null;
 
     }

@@ -101,7 +101,6 @@ public class KeyStorageUnitTest {
                     KeyWriter.publicKeyToString(edDSAPublicKey));
             assertEquals(edDSAPublicKey, edDSAPublicKey1);
         } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
             fail();
         }
     }

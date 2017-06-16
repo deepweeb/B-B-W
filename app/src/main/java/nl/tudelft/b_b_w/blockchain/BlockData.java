@@ -95,16 +95,28 @@ public class BlockData {
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof BlockData)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof BlockData)) {
+            return false;
+        }
 
         BlockData blockData = (BlockData) o;
 
-        if (sequenceNumber != blockData.sequenceNumber) return false;
-        if (Double.compare(blockData.trustValue, trustValue) != 0) return false;
-        if (blockType != blockData.blockType) return false;
-        if (previousHashChain != null ? !previousHashChain.equals(blockData.previousHashChain) : blockData.previousHashChain != null)
+        if (sequenceNumber != blockData.sequenceNumber) {
             return false;
+        }
+        if (Double.compare(blockData.trustValue, trustValue) != 0) {
+            return false;
+        }
+        if (blockType != blockData.blockType) {
+            return false;
+        }
+        if (previousHashChain != null ? !previousHashChain.equals(blockData.previousHashChain) : blockData.previousHashChain != null)
+        {
+            return false;
+        }
         return previousHashSender != null ? previousHashSender.equals(blockData.previousHashSender) : blockData.previousHashSender == null;
 
     }

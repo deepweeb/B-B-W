@@ -1,12 +1,7 @@
 package nl.tudelft.bbw.controller;
 
-<<<<<<< HEAD:app/src/main/java/nl/tudelft/b_b_w/controller/TrustController.java
-import nl.tudelft.b_b_w.blockchain.TrustValues;
-import nl.tudelft.b_b_w.blockchain.Block;
-=======
-import nl.tudelft.bbw.model.TrustValues;
-import nl.tudelft.bbw.model.block.Block;
->>>>>>> 1e99e1f5d99a7f027cc09e71ecf4ab4aa3b94723:app/src/main/java/nl/tudelft/bbw/controller/TrustController.java
+import nl.tudelft.bbw.blockchain.TrustValues;
+import nl.tudelft.bbw.blockchain.Block;
 
 /**
  * Class to edit the trust value of a block

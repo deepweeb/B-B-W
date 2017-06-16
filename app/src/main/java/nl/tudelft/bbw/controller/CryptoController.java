@@ -4,10 +4,6 @@ import org.encryptor4j.util.TextEncryptor;
 
 import java.security.GeneralSecurityException;
 
-<<<<<<< HEAD:app/src/main/java/nl/tudelft/b_b_w/controller/CryptoController.java
-=======
->>>>>>> 1e99e1f5d99a7f027cc09e71ecf4ab4aa3b94723:app/src/main/java/nl/tudelft/bbw/controller/CryptoController.java
-
 /**
  * CryptoController class
  * Encrypts and decrypts Strings using the AES-CBC protocol
@@ -27,8 +23,8 @@ public class CryptoController {
      * Constructor method
      * Initializes the CryptoController by initializing the textEncryptor with the secret key
      */
-    public CryptoController(User user) {
-        this.textEncryptor = new TextEncryptor(KeyWriter.publicKeyToString(user.getPublicKey()));
+    public CryptoController(String password) {
+        this.textEncryptor = new TextEncryptor(password);
     }
 
     /**

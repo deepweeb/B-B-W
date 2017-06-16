@@ -107,4 +107,4 @@ after_script:
   - pandoc builder/build/reports/tests/index.html -t plain | sed -n '/^Failed tests/,/default-package/p'
 
 after_success:
-  - travis_wait 60 ./gradlew cobertura coveralls
+  - ./gradlew coveralls

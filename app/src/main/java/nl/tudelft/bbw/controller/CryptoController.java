@@ -4,6 +4,8 @@ import org.encryptor4j.util.TextEncryptor;
 
 import java.security.GeneralSecurityException;
 
+import nl.tudelft.bbw.blockchain.User;
+
 /**
  * CryptoController class
  * Encrypts and decrypts Strings using the AES-CBC protocol
@@ -23,8 +25,8 @@ public class CryptoController {
      * Constructor method
      * Initializes the CryptoController by initializing the textEncryptor with the secret key
      */
-    public CryptoController(String password) {
-        this.textEncryptor = new TextEncryptor(password);
+    public CryptoController(User user) {
+        this.textEncryptor = new TextEncryptor(KeyWriter.publicKeyToString(user.getPublicKey()));
     }
 
     /**

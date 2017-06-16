@@ -13,13 +13,11 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-<<<<<<< HEAD:app/src/test/java/nl/tudelft/b_b_w/controller/TrustControllerUnitTest.java
 import nl.tudelft.bbw.BuildConfig;
+import nl.tudelft.bbw.blockchain.Block;
+import nl.tudelft.bbw.blockchain.User;
 import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
-=======
-
-import static org.junit.Assert.assertEquals;
->>>>>>> 1e99e1f5d99a7f027cc09e71ecf4ab4aa3b94723:app/src/test/java/nl/tudelft/bbw/controller/TrustControllerUnitTest.java
+import nl.tudelft.bbw.exception.HashException;
 
 /**
  * Test class for CryptoController

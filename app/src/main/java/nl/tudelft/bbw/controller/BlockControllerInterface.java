@@ -2,8 +2,8 @@ package nl.tudelft.bbw.controller;
 
 import java.util.List;
 
-import nl.tudelft.bbw.model.HashException;
-import nl.tudelft.bbw.model.block.Block;
+import nl.tudelft.bbw.exception.HashException;
+import nl.tudelft.bbw.blockchain.Block;
 
 /**
  * Interface for BlockController class

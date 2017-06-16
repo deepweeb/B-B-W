@@ -1,7 +1,5 @@
 package nl.tudelft.bbw.controller;
 
-import static junit.framework.Assert.assertEquals;
-
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
 import org.junit.Before;
@@ -17,18 +15,17 @@ import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< HEAD:app/src/test/java/nl/tudelft/b_b_w/controller/BlockControllerUnitTest.java
 import nl.tudelft.bbw.BuildConfig;
+import nl.tudelft.bbw.blockchain.Block;
+import nl.tudelft.bbw.blockchain.BlockData;
+import nl.tudelft.bbw.blockchain.BlockType;
 import nl.tudelft.bbw.blockchain.Hash;
+import nl.tudelft.bbw.blockchain.User;
 import nl.tudelft.bbw.database.DatabaseException;
 import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
-=======
+import nl.tudelft.bbw.exception.HashException;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
->>>>>>> 1e99e1f5d99a7f027cc09e71ecf4ab4aa3b94723:app/src/test/java/nl/tudelft/bbw/controller/BlockControllerUnitTest.java
 
 /**
  * Unit test for the BlockController class

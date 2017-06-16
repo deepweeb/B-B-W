@@ -29,7 +29,7 @@ public class BlockDataTest {
     public void setUpBlockData(){
 
         blockType = BlockType.ADD_KEY;
-        sequenceNumber = 5;
+        sequenceNumber = 1;
         previousHashChain = new Hash("ExampleHash1");
         previousHashSender = new Hash("ExampleHash2");
         trustValue = TrustValues.INITIALIZED.getValue();

@@ -6,8 +6,6 @@ import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 
-import nl.tudelft.bbw.model.TrustValues;
-
 /**
  * This class represents a block object.
  */

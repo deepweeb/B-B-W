@@ -1,12 +1,19 @@
 package nl.tudelft.bbw.controller;
 
-import nl.tudelft.bbw.model.TrustValues;
-import nl.tudelft.bbw.model.block.Block;
+import nl.tudelft.bbw.blockchain.Block;
+import nl.tudelft.bbw.blockchain.TrustValues;
 
 /**
  * Class to edit the trust value of a block
  */
-class TrustController {
+public final class TrustController {
+
+    /**
+     * Private constructor to ensure that the controller cannot be initialized
+     */
+    private TrustController() {
+
+    }
 
     /**
      * Regularization parameters
@@ -21,7 +28,7 @@ class TrustController {
      * @param block the given block
      * @return the block with the new trust value
      */
-    Block succesfulTransaction(Block block) {
+    public static Block successfulTransaction(Block block) {
         final double newValue = distributionFunction(getX(block.getTrustValue())
                 + REGULARIZATION_TRANSACTION);
         block.setTrustValue(newValue);
@@ -35,7 +42,7 @@ class TrustController {
      * @param block the given block
      * @return the block with the new trust value
      */
-    Block failedTransaction(Block block) {
+    public static Block failedTransaction(Block block) {
         final double newValue = checkCeiling(distributionFunction(getX(block.getTrustValue())
                 - REGULARIZATION_TRANSACTION));
         block.setTrustValue(newValue);
@@ -49,7 +56,7 @@ class TrustController {
      * @param block the given block
      * @return the block with the new trust value
      */
-    Block verifiedIBAN(Block block) {
+    public static Block verifiedIBAN(Block block) {
         final double newValue = distributionFunction(getX(block.getTrustValue())
                 + REGULARIZATION_VERIFIED_IBAN);
         block.setTrustValue(newValue);
@@ -63,7 +70,7 @@ class TrustController {
      * @param block given block to revoke
      * @return block with the new trust value
      */
-    Block revokeBlock(Block block) {
+    public static Block revokeBlock(Block block) {
         block.setTrustValue(TrustValues.REVOKED.getValue());
         return block;
     }
@@ -75,7 +82,7 @@ class TrustController {
      * @param x the given parameter to calculate the distribution value from
      * @return the distribution value
      */
-    private double distributionFunction(double x) {
+    private static double distributionFunction(double x) {
         return 100 - 100 * Math.exp(-0.05 * x);
     }
 
@@ -86,7 +93,7 @@ class TrustController {
      * @param y given distribution value
      * @return parameter belonging to the distribution value
      */
-    private double getX(double y) {
+    private static double getX(double y) {
         return Math.log(1 - y / 100) * -20;
     }
 
@@ -97,7 +104,7 @@ class TrustController {
      * @param value given value to check
      * @return new value with limits checked
      */
-    private double checkCeiling(double value) {
+    private static double checkCeiling(double value) {
         if (value < 0) {
             return 0;
         } else {

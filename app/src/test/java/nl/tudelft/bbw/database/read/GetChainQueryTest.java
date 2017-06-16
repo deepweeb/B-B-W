@@ -20,8 +20,7 @@ import nl.tudelft.bbw.controller.ED25519;
 import nl.tudelft.bbw.database.Database;
 import nl.tudelft.bbw.database.write.BlockAddQuery;
 import nl.tudelft.bbw.database.write.UserAddQuery;
-import nl.tudelft.bbw.model.TrustValues;
-
+import nl.tudelft.bbw.blockchain.TrustValues;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 

@@ -1,9 +1,9 @@
-package nl.tudelft.bbw.model;
+package nl.tudelft.bbw.blockchain;
 
+
+import static junit.framework.Assert.assertEquals;
 
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 public class TrustValuesUnitTest {
 
@@ -13,7 +13,7 @@ public class TrustValuesUnitTest {
      */
     @Test
     public void testTrustValuesInitialized() {
-        assertEquals(10, TrustValues.INITIALIZED.getValue());
+        assertEquals(10.0, TrustValues.INITIALIZED.getValue());
     }
 
     /**
@@ -22,6 +22,6 @@ public class TrustValuesUnitTest {
      */
     @Test
     public void testTrustValuesRevoke() {
-        assertEquals(0, TrustValues.REVOKED.getValue());
+        assertEquals(0.0, TrustValues.REVOKED.getValue());
     }
 }

@@ -18,8 +18,7 @@ import nl.tudelft.bbw.blockchain.User;
 import nl.tudelft.bbw.controller.ED25519;
 import nl.tudelft.bbw.database.Database;
 import nl.tudelft.bbw.database.read.GetChainQuery;
-import nl.tudelft.bbw.model.TrustValues;
-
+import nl.tudelft.bbw.blockchain.TrustValues;
 import static junit.framework.Assert.assertEquals;
 
 /**

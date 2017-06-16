@@ -1,4 +1,4 @@
-package nl.tudelft.bbw.model;
+package nl.tudelft.bbw.exception;
 
 /**
  * Thrown when the hash methods are not available.

@@ -1,4 +1,4 @@
-package nl.tudelft.bbw.model;
+package nl.tudelft.bbw.exception;
 
 /**
  * Exception for when hashes do not match

@@ -1,4 +1,4 @@
-package nl.tudelft.bbw.model;
+package nl.tudelft.bbw.exception;
 
 /**
  * Thrown when the hash method (currently SHA-256) is not available.

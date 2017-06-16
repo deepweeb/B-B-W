@@ -2,9 +2,6 @@ package nl.tudelft.bbw.blockchain;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import nl.tudelft.bbw.model.TrustValues;
-
 import static junit.framework.Assert.assertEquals;
 
 /**

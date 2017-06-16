@@ -1,5 +1,11 @@
 package nl.tudelft.bbw.controller;
 
+import static org.junit.Assert.assertEquals;
+
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+import net.i2p.crypto.eddsa.Utils;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,11 +14,11 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import nl.tudelft.bbw.BuildConfig;
-import nl.tudelft.bbw.model.HashException;
-import nl.tudelft.bbw.model.User;
-import nl.tudelft.bbw.model.block.Block;
+import nl.tudelft.bbw.blockchain.Block;
+import nl.tudelft.bbw.blockchain.User;
+import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
+import nl.tudelft.bbw.exception.HashException;
 
-import static org.junit.Assert.assertEquals;
 
 /**
  * Test class for CryptoController
@@ -25,7 +31,6 @@ public class TrustControllerUnitTest {
      * Class attributes
      */
     private static final double DELTA = 1e-15;
-    private TrustController trustController;
     private Block block;
 
     /**
@@ -33,20 +38,23 @@ public class TrustControllerUnitTest {
      * Initialized the TrustController, BlockController and a test block
      */
     @Before
-    public void initialize() throws HashException {
-        this.trustController = new TrustController();
+    public void initialize() throws HashException, BlockAlreadyExistsException {
         final String name = "name";
         final String iban = "iban";
-        final User user = new User(name, iban);
-        this.block = new BlockController(RuntimeEnvironment.application).createGenesis(user);
+        EdDSAPrivateKey edDSAPrivateKey1 =
+                ED25519.generatePrivateKey(Utils.hexToBytes(
+                        "0000000000000000000000000000000000000000000000000000000000000000"));
+        EdDSAPublicKey ownerPublicKey = ED25519.getPublicKey(edDSAPrivateKey1);
+        final User user = new User(name, iban, ownerPublicKey);
+        this.block = new BlockController(user, RuntimeEnvironment.application).createGenesis(user);
     }
 
     /**
      * Tests whether a successful transaction updates the trust value
      */
     @Test
-    public void testSuccesfulTransaction() {
-        block = trustController.succesfulTransaction(block);
+    public void testSuccessfulTransaction() {
+        block = TrustController.successfulTransaction(block);
         assertEquals(14.389351794935735, block.getTrustValue(), DELTA);
     }
 
@@ -55,7 +63,7 @@ public class TrustControllerUnitTest {
      */
     @Test
     public void testFailedTransaction() {
-        block = trustController.failedTransaction(block);
+        block = TrustController.failedTransaction(block);
         assertEquals(5.38560132615784, block.getTrustValue(), DELTA);
     }
 
@@ -64,7 +72,7 @@ public class TrustControllerUnitTest {
      */
     @Test
     public void testVerifiedIBAN() {
-        block = trustController.verifiedIBAN(block);
+        block = TrustController.verifiedIBAN(block);
         assertEquals(22.536282121744804, block.getTrustValue(), DELTA);
     }
 
@@ -74,7 +82,7 @@ public class TrustControllerUnitTest {
     @Test
     public void testUnderCeiling() {
         block.setTrustValue(0);
-        block = trustController.failedTransaction(block);
+        block = TrustController.failedTransaction(block);
         assertEquals(0, block.getTrustValue(), DELTA);
     }
 
@@ -83,7 +91,7 @@ public class TrustControllerUnitTest {
      */
     @Test
     public void testRevokeBlock() {
-        block = trustController.revokeBlock(block);
+        block = TrustController.revokeBlock(block);
         assertEquals(0, block.getTrustValue(), DELTA);
     }
 

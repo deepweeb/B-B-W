@@ -18,7 +18,11 @@ import nl.tudelft.bbw.blockchain.User;
 import nl.tudelft.bbw.controller.ED25519;
 import nl.tudelft.bbw.database.Database;
 import nl.tudelft.bbw.database.read.GetChainQuery;
+<<<<<<< HEAD:app/src/test/java/nl/tudelft/bbw/database/write/BlockAddQueryTest.java
 import nl.tudelft.bbw.blockchain.TrustValues;
+=======
+import nl.tudelft.bbw.model.TrustValues;
+>>>>>>> bf1d337508dc2ec241eb12f2ad6e85c78aea115d:app/src/test/java/nl/tudelft/bbw/database/write/BlockAddQueryTest.java
 
 import static junit.framework.Assert.assertEquals;
 
@@ -28,8 +32,6 @@ import static junit.framework.Assert.assertEquals;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml")
 public class BlockAddQueryTest {
-    final String notAvailable = "N/A";
-
     /**
      * Add one block
      */
@@ -40,7 +42,7 @@ public class BlockAddQueryTest {
 
         // create genesis block
         Block genesis = new Block(alice, alice, new BlockData(
-                BlockType.GENESIS, 1, new Hash(notAvailable), new Hash(notAvailable),
+                BlockType.GENESIS, 1, Hash.NOT_AVAILABLE, Hash.NOT_AVAILABLE,
                 TrustValues.INITIALIZED.getValue()));
 
         // add user to database
@@ -79,13 +81,13 @@ public class BlockAddQueryTest {
 
         // create genesis block
         Block genesisA = new Block(alice, alice, new BlockData(
-                BlockType.GENESIS, 1, new Hash(notAvailable), new Hash(notAvailable),
+                BlockType.GENESIS, 1, Hash.NOT_AVAILABLE, Hash.NOT_AVAILABLE,
                 TrustValues.INITIALIZED.getValue()));
         Block genesisB = new Block(bob, bob, new BlockData(
-                BlockType.GENESIS, 1, new Hash(notAvailable), new Hash(notAvailable),
+                BlockType.GENESIS, 1, Hash.NOT_AVAILABLE, Hash.NOT_AVAILABLE,
                 TrustValues.INITIALIZED.getValue()));
         Block genesisC = new Block(carol, carol, new BlockData(
-                BlockType.GENESIS, 1, new Hash(notAvailable), new Hash(notAvailable),
+                BlockType.GENESIS, 1, Hash.NOT_AVAILABLE, Hash.NOT_AVAILABLE,
                 TrustValues.INITIALIZED.getValue()));
 
         // add one genesis block

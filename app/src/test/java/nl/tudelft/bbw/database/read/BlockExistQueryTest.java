@@ -37,6 +37,9 @@ public class BlockExistQueryTest {
     private Block aRevokesB;
     private Block bAddsC;
 
+    /**
+     * Example genesises
+     */
     private Block genesisA;
     private Block genesisB;
     private Block genesisC;
@@ -54,7 +57,7 @@ public class BlockExistQueryTest {
     private Database database;
 
     /**
-     * Create example users
+     * Create example users and blocks
      */
     @Before
     public void init() {
@@ -89,6 +92,9 @@ public class BlockExistQueryTest {
         database.write(new BlockAddQuery(bAddsC));
     }
 
+    /**
+     * Test exists for a genesis block
+     */
     @Test
     public void testGenesisExists() {
         BlockExistQuery query = new BlockExistQuery(new Block(alice));
@@ -96,6 +102,9 @@ public class BlockExistQueryTest {
         assertTrue(query.blockExists());
     }
 
+    /**
+     * Test when a revoke block does not exist but an add block does
+     */
     @Test
     public void testRevokeInexists() {
         Block bRevokesC = new Block(bob, carol, new BlockData(BlockType.REVOKE_KEY, 3,
@@ -105,6 +114,9 @@ public class BlockExistQueryTest {
         assertFalse(query.blockExists());
     }
 
+    /**
+     * Test a non-existing genesis block
+     */
     @Test
     public void testGenesisInexists() {
         User luat = new User("Luat", "ibanLuat", ED25519.getPublicKey(ED25519.generatePrivateKey()));
@@ -113,7 +125,9 @@ public class BlockExistQueryTest {
         assertFalse(query.blockExists());
     }
 
-    // B can add A
+    /**
+     * Test if B can add A (true)
+     */
     @Test
     public void testBAddsA() {
         Block bAddsA = new Block(bob, alice, new BlockData(BlockType.ADD_KEY, 3,
@@ -125,7 +139,9 @@ public class BlockExistQueryTest {
         assertFalse(query.blockExists());
     }
 
-    // B cannot add C
+    /**
+     * Test if B can add C (false)
+     */
     @Test
     public void testBAddsC() {
         Block bAddsC2 = new Block(bob, carol, new   BlockData(BlockType.ADD_KEY, 3,

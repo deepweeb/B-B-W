@@ -29,10 +29,9 @@ public class HashTest {
 
     /**
      * toString() method testing
-     * @throws Exception
      */
     @Test
-    public void toStringTest() throws Exception {
+    public void toStringTest() {
         assertEquals(hashString, hash.toString());
     }
 

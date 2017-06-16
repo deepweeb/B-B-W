@@ -95,7 +95,7 @@ public final class KeyReader {
      * @param encodedPublicKey given hex representation of the byte array of the public key
      * @return public key
      */
-    public static EdDSAPublicKey StringToPublicKey(String encodedPublicKey) throws InvalidKeySpecException {
+    public static EdDSAPublicKey stringToPublicKey(String encodedPublicKey) throws InvalidKeySpecException {
         return convertToPublicKey(Utils.hexToBytes(encodedPublicKey));
     }
 

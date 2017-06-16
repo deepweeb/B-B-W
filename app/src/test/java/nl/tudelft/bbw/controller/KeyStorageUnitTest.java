@@ -89,7 +89,7 @@ public class KeyStorageUnitTest {
      */
     @Test
     public void testStringToPublicKey() throws InvalidKeySpecException, IOException {
-        EdDSAPublicKey edDSAPublicKey1 = KeyReader.StringToPublicKey(
+        EdDSAPublicKey edDSAPublicKey1 = KeyReader.stringToPublicKey(
                 KeyWriter.publicKeyToString(edDSAPublicKey));
         assertEquals(edDSAPublicKey, edDSAPublicKey1);
     }

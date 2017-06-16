@@ -1,8 +1,6 @@
 package nl.tudelft.b_b_w.view;
 
 
-import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
-
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,9 +12,19 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+import net.i2p.crypto.eddsa.Utils;
+
+import nl.tudelft.b_b_w.API;
 import nl.tudelft.b_b_w.R;
+import nl.tudelft.b_b_w.blockchain.Block;
+import nl.tudelft.b_b_w.blockchain.User;
+import nl.tudelft.b_b_w.controller.ED25519;
+import nl.tudelft.b_b_w.model.BlockAlreadyExistsException;
 import nl.tudelft.b_b_w.model.HashException;
-import nl.tudelft.b_b_w.model.User;
+
+import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
 
 /**
  * Page which handles transactions between user and a contact.
@@ -39,13 +47,19 @@ public class TransactionActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction);
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        user = new User(settings.getString("userName", ""), settings.getString("iban", ""));
+        EdDSAPrivateKey edDSAPrivateKeyOwner1 =
+                ED25519.generatePrivateKey(Utils.hexToBytes(
+                        "1000000000000000000000000000000000000000000000000000000000000001"));
+        EdDSAPublicKey ownerPublicKey1 = ED25519.getPublicKey(edDSAPrivateKeyOwner1);
+        user = new User(settings.getString("userName", ""), settings.getString("iban", ""), ownerPublicKey1);
+
         try {
             mAPI = new API(user, this);
             addItemsOnSpinner();
         } catch (HashException e) {
-            Toast.makeText(TransactionActivity.this, "Transaction failed: "
-                    + e, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        } catch (BlockAlreadyExistsException e) {
+            e.printStackTrace();
         }
         setText();
         onSend();
@@ -72,14 +86,13 @@ public class TransactionActivity extends Activity {
                 transactionName = String.valueOf(dialog.getSelectedItem());
                 EditText amountText = (EditText) findViewById(R.id.editText11);
                 final int amount = Integer.parseInt(amountText.getText().toString());
-//                for (Block block : mAPI.getBlocks(user)) {
-//                    if (block.getOwner().getName().equals(transactionName)) {
-//                        mAPI.transaction(block, TrustValues.SUCCESFUL_TRANSACTION);
-                //TODO update trust value of block using new api
-//                        Toast.makeText(TransactionActivity.this, "Send €" + amount + " to "
-//                                + transactionName + "!", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
+                for (Block block : mAPI.getBlocks(user)) {
+                    if (block.getBlockOwner().getName().equals(transactionName)) {
+                        mAPI.successfulTransaction(block);
+                        Toast.makeText(TransactionActivity.this, "Send €" + amount + " to "
+                                + transactionName + "!", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
     }
@@ -92,7 +105,7 @@ public class TransactionActivity extends Activity {
         int listSize = mAPI.getBlocks(user).size();
         String[] items = new String[listSize];
         for (int i = 0; i < listSize; i++) {
-            items[i] = mAPI.getBlocks(user).get(i).getOwner().getName();
+            items[i] = mAPI.getBlocks(user).get(i).getBlockOwner().getName();
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, items);

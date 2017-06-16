@@ -76,9 +76,10 @@ public class CryptoController {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     final void encryptFile(String path) {
         try {
-            fileEncryptor.encrypt(new File(path + KeyWriter.TEMP_EXTENSION),
+            File tempFile = new File(path + KeyWriter.TEMP_EXTENSION);
+            fileEncryptor.encrypt(tempFile,
                     new File(path + ENCRYPTION_EXTENSION));
-            new File(path + KeyWriter.TEMP_EXTENSION).delete();
+            tempFile.delete();
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException("Error - Could not encrypt file: " + path);
         }
@@ -93,8 +94,9 @@ public class CryptoController {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     final void decryptFile(String path) {
         try {
-            fileEncryptor.decrypt(new File(path + ENCRYPTION_EXTENSION), new File(path));
-            new File(path + ENCRYPTION_EXTENSION).delete();
+            File tempFile = new File(path + ENCRYPTION_EXTENSION);
+            fileEncryptor.decrypt(tempFile, new File(path));
+            tempFile.delete();
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException("Error - Could not decrypt file: " + path);
         }

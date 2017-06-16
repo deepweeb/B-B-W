@@ -95,10 +95,15 @@ public class KeyStorageUnitTest {
      * Test to check whether converting a public key to a string and back works
      */
     @Test
-    public void testStringPublicKey()  throws Exception {
-        EdDSAPublicKey edDSAPublicKey1 = KeyReader.readPublicKey(
-                KeyWriter.publicKeyToString(edDSAPublicKey));
-        assertEquals(edDSAPublicKey, edDSAPublicKey1);
+    public void testStringPublicKey() {
+        try {
+            EdDSAPublicKey edDSAPublicKey1 = KeyReader.readPublicKey(
+                    KeyWriter.publicKeyToString(edDSAPublicKey));
+            assertEquals(edDSAPublicKey, edDSAPublicKey1);
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
     /**

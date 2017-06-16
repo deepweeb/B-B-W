@@ -1,8 +1,6 @@
 package nl.tudelft.b_b_w.blockchain;
 
-import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
-import net.i2p.crypto.eddsa.Utils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -39,9 +37,7 @@ public class ChainTest {
         ownerName = "BlockOwner1";
         ownerIban = "Owner1Iban";
         //object to generate public key
-        EdDSAPrivateKey edDSAPrivateKey1 =
-                ED25519.generatePrivateKey(Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000"));
-        ownerPublicKey = ED25519.getPublicKey(edDSAPrivateKey1);
+        ownerPublicKey = ED25519.getPublicKey(ED25519.generatePrivateKey());
         owner = new User(ownerName, ownerIban, ownerPublicKey);
         testChain = new ArrayList<Block>();
         chain = new Chain(owner);

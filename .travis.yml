@@ -38,11 +38,8 @@ matrix:
   include: # More Emulator API levels to build in parallel
     - env: API=24
     - env: API=23
-    - env: API=22
-    - env: API=19
 #  allow_failures:
-#    - env: API=23
-#    - env: API=22
+    - env: API=22
   fast_finish: false
 
 before_install:
@@ -88,8 +85,6 @@ install:
   - ./gradlew clean
   # Check components status
   - sdkmanager --list || true
-  # Check style
-  # - ./gradlew checkstyle
 
 before_script:
   # Wait for emulator fully-booted and disable animations
@@ -103,7 +98,7 @@ before_script:
 
 script:
   # Build and run all device checks
-  ./gradlew build connectedCheck check lint test
+  - travis_wait ./gradlew build connectedCheck check lint test
 
 after_script:
   # Show tests and lint results
@@ -112,4 +107,4 @@ after_script:
   - pandoc builder/build/reports/tests/index.html -t plain | sed -n '/^Failed tests/,/default-package/p'
 
 after_success:
-  - ./gradlew cobertura coveralls
+  - travis_wait 60 ./gradlew cobertura coveralls

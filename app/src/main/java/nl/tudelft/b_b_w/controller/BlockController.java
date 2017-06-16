@@ -9,6 +9,7 @@ import nl.tudelft.b_b_w.blockchain.Block;
 import nl.tudelft.b_b_w.blockchain.BlockData;
 import nl.tudelft.b_b_w.blockchain.BlockType;
 import nl.tudelft.b_b_w.blockchain.Hash;
+import nl.tudelft.b_b_w.blockchain.TrustValues;
 import nl.tudelft.b_b_w.blockchain.User;
 import nl.tudelft.b_b_w.database.Database;
 import nl.tudelft.b_b_w.database.read.BlockExistQuery;
@@ -20,7 +21,6 @@ import nl.tudelft.b_b_w.database.write.UpdateTrustQuery;
 import nl.tudelft.b_b_w.database.write.UserAddQuery;
 import nl.tudelft.b_b_w.exception.BlockAlreadyExistsException;
 import nl.tudelft.b_b_w.exception.HashException;
-import nl.tudelft.b_b_w.blockchain.TrustValues;
 
 /**
  * Class which handles the the addition, revocation and creation of blocks.
@@ -216,7 +216,7 @@ public class BlockController {
      * @throws HashException when the hashing algorithm is not available
      */
     private Block createBlock(User owner, User contact,
-            BlockType blockType) throws HashException, BlockAlreadyExistsException {
+                              BlockType blockType) throws HashException, BlockAlreadyExistsException {
         Block latest = getLatestBlock(owner);
         if (latest == null) {
             throw new IllegalArgumentException("No genesis found for user " + owner);

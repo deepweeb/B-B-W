@@ -15,11 +15,11 @@ import org.robolectric.annotation.Config;
 import java.util.List;
 
 import nl.tudelft.b_b_w.blockchain.Block;
+import nl.tudelft.b_b_w.blockchain.TrustValues;
 import nl.tudelft.b_b_w.blockchain.User;
 import nl.tudelft.b_b_w.controller.ED25519;
 import nl.tudelft.b_b_w.exception.BlockAlreadyExistsException;
 import nl.tudelft.b_b_w.exception.HashException;
-import nl.tudelft.b_b_w.blockchain.TrustValues;
 
 
 @RunWith(RobolectricTestRunner.class)
@@ -35,7 +35,8 @@ public class APITest {
 
     /**
      * Initialize API before every test
-     * @throws HashException When creating a block results in an error
+     *
+     * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Before
@@ -49,7 +50,7 @@ public class APITest {
     /**
      * Test if adding to chain yields a different chain
      *
-     * @throws HashException When creating a block results in an error
+     * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Test
@@ -63,11 +64,12 @@ public class APITest {
     /**
      * Test if revoking from chain yields a different chain
      *
-     * @throws HashException When creating a block results in an error
+     * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Test
-    public final void revokeContactFromChainTest() throws HashException, BlockAlreadyExistsException {
+    public final void revokeContactFromChainTest()
+            throws HashException, BlockAlreadyExistsException {
         API.revokeContactFromChain(owner);
         assertNotEquals(API.getBlocks(owner), list);
     }
@@ -75,7 +77,7 @@ public class APITest {
     /**
      * Test if adding to database yields a different chain
      *
-     * @throws HashException When creating a block results in an error
+     * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Test
@@ -89,18 +91,18 @@ public class APITest {
     /**
      * Test if adding revoke block to database yields a different chain
      *
-     * @throws HashException When creating a block results in an error
+     * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Test
-    public final void addRevokeContactToDatabase() throws HashException, BlockAlreadyExistsException {
+    public final void addRevokeContactToDatabase()
+            throws HashException, BlockAlreadyExistsException {
         API.addRevokeContactToDatabase(owner, owner);
         assertNotEquals(list, API.getBlocks(owner));
     }
 
     /**
      * Test if the database isn't empty
-     *
      */
     @Test
     public final void databaseEmptyTest() {
@@ -109,7 +111,6 @@ public class APITest {
 
     /**
      * Test if trustValue of a block changes after transaction
-     *
      */
     @Test
     public final void succesfulTransactionTest() {
@@ -119,7 +120,6 @@ public class APITest {
 
     /**
      * Test if trustValue of a block changes after transaction
-     *
      */
     @Test
     public final void failedTransactionTest() {
@@ -129,7 +129,6 @@ public class APITest {
 
     /**
      * Test if trustValue of a block changes after verification
-     *
      */
     @Test
     public final void verifyIBANTest() {
@@ -140,7 +139,6 @@ public class APITest {
 
     /**
      * Test if trustValue of a block changes after revoking
-     *
      */
     @Test
     public final void revokedBlockTest() {

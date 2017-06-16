@@ -82,14 +82,14 @@ public class Database extends SQLiteOpenHelper {
     /**
      * Column indices for blocks
      */
-    public static final int INDEX_SEQ_NO = 0;
-    public static final int INDEX_OWNER = 1;
-    public static final int INDEX_CONTACT = 2;
-    public static final int INDEX_HASH = 3;
-    public static final int INDEX_PREV_HASH_CHAIN = 4;
-    public static final int INDEX_PREV_HASH_SENDER = 5;
-    public static final int INDEX_REVOKE = 6;
-    public static final int INDEX_TRUST_VALUE = 7;
+    static final int INDEX_SEQ_NO = 0;
+    static final int INDEX_OWNER = 1;
+    static final int INDEX_CONTACT = 2;
+    static final int INDEX_HASH = 3;
+    static final int INDEX_PREV_HASH_CHAIN = 4;
+    static final int INDEX_PREV_HASH_SENDER = 5;
+    static final int INDEX_REVOKE = 6;
+    static final int INDEX_TRUST_VALUE = 7;
 
     /**
      * Column names for users

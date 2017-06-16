@@ -8,7 +8,6 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import nl.tudelft.b_b_w.BuildConfig;
-import nl.tudelft.b_b_w.controller.API;
 import nl.tudelft.b_b_w.model.block.Block;
 import nl.tudelft.b_b_w.model.block.BlockFactory;
 

@@ -14,7 +14,6 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.util.List;
 
 import nl.tudelft.b_b_w.R;
-import nl.tudelft.b_b_w.controller.API;
 import nl.tudelft.b_b_w.model.User;
 import nl.tudelft.b_b_w.model.block.Block;
 

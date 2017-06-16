@@ -3,11 +3,13 @@ package nl.tudelft.b_b_w.database.read;
 import android.database.Cursor;
 
 import nl.tudelft.b_b_w.blockchain.Block;
+import nl.tudelft.b_b_w.blockchain.BlockType;
 import nl.tudelft.b_b_w.controller.KeyWriter;
 
 import static nl.tudelft.b_b_w.database.Database.BLOCK_TABLE_NAME;
 import static nl.tudelft.b_b_w.database.Database.KEY_CONTACT;
 import static nl.tudelft.b_b_w.database.Database.KEY_OWNER;
+import static nl.tudelft.b_b_w.database.Database.KEY_REVOKE;
 import static nl.tudelft.b_b_w.database.Database.getBlockColumns;
 
 /**
@@ -75,7 +77,7 @@ public class BlockExistQuery extends ReadQuery {
      */
     @Override
     protected String getWhere() {
-        return KEY_OWNER + " = ? AND " + KEY_CONTACT + " = ?";
+        return KEY_OWNER + " = ? AND " + KEY_CONTACT + " = ? AND " + KEY_REVOKE + " = ?";
     }
 
     /**
@@ -87,6 +89,7 @@ public class BlockExistQuery extends ReadQuery {
         return new String[] {
                 KeyWriter.publicKeyToString(block.getOwnerPublicKey()),
                 KeyWriter.publicKeyToString(block.getContactPublicKey()),
+                String.valueOf(block.getBlockType() == BlockType.REVOKE_KEY ? 1 : 0)
         };
     }
 }

@@ -16,7 +16,6 @@ import java.util.List;
 import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.blockchain.Block;
 import nl.tudelft.b_b_w.blockchain.User;
-import nl.tudelft.b_b_w.controller.API;
 import nl.tudelft.b_b_w.controller.ED25519;
 import nl.tudelft.b_b_w.model.BlockAlreadyExistsException;
 import nl.tudelft.b_b_w.model.HashException;

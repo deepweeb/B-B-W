@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import nl.tudelft.b_b_w.R;
-import nl.tudelft.b_b_w.controller.API;
 import nl.tudelft.b_b_w.model.HashException;
 import nl.tudelft.b_b_w.model.User;
 

@@ -14,35 +14,75 @@ import nl.tudelft.b_b_w.database.Database;
 import nl.tudelft.b_b_w.database.read.BlockExistQuery;
 import nl.tudelft.b_b_w.database.read.GetChainQuery;
 import nl.tudelft.b_b_w.database.read.LatestBlockQuery;
+import nl.tudelft.b_b_w.database.read.UserExistQuery;
 import nl.tudelft.b_b_w.database.write.BlockAddQuery;
 import nl.tudelft.b_b_w.database.write.UpdateTrustQuery;
+import nl.tudelft.b_b_w.database.write.UserAddQuery;
 import nl.tudelft.b_b_w.model.BlockAlreadyExistsException;
 import nl.tudelft.b_b_w.model.HashException;
 import nl.tudelft.b_b_w.model.TrustValues;
 
-
+/**
+ * Class which handles the the addition, revocation and creation of blocks.
+ */
 public class BlockController {
 
+    /**
+     * Variables for handling the database
+     */
     private User chainOwner;
     private Database database;
-    private final Hash notAvailable = new Hash("N/A");
-    private final int firstSequenceNumber = 1;
 
+    /**
+     * Creation of a BlockController
+     *
+     * @param chainOwner The owner of the blockchain
+     * @param context    The specific context which contains our database
+     */
     public BlockController(User chainOwner, Context context) {
         this.chainOwner = chainOwner;
         this.database = new Database(context);
     }
 
-    public final void addBlockToChain(User user) throws HashException, BlockAlreadyExistsException {
-        createKeyBlock(chainOwner, user);
+    /**
+     * Method for adding a user to our blockchain.
+     *
+     * @param user the user we want to add
+     * @return the created block
+     * @throws HashException               When there is an error calculating the hash
+     * @throws BlockAlreadyExistsException When there already exists a block in the database
+     */
+    public final Block addBlockToChain(User user)
+            throws HashException, BlockAlreadyExistsException {
+        UserExistQuery query = new UserExistQuery(user);
+        database.read(query);
+        if (!query.doesExist()) {
+            UserAddQuery existQuery = new UserAddQuery(user);
+            database.write(existQuery);
+        }
+        return createKeyBlock(chainOwner, user);
     }
 
-    public final void revokeBlockFromChain(User user) throws HashException,
+    /**
+     * Method for revoking a user to our blockchain.
+     *
+     * @param user the user we want to revoking
+     * @return the created revoke block
+     * @throws HashException               When there is an error calculating the hash
+     * @throws BlockAlreadyExistsException When there already exists a block in the database
+     */
+    public final Block revokeBlockFromChain(User user) throws HashException,
             BlockAlreadyExistsException {
-        createRevokeBlock(chainOwner, user);
+        return createRevokeBlock(chainOwner, user);
     }
 
-    public final void addBlock(Block block) throws BlockAlreadyExistsException {
+    /**
+     * Method for adding a block to our database
+     *
+     * @param block The block which we want to add
+     * @throws BlockAlreadyExistsException When there already exists a block in the database
+     */
+    public void addBlock(Block block) throws BlockAlreadyExistsException {
         if (blockExists(block)) {
             throw new BlockAlreadyExistsException();
         }
@@ -50,18 +90,35 @@ public class BlockController {
         database.write(query);
     }
 
-    public final boolean blockExists(Block block) {
+    /**
+     * Method  for checking whether a block exists in the database
+     *
+     * @param block Block which we want to check
+     * @return true if the block is already present, false if the block isn't present
+     */
+    public boolean blockExists(Block block) {
         BlockExistQuery query = new BlockExistQuery(block);
         database.read(query);
         return query.blockExists();
     }
 
-    public final void updateBlock(Block block) {
+    /**
+     * Method for updating the trustValue of a block
+     *
+     * @param block The block which is already present in the database, but different trustValue
+     */
+    public final void updateTrustOfBlock(Block block) {
         UpdateTrustQuery query = new UpdateTrustQuery(block);
         database.write(query);
     }
 
-    public final List<Block> getBlocks(User owner) throws HashException {
+    /**
+     * Method for retrieving the blockchain of a user
+     *
+     * @param owner The user whose chain we want
+     * @return A list containing the block in the blockchain
+     */
+    public final List<Block> getBlocks(User owner) {
         // retrieve all blocks in the database and then sort it in order of sequence number
         GetChainQuery query = new GetChainQuery(database, owner);
         database.read(query);
@@ -77,18 +134,31 @@ public class BlockController {
         return res;
     }
 
+    /**
+     * Helper method to remove a specific block in a given list
+     *
+     * @param list  The list containing blocks
+     * @param block The block which we want to remove from the list
+     * @return A list without the specific block
+     */
     private List<Block> removeBlock(List<Block> list, Block block) {
         final List<Block> res = new ArrayList<>();
         for (Block listBlock : list) {
-            if (!(listBlock.getBlockOwner().equals(block.getBlockOwner())
-                    && listBlock.getContact().equals(block.getContact()))) {
+            if (!(listBlock.getOwnerName().equals(block.getOwnerName())
+                    && listBlock.getContactName().equals(block.getContactName()))) {
                 res.add(listBlock);
             }
         }
         return res;
     }
 
-    private final Block getLatestBlock(User owner) throws HashException {
+    /**
+     * Helper method to get the latest block of a blockchain
+     *
+     * @param owner The owner of the blockchain
+     * @return The last block
+     */
+    private Block getLatestBlock(User owner) {
         LatestBlockQuery query = new LatestBlockQuery(database, owner);
         database.read(query);
         return query.getLatestBlock();
@@ -103,6 +173,8 @@ public class BlockController {
      */
     public Block createGenesis(User owner) throws HashException, BlockAlreadyExistsException {
         Block genesisBlock = new Block(owner);
+        UserAddQuery query = new UserAddQuery(owner);
+        database.write(query);
         addBlock(genesisBlock);
         return genesisBlock;
     }
@@ -111,7 +183,7 @@ public class BlockController {
      * Create a block which adds a key for a certain user and weaves it into the blockchain.
      * The initial trust value is zero.
      *
-     * @param contact   of whom is the information
+     * @param contact of whom is the information
      * @return the newly created block
      * @throws HashException when the hashing algorithm is not available
      */
@@ -124,7 +196,7 @@ public class BlockController {
      * Create a block which revokes a key for a certain user and weaves it into the blockchain.
      * The initial trust value is zero.
      *
-     * @param contact   of whom is the information
+     * @param contact of whom is the information
      * @return the newly created block
      * @throws HashException when the hashing algorithm is not available
      */
@@ -152,11 +224,7 @@ public class BlockController {
         Hash previousBlockHash = latest.getOwnHash();
         // always link to genesis of contact blocks
         Hash contactBlockHash;
-        if (owner.equals(contact)) {
-            contactBlockHash = notAvailable;
-        } else {
-            contactBlockHash = getBlocks(contact).get(0).getOwnHash();
-        }
+        contactBlockHash = getBlocks(contact).get(0).getOwnHash();
         int seqNumber = latest.getSequenceNumber() + 1;
 
         BlockData blockData = new BlockData(blockType, seqNumber, previousBlockHash,

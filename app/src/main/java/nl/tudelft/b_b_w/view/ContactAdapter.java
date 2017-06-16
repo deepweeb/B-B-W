@@ -13,11 +13,11 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import nl.tudelft.b_b_w.API;
 import nl.tudelft.b_b_w.R;
-import nl.tudelft.b_b_w.controller.API;
+import nl.tudelft.b_b_w.blockchain.User;
 import nl.tudelft.b_b_w.model.BlockAlreadyExistsException;
 import nl.tudelft.b_b_w.model.HashException;
-import nl.tudelft.b_b_w.blockchain.User;
 
 /**
  * Adapter to add the different blocks dynamically

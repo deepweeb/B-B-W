@@ -1,4 +1,4 @@
-package nl.tudelft.b_b_w.database.read;
+package nl.tudelft.b_b_w.database.write;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,11 +15,9 @@ import nl.tudelft.b_b_w.blockchain.Hash;
 import nl.tudelft.b_b_w.blockchain.User;
 import nl.tudelft.b_b_w.controller.ED25519;
 import nl.tudelft.b_b_w.database.Database;
-import nl.tudelft.b_b_w.database.write.BlockAddQuery;
-import nl.tudelft.b_b_w.database.write.UserAddQuery;
+import nl.tudelft.b_b_w.database.read.LatestBlockQuery;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.assertEquals;
 
 /**
  * Tests for the UserExistQuery class
@@ -29,7 +27,7 @@ import static junit.framework.Assert.assertTrue;
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml")
-public class BlockExistQueryTest {
+public class UpdateTrustQueryTest {
     /**
      * Example blocks to test with
      */
@@ -78,11 +76,11 @@ public class BlockExistQueryTest {
 
         // add specific blocks
         aAddsB = new Block(alice, bob, new BlockData(BlockType.ADD_KEY, 2,
-                genesisA.getOwnHash(), genesisB.getOwnHash(), 0));
+                genesisA.getOwnHash(), genesisB.getOwnHash(), 0.0));
         aRevokesB = new Block(alice, bob, new BlockData(BlockType.REVOKE_KEY, 3,
                 aAddsB.getOwnHash(), Hash.NOT_AVAILABLE, 0));
         bAddsC = new Block(bob, carol, new BlockData(BlockType.ADD_KEY, 3,
-                genesisB.getOwnHash(), genesisC.getOwnHash(), 0));
+                genesisB.getOwnHash(), genesisC.getOwnHash(), 0.0));
 
         database.write(new BlockAddQuery(aAddsB));
         database.write(new BlockAddQuery(aRevokesB));
@@ -90,50 +88,33 @@ public class BlockExistQueryTest {
     }
 
     @Test
-    public void testGenesisExists() {
-        BlockExistQuery query = new BlockExistQuery(new Block(alice));
-        database.read(query);
-        assertTrue(query.blockExists());
+    public void testSimpleUpdateTrust() {
+        Block bAddsCTrust = new Block(bob, carol, new BlockData(BlockType.ADD_KEY, 3,
+                genesisB.getOwnHash(), genesisC.getOwnHash(), 10.0));
+        database.write(new UpdateTrustQuery(bAddsCTrust));
+
+        // verify
+        LatestBlockQuery latest = new LatestBlockQuery(database, bob);
+        database.read(latest);
+        assertEquals(10.0, latest.getLatestBlock().getTrustValue());
     }
 
     @Test
-    public void testRevokeInexists() {
-        Block bRevokesC = new Block(bob, carol, new BlockData(BlockType.REVOKE_KEY, 3,
-                genesisB.getOwnHash(), genesisC.getOwnHash(), 0));
-        BlockExistQuery query = new BlockExistQuery(bRevokesC);
-        database.read(query);
-        assertFalse(query.blockExists());
-    }
+    public void testDoubleUpdateTrust() {
+        Block bAddsCTrust1 = new Block(bob, carol, new BlockData(BlockType.ADD_KEY, 3,
+                genesisB.getOwnHash(), genesisC.getOwnHash(), 10.0));
+        Block bAddsCTrust2 = new Block(bob, carol, new BlockData(BlockType.ADD_KEY, 3,
+                genesisB.getOwnHash(), genesisC.getOwnHash(), 20.0));
+        Block bAddsCTrust3 = new Block(bob, carol, new BlockData(BlockType.ADD_KEY, 3,
+                genesisB.getOwnHash(), genesisC.getOwnHash(), 30.0));
+        database.write(new UpdateTrustQuery(bAddsCTrust1));
+        database.write(new UpdateTrustQuery(bAddsCTrust2));
+        database.write(new UpdateTrustQuery(bAddsCTrust3));
 
-    @Test
-    public void testGenesisInexists() {
-        User luat = new User("Luat", "ibanLuat", ED25519.getPublicKey(ED25519.generatePrivateKey()));
-        BlockExistQuery query = new BlockExistQuery(new Block(luat));
-        database.read(query);
-        assertFalse(query.blockExists());
-    }
-
-    // B can add A
-    @Test
-    public void testBAddsA() {
-        Block bAddsA = new Block(bob, alice, new BlockData(BlockType.ADD_KEY, 3,
-                genesisC.getOwnHash(), Hash.NOT_AVAILABLE, 0));
-
-        // query
-        BlockExistQuery query = new BlockExistQuery(bAddsA);
-        database.read(query);
-        assertFalse(query.blockExists());
-    }
-
-    // B cannot add C
-    @Test
-    public void testBAddsC() {
-        Block bAddsC2 = new Block(bob, carol, new   BlockData(BlockType.ADD_KEY, 3,
-                genesisC.getOwnHash(), Hash.NOT_AVAILABLE, 0));
-
-        // query
-        BlockExistQuery query = new BlockExistQuery(bAddsC2);
-        database.read(query);
-        assertTrue(query.blockExists());
+        // verify
+        LatestBlockQuery latest = new LatestBlockQuery(database, bob);
+        database.read(latest);
+        //assertEquals(20.0, bAddsCTrust2.getTrustValue());
+        assertEquals(30.0, latest.getLatestBlock().getTrustValue());
     }
 }

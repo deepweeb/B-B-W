@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import nl.tudelft.b_b_w.API;
 import nl.tudelft.b_b_w.R;
@@ -55,14 +54,7 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
      */
     @Override
     public Object getItem(int position) {
-        try {
-            return mAPI.getBlocks(owner).get(position);
-        } catch (HashException e) {
-            e.printStackTrace();
-        } catch (BlockAlreadyExistsException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return mAPI.getBlocks(owner).get(position);
     }
 
     /**
@@ -79,14 +71,8 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
     @Override
     public int getCount() {
 
-        try {
-            return mAPI.getBlocks(owner).size();
-        } catch (HashException e) {
-            e.printStackTrace();
-        } catch (BlockAlreadyExistsException e) {
-            e.printStackTrace();
-        }
-        return -1;
+        return mAPI.getBlocks(owner).size();
+
     }
 
     /**
@@ -126,25 +112,22 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Confirm");
-                try {
-                    builder.setMessage("Are you sure you want to revoke "
-                            + mAPI.getBlocks(owner).get(position).getBlockOwner()
-                            + " IBAN?");
-                } catch (HashException e) {
-                    e.printStackTrace();
-                } catch (BlockAlreadyExistsException e) {
-                    e.printStackTrace();
-                }
+
+                builder.setMessage("Are you sure you want to revoke "
+                        + mAPI.getBlocks(owner).get(position).getBlockOwner()
+                        + " IBAN?");
+
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+
                         try {
                             mAPI.revokeContactFromChain((mAPI.getBlocks(owner).get(position).getBlockOwner()));
                         } catch (HashException e) {
-                            Toast.makeText(context, retrievingHashError,
-                                    Toast.LENGTH_LONG).show();
+                            e.printStackTrace();
                         } catch (BlockAlreadyExistsException e) {
                             e.printStackTrace();
                         }
+
                         notifyDataSetChanged();
                         dialog.dismiss();
                     }
@@ -175,32 +158,19 @@ public class ContactAdapter extends BaseAdapter implements ListAdapter {
             view = inflater.inflate(R.layout.simple_list_item_1, parent, false);
         }
         TextView nameItemText = (TextView) view.findViewById(R.id.list_item_name);
-        try {
-            nameItemText.setText(mAPI.getBlocks(owner).get(position).getBlockOwner().getName());
-        } catch (HashException e) {
-            e.printStackTrace();
-        } catch (BlockAlreadyExistsException e) {
-            e.printStackTrace();
-        }
+
+        nameItemText.setText(mAPI.getBlocks(owner).get(position).getBlockOwner().getName());
+
 
         TextView ibanItemText = (TextView) view.findViewById(R.id.list_item_iban);
-        try {
-            ibanItemText.setText(mAPI.getBlocks(owner).get(position).getBlockOwner().getIban());
-        } catch (HashException e) {
-            e.printStackTrace();
-        } catch (BlockAlreadyExistsException e) {
-            e.printStackTrace();
-        }
+
+        ibanItemText.setText(mAPI.getBlocks(owner).get(position).getBlockOwner().getIban());
 
         ImageView pic = (ImageView) view.findViewById(R.id.trust_image);
-        try {
-            pic.setImageResource(
-                    (int) getImageNo((int) mAPI.getBlocks(owner).get(position).getTrustValue()));
-        } catch (HashException e) {
-            e.printStackTrace();
-        } catch (BlockAlreadyExistsException e) {
-            e.printStackTrace();
-        }
+
+        pic.setImageResource(
+                (int) getImageNo((int) mAPI.getBlocks(owner).get(position).getTrustValue()));
+
 
         Button revokeButton = (Button) view.findViewById(R.id.revoke_btn);
         revokeButton.setOnClickListener(createDialog(position));

@@ -21,8 +21,8 @@ import nl.tudelft.b_b_w.blockchain.BlockType;
 import nl.tudelft.b_b_w.blockchain.Hash;
 import nl.tudelft.b_b_w.blockchain.User;
 import nl.tudelft.b_b_w.database.DatabaseException;
-import nl.tudelft.b_b_w.model.BlockAlreadyExistsException;
-import nl.tudelft.b_b_w.model.HashException;
+import nl.tudelft.b_b_w.exception.BlockAlreadyExistsException;
+import nl.tudelft.b_b_w.exception.HashException;
 
 /**
  * Unit test for the BlockController class
@@ -42,6 +42,8 @@ public class BlockControllerUnitTest {
     /**
      * Initialize BlockController before every test
      * Setting up an owner, and a user
+     * @throws HashException When creating a block results in an error
+     * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Before
     public final void setUp() throws HashException, BlockAlreadyExistsException {
@@ -65,10 +67,11 @@ public class BlockControllerUnitTest {
     /**
      * Test adding a block
      *
-     * @throws Exception RuntimeException
+     * @throws HashException When creating a block results in an error
+     * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Test
-    public final void testAddBlock() throws Exception {
+    public final void testAddBlock() throws HashException, BlockAlreadyExistsException {
         List<Block> list = new ArrayList<>();
         list.add(genesisA);
         list.add(blockController.addBlockToChain(userB));
@@ -78,10 +81,11 @@ public class BlockControllerUnitTest {
 
     /**
      * Test revoking a block
-     * @throws Exception RuntimeException
+     * @throws HashException When creating a block results in an error
+     * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Test
-    public final void testRevokeBlock() throws Exception {
+    public final void testRevokeBlock() throws HashException, BlockAlreadyExistsException {
         List<Block> list = new ArrayList<>();
         list.add(genesisA);
         blockController.addBlockToChain(userB);
@@ -91,10 +95,11 @@ public class BlockControllerUnitTest {
 
     /**
      * Test for updating the trustValue of a block
-     * @throws Exception RuntimeException
+     * @throws HashException When creating a block results in an error
+     * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Test
-    public final void testUpdateBlock() throws Exception {
+    public final void testUpdateBlock() throws HashException, BlockAlreadyExistsException {
         List<Block> list = new ArrayList<>();
         Block updated = new Block(owner, owner, new BlockData(BlockType.GENESIS, 1,
                 Hash.NOT_AVAILABLE, Hash.NOT_AVAILABLE, 50));
@@ -105,10 +110,11 @@ public class BlockControllerUnitTest {
 
     /**
      * Tests adding a duplicate block thrice
-     * @throws Exception RuntimeException
+     * @throws HashException When creating a block results in an error
+     * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Test(expected = DatabaseException.class)
-    public final void testAddDupBlocks() throws Exception {
+    public final void testAddDupBlocks() throws HashException, BlockAlreadyExistsException {
         Block blockC = blockController.createGenesis(owner);
         blockController.addBlock(blockC);
         blockController.addBlock(blockC);
@@ -116,10 +122,11 @@ public class BlockControllerUnitTest {
 
     /**
      * Tests adding a block when the user hasn't a genesis block yet
-     * @throws Exception RuntimeException
+     * @throws HashException When creating a block results in an error
+     * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Test(expected = IllegalArgumentException.class)
-    public final void noGenesisTest() throws Exception {
+    public final void noGenesisTest() throws HashException, BlockAlreadyExistsException {
         User newUser = new User("Jeff", "iban", ED25519.getPublicKey(ED25519.generatePrivateKey()));
         blockController.createKeyBlock(newUser, owner);
     }

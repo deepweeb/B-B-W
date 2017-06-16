@@ -4,7 +4,7 @@ import org.encryptor4j.util.TextEncryptor;
 
 import java.security.GeneralSecurityException;
 
-import nl.tudelft.b_b_w.model.User;
+import nl.tudelft.b_b_w.blockchain.User;
 
 /**
  * CryptoController class

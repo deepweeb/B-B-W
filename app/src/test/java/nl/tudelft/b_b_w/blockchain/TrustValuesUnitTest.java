@@ -1,9 +1,11 @@
-package nl.tudelft.b_b_w.model;
+package nl.tudelft.b_b_w.blockchain;
 
 
 import static junit.framework.Assert.assertEquals;
 
 import org.junit.Test;
+
+import nl.tudelft.b_b_w.blockchain.TrustValues;
 
 public class TrustValuesUnitTest {
 

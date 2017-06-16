@@ -1,6 +1,7 @@
 package nl.tudelft.b_b_w.controller;
 
-import net.i2p.crypto.eddsa.Utils;
+import static org.junit.Assert.assertEquals;
+
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import net.i2p.crypto.eddsa.Utils;
@@ -8,9 +9,7 @@ import net.i2p.crypto.eddsa.Utils;
 import org.junit.Before;
 import org.junit.Test;
 
-import nl.tudelft.b_b_w.model.User;
-
-import static org.junit.Assert.assertEquals;
+import nl.tudelft.b_b_w.blockchain.User;
 
 /**
  * Test class for CryptoController

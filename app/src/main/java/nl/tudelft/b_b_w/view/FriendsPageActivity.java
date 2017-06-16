@@ -1,7 +1,5 @@
 package nl.tudelft.b_b_w.view;
 
-import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,9 +8,19 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+import net.i2p.crypto.eddsa.Utils;
+
+import nl.tudelft.b_b_w.API;
 import nl.tudelft.b_b_w.R;
-import nl.tudelft.b_b_w.model.HashException;
+import nl.tudelft.b_b_w.blockchain.Hash;
 import nl.tudelft.b_b_w.blockchain.User;
+import nl.tudelft.b_b_w.controller.ED25519;
+import nl.tudelft.b_b_w.model.BlockAlreadyExistsException;
+import nl.tudelft.b_b_w.model.HashException;
+
+import static nl.tudelft.b_b_w.view.MainActivity.PREFS_NAME;
 
 /**
  * This class displays the Friend Page. Here we want to be able to see the
@@ -57,12 +65,12 @@ public class FriendsPageActivity extends Activity {
     /**
      * Block hash of the paired contact's genesis
      */
-    private String contactGenesisBlockHash;
+    private Hash contactGenesisBlockHash;
 
     /**
      * The hash of your latest block
      */
-    private String userLatestBlockHash;
+    private Hash userLatestBlockHash;
 
     /**
      * Text view of the iban number.
@@ -81,30 +89,42 @@ public class FriendsPageActivity extends Activity {
     @Override
     protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         try {
             mAPI = new API(user, this);
         } catch (HashException e) {
-            //do nothing
+            e.printStackTrace();
+        } catch (BlockAlreadyExistsException e) {
+            e.printStackTrace();
         }
+
 
         setContentView(R.layout.activity_friends_page);
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+
+        EdDSAPrivateKey edDSAPrivateKey1 =
+                ED25519.generatePrivateKey(Utils.hexToBytes(
+                        "0000000000000000000000000000000000000000000000000000000000000000"));
+        EdDSAPublicKey contactPublicKey = ED25519.getPublicKey(edDSAPrivateKey1);
         contact = new User(settings.getString("userNameTestSubject", ""),
-                settings.getString("ibanTestSubject", ""));
-        user = new User(settings.getString("userName", ""), settings.getString("iban", ""));
+                settings.getString("ibanTestSubject", ""), contactPublicKey);
+
+        EdDSAPrivateKey edDSAPrivateKeyOwner1 =
+                ED25519.generatePrivateKey(Utils.hexToBytes(
+                        "1000000000000000000000000000000000000000000000000000000000000001"));
+        EdDSAPublicKey ownerPublicKey1 = ED25519.getPublicKey(edDSAPrivateKeyOwner1);
+        user = new User(settings.getString("userName", ""), settings.getString("iban", ""), ownerPublicKey1 );
 
         contactName = contact.getName();
         ibanNumber = contact.getIban();
-        publicKey = contact.generatePublicKey();
 
-        try {
+
+
             userLatestBlockHash = mAPI.getBlocks(user).get(
                     mAPI.getBlocks(user).size() - 1).getOwnHash();
             contactGenesisBlockHash = mAPI.getBlocks(contact).get(0).getOwnHash();
-        } catch (HashException e) {
-            //do nothing
-        }
+
         //Displaying the information of the contact whose you are paired with
         textViewIban = (TextView) findViewById(R.id.editIban);
         textViewContact = (TextView) findViewById(R.id.senderName);

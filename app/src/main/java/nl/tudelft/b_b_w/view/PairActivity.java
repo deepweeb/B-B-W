@@ -13,6 +13,7 @@ import net.i2p.crypto.eddsa.Utils;
 
 import java.util.List;
 
+import nl.tudelft.b_b_w.API;
 import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.blockchain.Block;
 import nl.tudelft.b_b_w.blockchain.User;

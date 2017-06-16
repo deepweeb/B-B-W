@@ -39,49 +39,55 @@ public class BlockDataTest {
 
     /**
      * getBlockType() getter method testing
+     * @throws Exception
      */
     @Test
-    public void getBlockTypeTest() {
+    public void getBlockTypeTest() throws Exception {
         assertEquals(blockType, blockData.getBlockType());
     }
 
     /**
      * getSequenceNumber() getter method testing
+     * @throws Exception
      */
     @Test
-    public void getSequenceNumberTest() {
+    public void getSequenceNumberTest() throws Exception {
         assertEquals(sequenceNumber, blockData.getSequenceNumber());
     }
 
     /**
      * getPreviousHashChain() getter method testing
+     * @throws Exception
      */
     @Test
-    public void getPreviousHashChainTest() {
+    public void getPreviousHashChainTest() throws Exception {
         assertEquals(previousHashChain, blockData.getPreviousHashChain());
     }
 
     /**
      * getPreviousHashSender() getter method testing
+     * @throws Exception
      */
     @Test
-    public void getPreviousHashSenderTest() {
+    public void getPreviousHashSenderTest() throws Exception {
         assertEquals(previousHashSender, blockData.getPreviousHashSender());
     }
 
     /**
      * getTrustValue() getter method testing
+     * @throws Exception
      */
     @Test
-    public void getTrustValueTest() {
+    public void getTrustValueTest() throws Exception {
         assertEquals(trustValue, blockData.getTrustValue());
     }
 
     /**
      * setTrustValue() setter method testing
+     * @throws Exception
      */
     @Test
-    public void setTrustValueTest() {
+    public void setTrustValueTest() throws Exception {
         final double testTrustValue = 99;
         blockData.setTrustValue(testTrustValue);
         assertEquals(testTrustValue, blockData.getTrustValue());

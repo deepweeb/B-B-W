@@ -30,11 +30,9 @@ public class ChainTest {
     //chain object to be tested
     private Chain chain;
 
-    /**
-     * Setting up before testing
-     */
     @Before
-    public void setUpChain() {
+    public void setUpBlock() throws Exception {
+
         //setting up owner
         ownerName = "BlockOwner1";
         ownerIban = "Owner1Iban";
@@ -48,27 +46,18 @@ public class ChainTest {
 
     }
 
-    /**
-     * getChainOwner() getter method testing
-     */
     @Test
-    public void getChainOwner() {
+    public void getChainOwner() throws Exception {
         assertEquals(owner, chain.getChainOwner());
     }
 
-    /**
-     * getChainList() getter method testing
-     */
     @Test
-    public void getChainList() {
+    public void getChainList() throws Exception {
         assertEquals(testChain, chain.getChainList());
     }
 
-    /**
-     * getChainList() setter method testing
-     */
     @Test
-    public void setChainList() {
+    public void setChainList() throws Exception {
         testChain.add(new Block(owner));
         chain.setChainList(testChain);
         assertEquals(testChain, chain.getChainList());

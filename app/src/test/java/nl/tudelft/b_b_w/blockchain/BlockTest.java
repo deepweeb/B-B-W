@@ -95,7 +95,7 @@ public class BlockTest {
     }
 
     @Test
-    public void getterTests() {
+    public void getterTests() throws Exception {
 
         //testing block owner getters
         assertEquals(owner, genesisBlock.getBlockOwner());

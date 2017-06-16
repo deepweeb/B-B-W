@@ -1,5 +1,6 @@
 package nl.tudelft.bbw.blockchain;
 
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
 import org.junit.Before;
@@ -20,6 +21,7 @@ public class UserTest {
     private String name;
     private String iban;
     private EdDSAPublicKey publicKey;
+    private EdDSAPrivateKey privateKey;
     private User user;
 
     /**
@@ -29,7 +31,8 @@ public class UserTest {
     public void setUpUser(){
         name = "testName";
         iban = "NL642335674446";
-        publicKey = ED25519.getPublicKey(ED25519.generatePrivateKey());
+        privateKey = ED25519.generatePrivateKey();
+        publicKey = ED25519.getPublicKey(privateKey);
         user = new User(name, iban, publicKey);
     }
 
@@ -55,6 +58,15 @@ public class UserTest {
     @Test
     public void getPublicKeyTest() {
         assertEquals(publicKey, user.getPublicKey());
+    }
+
+    /**
+     * Test for getter and setter of private key
+     */
+    @Test
+    public void getsetPrivateKey() throws Exception {
+        user.setPrivateKey(privateKey);
+        assertEquals(privateKey, user.getPrivateKey());
     }
 
 }

@@ -2,6 +2,9 @@ package nl.tudelft.bbw.controller;
 
 import android.content.Context;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +24,6 @@ import nl.tudelft.bbw.database.write.UpdateTrustQuery;
 import nl.tudelft.bbw.database.write.UserAddQuery;
 import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
 import nl.tudelft.bbw.exception.HashException;
-
 
 /**
  * Class which handles the the addition, revocation and creation of blocks.
@@ -49,19 +51,26 @@ public class BlockController {
      * Method for adding a user to our blockchain.
      *
      * @param user the user we want to add
+     * @param signature byte array containing the signature
+     * @param message byte array containing the message
      * @return the created block
      * @throws HashException               When there is an error calculating the hash
      * @throws BlockAlreadyExistsException When there already exists a block in the database
      */
-    public final Block addBlockToChain(User user)
+    public final Block addBlockToChain(User user, byte[] signature, byte[] message)
             throws HashException, BlockAlreadyExistsException {
+
         UserExistQuery query = new UserExistQuery(user);
         database.read(query);
         if (!query.doesExist()) {
             UserAddQuery existQuery = new UserAddQuery(user);
             database.write(existQuery);
         }
-        return createKeyBlock(chainOwner, user);
+        if (verifySignature(signature, message)) {
+            return createKeyBlock(chainOwner, user);
+        } else {
+            throw new RuntimeException("Block cannot be verified");
+        }
     }
 
     /**
@@ -235,4 +244,21 @@ public class BlockController {
         addBlock(block);
         return block;
     }
+
+    /**
+     * verifySignature method
+     * Verifies the signature given a signature and message byte array
+     *
+     * @param signature given signature to use
+     * @param message given message to verify
+     * @return boolean if the signature of the block is verified
+     */
+    private boolean verifySignature(byte[] signature, byte[] message) {
+        try {
+            return ED25519.verifySignature(signature, message, chainOwner.getPublicKey());
+        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
 }

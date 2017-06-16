@@ -1,4 +1,5 @@
 package nl.tudelft.bbw.database.read;
+
 import android.database.Cursor;
 
 import java.util.ArrayList;

@@ -1,6 +1,8 @@
 package nl.tudelft.bbw;
 
 
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+
 import static junit.framework.Assert.assertFalse;
 
 import static org.junit.Assert.assertNotEquals;
@@ -12,6 +14,9 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.util.List;
 
 import nl.tudelft.bbw.blockchain.Block;
@@ -41,10 +46,15 @@ public class APITest {
      */
     @Before
     public final void setUp() throws HashException, BlockAlreadyExistsException {
-        owner = new User("Jeff", "iban", ED25519.getPublicKey(ED25519.generatePrivateKey()));
+        EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
+        owner = new User("Jeff", "iban", ED25519.getPublicKey(privateKey));
+        owner.setPrivateKey(privateKey);
         API.initializeAPI(owner, RuntimeEnvironment.application);
         list = API.getBlocks(owner);
-        newUser = new User("Nick", "iban2", ED25519.getPublicKey(ED25519.generatePrivateKey()));
+
+        privateKey = ED25519.generatePrivateKey();
+        newUser = new User("Nick", "iban2", ED25519.getPublicKey(privateKey));
+        newUser.setPrivateKey(privateKey);
     }
 
     /**
@@ -54,10 +64,13 @@ public class APITest {
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Test
-    public final void addContactToChainTest() throws HashException, BlockAlreadyExistsException {
+    public final void addContactToChainTest() throws HashException, BlockAlreadyExistsException,
+            NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         API.initializeAPI(newUser, RuntimeEnvironment.application);
+        final byte[] message = owner.getPublicKey().getEncoded();
+        final byte[] signature = ED25519.generateSignature(message, newUser.getPrivateKey());
         list = API.getBlocks(newUser);
-        API.addContactToChain(owner);
+        API.addContactToChain(owner, signature, message);
         assertNotEquals(API.getBlocks(newUser), list);
     }
 

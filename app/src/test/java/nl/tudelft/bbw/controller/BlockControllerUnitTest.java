@@ -1,7 +1,6 @@
 package nl.tudelft.bbw.controller;
 
-import static junit.framework.Assert.assertEquals;
-
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
 import org.junit.Before;
@@ -11,6 +10,9 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +25,8 @@ import nl.tudelft.bbw.blockchain.User;
 import nl.tudelft.bbw.database.DatabaseException;
 import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
 import nl.tudelft.bbw.exception.HashException;
+
+import static org.junit.Assert.assertEquals;
 
 
 /**
@@ -51,9 +55,10 @@ public class BlockControllerUnitTest {
         //setting up owner
         String ownerName = "BlockOwner1";
         String ownerIban = "Owner1Iban";
-        //object to generate public key         ;
-        EdDSAPublicKey ownerPublicKey = ED25519.getPublicKey(ED25519.generatePrivateKey());
-        owner = new User(ownerName, ownerIban, ownerPublicKey);
+        //object to generate public key
+        EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
+        owner = new User(ownerName, ownerIban, ED25519.getPublicKey(privateKey));
+        owner.setPrivateKey(privateKey);
 
         blockController = new BlockController(owner, RuntimeEnvironment.application);
 
@@ -72,11 +77,13 @@ public class BlockControllerUnitTest {
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Test
-    public final void testAddBlock() throws HashException, BlockAlreadyExistsException {
+    public final void testAddBlock() throws HashException, BlockAlreadyExistsException,
+            NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+        final byte[] message = genesisA.getContactPublicKey().getEncoded();
+        final byte[] signature = ED25519.generateSignature(message, owner.getPrivateKey());
         List<Block> list = new ArrayList<>();
         list.add(genesisA);
-        list.add(blockController.addBlockToChain(userB));
-        System.out.print(list.toString());
+        list.add(blockController.addBlockToChain(userB, signature, message));
         assertEquals(list, blockController.getBlocks(owner));
     }
 
@@ -86,10 +93,13 @@ public class BlockControllerUnitTest {
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Test
-    public final void testRevokeBlock() throws HashException, BlockAlreadyExistsException {
+    public final void testRevokeBlock() throws HashException, BlockAlreadyExistsException,
+            NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+        final byte[] message = genesisA.getBlockOwner().getPublicKey().getEncoded();
+        final byte[] signature = ED25519.generateSignature(message, genesisA.getBlockOwner().getPrivateKey());
         List<Block> list = new ArrayList<>();
         list.add(genesisA);
-        blockController.addBlockToChain(userB);
+        blockController.addBlockToChain(userB, signature, message);
         blockController.revokeBlockFromChain(userB);
         assertEquals(list, blockController.getBlocks(owner));
     }

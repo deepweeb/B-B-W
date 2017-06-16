@@ -47,12 +47,14 @@ public final class API {
      * Method to add a contact to your chain
      *
      * @param contact the contact
+     * @param signature byte array containing the signature
+     * @param message byte array containing the message
      * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
-    public static void addContactToChain(User contact)
+    public static void addContactToChain(User contact, byte[] signature, byte[] message)
             throws HashException, BlockAlreadyExistsException {
-        blockController.addBlockToChain(contact);
+        blockController.addBlockToChain(contact, signature, message);
     }
 
     /**

@@ -1,5 +1,4 @@
 package nl.tudelft.bbw.controller;
-
 import nl.tudelft.bbw.blockchain.Block;
 import nl.tudelft.bbw.blockchain.TrustValues;
 

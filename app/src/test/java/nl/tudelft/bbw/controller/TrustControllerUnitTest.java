@@ -1,7 +1,5 @@
 package nl.tudelft.bbw.controller;
 
-import static org.junit.Assert.assertEquals;
-
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import net.i2p.crypto.eddsa.Utils;
@@ -18,6 +16,8 @@ import nl.tudelft.bbw.blockchain.Block;
 import nl.tudelft.bbw.blockchain.User;
 import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
 import nl.tudelft.bbw.exception.HashException;
+
+import static org.junit.Assert.assertEquals;
 
 
 /**

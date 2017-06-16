@@ -274,31 +274,7 @@ public class Block {
         return getContactPublicKey().equals(block.getContactPublicKey());
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Block)) {
-            return false;
-        }
 
-        Block block = (Block) o;
-
-        return ownHash.equals(block.ownHash);
-
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int hashCode() {
-        return ownHash.hashCode();
-    }
 
     /**
      * {@inheritDoc}
@@ -307,5 +283,34 @@ public class Block {
     public String toString() {
         return "Block#" + getSequenceNumber() + "{owner=" + owner.getName() + ",contact="
                 + contact.getName() + "}";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Block)) return false;
+
+        Block block = (Block) o;
+
+        if (owner != null ? !owner.equals(block.owner) : block.owner != null) return false;
+        if (contact != null ? !contact.equals(block.contact) : block.contact != null) return false;
+        if (data != null ? !data.equals(block.data) : block.data != null) return false;
+        return ownHash != null ? ownHash.equals(block.ownHash) : block.ownHash == null;
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        int result = owner != null ? owner.hashCode() : 0;
+        result = 31 * result + (contact != null ? contact.hashCode() : 0);
+        result = 31 * result + (data != null ? data.hashCode() : 0);
+        result = 31 * result + (ownHash != null ? ownHash.hashCode() : 0);
+        return result;
     }
 }

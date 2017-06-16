@@ -30,7 +30,6 @@ public class TrustControllerUnitTest {
      * Class attributes
      */
     private static final double DELTA = 1e-15;
-    private TrustController trustController;
     private Block block;
 
     /**
@@ -39,7 +38,6 @@ public class TrustControllerUnitTest {
      */
     @Before
     public void initialize() throws HashException, BlockAlreadyExistsException {
-        this.trustController = new TrustController();
         final String name = "name";
         final String iban = "iban";
         EdDSAPrivateKey edDSAPrivateKey1 =
@@ -55,7 +53,7 @@ public class TrustControllerUnitTest {
      */
     @Test
     public void testSuccessfulTransaction() {
-        block = trustController.successfulTransaction(block);
+        block = TrustController.successfulTransaction(block);
         assertEquals(14.389351794935735, block.getTrustValue(), DELTA);
     }
 
@@ -64,7 +62,7 @@ public class TrustControllerUnitTest {
      */
     @Test
     public void testFailedTransaction() {
-        block = trustController.failedTransaction(block);
+        block = TrustController.failedTransaction(block);
         assertEquals(5.38560132615784, block.getTrustValue(), DELTA);
     }
 
@@ -73,7 +71,7 @@ public class TrustControllerUnitTest {
      */
     @Test
     public void testVerifiedIBAN() {
-        block = trustController.verifiedIBAN(block);
+        block = TrustController.verifiedIBAN(block);
         assertEquals(22.536282121744804, block.getTrustValue(), DELTA);
     }
 
@@ -83,7 +81,7 @@ public class TrustControllerUnitTest {
     @Test
     public void testUnderCeiling() {
         block.setTrustValue(0);
-        block = trustController.failedTransaction(block);
+        block = TrustController.failedTransaction(block);
         assertEquals(0, block.getTrustValue(), DELTA);
     }
 
@@ -92,7 +90,7 @@ public class TrustControllerUnitTest {
      */
     @Test
     public void testRevokeBlock() {
-        block = trustController.revokeBlock(block);
+        block = TrustController.revokeBlock(block);
         assertEquals(0, block.getTrustValue(), DELTA);
     }
 

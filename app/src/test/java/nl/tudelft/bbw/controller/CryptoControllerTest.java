@@ -9,11 +9,7 @@ import net.i2p.crypto.eddsa.Utils;
 import org.junit.Before;
 import org.junit.Test;
 
-<<<<<<< HEAD:app/src/test/java/nl/tudelft/b_b_w/controller/CryptoControllerTest.java
-=======
-
-import static org.junit.Assert.assertEquals;
->>>>>>> 1e99e1f5d99a7f027cc09e71ecf4ab4aa3b94723:app/src/test/java/nl/tudelft/bbw/controller/CryptoControllerTest.java
+import nl.tudelft.bbw.blockchain.User;
 
 /**
  * Test class for CryptoController

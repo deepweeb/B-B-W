@@ -5,7 +5,6 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< HEAD:app/src/main/java/nl/tudelft/b_b_w/controller/BlockController.java
 import nl.tudelft.bbw.blockchain.Block;
 import nl.tudelft.bbw.blockchain.BlockData;
 import nl.tudelft.bbw.blockchain.BlockType;
@@ -22,17 +21,7 @@ import nl.tudelft.bbw.database.write.UpdateTrustQuery;
 import nl.tudelft.bbw.database.write.UserAddQuery;
 import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
 import nl.tudelft.bbw.exception.HashException;
-=======
-import nl.tudelft.bbw.model.GetDatabaseHandler;
-import nl.tudelft.bbw.model.HashException;
-import nl.tudelft.bbw.model.MutateDatabaseHandler;
-import nl.tudelft.bbw.model.TrustValues;
-import nl.tudelft.bbw.model.User;
-import nl.tudelft.bbw.model.block.Block;
-import nl.tudelft.bbw.model.block.BlockData;
-import nl.tudelft.bbw.model.block.BlockFactory;
-import nl.tudelft.bbw.model.block.BlockType;
->>>>>>> 1e99e1f5d99a7f027cc09e71ecf4ab4aa3b94723:app/src/main/java/nl/tudelft/bbw/controller/BlockController.java
+
 
 /**
  * Class which handles the the addition, revocation and creation of blocks.

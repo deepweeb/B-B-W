@@ -4,9 +4,7 @@ import org.encryptor4j.util.TextEncryptor;
 
 import java.security.GeneralSecurityException;
 
-<<<<<<< HEAD:app/src/main/java/nl/tudelft/b_b_w/controller/CryptoController.java
-=======
->>>>>>> 1e99e1f5d99a7f027cc09e71ecf4ab4aa3b94723:app/src/main/java/nl/tudelft/bbw/controller/CryptoController.java
+import nl.tudelft.bbw.blockchain.User;
 
 /**
  * CryptoController class

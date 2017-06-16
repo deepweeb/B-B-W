@@ -12,6 +12,9 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,7 +75,8 @@ public class BlockControllerUnitTest {
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Test
-    public final void testAddBlock() throws HashException, BlockAlreadyExistsException {
+    public final void testAddBlock() throws HashException, BlockAlreadyExistsException,
+            NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         final byte[] message = genesisA.getContactPublicKey().getEncoded();
         final byte[] signature = ED25519.generateSignature(message, owner.getPrivateKey());
         List<Block> list = new ArrayList<>();
@@ -88,7 +92,8 @@ public class BlockControllerUnitTest {
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Test
-    public final void testRevokeBlock() throws HashException, BlockAlreadyExistsException {
+    public final void testRevokeBlock() throws HashException, BlockAlreadyExistsException,
+            NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         final byte[] message = genesisA.getContactPublicKey().getEncoded();
         final byte[] signature = ED25519.generateSignature(message, owner.getPrivateKey());
         List<Block> list = new ArrayList<>();

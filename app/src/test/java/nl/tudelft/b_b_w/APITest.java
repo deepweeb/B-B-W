@@ -14,6 +14,9 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.util.List;
 
 import nl.tudelft.b_b_w.blockchain.Block;
@@ -56,9 +59,11 @@ public class APITest {
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Test
-    public final void addContactToChainTest() throws HashException, BlockAlreadyExistsException {
+    public final void addContactToChainTest() throws HashException, BlockAlreadyExistsException,
+            NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+        final byte[] signature = ED25519.generateSignature(new byte[]{}, owner.getPrivateKey());
         list = API.getBlocks(newUser, context);
-        API.addContactToChain(newUser, context, owner);
+        API.addContactToChain(newUser, context, owner, signature, new byte[] {});
         assertNotEquals(API.getBlocks(newUser, context), list);
     }
 

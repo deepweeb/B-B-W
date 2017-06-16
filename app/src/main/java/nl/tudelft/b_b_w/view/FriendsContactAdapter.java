@@ -13,10 +13,11 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import nl.tudelft.b_b_w.API;
 import nl.tudelft.b_b_w.R;
+import nl.tudelft.b_b_w.blockchain.User;
 import nl.tudelft.b_b_w.model.BlockAlreadyExistsException;
 import nl.tudelft.b_b_w.model.HashException;
-import nl.tudelft.b_b_w.blockchain.User;
 
 public class FriendsContactAdapter extends BaseAdapter implements ListAdapter {
 

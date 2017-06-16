@@ -15,6 +15,7 @@ import net.i2p.crypto.eddsa.Utils;
 
 import java.util.List;
 
+import nl.tudelft.b_b_w.API;
 import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.blockchain.Block;
 import nl.tudelft.b_b_w.blockchain.User;
@@ -56,13 +57,9 @@ public class DisplayContactFriendListActivity extends Activity {
             e.printStackTrace();
         }
         List<Block> list = null;
-        try {
-            list = API.getBlocks(user);
-        } catch (HashException e) {
-            e.printStackTrace();
-        } catch (BlockAlreadyExistsException e) {
-            e.printStackTrace();
-        }
+
+        list = API.getBlocks(user);
+
         setUpGraph(list);
         FriendsContactAdapter adapter = new FriendsContactAdapter(API, ownerName, user, this);
         ListView lView = (ListView) findViewById(R.id.contacts2);

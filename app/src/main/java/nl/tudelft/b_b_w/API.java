@@ -17,6 +17,9 @@ import nl.tudelft.b_b_w.exception.HashException;
  */
 public final class API {
 
+    private static BlockController blockController;
+    private static BlockVerificationController blockVerificationController;
+
     /**
      * Private constructor to make sure that the class cannot be initialized
      */
@@ -25,134 +28,128 @@ public final class API {
     }
 
     /**
-     * Method to add a contact to your chain
+     * Intitialising the API, the genesis block is here created since this
+     * can only be done once per user
+     * TODO: Remove this function
      *
      * @param owner   the User
      * @param context The state of the program
+     * @throws HashException               When creating a block results in an error
+     * @throws BlockAlreadyExistsException when adding a block results in an error
+     */
+    public static void initializeAPI(User owner, Context context) throws HashException, BlockAlreadyExistsException {
+        blockController = new BlockController(owner, context);
+        blockVerificationController = new BlockVerificationController(context);
+        blockController.createGenesis(owner);
+    }
+
+    /**
+     * Method to add a contact to your chain
+     *
      * @param contact the contact
      * @param signature byte array containing the signature
      * @param message byte array containing the message
      * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
-    public static void addContactToChain(User owner, Context context, User contact, byte[] signature,
-            byte[] message) throws HashException, BlockAlreadyExistsException {
-        new BlockController(owner, context).addBlockToChain(contact, signature, message);
+    public static void addContactToChain(User contact, byte[] signature, byte[] message)
+            throws HashException, BlockAlreadyExistsException {
+        blockController.addBlockToChain(contact, signature, message);
     }
 
     /**
      * Method to revoke a contact to your chain
      *
-     * @param owner   the User
-     * @param context The state of the program
      * @param contact the contact
      * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
-    public static void revokeContactFromChain(User owner, Context context, User contact)
+    public static void revokeContactFromChain(User contact)
             throws HashException, BlockAlreadyExistsException {
-        new BlockController(owner, context).revokeBlockFromChain(contact);
+        blockController.revokeBlockFromChain(contact);
     }
 
     /**
      * Method to add a contact to your database
      *
      * @param owner   the User
-     * @param context The state of the program
      * @param contact the contact
      * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
-    public static void addContactToDatabase(User owner, Context context, User contact)
+    public static void addContactToDatabase(User owner, User contact)
             throws HashException, BlockAlreadyExistsException {
-        new BlockController(owner, context).createKeyBlock(owner, contact);
+        blockController.createKeyBlock(owner, contact);
     }
 
     /**
      * Method to add a revoked contact to your database
      *
      * @param owner   the User
-     * @param context The state of the program
      * @param contact the contact
      * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
-    public static void addRevokeContactToDatabase(User owner, Context context, User contact)
+    public static void addRevokeContactToDatabase(User owner, User contact)
             throws HashException, BlockAlreadyExistsException {
-        new BlockController(owner, context).createRevokeBlock(owner, contact);
+        blockController.createRevokeBlock(owner, contact);
     }
 
     /**
      * Method to return the chain of a specific user
      *
-     * @param owner   the User
-     * @param context The state of the program
      * @return the chain of the user
-     * @throws HashException when the hashing algorithm is unavailable
      */
-    public static List<Block> getBlocks(User owner, Context context) throws HashException {
-        return new BlockController(owner, context).getBlocks(owner);
+    public static List<Block> getBlocks(User owner) {
+        return blockController.getBlocks(owner);
     }
 
     /**
      * Method to check whether the database is empty or not
      *
-     * @param context The state of the program
      * @return true if the database is empty, false otherwise
      */
-    public static boolean isDatabaseEmpty(Context context) {
-        return new BlockVerificationController(context).isDatabaseEmpty();
+    public static boolean isDatabaseEmpty() {
+        return blockVerificationController.isDatabaseEmpty();
     }
 
     /**
      * Method to update the trustValue of a block after successful transaction
      *
-     * @param owner   the User
-     * @param context The state of the program
      * @param block   the specific block
-     * @throws HashException when the hashing algorithm is unavailable
      */
-    public static void successfulTransaction(User owner, Context context, Block block) throws HashException {
+    public static void successfulTransaction(Block block) {
         Block updatedBlock = TrustController.successfulTransaction(block);
-        new BlockController(owner, context).updateTrustOfBlock(updatedBlock);
+        blockController.updateTrustOfBlock(updatedBlock);
     }
 
     /**
      * Method to update the trustValue of a block after failed transaction
      *
-     * @param owner   the User
-     * @param context The state of the program
      * @param block   the specific block
-     * @throws HashException when the hashing algorithm is unavailable
      */
-    public static void failedTransaction(User owner, Context context, Block block) throws HashException {
+    public static void failedTransaction(Block block) {
         Block updatedBlock = TrustController.failedTransaction(block);
-        new BlockController(owner, context).updateTrustOfBlock(updatedBlock);
+        blockController.updateTrustOfBlock(updatedBlock);
     }
 
     /**
      * Method to update the trustValue of a block after successful verification
      *
-     * @param owner   the User
-     * @param context The state of the program
      * @param block   the specific block
-     * @throws HashException when the hashing algorithm is unavailable
      */
-    public static void verifyIBAN(User owner, Context context, Block block) throws HashException {
+    public static void verifyIBAN(Block block) {
         Block updatedBlock = TrustController.verifiedIBAN(block);
-        new BlockController(owner, context).updateTrustOfBlock(updatedBlock);
+        blockController.updateTrustOfBlock(updatedBlock);
     }
 
     /**
      * Method to update the trustValue of a block after revoking
      *
-     * @param owner   the User
-     * @param context The state of the program
      * @param block   the specific block
-     * @throws HashException when the hashing algorithm is unavailable
      */
-    public static void revokedBlock(User owner, Context context, Block block) throws HashException {
+    public static void revokedBlock(Block block) {
         Block updatedBlock = TrustController.revokeBlock(block);
-        new BlockController(owner, context).updateTrustOfBlock(updatedBlock);
+        blockController.updateTrustOfBlock(updatedBlock);
     }
 }

@@ -1,8 +1,6 @@
 package nl.tudelft.b_b_w;
 
 
-import android.content.Context;
-
 import static junit.framework.Assert.assertFalse;
 
 import static org.junit.Assert.assertNotEquals;
@@ -20,11 +18,11 @@ import java.security.SignatureException;
 import java.util.List;
 
 import nl.tudelft.b_b_w.blockchain.Block;
+import nl.tudelft.b_b_w.blockchain.TrustValues;
 import nl.tudelft.b_b_w.blockchain.User;
 import nl.tudelft.b_b_w.controller.ED25519;
 import nl.tudelft.b_b_w.exception.BlockAlreadyExistsException;
 import nl.tudelft.b_b_w.exception.HashException;
-import nl.tudelft.b_b_w.blockchain.TrustValues;
 
 
 @RunWith(RobolectricTestRunner.class)
@@ -36,121 +34,120 @@ public class APITest {
      */
     private User owner;
     private User newUser;
-    private Context context;
     private List<Block> list;
 
     /**
      * Initialize API before every test
-     * @throws HashException When creating a block results in an error
+     *
+     * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Before
     public final void setUp() throws HashException, BlockAlreadyExistsException {
         owner = new User("Jeff", "iban", ED25519.getPublicKey(ED25519.generatePrivateKey()));
-        this.context = RuntimeEnvironment.application;
-        list = API.getBlocks(owner, context);
+        API.initializeAPI(owner, RuntimeEnvironment.application);
+        list = API.getBlocks(owner);
         newUser = new User("Nick", "iban2", ED25519.getPublicKey(ED25519.generatePrivateKey()));
     }
 
     /**
      * Test if adding to chain yields a different chain
      *
-     * @throws HashException When creating a block results in an error
+     * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Test
     public final void addContactToChainTest() throws HashException, BlockAlreadyExistsException,
             NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+        API.initializeAPI(newUser, RuntimeEnvironment.application);
         final byte[] signature = ED25519.generateSignature(new byte[]{}, owner.getPrivateKey());
-        list = API.getBlocks(newUser, context);
-        API.addContactToChain(newUser, context, owner, signature, new byte[] {});
-        assertNotEquals(API.getBlocks(newUser, context), list);
+        list = API.getBlocks(newUser);
+        API.addContactToChain(owner, signature, new byte[] {});
+        assertNotEquals(API.getBlocks(newUser), list);
     }
 
     /**
      * Test if revoking from chain yields a different chain
      *
-     * @throws HashException When creating a block results in an error
+     * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Test
-    public final void revokeContactFromChainTest() throws HashException, BlockAlreadyExistsException {
-        API.revokeContactFromChain(owner, context, owner);
-        assertNotEquals(API.getBlocks(owner, context), list);
+    public final void revokeContactFromChainTest()
+            throws HashException, BlockAlreadyExistsException {
+        API.revokeContactFromChain(owner);
+        assertNotEquals(API.getBlocks(owner), list);
     }
 
     /**
      * Test if adding to database yields a different chain
      *
-     * @throws HashException When creating a block results in an error
+     * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Test
     public final void addContactToDatabase() throws HashException, BlockAlreadyExistsException {
-        list = API.getBlocks(newUser, context);
-        API.addContactToDatabase(newUser, context, owner);
-        assertNotEquals(API.getBlocks(newUser, context), list);
+        API.initializeAPI(newUser, RuntimeEnvironment.application);
+        list = API.getBlocks(newUser);
+        API.addContactToDatabase(newUser, owner);
+        assertNotEquals(API.getBlocks(newUser), list);
     }
 
     /**
      * Test if adding revoke block to database yields a different chain
      *
-     * @throws HashException When creating a block results in an error
+     * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Test
-    public final void addRevokeContactToDatabase() throws HashException, BlockAlreadyExistsException {
-        API.addRevokeContactToDatabase(owner, context, owner);
-        assertNotEquals(list, API.getBlocks(owner, context));
+    public final void addRevokeContactToDatabase()
+            throws HashException, BlockAlreadyExistsException {
+        API.addRevokeContactToDatabase(owner, owner);
+        assertNotEquals(list, API.getBlocks(owner));
     }
 
     /**
      * Test if the database isn't empty
-     *
      */
     @Test
     public final void databaseEmptyTest() {
-        assertFalse(API.isDatabaseEmpty(context));
+        assertFalse(API.isDatabaseEmpty());
     }
 
     /**
      * Test if trustValue of a block changes after transaction
-     *
      */
     @Test
     public final void succesfulTransactionTest() {
-        API.successfulTransaction(owner, context, list.get(0));
+        API.successfulTransaction(list.get(0));
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
 
     /**
      * Test if trustValue of a block changes after transaction
-     *
      */
     @Test
     public final void failedTransactionTest() {
-        API.failedTransaction(owner, context, list.get(0));
+        API.failedTransaction(list.get(0));
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
 
     /**
      * Test if trustValue of a block changes after verification
-     *
      */
     @Test
     public final void verifyIBANTest() {
-        API.verifyIBAN(owner, context, list.get(0));
-        API.getBlocks(owner, context).get(0).getTrustValue();
+        API.verifyIBAN(list.get(0));
+        API.getBlocks(owner).get(0).getTrustValue();
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
 
     /**
      * Test if trustValue of a block changes after revoking
-     *
      */
     @Test
     public final void revokedBlockTest() {
-        API.revokedBlock(owner, context, list.get(0));
+        API.revokedBlock(list.get(0));
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
 }

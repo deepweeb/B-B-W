@@ -42,7 +42,7 @@ public class BlockController {
      * @param chainOwner The owner of the blockchain
      * @param context    The specific context which contains our database
      */
-    public BlockController(User chainOwner, Context context) throws HashException {
+    public BlockController(User chainOwner, Context context) {
         this.chainOwner = chainOwner;
         this.database = new Database(context);
     }
@@ -253,11 +253,12 @@ public class BlockController {
      * @param message given message to verify
      * @return boolean if the signature of the block is verified
      */
-    boolean verifySignature(byte[] signature, byte[] message) {
+    private boolean verifySignature(byte[] signature, byte[] message) {
         try {
             return ED25519.verifySignature(signature, message, chainOwner.getPublicKey());
         } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
             throw new RuntimeException(e.getMessage());
         }
     }
+
 }

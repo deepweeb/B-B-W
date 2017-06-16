@@ -25,8 +25,6 @@ import static junit.framework.Assert.assertEquals;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml")
 public class ChainSizeQueryTest {
-    final String notAvailable = "N/A";
-
     /**
      * Example users to test with
      */
@@ -82,6 +80,9 @@ public class ChainSizeQueryTest {
         assertEquals(1, chainsize);
     }
 
+    /**
+     * Test a large chain size
+     */
     @Test
     public void testLargeChain() {
         Block genesisA = new Block(alice);

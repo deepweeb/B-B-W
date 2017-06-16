@@ -18,16 +18,28 @@ import nl.tudelft.b_b_w.database.write.UserAddQuery;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
+/**
+ * Tests for the database empty query
+ */
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml")
-public class DatabaseEmptyTest {
+public class DatabaseEmptyQueryTest {
+    /**
+     * The example database
+     */
     Database database;
 
+    /**
+     * Initialise database empty test
+     */
     @Before
     public void init() {
         database = new Database(RuntimeEnvironment.application);
     }
 
+    /**
+     * Test when database is empty
+     */
     @Test
     public void testEmpty() {
         DatabaseEmptyQuery query = new DatabaseEmptyQuery();
@@ -35,6 +47,9 @@ public class DatabaseEmptyTest {
         assertTrue(query.isDatabaseEmpty());
     }
 
+    /**
+     * Test if database is not empty
+     */
     @Test
     public void testNonEmpty() {
         User alice = new User("Alice", "ibanA", ED25519.getPublicKey(ED25519.generatePrivateKey()));

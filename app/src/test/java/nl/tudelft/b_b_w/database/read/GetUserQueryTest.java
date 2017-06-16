@@ -19,13 +19,30 @@ import nl.tudelft.b_b_w.database.write.UserAddQuery;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 
+/**
+ * Tests for get user query test
+ */
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml")
 public class GetUserQueryTest {
+    /**
+     * Example user
+     */
     private User alice;
+
+    /**
+     * Example database
+     */
     private Database database;
+
+    /**
+     * Alice's public key
+     */
     private EdDSAPublicKey aliceKey;
 
+    /**
+     * Initialize the get user query tests
+     */
     @Before
     public void init() {
         database = new Database(RuntimeEnvironment.application);
@@ -33,6 +50,9 @@ public class GetUserQueryTest {
         alice = new User("Alice", "IBANA", aliceKey);
     }
 
+    /**
+     * Test when a user does not exist
+     */
     @Test
     public void testNonexistentUser() {
         GetUserQuery query = new GetUserQuery(alice.getPublicKey());
@@ -40,6 +60,9 @@ public class GetUserQueryTest {
         assertNull(query.getUser());
     }
 
+    /**
+     * Test when a user does exist
+     */
     @Test
     public void testExistentUser() {
         database.write(new UserAddQuery(alice));

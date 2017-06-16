@@ -31,8 +31,6 @@ import static junit.framework.Assert.assertNull;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml")
 public class GetChainQueryTest {
-    final String notAvailable = "N/A";
-
     /**
      * Example database
      */
@@ -71,7 +69,7 @@ public class GetChainQueryTest {
     public void testEmptyChain() {
         // write chain
         Block genesis = new Block(alice, alice, new BlockData(
-                BlockType.GENESIS, 1, new Hash(notAvailable), new Hash(notAvailable),
+                BlockType.GENESIS, 1, Hash.NOT_AVAILABLE, Hash.NOT_AVAILABLE,
                 TrustValues.INITIALIZED.getValue()));
         database.write(new BlockAddQuery(genesis));
 
@@ -88,7 +86,7 @@ public class GetChainQueryTest {
     public void testSimpleChain() {
         // write chain
         Block genesis = new Block(alice, alice, new BlockData(
-                BlockType.GENESIS, 1, new Hash(notAvailable), new Hash(notAvailable),
+                BlockType.GENESIS, 1, Hash.NOT_AVAILABLE, Hash.NOT_AVAILABLE,
                 TrustValues.INITIALIZED.getValue()));
 
         database.write(new UserAddQuery(alice));

@@ -54,8 +54,8 @@ public class TrustControllerUnitTest {
      * Tests whether a successful transaction updates the trust value
      */
     @Test
-    public void testSuccesfulTransaction() {
-        block = trustController.succesfulTransaction(block);
+    public void testSuccessfulTransaction() {
+        block = trustController.successfulTransaction(block);
         assertEquals(14.389351794935735, block.getTrustValue(), DELTA);
     }
 

@@ -21,7 +21,7 @@ class TrustController {
      * @param block the given block
      * @return the block with the new trust value
      */
-    static Block succesfulTransaction(Block block) {
+    static Block successfulTransaction(Block block) {
         final double newValue = distributionFunction(getX(block.getTrustValue())
                 + REGULARIZATION_TRANSACTION);
         block.setTrustValue(newValue);

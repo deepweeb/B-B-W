@@ -44,7 +44,7 @@ public class AcquaintanceTest {
     }
 
     @Test
-    public void getMultichain() throws Exception {
+    public void getMultichain() {
         assertEquals(multiChain, acquaintance.getMultichain());
     }
 

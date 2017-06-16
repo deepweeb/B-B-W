@@ -57,7 +57,7 @@ public class BlockTest {
      * Set up the before testing.
      */
     @Before
-    public void setUpBlock() throws Exception {
+    public void setUpBlock() {
 
 
         //setting up owner
@@ -95,7 +95,7 @@ public class BlockTest {
     }
 
     @Test
-    public void getterTests() throws Exception {
+    public void getterTests() {
 
         //testing block owner getters
         assertEquals(owner, genesisBlock.getBlockOwner());

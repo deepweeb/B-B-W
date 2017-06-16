@@ -38,28 +38,25 @@ public class UserTest {
 
     /**
      * getName() getter method testing
-     * @throws Exception
      */
     @Test
-    public void getNameTest() throws Exception {
+    public void getNameTest() {
         assertEquals(name, user.getName());
     }
 
     /**
      * getIban() getter method testing
-     * @throws Exception
      */
     @Test
-    public void getIbanTest() throws Exception {
+    public void getIbanTest() {
         assertEquals(iban, user.getIban());
     }
 
     /**
      * getPublicKey() getter method testing
-     * @throws Exception
      */
     @Test
-    public void getPublicKeyTest() throws Exception {
+    public void getPublicKeyTest() {
         assertEquals(publicKey, user.getPublicKey());
     }
 

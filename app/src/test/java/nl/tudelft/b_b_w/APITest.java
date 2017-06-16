@@ -1,4 +1,4 @@
-package nl.tudelft.b_b_w.controller;
+package nl.tudelft.b_b_w;
 
 
 import static junit.framework.Assert.assertFalse;
@@ -14,9 +14,11 @@ import org.robolectric.annotation.Config;
 
 import java.util.List;
 
-import nl.tudelft.b_b_w.BuildConfig;
 import nl.tudelft.b_b_w.blockchain.Block;
 import nl.tudelft.b_b_w.blockchain.User;
+import nl.tudelft.b_b_w.controller.ED25519;
+import nl.tudelft.b_b_w.model.BlockAlreadyExistsException;
+import nl.tudelft.b_b_w.model.HashException;
 import nl.tudelft.b_b_w.model.TrustValues;
 
 
@@ -34,9 +36,11 @@ public class APITest {
 
     /**
      * Initialize API before every test
+     * @throws HashException When creating a block results in an error
+     * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Before
-    public final void setUp() throws Exception {
+    public final void setUp() throws HashException, BlockAlreadyExistsException {
         owner = new User("Jeff", "iban", ED25519.getPublicKey(ED25519.generatePrivateKey()));
         api = new API(owner, RuntimeEnvironment.application);
         list = api.getBlocks(owner);
@@ -46,10 +50,11 @@ public class APITest {
     /**
      * Test if adding to chain yields a different chain
      *
-     * @throws Exception RuntimeException
+     * @throws HashException When creating a block results in an error
+     * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Test
-    public final void addContactToChainTest() throws Exception {
+    public final void addContactToChainTest() throws HashException, BlockAlreadyExistsException {
         API newAPI = new API(newUser, RuntimeEnvironment.application);
         list = newAPI.getBlocks(newUser);
         newAPI.addContactToChain(owner);
@@ -59,10 +64,11 @@ public class APITest {
     /**
      * Test if revoking from chain yields a different chain
      *
-     * @throws Exception RuntimeException
+     * @throws HashException When creating a block results in an error
+     * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Test
-    public final void revokeContactFromChainTest() throws Exception {
+    public final void revokeContactFromChainTest() throws HashException, BlockAlreadyExistsException {
         api.revokeContactFromChain(owner);
         assertNotEquals(api.getBlocks(owner), list);
     }
@@ -70,10 +76,11 @@ public class APITest {
     /**
      * Test if adding to database yields a different chain
      *
-     * @throws Exception RuntimeException
+     * @throws HashException When creating a block results in an error
+     * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Test
-    public final void addContactToDatabase() throws Exception {
+    public final void addContactToDatabase() throws HashException, BlockAlreadyExistsException {
         API newAPI = new API(newUser, RuntimeEnvironment.application);
         list = newAPI.getBlocks(newUser);
         newAPI.addContactToDatabase(newUser, owner);
@@ -83,10 +90,11 @@ public class APITest {
     /**
      * Test if adding revoke block to database yields a different chain
      *
-     * @throws Exception RuntimeException
+     * @throws HashException When creating a block results in an error
+     * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Test
-    public final void addRevokeContactToDatabase() throws Exception {
+    public final void addRevokeContactToDatabase() throws HashException, BlockAlreadyExistsException {
         api.addRevokeContactToDatabase(owner, owner);
         assertNotEquals(list, api.getBlocks(owner));
     }
@@ -94,7 +102,6 @@ public class APITest {
     /**
      * Test if the database isn't empty
      *
-     * @throws Exception RuntimeException
      */
     @Test
     public final void databaseEmptyTest() {
@@ -104,10 +111,9 @@ public class APITest {
     /**
      * Test if trustValue of a block changes after transaction
      *
-     * @throws Exception RuntimeException
      */
     @Test
-    public final void succesfulTransactionTest() throws Exception {
+    public final void succesfulTransactionTest() {
         api.successfulTransaction(list.get(0));
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
@@ -115,10 +121,9 @@ public class APITest {
     /**
      * Test if trustValue of a block changes after transaction
      *
-     * @throws Exception RuntimeException
      */
     @Test
-    public final void failedTransactionTest() throws Exception {
+    public final void failedTransactionTest() {
         api.failedTransaction(list.get(0));
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
@@ -126,22 +131,20 @@ public class APITest {
     /**
      * Test if trustValue of a block changes after verification
      *
-     * @throws Exception RuntimeException
      */
     @Test
-    public final void verifyIBANTest() throws Exception {
+    public final void verifyIBANTest() {
         api.verifyIBAN(list.get(0));
-        double val = api.getBlocks(owner).get(0).getTrustValue();
+        api.getBlocks(owner).get(0).getTrustValue();
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
 
     /**
      * Test if trustValue of a block changes after revoking
      *
-     * @throws Exception RuntimeException
      */
     @Test
-    public final void revokedBlockTest() throws Exception {
+    public final void revokedBlockTest() {
         api.revokedBlock(list.get(0));
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }

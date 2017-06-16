@@ -6,7 +6,7 @@ import nl.tudelft.b_b_w.blockchain.Block;
 /**
  * Class to edit the trust value of a block
  */
-class TrustController {
+public class TrustController {
 
     /**
      * Regularization parameters
@@ -21,7 +21,7 @@ class TrustController {
      * @param block the given block
      * @return the block with the new trust value
      */
-    static Block succesfulTransaction(Block block) {
+    public static Block succesfulTransaction(Block block) {
         final double newValue = distributionFunction(getX(block.getTrustValue())
                 + REGULARIZATION_TRANSACTION);
         block.setTrustValue(newValue);
@@ -35,7 +35,7 @@ class TrustController {
      * @param block the given block
      * @return the block with the new trust value
      */
-    static Block failedTransaction(Block block) {
+    public static Block failedTransaction(Block block) {
         final double newValue = checkCeiling(distributionFunction(getX(block.getTrustValue())
                 - REGULARIZATION_TRANSACTION));
         block.setTrustValue(newValue);
@@ -49,7 +49,7 @@ class TrustController {
      * @param block the given block
      * @return the block with the new trust value
      */
-    static Block verifiedIBAN(Block block) {
+    public static Block verifiedIBAN(Block block) {
         final double newValue = distributionFunction(getX(block.getTrustValue())
                 + REGULARIZATION_VERIFIED_IBAN);
         block.setTrustValue(newValue);
@@ -63,7 +63,7 @@ class TrustController {
      * @param block given block to revoke
      * @return block with the new trust value
      */
-    static Block revokeBlock(Block block) {
+    public static Block revokeBlock(Block block) {
         block.setTrustValue(TrustValues.REVOKED.getValue());
         return block;
     }

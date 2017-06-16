@@ -9,8 +9,8 @@ import nl.tudelft.b_b_w.blockchain.User;
 import nl.tudelft.b_b_w.controller.BlockController;
 import nl.tudelft.b_b_w.controller.BlockVerificationController;
 import nl.tudelft.b_b_w.controller.TrustController;
-import nl.tudelft.b_b_w.model.BlockAlreadyExistsException;
-import nl.tudelft.b_b_w.model.HashException;
+import nl.tudelft.b_b_w.exception.BlockAlreadyExistsException;
+import nl.tudelft.b_b_w.exception.HashException;
 
 /**
  * Performs the actions on the blockchain

@@ -21,8 +21,8 @@ import nl.tudelft.b_b_w.blockchain.BlockType;
 import nl.tudelft.b_b_w.blockchain.Hash;
 import nl.tudelft.b_b_w.blockchain.User;
 import nl.tudelft.b_b_w.database.DatabaseException;
-import nl.tudelft.b_b_w.model.BlockAlreadyExistsException;
-import nl.tudelft.b_b_w.model.HashException;
+import nl.tudelft.b_b_w.exception.BlockAlreadyExistsException;
+import nl.tudelft.b_b_w.exception.HashException;
 
 /**
  * Unit test for the BlockController class

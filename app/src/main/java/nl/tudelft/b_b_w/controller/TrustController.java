@@ -1,6 +1,6 @@
 package nl.tudelft.b_b_w.controller;
 
-import nl.tudelft.b_b_w.model.TrustValues;
+import nl.tudelft.b_b_w.blockchain.TrustValues;
 import nl.tudelft.b_b_w.blockchain.Block;
 
 /**

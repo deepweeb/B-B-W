@@ -1,4 +1,4 @@
-package nl.tudelft.b_b_w.model;
+package nl.tudelft.b_b_w.blockchain;
 
 /**
  * Enum class for all available trustvalues

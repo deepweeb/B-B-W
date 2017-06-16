@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import nl.tudelft.b_b_w.controller.ED25519;
-import nl.tudelft.b_b_w.model.TrustValues;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;

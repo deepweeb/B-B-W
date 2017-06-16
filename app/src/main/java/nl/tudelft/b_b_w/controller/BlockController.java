@@ -18,9 +18,9 @@ import nl.tudelft.b_b_w.database.read.UserExistQuery;
 import nl.tudelft.b_b_w.database.write.BlockAddQuery;
 import nl.tudelft.b_b_w.database.write.UpdateTrustQuery;
 import nl.tudelft.b_b_w.database.write.UserAddQuery;
-import nl.tudelft.b_b_w.model.BlockAlreadyExistsException;
-import nl.tudelft.b_b_w.model.HashException;
-import nl.tudelft.b_b_w.model.TrustValues;
+import nl.tudelft.b_b_w.exception.BlockAlreadyExistsException;
+import nl.tudelft.b_b_w.exception.HashException;
+import nl.tudelft.b_b_w.blockchain.TrustValues;
 
 /**
  * Class which handles the the addition, revocation and creation of blocks.

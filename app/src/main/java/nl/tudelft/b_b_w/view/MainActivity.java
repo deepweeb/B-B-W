@@ -15,6 +15,7 @@ import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import net.i2p.crypto.eddsa.Utils;
 
+import nl.tudelft.b_b_w.API;
 import nl.tudelft.b_b_w.R;
 import nl.tudelft.b_b_w.blockchain.User;
 import nl.tudelft.b_b_w.controller.ED25519;
@@ -41,6 +42,7 @@ public class MainActivity extends Activity {
     protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         try {
             mAPI = new API(user, this);
         } catch (HashException e) {
@@ -48,6 +50,7 @@ public class MainActivity extends Activity {
         } catch (BlockAlreadyExistsException e) {
             e.printStackTrace();
         }
+
         // add genesis if we don't have any blocks
         if (user == null && mAPI.isDatabaseEmpty()) {
             user = getUser();

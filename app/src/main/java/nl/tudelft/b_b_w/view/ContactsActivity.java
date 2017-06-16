@@ -11,11 +11,19 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+import net.i2p.crypto.eddsa.Utils;
+
 import java.util.List;
 
+import nl.tudelft.b_b_w.API;
 import nl.tudelft.b_b_w.R;
-import nl.tudelft.b_b_w.model.User;
-import nl.tudelft.b_b_w.model.block.Block;
+import nl.tudelft.b_b_w.blockchain.Block;
+import nl.tudelft.b_b_w.blockchain.User;
+import nl.tudelft.b_b_w.controller.ED25519;
+import nl.tudelft.b_b_w.model.BlockAlreadyExistsException;
+import nl.tudelft.b_b_w.model.HashException;
 
 /**
  * When the user wants to add a block he enters into the ContactsActivity, which contain
@@ -34,8 +42,20 @@ public class ContactsActivity extends Activity {
         setContentView(R.layout.activity_contacts);
         setTitle("Contacts");
         SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
-        final User owner = new User(settings.getString("userName", ""), settings.getString("iban", ""));
-        API API = new API(owner, this);
+
+        EdDSAPrivateKey edDSAPrivateKey1 =
+                ED25519.generatePrivateKey(Utils.hexToBytes(
+                        "0000000000000000000000000000000000000000000000000000000000000000"));
+        EdDSAPublicKey ownerPublicKey = ED25519.getPublicKey(edDSAPrivateKey1);
+        final User owner = new User(settings.getString("userName", ""), settings.getString("iban", ""), ownerPublicKey);
+        API API = null;
+        try {
+            API = new API(owner, this);
+        } catch (HashException e) {
+            e.printStackTrace();
+        } catch (BlockAlreadyExistsException e) {
+            e.printStackTrace();
+        }
         setUpGraph(API.getBlocks(owner));
         ContactAdapter adapter = new ContactAdapter(API, owner, this);
         ListView lView = (ListView) findViewById(R.id.contacts);

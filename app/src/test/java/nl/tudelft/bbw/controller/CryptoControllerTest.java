@@ -4,12 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
-import net.i2p.crypto.eddsa.Utils;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import nl.tudelft.bbw.blockchain.User;
 
 /**
  * Test class for CryptoController
@@ -20,7 +17,6 @@ public class CryptoControllerTest {
      * Class attributes
      */
     private CryptoController cryptoController;
-    private static final byte[] TEST_SEED = Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000");
 
     /**
      * setUp method
@@ -28,11 +24,11 @@ public class CryptoControllerTest {
      */
     @Before
     public void setUp() {
-        EdDSAPrivateKey privateKey = ED25519.generatePrivateKey(TEST_SEED);
+        EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
         EdDSAPublicKey publicKey = ED25519.getPublicKey(privateKey);
         final String name = "name";
         final String iban = "iban";
-        this.cryptoController = new CryptoController(new User(name, iban, publicKey));
+        this.cryptoController = new CryptoController(KeyWriter.publicKeyToString(publicKey));
     }
 
     /**

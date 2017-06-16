@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.IOException;
 import java.security.spec.InvalidKeySpecException;
 
-import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -45,26 +44,20 @@ public class KeyStorageUnitTest {
      * Tests whether writing and reading the private key works
      */
     @Test
-    public void testPrivateKey() throws IOException {
+    public void testPrivateKey() throws IOException, InvalidKeySpecException {
         KeyWriter.writePrivateKey(this.edDSAPrivateKey);
-        try {
-            assertEquals(this.edDSAPrivateKey, KeyReader.readPrivateKey());
-        } catch (InvalidKeySpecException e) {
-            fail();
-        }
+        assertEquals(this.edDSAPrivateKey, KeyReader.readPrivateKey(
+                KeyWriter.publicKeyToString(edDSAPublicKey)));
     }
 
     /**
      * Tests whether writing and reading the public key works
      */
     @Test
-    public void testPublicKey() throws IOException {
+    public void testPublicKey() throws IOException, InvalidKeySpecException {
         KeyWriter.writePublicKey(this.edDSAPublicKey);
-        try {
-            assertEquals(this.edDSAPublicKey, KeyReader.readPublicKey());
-        } catch (InvalidKeySpecException e) {
-            fail();
-        }
+        assertEquals(this.edDSAPublicKey, KeyReader.readPublicKey(
+                KeyWriter.publicKeyToString(edDSAPublicKey)));
     }
 
     /**
@@ -72,9 +65,9 @@ public class KeyStorageUnitTest {
      */
     @Test
     public void testReadKeyException() throws IOException {
-        exception.expect(IOException.class);
-        exception.expectMessage("Failed to initalize path: ");
-        KeyReader.readKey("");
+        exception.expect(RuntimeException.class);
+        exception.expectMessage("Error - Could not decrypt file: ");
+        KeyReader.readKey("", "");
     }
 
     /**
@@ -84,19 +77,19 @@ public class KeyStorageUnitTest {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public void testReadKeyEmpty() throws IOException {
         final String empty = "empty";
-        exception.expect(IOException.class);
-        exception.expectMessage("File is empty: " + empty);
+        exception.expect(RuntimeException.class);
+        exception.expectMessage("Error - Could not decrypt file: " + empty);
 
         new File(empty).createNewFile();
-        KeyReader.readKey(empty);
+        KeyReader.readKey(empty, "");
     }
 
     /**
      * Test to check whether converting a public key to a string and back works
      */
     @Test
-    public void testStringPublicKey()  throws Exception {
-        EdDSAPublicKey edDSAPublicKey1 = KeyReader.readPublicKey(
+    public void testStringToPublicKey() throws InvalidKeySpecException, IOException {
+        EdDSAPublicKey edDSAPublicKey1 = KeyReader.stringToPublicKey(
                 KeyWriter.publicKeyToString(edDSAPublicKey));
         assertEquals(edDSAPublicKey, edDSAPublicKey1);
     }

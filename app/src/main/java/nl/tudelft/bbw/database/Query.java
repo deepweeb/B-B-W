@@ -58,8 +58,8 @@ public abstract class Query {
 
         try {
             // get the users
-            GetUserQuery ownerQuery = new GetUserQuery(KeyReader.readPublicKey(ownerKey));
-            GetUserQuery contactQuery = new GetUserQuery(KeyReader.readPublicKey(contactKey));
+            GetUserQuery ownerQuery = new GetUserQuery(KeyReader.stringToPublicKey(ownerKey));
+            GetUserQuery contactQuery = new GetUserQuery(KeyReader.stringToPublicKey(contactKey));
             database.read(ownerQuery);
             database.read(contactQuery);
 

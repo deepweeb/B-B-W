@@ -1,6 +1,8 @@
 package nl.tudelft.b_b_w;
 
 
+import android.content.Context;
+
 import static junit.framework.Assert.assertFalse;
 
 import static org.junit.Assert.assertNotEquals;
@@ -31,7 +33,7 @@ public class APITest {
      */
     private User owner;
     private User newUser;
-    private API api;
+    private Context context;
     private List<Block> list;
 
     /**
@@ -42,8 +44,8 @@ public class APITest {
     @Before
     public final void setUp() throws HashException, BlockAlreadyExistsException {
         owner = new User("Jeff", "iban", ED25519.getPublicKey(ED25519.generatePrivateKey()));
-        api = new API(owner, RuntimeEnvironment.application);
-        list = api.getBlocks(owner);
+        this.context = RuntimeEnvironment.application;
+        list = API.getBlocks(owner, context);
         newUser = new User("Nick", "iban2", ED25519.getPublicKey(ED25519.generatePrivateKey()));
     }
 
@@ -55,10 +57,9 @@ public class APITest {
      */
     @Test
     public final void addContactToChainTest() throws HashException, BlockAlreadyExistsException {
-        API newAPI = new API(newUser, RuntimeEnvironment.application);
-        list = newAPI.getBlocks(newUser);
-        newAPI.addContactToChain(owner);
-        assertNotEquals(newAPI.getBlocks(newUser), list);
+        list = API.getBlocks(newUser, context);
+        API.addContactToChain(newUser, context, owner);
+        assertNotEquals(API.getBlocks(newUser, context), list);
     }
 
     /**
@@ -69,8 +70,8 @@ public class APITest {
      */
     @Test
     public final void revokeContactFromChainTest() throws HashException, BlockAlreadyExistsException {
-        api.revokeContactFromChain(owner);
-        assertNotEquals(api.getBlocks(owner), list);
+        API.revokeContactFromChain(owner, context, owner);
+        assertNotEquals(API.getBlocks(owner, context), list);
     }
 
     /**
@@ -81,10 +82,9 @@ public class APITest {
      */
     @Test
     public final void addContactToDatabase() throws HashException, BlockAlreadyExistsException {
-        API newAPI = new API(newUser, RuntimeEnvironment.application);
-        list = newAPI.getBlocks(newUser);
-        newAPI.addContactToDatabase(newUser, owner);
-        assertNotEquals(newAPI.getBlocks(newUser), list);
+        list = API.getBlocks(newUser, context);
+        API.addContactToDatabase(newUser, context, owner);
+        assertNotEquals(API.getBlocks(newUser, context), list);
     }
 
     /**
@@ -95,8 +95,8 @@ public class APITest {
      */
     @Test
     public final void addRevokeContactToDatabase() throws HashException, BlockAlreadyExistsException {
-        api.addRevokeContactToDatabase(owner, owner);
-        assertNotEquals(list, api.getBlocks(owner));
+        API.addRevokeContactToDatabase(owner, context, owner);
+        assertNotEquals(list, API.getBlocks(owner, context));
     }
 
     /**
@@ -105,7 +105,7 @@ public class APITest {
      */
     @Test
     public final void databaseEmptyTest() {
-        assertFalse(api.isDatabaseEmpty());
+        assertFalse(API.isDatabaseEmpty(context));
     }
 
     /**
@@ -114,7 +114,7 @@ public class APITest {
      */
     @Test
     public final void succesfulTransactionTest() {
-        api.successfulTransaction(list.get(0));
+        API.successfulTransaction(owner, context, list.get(0));
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
 
@@ -124,7 +124,7 @@ public class APITest {
      */
     @Test
     public final void failedTransactionTest() {
-        api.failedTransaction(list.get(0));
+        API.failedTransaction(owner, context, list.get(0));
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
 
@@ -134,8 +134,8 @@ public class APITest {
      */
     @Test
     public final void verifyIBANTest() {
-        api.verifyIBAN(list.get(0));
-        api.getBlocks(owner).get(0).getTrustValue();
+        API.verifyIBAN(owner, context, list.get(0));
+        API.getBlocks(owner, context).get(0).getTrustValue();
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
 
@@ -145,7 +145,7 @@ public class APITest {
      */
     @Test
     public final void revokedBlockTest() {
-        api.revokedBlock(list.get(0));
+        API.revokedBlock(owner, context, list.get(0));
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
 }

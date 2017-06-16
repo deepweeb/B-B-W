@@ -9,6 +9,7 @@ import nl.tudelft.b_b_w.blockchain.Block;
 import nl.tudelft.b_b_w.blockchain.BlockData;
 import nl.tudelft.b_b_w.blockchain.BlockType;
 import nl.tudelft.b_b_w.blockchain.Hash;
+import nl.tudelft.b_b_w.blockchain.TrustValues;
 import nl.tudelft.b_b_w.blockchain.User;
 import nl.tudelft.b_b_w.database.Database;
 import nl.tudelft.b_b_w.database.read.BlockExistQuery;
@@ -20,7 +21,6 @@ import nl.tudelft.b_b_w.database.write.UpdateTrustQuery;
 import nl.tudelft.b_b_w.database.write.UserAddQuery;
 import nl.tudelft.b_b_w.exception.BlockAlreadyExistsException;
 import nl.tudelft.b_b_w.exception.HashException;
-import nl.tudelft.b_b_w.blockchain.TrustValues;
 
 /**
  * Class which handles the the addition, revocation and creation of blocks.
@@ -39,9 +39,10 @@ public class BlockController {
      * @param chainOwner The owner of the blockchain
      * @param context    The specific context which contains our database
      */
-    public BlockController(User chainOwner, Context context) {
+    public BlockController(User chainOwner, Context context) throws HashException {
         this.chainOwner = chainOwner;
         this.database = new Database(context);
+        checkGenesis(chainOwner);
     }
 
     /**
@@ -216,7 +217,7 @@ public class BlockController {
      * @throws HashException when the hashing algorithm is not available
      */
     private Block createBlock(User owner, User contact,
-            BlockType blockType) throws HashException, BlockAlreadyExistsException {
+                              BlockType blockType) throws HashException, BlockAlreadyExistsException {
         Block latest = getLatestBlock(owner);
         if (latest == null) {
             throw new IllegalArgumentException("No genesis found for user " + owner);
@@ -233,5 +234,20 @@ public class BlockController {
         final Block block = new Block(owner, contact, blockData);
         addBlock(block);
         return block;
+    }
+
+    /**
+     * checkGenesis function
+     * Creates a genesis block if it does not exist
+     *
+     * @param owner given owner
+     * @throws HashException when the hashing algorithm is unavailable
+     */
+    private void checkGenesis(User owner) throws HashException {
+        try {
+            createGenesis(owner);
+        } catch (BlockAlreadyExistsException e) {
+            // Do nothing
+        }
     }
 }

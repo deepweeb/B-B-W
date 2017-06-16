@@ -1,5 +1,6 @@
 package nl.tudelft.bbw.blockchain;
 
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
 import org.junit.Before;
@@ -30,12 +31,8 @@ public class UserTest {
     public void setUpUser(){
         name = "testName";
         iban = "NL642335674446";
-<<<<<<< HEAD:app/src/test/java/nl/tudelft/bbw/blockchain/UserTest.java
-        privateKey = ED25519.generatePrivateKey(Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000"));
+        privateKey = ED25519.generatePrivateKey();
         publicKey = ED25519.getPublicKey(privateKey);
-=======
-        publicKey = ED25519.getPublicKey(ED25519.generatePrivateKey());
->>>>>>> bf1d337508dc2ec241eb12f2ad6e85c78aea115d:app/src/test/java/nl/tudelft/bbw/blockchain/UserTest.java
         user = new User(name, iban, publicKey);
     }
 

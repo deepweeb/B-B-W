@@ -8,10 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import nl.tudelft.bbw.controller.ED25519;
-<<<<<<< HEAD:app/src/test/java/nl/tudelft/bbw/blockchain/BlockTest.java
-=======
-import nl.tudelft.bbw.model.TrustValues;
->>>>>>> bf1d337508dc2ec241eb12f2ad6e85c78aea115d:app/src/test/java/nl/tudelft/bbw/blockchain/BlockTest.java
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;

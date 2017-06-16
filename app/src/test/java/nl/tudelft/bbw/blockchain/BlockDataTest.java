@@ -3,11 +3,6 @@ package nl.tudelft.bbw.blockchain;
 import org.junit.Before;
 import org.junit.Test;
 
-<<<<<<< HEAD:app/src/test/java/nl/tudelft/bbw/blockchain/BlockDataTest.java
-=======
-import nl.tudelft.bbw.model.TrustValues;
-
->>>>>>> bf1d337508dc2ec241eb12f2ad6e85c78aea115d:app/src/test/java/nl/tudelft/bbw/blockchain/BlockDataTest.java
 import static junit.framework.Assert.assertEquals;
 
 /**

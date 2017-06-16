@@ -18,11 +18,7 @@ import nl.tudelft.bbw.blockchain.User;
 import nl.tudelft.bbw.controller.ED25519;
 import nl.tudelft.bbw.database.Database;
 import nl.tudelft.bbw.database.read.GetChainQuery;
-<<<<<<< HEAD:app/src/test/java/nl/tudelft/bbw/database/write/BlockAddQueryTest.java
 import nl.tudelft.bbw.blockchain.TrustValues;
-=======
-import nl.tudelft.bbw.model.TrustValues;
->>>>>>> bf1d337508dc2ec241eb12f2ad6e85c78aea115d:app/src/test/java/nl/tudelft/bbw/database/write/BlockAddQueryTest.java
 
 import static junit.framework.Assert.assertEquals;
 

@@ -50,7 +50,7 @@ public final class API {
     }
 
     public static void successfulTransaction(Block block) {
-        Block updatedBlock = TrustController.succesfulTransaction(block);
+        Block updatedBlock = TrustController.successfulTransaction(block);
         blockController.updateTrustOfBlock(updatedBlock);
     }
 

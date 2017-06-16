@@ -135,8 +135,8 @@ public class BlockControllerUnitTest {
     @Test
     public final void testEmptyList() throws HashException {
         Block genesisC = blockController.createGenesis(c);
-        blockController.createKeyBlock(c, c, "pkc");
-        blockController.createRevokeBlock(c, c, "pkc", "ibanC");
+        blockController.createKeyBlock(c, c, publicKeyC);
+        blockController.createRevokeBlock(c, c, publicKeyC, "ibanC");
         List<Block> list = new ArrayList<>();
         list.add(genesisC);
         assertEquals(list, blockController.getBlocks(c.getName()));
@@ -205,7 +205,7 @@ public class BlockControllerUnitTest {
     @Test
     public void testBacktrack() throws HashException {
         blockController.createGenesis(c);
-        Block fresh = blockController.createKeyBlock(c, c, "pkc");
+        Block fresh = blockController.createKeyBlock(c, c, publicKeyC);
         assertEquals(fresh, blockController.backtrack(fresh));
     }
 

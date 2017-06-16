@@ -2,9 +2,7 @@ package nl.tudelft.bbw.model;
 
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
-import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * Class for creating a user
@@ -77,22 +75,18 @@ public class User {
      * @return generated publicKey
      */
     public String generatePublicKey() {
-        //TODO: Generate public key using ED25519 protocol
-        //Generate SHA256 hash until this protocol is implemented
-        MessageDigest messageDigest = null;
         try {
+            //TODO: Generate public key using ED25519 protocol
+            //Generate SHA256 hash until this protocol is implemented
+            MessageDigest messageDigest = null;
             messageDigest = MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        String text = name + iban;
-        try {
+            String text = name + iban;
             messageDigest.update(text.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            byte[] digest = messageDigest.digest();
+            return String.format("%064x", new java.math.BigInteger(1, digest));
+        } catch (Exception e) {
+            return e.getMessage();
         }
-        byte[] digest = messageDigest.digest();
-        return String.format("%064x", new java.math.BigInteger(1, digest));
     }
 
     @Override

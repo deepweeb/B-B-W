@@ -7,7 +7,9 @@ import java.security.MessageDigest;
  */
 @Deprecated
 public class ConversionController {
-    // Variables which we need to create a hashed key
+    /**
+     * Variables which we need to create a hashed key
+     */
     private String blockOwner;
     private String senderPublicKey;
     private String previousBlockHash;

@@ -2,6 +2,9 @@ package nl.tudelft.b_b_w.controller;
 
 import android.content.Context;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,19 +45,25 @@ public class BlockController {
     public BlockController(User chainOwner, Context context) throws HashException {
         this.chainOwner = chainOwner;
         this.database = new Database(context);
-        checkGenesis(chainOwner);
     }
 
     /**
      * Method for adding a user to our blockchain.
      *
      * @param user the user we want to add
+     * @param signature byte array containing the signature
+     * @param message byte array containing the message
      * @return the created block
      * @throws HashException               When there is an error calculating the hash
      * @throws BlockAlreadyExistsException When there already exists a block in the database
      */
-    public final Block addBlockToChain(User user)
+    public final Block addBlockToChain(User user, byte[] signature, byte[] message)
             throws HashException, BlockAlreadyExistsException {
+        if (verifySignature(signature, message)) {
+            createKeyBlock(chainOwner, user);
+        } else {
+            throw new RuntimeException("Block cannot be verified");
+        }
         UserExistQuery query = new UserExistQuery(user);
         database.read(query);
         if (!query.doesExist()) {
@@ -237,17 +246,18 @@ public class BlockController {
     }
 
     /**
-     * checkGenesis function
-     * Creates a genesis block if it does not exist
+     * verifySignature method
+     * Verifies the signature given a signature and message byte array
      *
-     * @param owner given owner
-     * @throws HashException when the hashing algorithm is unavailable
+     * @param signature given signature to use
+     * @param message given message to verify
+     * @return boolean if the signature of the block is verified
      */
-    private void checkGenesis(User owner) throws HashException {
+    boolean verifySignature(byte[] signature, byte[] message) {
         try {
-            createGenesis(owner);
-        } catch (BlockAlreadyExistsException e) {
-            // Do nothing
+            return ED25519.verifySignature(signature, message, chainOwner.getPublicKey());
+        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 }

@@ -30,12 +30,14 @@ public final class API {
      * @param owner   the User
      * @param context The state of the program
      * @param contact the contact
+     * @param signature byte array containing the signature
+     * @param message byte array containing the message
      * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
-    public static void addContactToChain(User owner, Context context, User contact)
-            throws HashException, BlockAlreadyExistsException {
-        new BlockController(owner, context).addBlockToChain(contact);
+    public static void addContactToChain(User owner, Context context, User contact, byte[] signature,
+            byte[] message) throws HashException, BlockAlreadyExistsException {
+        new BlockController(owner, context).addBlockToChain(contact, signature, message);
     }
 
     /**

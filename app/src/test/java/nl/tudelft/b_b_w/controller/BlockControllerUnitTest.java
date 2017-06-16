@@ -3,6 +3,7 @@ package nl.tudelft.b_b_w.controller;
 import static junit.framework.Assert.assertEquals;
 
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
+import net.i2p.crypto.eddsa.Utils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -72,9 +73,11 @@ public class BlockControllerUnitTest {
      */
     @Test
     public final void testAddBlock() throws HashException, BlockAlreadyExistsException {
+        final byte[] message = genesisA.getContactPublicKey().getEncoded();
+        final byte[] signature = ED25519.generateSignature(message, owner.getPrivateKey());
         List<Block> list = new ArrayList<>();
         list.add(genesisA);
-        list.add(blockController.addBlockToChain(userB));
+        list.add(blockController.addBlockToChain(userB, signature, message));
         System.out.print(list.toString());
         assertEquals(list, blockController.getBlocks(owner));
     }
@@ -86,9 +89,11 @@ public class BlockControllerUnitTest {
      */
     @Test
     public final void testRevokeBlock() throws HashException, BlockAlreadyExistsException {
+        final byte[] message = genesisA.getContactPublicKey().getEncoded();
+        final byte[] signature = ED25519.generateSignature(message, owner.getPrivateKey());
         List<Block> list = new ArrayList<>();
         list.add(genesisA);
-        blockController.addBlockToChain(userB);
+        blockController.addBlockToChain(userB, signature, message);
         blockController.revokeBlockFromChain(userB);
         assertEquals(list, blockController.getBlocks(owner));
     }

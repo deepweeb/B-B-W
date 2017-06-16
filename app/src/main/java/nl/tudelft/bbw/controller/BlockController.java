@@ -59,18 +59,18 @@ public class BlockController {
      */
     public final Block addBlockToChain(User user, byte[] signature, byte[] message)
             throws HashException, BlockAlreadyExistsException {
-        if (verifySignature(signature, message)) {
-            createKeyBlock(chainOwner, user);
-        } else {
-            throw new RuntimeException("Block cannot be verified");
-        }
+
         UserExistQuery query = new UserExistQuery(user);
         database.read(query);
         if (!query.doesExist()) {
             UserAddQuery existQuery = new UserAddQuery(user);
             database.write(existQuery);
         }
-        return createKeyBlock(chainOwner, user);
+        if (verifySignature(signature, message)) {
+            return createKeyBlock(chainOwner, user);
+        } else {
+            throw new RuntimeException("Block cannot be verified");
+        }
     }
 
     /**

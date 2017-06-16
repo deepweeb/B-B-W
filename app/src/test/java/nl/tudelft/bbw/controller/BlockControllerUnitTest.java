@@ -1,5 +1,6 @@
 package nl.tudelft.bbw.controller;
 
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
 import org.junit.Before;
@@ -53,9 +54,10 @@ public class BlockControllerUnitTest {
         //setting up owner
         String ownerName = "BlockOwner1";
         String ownerIban = "Owner1Iban";
-        //object to generate public key         ;
-        EdDSAPublicKey ownerPublicKey = ED25519.getPublicKey(ED25519.generatePrivateKey());
-        owner = new User(ownerName, ownerIban, ownerPublicKey);
+        //object to generate public key
+        EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
+        owner = new User(ownerName, ownerIban, ED25519.getPublicKey(privateKey));
+        owner.setPrivateKey(privateKey);
 
         blockController = new BlockController(owner, RuntimeEnvironment.application);
 
@@ -93,8 +95,8 @@ public class BlockControllerUnitTest {
     @Test
     public final void testRevokeBlock() throws HashException, BlockAlreadyExistsException,
             NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-        final byte[] message = genesisA.getContactPublicKey().getEncoded();
-        final byte[] signature = ED25519.generateSignature(message, owner.getPrivateKey());
+        final byte[] message = genesisA.getBlockOwner().getPublicKey().getEncoded();
+        final byte[] signature = ED25519.generateSignature(message, genesisA.getBlockOwner().getPrivateKey());
         List<Block> list = new ArrayList<>();
         list.add(genesisA);
         blockController.addBlockToChain(userB, signature, message);

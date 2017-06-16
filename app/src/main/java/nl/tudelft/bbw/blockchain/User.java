@@ -68,10 +68,10 @@ public class User {
     /**
      * setPrivateKey function
      *
-     * @param privateKey given private key to set it to
+     * @param edDSAPrivateKey given private key to set it to
      */
-    public void setPrivateKey(EdDSAPrivateKey privateKey) {
-        this.privateKey = privateKey;
+    public void setPrivateKey(EdDSAPrivateKey edDSAPrivateKey) {
+        this.privateKey = edDSAPrivateKey;
     }
 
     /**

@@ -1,6 +1,8 @@
 package nl.tudelft.bbw;
 
 
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+
 import static junit.framework.Assert.assertFalse;
 
 import static org.junit.Assert.assertNotEquals;
@@ -21,6 +23,7 @@ import nl.tudelft.bbw.blockchain.Block;
 import nl.tudelft.bbw.blockchain.TrustValues;
 import nl.tudelft.bbw.blockchain.User;
 import nl.tudelft.bbw.controller.ED25519;
+import nl.tudelft.bbw.controller.KeyWriter;
 import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
 import nl.tudelft.bbw.exception.HashException;
 
@@ -44,10 +47,15 @@ public class APITest {
      */
     @Before
     public final void setUp() throws HashException, BlockAlreadyExistsException {
-        owner = new User("Jeff", "iban", ED25519.getPublicKey(ED25519.generatePrivateKey()));
+        EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
+        owner = new User("Jeff", "iban", ED25519.getPublicKey(privateKey));
+        owner.setPrivateKey(privateKey);
         API.initializeAPI(owner, RuntimeEnvironment.application);
         list = API.getBlocks(owner);
-        newUser = new User("Nick", "iban2", ED25519.getPublicKey(ED25519.generatePrivateKey()));
+
+        privateKey = ED25519.generatePrivateKey();
+        newUser = new User("Nick", "iban2", ED25519.getPublicKey(privateKey));
+        newUser.setPrivateKey(privateKey);
     }
 
     /**
@@ -60,9 +68,10 @@ public class APITest {
     public final void addContactToChainTest() throws HashException, BlockAlreadyExistsException,
             NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         API.initializeAPI(newUser, RuntimeEnvironment.application);
-        final byte[] signature = ED25519.generateSignature(new byte[]{}, owner.getPrivateKey());
+        final byte[] message = owner.getPublicKey().getEncoded();
+        final byte[] signature = ED25519.generateSignature(message, newUser.getPrivateKey());
         list = API.getBlocks(newUser);
-        API.addContactToChain(owner, signature, new byte[] {});
+        API.addContactToChain(owner, signature, message);
         assertNotEquals(API.getBlocks(newUser), list);
     }
 

@@ -89,4 +89,51 @@ public class BlockData {
         this.trustValue = trustValue;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof BlockData)) {
+            return false;
+        }
+
+        BlockData blockData = (BlockData) o;
+
+        if (sequenceNumber != blockData.sequenceNumber) {
+            return false;
+        }
+        if (Double.compare(blockData.trustValue, trustValue) != 0) {
+            return false;
+        }
+        if (blockType != blockData.blockType) {
+            return false;
+        }
+        if (previousHashChain != null ? !previousHashChain.equals(blockData.previousHashChain) : blockData.previousHashChain != null)
+        {
+            return false;
+        }
+        return previousHashSender != null ? previousHashSender.equals(blockData.previousHashSender) : blockData.previousHashSender == null;
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = blockType != null ? blockType.hashCode() : 0;
+        result = 31 * result + sequenceNumber;
+        result = 31 * result + (previousHashChain != null ? previousHashChain.hashCode() : 0);
+        result = 31 * result + (previousHashSender != null ? previousHashSender.hashCode() : 0);
+        temp = Double.doubleToLongBits(trustValue);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
 }

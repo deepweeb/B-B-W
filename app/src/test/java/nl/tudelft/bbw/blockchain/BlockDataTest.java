@@ -2,7 +2,6 @@ package nl.tudelft.bbw.blockchain;
 
 import org.junit.Before;
 import org.junit.Test;
-
 import static junit.framework.Assert.assertEquals;
 
 /**
@@ -27,7 +26,7 @@ public class BlockDataTest {
     public void setUpBlockData(){
 
         blockType = BlockType.ADD_KEY;
-        sequenceNumber = 5;
+        sequenceNumber = 1;
         previousHashChain = new Hash("ExampleHash1");
         previousHashSender = new Hash("ExampleHash2");
         trustValue = TrustValues.INITIALIZED.getValue();
@@ -37,55 +36,49 @@ public class BlockDataTest {
 
     /**
      * getBlockType() getter method testing
-     * @throws Exception
      */
     @Test
-    public void getBlockTypeTest() throws Exception {
+    public void getBlockTypeTest() {
         assertEquals(blockType, blockData.getBlockType());
     }
 
     /**
      * getSequenceNumber() getter method testing
-     * @throws Exception
      */
     @Test
-    public void getSequenceNumberTest() throws Exception {
+    public void getSequenceNumberTest() {
         assertEquals(sequenceNumber, blockData.getSequenceNumber());
     }
 
     /**
      * getPreviousHashChain() getter method testing
-     * @throws Exception
      */
     @Test
-    public void getPreviousHashChainTest() throws Exception {
+    public void getPreviousHashChainTest() {
         assertEquals(previousHashChain, blockData.getPreviousHashChain());
     }
 
     /**
      * getPreviousHashSender() getter method testing
-     * @throws Exception
      */
     @Test
-    public void getPreviousHashSenderTest() throws Exception {
+    public void getPreviousHashSenderTest() {
         assertEquals(previousHashSender, blockData.getPreviousHashSender());
     }
 
     /**
      * getTrustValue() getter method testing
-     * @throws Exception
      */
     @Test
-    public void getTrustValueTest() throws Exception {
+    public void getTrustValueTest() {
         assertEquals(trustValue, blockData.getTrustValue());
     }
 
     /**
      * setTrustValue() setter method testing
-     * @throws Exception
      */
     @Test
-    public void setTrustValueTest() throws Exception {
+    public void setTrustValueTest() {
         final double testTrustValue = 99;
         blockData.setTrustValue(testTrustValue);
         assertEquals(testTrustValue, blockData.getTrustValue());

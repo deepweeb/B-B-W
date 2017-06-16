@@ -37,6 +37,9 @@ public class LatestBlockQueryTest {
     private Block aRevokesB;
     private Block bAddsC;
 
+    /**
+     * Example genesises
+     */
     private Block genesisA;
     private Block genesisB;
     private Block genesisC;
@@ -90,6 +93,9 @@ public class LatestBlockQueryTest {
 
     }
 
+    /**
+     * Test if the latest block of A is correct
+     */
     @Test
     public void testLatestA() {
         LatestBlockQuery latestQuery = new LatestBlockQuery(database, alice);
@@ -97,6 +103,9 @@ public class LatestBlockQueryTest {
         assertEquals(aRevokesB, latestQuery.getLatestBlock());
     }
 
+    /**
+     * Test if the latest block of B is correct
+     */
     @Test
     public void testLatestB() {
         LatestBlockQuery latestQuery = new LatestBlockQuery(database, bob);
@@ -104,6 +113,9 @@ public class LatestBlockQueryTest {
         assertEquals(bAddsC, latestQuery.getLatestBlock());
     }
 
+    /**
+     * Test if the latest block of C (its genesis) is correct
+     */
     @Test
     public void testLatestC() {
         LatestBlockQuery latestQuery = new LatestBlockQuery(database, carol);
@@ -111,6 +123,9 @@ public class LatestBlockQueryTest {
         assertEquals(genesisC, latestQuery.getLatestBlock());
     }
 
+    /**
+     * Test if a non-existing user has null for latest block
+     */
     @Test
     public void testLatestNonexistent() {
         User sinterklaas = new User("Sinterklaas", "gratis",
@@ -119,5 +134,4 @@ public class LatestBlockQueryTest {
         database.read(latestQuery);
         assertNull(latestQuery.getLatestBlock());
     }
-
 }

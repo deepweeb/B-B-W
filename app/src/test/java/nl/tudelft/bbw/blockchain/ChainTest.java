@@ -1,8 +1,6 @@
 package nl.tudelft.bbw.blockchain;
 
-import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
-import net.i2p.crypto.eddsa.Utils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,34 +28,43 @@ public class ChainTest {
     //chain object to be tested
     private Chain chain;
 
+    /**
+     * Setting up before testing
+     */
     @Before
-    public void setUpBlock() throws Exception {
-
+    public void setUpChain() {
         //setting up owner
         ownerName = "BlockOwner1";
         ownerIban = "Owner1Iban";
         //object to generate public key
-        EdDSAPrivateKey edDSAPrivateKey1 =
-                ED25519.generatePrivateKey(Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000"));
-        ownerPublicKey = ED25519.getPublicKey(edDSAPrivateKey1);
+        ownerPublicKey = ED25519.getPublicKey(ED25519.generatePrivateKey());
         owner = new User(ownerName, ownerIban, ownerPublicKey);
         testChain = new ArrayList<Block>();
         chain = new Chain(owner);
 
     }
 
+    /**
+     * getChainOwner() getter method testing
+     */
     @Test
-    public void getChainOwner() throws Exception {
+    public void getChainOwner() {
         assertEquals(owner, chain.getChainOwner());
     }
 
+    /**
+     * getChainList() getter method testing
+     */
     @Test
-    public void getChainList() throws Exception {
+    public void getChainList() {
         assertEquals(testChain, chain.getChainList());
     }
 
+    /**
+     * getChainList() setter method testing
+     */
     @Test
-    public void setChainList() throws Exception {
+    public void setChainList() {
         testChain.add(new Block(owner));
         chain.setChainList(testChain);
         assertEquals(testChain, chain.getChainList());

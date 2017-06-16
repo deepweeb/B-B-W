@@ -35,6 +35,9 @@ public class UpdateTrustQueryTest {
     private Block aRevokesB;
     private Block bAddsC;
 
+    /**
+     * Example genesises
+     */
     private Block genesisA;
     private Block genesisB;
     private Block genesisC;
@@ -87,6 +90,9 @@ public class UpdateTrustQueryTest {
         database.write(new BlockAddQuery(bAddsC));
     }
 
+    /**
+     * Update trust once and test if it is updated
+     */
     @Test
     public void testSimpleUpdateTrust() {
         Block bAddsCTrust = new Block(bob, carol, new BlockData(BlockType.ADD_KEY, 3,
@@ -99,8 +105,11 @@ public class UpdateTrustQueryTest {
         assertEquals(10.0, latest.getLatestBlock().getTrustValue());
     }
 
+    /**
+     * Update trust thrice and test if it is updated
+     */
     @Test
-    public void testDoubleUpdateTrust() {
+    public void testTripleUpdateTrust() {
         Block bAddsCTrust1 = new Block(bob, carol, new BlockData(BlockType.ADD_KEY, 3,
                 genesisB.getOwnHash(), genesisC.getOwnHash(), 10.0));
         Block bAddsCTrust2 = new Block(bob, carol, new BlockData(BlockType.ADD_KEY, 3,
@@ -114,7 +123,6 @@ public class UpdateTrustQueryTest {
         // verify
         LatestBlockQuery latest = new LatestBlockQuery(database, bob);
         database.read(latest);
-        //assertEquals(20.0, bAddsCTrust2.getTrustValue());
         assertEquals(30.0, latest.getLatestBlock().getTrustValue());
     }
 }

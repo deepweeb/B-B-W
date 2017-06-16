@@ -4,13 +4,13 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
     defaultConfig {
-        applicationId "nl.tudelft.b_b_w"
-        minSdkVersion 23
+        applicationId "nl.tudelft.bbw"
+        minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
-        testApplicationId "nl.tudelft.b_b_w.view"
-        testInstrumentationRunner "nl.tudelft.b_b_w.view.Instrumentation"
+        testApplicationId "nl.tudelft.bbw.view"
+        testInstrumentationRunner "nl.tudelft.bbw.view.Instrumentation"
     }
     buildTypes {
         release {
@@ -58,7 +58,7 @@ apply plugin: 'cobertura'
 
 cobertura {
     coverageExcludes = [
-            ".*nl.tudelft.b_b_w.view.*",
+            ".*nl.tudelft.bbw.view.*",
             ".*com.jjoe64.*",
             ".*android.*"
     ]

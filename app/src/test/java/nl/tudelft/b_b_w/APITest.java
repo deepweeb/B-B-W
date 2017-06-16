@@ -31,7 +31,6 @@ public class APITest {
      */
     private User owner;
     private User newUser;
-    private API api;
     private List<Block> list;
 
     /**
@@ -42,8 +41,8 @@ public class APITest {
     @Before
     public final void setUp() throws HashException, BlockAlreadyExistsException {
         owner = new User("Jeff", "iban", ED25519.getPublicKey(ED25519.generatePrivateKey()));
-        api = new API(owner, RuntimeEnvironment.application);
-        list = api.getBlocks(owner);
+        API.initializeAPI(owner, RuntimeEnvironment.application);
+        list = API.getBlocks(owner);
         newUser = new User("Nick", "iban2", ED25519.getPublicKey(ED25519.generatePrivateKey()));
     }
 
@@ -55,10 +54,10 @@ public class APITest {
      */
     @Test
     public final void addContactToChainTest() throws HashException, BlockAlreadyExistsException {
-        API newAPI = new API(newUser, RuntimeEnvironment.application);
-        list = newAPI.getBlocks(newUser);
-        newAPI.addContactToChain(owner);
-        assertNotEquals(newAPI.getBlocks(newUser), list);
+        API.initializeAPI(newUser, RuntimeEnvironment.application);
+        list = API.getBlocks(newUser);
+        API.addContactToChain(owner);
+        assertNotEquals(API.getBlocks(newUser), list);
     }
 
     /**
@@ -69,8 +68,8 @@ public class APITest {
      */
     @Test
     public final void revokeContactFromChainTest() throws HashException, BlockAlreadyExistsException {
-        api.revokeContactFromChain(owner);
-        assertNotEquals(api.getBlocks(owner), list);
+        API.revokeContactFromChain(owner);
+        assertNotEquals(API.getBlocks(owner), list);
     }
 
     /**
@@ -81,10 +80,10 @@ public class APITest {
      */
     @Test
     public final void addContactToDatabase() throws HashException, BlockAlreadyExistsException {
-        API newAPI = new API(newUser, RuntimeEnvironment.application);
-        list = newAPI.getBlocks(newUser);
-        newAPI.addContactToDatabase(newUser, owner);
-        assertNotEquals(newAPI.getBlocks(newUser), list);
+        API.initializeAPI(newUser, RuntimeEnvironment.application);
+        list = API.getBlocks(newUser);
+        API.addContactToDatabase(newUser, owner);
+        assertNotEquals(API.getBlocks(newUser), list);
     }
 
     /**
@@ -95,8 +94,8 @@ public class APITest {
      */
     @Test
     public final void addRevokeContactToDatabase() throws HashException, BlockAlreadyExistsException {
-        api.addRevokeContactToDatabase(owner, owner);
-        assertNotEquals(list, api.getBlocks(owner));
+        API.addRevokeContactToDatabase(owner, owner);
+        assertNotEquals(list, API.getBlocks(owner));
     }
 
     /**
@@ -105,7 +104,7 @@ public class APITest {
      */
     @Test
     public final void databaseEmptyTest() {
-        assertFalse(api.isDatabaseEmpty());
+        assertFalse(API.isDatabaseEmpty());
     }
 
     /**
@@ -114,7 +113,7 @@ public class APITest {
      */
     @Test
     public final void succesfulTransactionTest() {
-        api.successfulTransaction(list.get(0));
+        API.successfulTransaction(list.get(0));
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
 
@@ -124,7 +123,7 @@ public class APITest {
      */
     @Test
     public final void failedTransactionTest() {
-        api.failedTransaction(list.get(0));
+        API.failedTransaction(list.get(0));
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
 
@@ -134,8 +133,8 @@ public class APITest {
      */
     @Test
     public final void verifyIBANTest() {
-        api.verifyIBAN(list.get(0));
-        api.getBlocks(owner).get(0).getTrustValue();
+        API.verifyIBAN(list.get(0));
+        API.getBlocks(owner).get(0).getTrustValue();
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
 
@@ -145,7 +144,7 @@ public class APITest {
      */
     @Test
     public final void revokedBlockTest() {
-        api.revokedBlock(list.get(0));
+        API.revokedBlock(list.get(0));
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
 }

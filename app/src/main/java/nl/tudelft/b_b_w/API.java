@@ -27,13 +27,14 @@ public final class API {
     /**
      * Intitialising the API, the genesis block is here created since this
      * can only be done once per user
+     * TODO: Remove this function
      *
      * @param owner   the User
      * @param context The state of the program
      * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
-    public API(User owner, Context context) throws HashException, BlockAlreadyExistsException {
+    public static void initializeAPI(User owner, Context context) throws HashException, BlockAlreadyExistsException {
         blockController = new BlockController(owner, context);
         blockVerificationController = new BlockVerificationController(context);
         blockController.createGenesis(owner);

@@ -7,13 +7,13 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import nl.tudelft.b_b_w.BuildConfig;
-import nl.tudelft.b_b_w.blockchain.Block;
-import nl.tudelft.b_b_w.blockchain.BlockData;
-import nl.tudelft.b_b_w.blockchain.BlockType;
-import nl.tudelft.b_b_w.blockchain.Hash;
-import nl.tudelft.b_b_w.blockchain.User;
-import nl.tudelft.b_b_w.controller.ED25519;
+import nl.tudelft.bbw.BuildConfig;
+import nl.tudelft.bbw.blockchain.Block;
+import nl.tudelft.bbw.blockchain.BlockData;
+import nl.tudelft.bbw.blockchain.BlockType;
+import nl.tudelft.bbw.blockchain.Hash;
+import nl.tudelft.bbw.blockchain.User;
+import nl.tudelft.bbw.controller.ED25519;
 import nl.tudelft.bbw.database.Database;
 import nl.tudelft.bbw.database.read.LatestBlockQuery;
 

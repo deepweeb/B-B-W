@@ -7,9 +7,9 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import nl.tudelft.b_b_w.BuildConfig;
-import nl.tudelft.b_b_w.blockchain.User;
-import nl.tudelft.b_b_w.controller.ED25519;
+import nl.tudelft.bbw.BuildConfig;
+import nl.tudelft.bbw.blockchain.User;
+import nl.tudelft.bbw.controller.ED25519;
 import nl.tudelft.bbw.database.Database;
 import nl.tudelft.bbw.database.write.UserAddQuery;
 

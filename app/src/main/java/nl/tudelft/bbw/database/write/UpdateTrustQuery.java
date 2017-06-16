@@ -4,9 +4,9 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
-import nl.tudelft.b_b_w.blockchain.Block;
-import nl.tudelft.b_b_w.blockchain.BlockType;
-import nl.tudelft.b_b_w.controller.KeyWriter;
+import nl.tudelft.bbw.blockchain.Block;
+import nl.tudelft.bbw.blockchain.BlockType;
+import nl.tudelft.bbw.controller.KeyWriter;
 import nl.tudelft.bbw.database.DatabaseException;
 
 import static nl.tudelft.bbw.database.Database.BLOCK_TABLE_NAME;

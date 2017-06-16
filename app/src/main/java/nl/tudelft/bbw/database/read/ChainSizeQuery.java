@@ -2,8 +2,8 @@ package nl.tudelft.bbw.database.read;
 
 import android.database.Cursor;
 
-import nl.tudelft.b_b_w.blockchain.User;
-import nl.tudelft.b_b_w.controller.KeyWriter;
+import nl.tudelft.bbw.blockchain.User;
+import nl.tudelft.bbw.controller.KeyWriter;
 
 import static nl.tudelft.bbw.database.Database.BLOCK_TABLE_NAME;
 import static nl.tudelft.bbw.database.Database.KEY_OWNER;

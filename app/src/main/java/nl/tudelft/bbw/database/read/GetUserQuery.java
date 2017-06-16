@@ -6,9 +6,9 @@ import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
 import java.util.List;
 
-import nl.tudelft.b_b_w.blockchain.Block;
-import nl.tudelft.b_b_w.blockchain.User;
-import nl.tudelft.b_b_w.controller.KeyWriter;
+import nl.tudelft.bbw.blockchain.Block;
+import nl.tudelft.bbw.blockchain.User;
+import nl.tudelft.bbw.controller.KeyWriter;
 
 import static nl.tudelft.bbw.database.Database.INDEX_IBAN;
 import static nl.tudelft.bbw.database.Database.INDEX_NAME;

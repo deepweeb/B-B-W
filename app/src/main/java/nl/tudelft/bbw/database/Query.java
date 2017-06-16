@@ -3,11 +3,11 @@ package nl.tudelft.bbw.database;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import nl.tudelft.b_b_w.blockchain.Block;
-import nl.tudelft.b_b_w.blockchain.BlockData;
-import nl.tudelft.b_b_w.blockchain.BlockType;
-import nl.tudelft.b_b_w.blockchain.Hash;
-import nl.tudelft.b_b_w.controller.KeyReader;
+import nl.tudelft.bbw.blockchain.Block;
+import nl.tudelft.bbw.blockchain.BlockData;
+import nl.tudelft.bbw.blockchain.BlockType;
+import nl.tudelft.bbw.blockchain.Hash;
+import nl.tudelft.bbw.controller.KeyReader;
 import nl.tudelft.bbw.database.read.GetUserQuery;
 
 import static nl.tudelft.bbw.database.Database.INDEX_CONTACT;

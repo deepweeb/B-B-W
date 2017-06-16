@@ -3,9 +3,9 @@ package nl.tudelft.bbw.database.read;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import nl.tudelft.b_b_w.blockchain.Block;
-import nl.tudelft.b_b_w.blockchain.User;
-import nl.tudelft.b_b_w.controller.KeyWriter;
+import nl.tudelft.bbw.blockchain.Block;
+import nl.tudelft.bbw.blockchain.User;
+import nl.tudelft.bbw.controller.KeyWriter;
 import nl.tudelft.bbw.database.Database;
 
 import static nl.tudelft.bbw.database.Database.BLOCK_TABLE_NAME;

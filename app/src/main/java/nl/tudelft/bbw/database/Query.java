@@ -1,5 +1,14 @@
 package nl.tudelft.bbw.database;
 
+import static nl.tudelft.bbw.database.Database.INDEX_CONTACT;
+import static nl.tudelft.bbw.database.Database.INDEX_HASH;
+import static nl.tudelft.bbw.database.Database.INDEX_OWNER;
+import static nl.tudelft.bbw.database.Database.INDEX_PREV_HASH_CHAIN;
+import static nl.tudelft.bbw.database.Database.INDEX_PREV_HASH_SENDER;
+import static nl.tudelft.bbw.database.Database.INDEX_REVOKE;
+import static nl.tudelft.bbw.database.Database.INDEX_SEQ_NO;
+import static nl.tudelft.bbw.database.Database.INDEX_TRUST_VALUE;
+
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -9,15 +18,6 @@ import nl.tudelft.bbw.blockchain.BlockType;
 import nl.tudelft.bbw.blockchain.Hash;
 import nl.tudelft.bbw.controller.KeyReader;
 import nl.tudelft.bbw.database.read.GetUserQuery;
-
-import static nl.tudelft.bbw.database.Database.INDEX_CONTACT;
-import static nl.tudelft.bbw.database.Database.INDEX_HASH;
-import static nl.tudelft.bbw.database.Database.INDEX_OWNER;
-import static nl.tudelft.bbw.database.Database.INDEX_PREV_HASH_CHAIN;
-import static nl.tudelft.bbw.database.Database.INDEX_PREV_HASH_SENDER;
-import static nl.tudelft.bbw.database.Database.INDEX_REVOKE;
-import static nl.tudelft.bbw.database.Database.INDEX_SEQ_NO;
-import static nl.tudelft.bbw.database.Database.INDEX_TRUST_VALUE;
 
 /**
  * A query you can apply on the database.
@@ -58,8 +58,8 @@ public abstract class Query {
 
         try {
             // get the users
-            GetUserQuery ownerQuery = new GetUserQuery(KeyReader.readPublicKey(ownerKey));
-            GetUserQuery contactQuery = new GetUserQuery(KeyReader.readPublicKey(contactKey));
+            GetUserQuery ownerQuery = new GetUserQuery(KeyReader.stringToPublicKey(ownerKey));
+            GetUserQuery contactQuery = new GetUserQuery(KeyReader.stringToPublicKey(contactKey));
             database.read(ownerQuery);
             database.read(contactQuery);
 

@@ -2,7 +2,6 @@ package nl.tudelft.b_b_w.controller;
 
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
-import net.i2p.crypto.eddsa.Utils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +12,7 @@ import static org.junit.Assert.assertEquals;
  * Test class for CryptoController
  */
 public class CryptoControllerTest {
-    
+
     /**
      * Class attributes
      */

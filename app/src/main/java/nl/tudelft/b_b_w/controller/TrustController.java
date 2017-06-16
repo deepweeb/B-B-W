@@ -6,7 +6,7 @@ import nl.tudelft.b_b_w.blockchain.Block;
 /**
  * Class to edit the trust value of a block
  */
-public final class TrustController {
+public class TrustController {
 
     /**
      * Private constructor to ensure that the controller cannot be initialized

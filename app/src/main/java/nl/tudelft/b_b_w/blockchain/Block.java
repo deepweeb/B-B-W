@@ -24,9 +24,9 @@ public class Block {
     /**
      * Constructor for the BlockData class
      *
-     * @param owner given the User object of the owner of the chain this block belongs to
-     * @param contact    given the User object of the contact which the block concerns
-     * @param data  the data of the block such as hash, trust, etc.
+     * @param owner   given the User object of the owner of the chain this block belongs to
+     * @param contact given the User object of the contact which the block concerns
+     * @param data    the data of the block such as hash, trust, etc.
      */
     public Block(User owner, User contact, BlockData data) {
         this.owner = owner;
@@ -37,6 +37,7 @@ public class Block {
 
     /**
      * Constructor for the Genesis block
+     *
      * @param blockOwner given the User object of the one you want to make an genesis block of.
      */
     public Block(User blockOwner) {
@@ -273,7 +274,6 @@ public class Block {
         }
         return getContactPublicKey().equals(block.getContactPublicKey());
     }
-
 
 
     /**

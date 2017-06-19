@@ -1,4 +1,4 @@
-package nl.tudelft.bbw.database.write;
+package nl.tudelft.bbw.database.read;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -7,6 +7,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import nl.tudelft.bbw.BuildConfig;
@@ -17,17 +18,20 @@ import nl.tudelft.bbw.blockchain.Hash;
 import nl.tudelft.bbw.blockchain.User;
 import nl.tudelft.bbw.controller.ED25519;
 import nl.tudelft.bbw.database.Database;
-import nl.tudelft.bbw.database.read.GetChainQuery;
+import nl.tudelft.bbw.database.write.BlockAddQuery;
+import nl.tudelft.bbw.database.write.UserAddQuery;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
 
 /**
- * Tests for the RemoveChainQuery
+ * Tests for converting the database to a multichain
+ * A: genesis, add B, revoke B
+ * B: genesis, add C
+ * C: genesis
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml")
-public class RemoveChainQueryTest {
+public class DatabaseToMultichainQueryTest {
     /**
      * Example blocks to test with
      */
@@ -55,7 +59,7 @@ public class RemoveChainQueryTest {
     private Database database;
 
     /**
-     * Create example database, users, and blocks
+     * Create example users and blocks
      */
     @Before
     public void init() {
@@ -79,11 +83,11 @@ public class RemoveChainQueryTest {
 
         // add specific blocks
         aAddsB = new Block(alice, bob, new BlockData(BlockType.ADD_KEY, 2,
-                genesisA.getOwnHash(), genesisB.getOwnHash(), 0.0));
+                genesisA.getOwnHash(), genesisB.getOwnHash(), 0));
         aRevokesB = new Block(alice, bob, new BlockData(BlockType.REVOKE_KEY, 3,
                 aAddsB.getOwnHash(), Hash.NOT_AVAILABLE, 0));
         bAddsC = new Block(bob, carol, new BlockData(BlockType.ADD_KEY, 3,
-                genesisB.getOwnHash(), genesisC.getOwnHash(), 0.0));
+                genesisB.getOwnHash(), genesisC.getOwnHash(), 0));
 
         database.write(new BlockAddQuery(aAddsB));
         database.write(new BlockAddQuery(aRevokesB));
@@ -91,51 +95,28 @@ public class RemoveChainQueryTest {
     }
 
     /**
-     * Remove Alice's chain and verify that it is truly gone
+     * Convert the test database to a multichain
      */
     @Test
-    public void testRemoveAlice() {
-        RemoveChainQuery query = new RemoveChainQuery(alice);
-        database.write(query);
+    public void testDatabaseToMultichain() {
+        // construct expected blockchain
+        List<List<Block>> expectedMultichain = new ArrayList<List<Block>>();
+        List<Block> aliceBlocks = new ArrayList<Block>();
+        List<Block> bobBlocks = new ArrayList<Block>();
+        List<Block> carolBlocks = new ArrayList<Block>();
+        aliceBlocks.add(genesisA);
+        aliceBlocks.add(aAddsB);
+        aliceBlocks.add(aRevokesB);
+        bobBlocks.add(genesisB);
+        bobBlocks.add(bAddsC);
+        carolBlocks.add(genesisC);
+        expectedMultichain.add(aliceBlocks);
+        expectedMultichain.add(bobBlocks);
+        expectedMultichain.add(carolBlocks);
 
-        // verify
-        GetChainQuery verifyQuery = new GetChainQuery(database, alice);
-        database.read(verifyQuery);
-        assertNull(verifyQuery.getChain());
-    }
-
-    /**
-     * Remove Carol's chain and verify that it is truly gone
-     */
-    @Test
-    public void testRemoveCarol() {
-        RemoveChainQuery query = new RemoveChainQuery(carol);
-        database.write(query);
-
-        // verify
-        GetChainQuery verifyQuery = new GetChainQuery(database, carol);
-        database.read(verifyQuery);
-        assertNull(verifyQuery.getChain());
-    }
-
-    /**
-     * Remove Bob's chain and verify that Alice's chain is still intact
-     */
-    @Test
-    public void testOtherChainIntact() {
-        // original Alice query
-        GetChainQuery originalQuery = new GetChainQuery(database, alice);
-        database.read(originalQuery);
-        List<Block> original = originalQuery.getChain();
-
-        // remove Bob's chain
-        RemoveChainQuery query = new RemoveChainQuery(bob);
-        database.write(query);
-
-        // verify
-        GetChainQuery verifyQuery = new GetChainQuery(database, alice);
-        database.read(verifyQuery);
-        List<Block> verify = verifyQuery.getChain();
-        assertEquals(original, verify);
+        // perform query
+        DatabaseToMultichainQuery query = new DatabaseToMultichainQuery(database);
+        database.read(query);
+        assertEquals(expectedMultichain, query.getMultichain());
     }
 }

@@ -11,6 +11,7 @@ import nl.tudelft.bbw.blockchain.User;
 import nl.tudelft.bbw.controller.BlockController;
 import nl.tudelft.bbw.controller.BlockVerificationController;
 import nl.tudelft.bbw.controller.TrustController;
+import nl.tudelft.bbw.database.read.DatabaseToMultichainQuery;
 import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
 import nl.tudelft.bbw.exception.HashException;
 
@@ -146,6 +147,19 @@ public final class API {
     public static void verifyIBAN(Block block) {
         Block updatedBlock = TrustController.verifiedIBAN(block);
         blockController.updateTrustOfBlock(updatedBlock);
+    }
+
+    /**
+     * Create an acquintance object that you can send over the network
+     * @return a new acquintance object
+     */
+    public static Acquaintance makeAcquintanceObject() {
+        DatabaseToMultichainQuery query = new DatabaseToMultichainQuery(
+                blockController.getDatabase());
+        blockController.getDatabase().read(query);
+        User owner = blockController.getOwnUser();
+        return new Acquaintance(owner.getName(), owner.getIban(), owner.getPublicKey(),
+                query.getMultichain());
     }
 
     //For debugging purpose

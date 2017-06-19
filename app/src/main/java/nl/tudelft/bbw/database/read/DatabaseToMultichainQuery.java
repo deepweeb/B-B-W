@@ -47,7 +47,7 @@ public class DatabaseToMultichainQuery extends ReadQuery {
         multichain = new ArrayList<List<Block>>();
         List<Block> currentBlocks = new ArrayList<Block>();
         User previousUser = null;
-        for (cursor.moveToFirst(); cursor.isAfterLast(); cursor.moveToNext()) {
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             // extract block from the cursor
             Block block = toBlock(database, cursor);
 
@@ -63,6 +63,8 @@ public class DatabaseToMultichainQuery extends ReadQuery {
                 currentBlocks = new ArrayList<Block>();
                 previousUser = block.getBlockOwner();
             }
+
+            currentBlocks.add(block);
         }
 
         // add the final block list since no new user is to be found in the end while the blocks
@@ -92,7 +94,7 @@ public class DatabaseToMultichainQuery extends ReadQuery {
 
     /**
      * We need every block, so no filter
-     * @return the empty string
+     * @return null
      */
     @Override
     protected String getWhere() {

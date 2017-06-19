@@ -8,7 +8,9 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import nl.tudelft.bbw.BuildConfig;
 import nl.tudelft.bbw.blockchain.Block;
@@ -117,6 +119,11 @@ public class DatabaseToMultichainQueryTest {
         // perform query
         DatabaseToMultichainQuery query = new DatabaseToMultichainQuery(database);
         database.read(query);
-        assertEquals(expectedMultichain, query.getMultichain());
+        List<List<Block>> actualMultichain = query.getMultichain();
+
+        // make them unique becuase the order is not necessarily the same
+        Set<List<Block>> expectedUnordered = new HashSet<List<Block>>(expectedMultichain);
+        Set<List<Block>> actualUnordered = new HashSet<List<Block>>(actualMultichain);
+        assertEquals(expectedUnordered, actualUnordered);
     }
 }

@@ -280,7 +280,7 @@ public class Block {
     @Override
     public String toString() {
         return "Block#" + getSequenceNumber() + "{owner=" + owner.getName() + ",contact="
-                + contact.getName() + "}";
+                + contact.getName() + (isRevoked()?",REVOKE":"") + "}";
     }
 
     /**

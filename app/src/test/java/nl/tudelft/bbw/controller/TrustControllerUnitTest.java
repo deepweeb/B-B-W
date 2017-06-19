@@ -91,7 +91,7 @@ public class TrustControllerUnitTest {
      */
     @Test
     public void testRevokeBlock() {
-        block = TrustController.revokeBlock(block);
+        block = TrustController.revokeBlockTrust(block);
         assertEquals(0, block.getTrustValue(), DELTA);
     }
 

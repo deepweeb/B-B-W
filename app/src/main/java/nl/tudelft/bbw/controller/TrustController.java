@@ -63,13 +63,13 @@ public final class TrustController {
     }
 
     /**
-     * revokeBlock
+     * revokeBlockTrust
      * Sets the block value to the revoked trust value
      *
      * @param block given block to revoke
      * @return block with the new trust value
      */
-    public static Block revokeBlock(Block block) {
+    public static Block revokeBlockTrust(Block block) {
         block.setTrustValue(TrustValues.REVOKED.getValue());
         return block;
     }

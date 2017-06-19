@@ -47,13 +47,13 @@ public class APITest {
     @Before
     public final void setUp() throws HashException, BlockAlreadyExistsException {
         EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
-        owner = new Acquaintance("Jeff", "iban", ED25519.getPublicKey(privateKey), new ArrayList<Chain>());
+        owner = new Acquaintance("Jeff", "iban", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
         owner.setPrivateKey(privateKey);
         API.initializeAPI(owner, RuntimeEnvironment.application);
         list = API.getBlocks(owner);
 
         privateKey = ED25519.generatePrivateKey();
-        newUser = new Acquaintance("Nick", "iban2", ED25519.getPublicKey(privateKey), new ArrayList<Chain>());
+        newUser = new Acquaintance("Nick", "iban2", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
         newUser.setPrivateKey(privateKey);
     }
 
@@ -67,6 +67,7 @@ public class APITest {
     public final void addContactToChainTest() throws HashException, BlockAlreadyExistsException,
             NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         API.initializeAPI(newUser, RuntimeEnvironment.application);
+
         final byte[] message = owner.getPublicKey().getEncoded();
         final byte[] signature = ED25519.generateSignature(message, newUser.getPrivateKey());
         list = API.getBlocks(newUser);
@@ -85,6 +86,7 @@ public class APITest {
     public final void revokeContactFromChainTest()
             throws HashException, BlockAlreadyExistsException {
         API.revokeContactFromChain(owner);
+        List<Block> listz = API.getBlocks(owner);
         assertNotEquals(API.getBlocks(owner), list);
     }
 
@@ -124,12 +126,4 @@ public class APITest {
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
 
-/*    *//**
-     * Test if trustValue of a block changes after revoking
-     *//*
-    @Test
-    public final void revokedBlockTest() {
-        API.revokedBlock(list.get(0));
-        assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
-    }*/
 }

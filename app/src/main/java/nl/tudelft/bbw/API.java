@@ -2,7 +2,6 @@ package nl.tudelft.bbw;
 
 import android.content.Context;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import nl.tudelft.bbw.blockchain.Acquaintance;
@@ -48,7 +47,6 @@ public final class API {
     /**
      * Method to add a contact to your chain
      *
-     * @param contact the contact
      * @param signature byte array containing the signature
      * @param message byte array containing the message
      * @throws HashException               When creating a block results in an error
@@ -95,7 +93,7 @@ public final class API {
         Block revokedBlock = blockController.revokeBlockFromChain(contact);
 
         //update the trustValue of a block after revoking
-        Block updatedBlock = TrustController.revokeBlock(revokedBlock);
+        Block updatedBlock = TrustController.revokeBlockTrust(revokedBlock);
         blockController.updateTrustOfBlock(updatedBlock);
     }
 

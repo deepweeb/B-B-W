@@ -2,8 +2,10 @@ package nl.tudelft.bbw;
 
 import android.content.Context;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import nl.tudelft.bbw.blockchain.Acquaintance;
 import nl.tudelft.bbw.blockchain.Block;
 import nl.tudelft.bbw.blockchain.User;
 import nl.tudelft.bbw.controller.BlockController;
@@ -52,9 +54,32 @@ public final class API {
      * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
-    public static void addContactToChain(User contact, byte[] signature, byte[] message)
+    public static void addAcquaintanceToChain(Acquaintance acquaintance, byte[] signature, byte[] message)
             throws HashException, BlockAlreadyExistsException {
-        blockController.addBlockToChain(contact, signature, message);
+
+        //Adding the user into your own chain
+        blockController.addBlockToChain(acquaintance, signature, message);
+
+        //Adding his database into your database (so you can look up his contacts)
+        List<List<Block>> multichain = acquaintance.getMultichain();
+        if(multichain.isEmpty())
+        {
+            return;
+        }
+        for(List<Block> chain: multichain)
+        {
+            for(Block block: chain)
+            {
+                if(block.isRevoked())
+                {
+                    blockController.createRevokeBlock(block.getBlockOwner(), block.getContact());
+                }
+                else
+                {
+                    blockController.createKeyBlock(block.getBlockOwner(), block.getContact());
+                }
+            }
+        }
     }
 
     /**
@@ -66,34 +91,14 @@ public final class API {
      */
     public static void revokeContactFromChain(User contact)
             throws HashException, BlockAlreadyExistsException {
-        blockController.revokeBlockFromChain(contact);
+        //Revoke a block in own chain (adding a revoke block to the chain)
+        Block revokedBlock = blockController.revokeBlockFromChain(contact);
+
+        //update the trustValue of a block after revoking
+        Block updatedBlock = TrustController.revokeBlock(revokedBlock);
+        blockController.updateTrustOfBlock(updatedBlock);
     }
 
-    /**
-     * Method to add a contact to your database
-     *
-     * @param owner   the User
-     * @param contact the contact
-     * @throws HashException               When creating a block results in an error
-     * @throws BlockAlreadyExistsException when adding a block results in an error
-     */
-    public static void addContactToDatabase(User owner, User contact)
-            throws HashException, BlockAlreadyExistsException {
-        blockController.createKeyBlock(owner, contact);
-    }
-
-    /**
-     * Method to add a revoked contact to your database
-     *
-     * @param owner   the User
-     * @param contact the contact
-     * @throws HashException               When creating a block results in an error
-     * @throws BlockAlreadyExistsException when adding a block results in an error
-     */
-    public static void addRevokeContactToDatabase(User owner, User contact)
-            throws HashException, BlockAlreadyExistsException {
-        blockController.createRevokeBlock(owner, contact);
-    }
 
     /**
      * Method to return the chain of a specific user
@@ -142,17 +147,6 @@ public final class API {
         Block updatedBlock = TrustController.verifiedIBAN(block);
         blockController.updateTrustOfBlock(updatedBlock);
     }
-
-    /**
-     * Method to update the trustValue of a block after revoking
-     *
-     * @param block   the specific block
-     */
-    public static void revokedBlock(Block block) {
-        Block updatedBlock = TrustController.revokeBlock(block);
-        blockController.updateTrustOfBlock(updatedBlock);
-    }
-
 
     //For debugging purpose
     public static void debug()

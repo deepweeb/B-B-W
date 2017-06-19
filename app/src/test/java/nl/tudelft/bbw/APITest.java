@@ -13,11 +13,12 @@ import org.robolectric.annotation.Config;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
+import java.util.ArrayList;
 import java.util.List;
 
+import nl.tudelft.bbw.blockchain.Acquaintance;
 import nl.tudelft.bbw.blockchain.Block;
 import nl.tudelft.bbw.blockchain.TrustValues;
-import nl.tudelft.bbw.blockchain.User;
 import nl.tudelft.bbw.controller.ED25519;
 import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
 import nl.tudelft.bbw.exception.HashException;
@@ -33,8 +34,8 @@ public class APITest {
     /**
      * Attributes which are used more than once
      */
-    private User owner;
-    private User newUser;
+    private Acquaintance owner;
+    private Acquaintance newUser;
     private List<Block> list;
 
     /**
@@ -46,13 +47,13 @@ public class APITest {
     @Before
     public final void setUp() throws HashException, BlockAlreadyExistsException {
         EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
-        owner = new User("Jeff", "iban", ED25519.getPublicKey(privateKey));
+        owner = new Acquaintance("Jeff", "iban", ED25519.getPublicKey(privateKey), new ArrayList<Chain>());
         owner.setPrivateKey(privateKey);
         API.initializeAPI(owner, RuntimeEnvironment.application);
         list = API.getBlocks(owner);
 
         privateKey = ED25519.generatePrivateKey();
-        newUser = new User("Nick", "iban2", ED25519.getPublicKey(privateKey));
+        newUser = new Acquaintance("Nick", "iban2", ED25519.getPublicKey(privateKey), new ArrayList<Chain>());
         newUser.setPrivateKey(privateKey);
     }
 
@@ -69,7 +70,7 @@ public class APITest {
         final byte[] message = owner.getPublicKey().getEncoded();
         final byte[] signature = ED25519.generateSignature(message, newUser.getPrivateKey());
         list = API.getBlocks(newUser);
-        API.addContactToChain(owner, signature, message);
+        API.addAcquaintanceToChain(owner, signature, message);
         assertNotEquals(API.getBlocks(newUser), list);
         API.debug();
     }
@@ -85,33 +86,6 @@ public class APITest {
             throws HashException, BlockAlreadyExistsException {
         API.revokeContactFromChain(owner);
         assertNotEquals(API.getBlocks(owner), list);
-    }
-
-    /**
-     * Test if adding to database yields a different chain
-     *
-     * @throws HashException               When creating a block results in an error
-     * @throws BlockAlreadyExistsException when adding a block results in an error
-     */
-    @Test
-    public final void addContactToDatabase() throws HashException, BlockAlreadyExistsException {
-        API.initializeAPI(newUser, RuntimeEnvironment.application);
-        list = API.getBlocks(newUser);
-        API.addContactToDatabase(newUser, owner);
-        assertNotEquals(API.getBlocks(newUser), list);
-    }
-
-    /**
-     * Test if adding revoke block to database yields a different chain
-     *
-     * @throws HashException               When creating a block results in an error
-     * @throws BlockAlreadyExistsException when adding a block results in an error
-     */
-    @Test
-    public final void addRevokeContactToDatabase()
-            throws HashException, BlockAlreadyExistsException {
-        API.addRevokeContactToDatabase(owner, owner);
-        assertNotEquals(list, API.getBlocks(owner));
     }
 
     /**
@@ -150,12 +124,12 @@ public class APITest {
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
 
-    /**
+/*    *//**
      * Test if trustValue of a block changes after revoking
-     */
+     *//*
     @Test
     public final void revokedBlockTest() {
         API.revokedBlock(list.get(0));
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
-    }
+    }*/
 }

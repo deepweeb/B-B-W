@@ -49,6 +49,15 @@ public class BlockController {
     }
 
     /**
+     *Method to return the own chain
+     * @return the list of block forming the own chain of the user
+     */
+    public final List<Block> returnOwnChain()
+    {
+        return this.getBlocks(chainOwner);
+    }
+
+    /**
      * Method for adding a user to our blockchain.
      *
      * @param user the user we want to add

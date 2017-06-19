@@ -152,4 +152,11 @@ public final class API {
         Block updatedBlock = TrustController.revokeBlock(block);
         blockController.updateTrustOfBlock(updatedBlock);
     }
+
+
+    //For debugging purpose
+    public static void debug()
+    {
+        blockController.getDatabase().debugDisplayDatabase();
+    }
 }

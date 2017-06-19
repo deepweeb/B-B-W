@@ -3,10 +3,6 @@ package nl.tudelft.bbw;
 
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 
-import static junit.framework.Assert.assertFalse;
-
-import static org.junit.Assert.assertNotEquals;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +21,9 @@ import nl.tudelft.bbw.blockchain.User;
 import nl.tudelft.bbw.controller.ED25519;
 import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
 import nl.tudelft.bbw.exception.HashException;
+
+import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 
 
 @RunWith(RobolectricTestRunner.class)
@@ -72,6 +71,7 @@ public class APITest {
         list = API.getBlocks(newUser);
         API.addContactToChain(owner, signature, message);
         assertNotEquals(API.getBlocks(newUser), list);
+        API.debug();
     }
 
     /**

@@ -261,4 +261,10 @@ public class BlockController {
         }
     }
 
+    //For debugging purpose
+    public Database getDatabase()
+    {
+        return database;
+    }
+
 }

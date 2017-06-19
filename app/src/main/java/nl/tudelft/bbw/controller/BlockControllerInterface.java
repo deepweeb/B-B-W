@@ -2,8 +2,9 @@ package nl.tudelft.bbw.controller;
 
 import java.util.List;
 
-import nl.tudelft.bbw.exception.HashException;
 import nl.tudelft.bbw.blockchain.Block;
+import nl.tudelft.bbw.blockchain.User;
+import nl.tudelft.bbw.exception.HashException;
 
 /**
  * Interface for BlockController class
@@ -114,4 +115,10 @@ interface BlockControllerInterface {
      * @return boolean, representing whether the blocks are equal
      */
     boolean verifyTrustworthiness(Block block) throws HashException;
+
+    /**
+     * Remove a chain with an owner from the database
+     * @param owner the owner of the chain to remove
+     */
+    void removeChainFromDatabase(User owner);
 }

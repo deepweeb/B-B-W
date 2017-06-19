@@ -20,6 +20,7 @@ import nl.tudelft.bbw.database.read.GetChainQuery;
 import nl.tudelft.bbw.database.read.LatestBlockQuery;
 import nl.tudelft.bbw.database.read.UserExistQuery;
 import nl.tudelft.bbw.database.write.BlockAddQuery;
+import nl.tudelft.bbw.database.write.RemoveChainQuery;
 import nl.tudelft.bbw.database.write.UpdateTrustQuery;
 import nl.tudelft.bbw.database.write.UserAddQuery;
 import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
@@ -213,6 +214,14 @@ public class BlockController {
     public Block createRevokeBlock(User owner, User contact)
             throws HashException, BlockAlreadyExistsException {
         return createBlock(owner, contact, BlockType.REVOKE_KEY);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void removeChainFromDatabase(User owner) {
+        RemoveChainQuery query = new RemoveChainQuery(owner);
+        database.write(query);
     }
 
     /**

@@ -67,7 +67,9 @@ public class DatabaseToMultichainQuery extends ReadQuery {
 
         // add the final block list since no new user is to be found in the end while the blocks
         // still must be added
-        multichain.add(currentBlocks);
+        if (previousUser != null) {
+            multichain.add(currentBlocks);
+        }
     }
 
     /**
@@ -94,7 +96,7 @@ public class DatabaseToMultichainQuery extends ReadQuery {
      */
     @Override
     protected String getWhere() {
-        return "";
+        return null;
     }
 
     /**

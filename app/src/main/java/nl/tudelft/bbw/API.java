@@ -41,8 +41,8 @@ public final class API {
      * can only be done once per user
      * TODO: Remove this function
      *
-     * @param Name of the API user
-     * @param Iban of the API user
+     * @param Name    of the API user
+     * @param Iban    of the API user
      * @param context The state of the program
      * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
@@ -59,26 +59,42 @@ public final class API {
         return owner;
     }
 
+    /**
+     * Getter method to get the API user's contact list
+     *
+     * @return List of blocks forming this user contact list.
+     */
     public static List<Block> getMyContacts() {
         return blockController.getBlocks(blockController.getOwnUser());
     }
 
-    public static String getMyName(){
+    /**
+     * Getter method to get the API user's name
+     *
+     * @return name of the API user
+     */
+    public static String getMyName() {
         return blockController.getOwnUser().getName();
     }
 
-    public static String getMyIban(){
+    /**
+     * Getter method to get the API user's Iban
+     *
+     * @return Iban number of the API user
+     */
+    public static String getMyIban() {
         return blockController.getOwnUser().getIban();
     }
 
-    public static EdDSAPublicKey getMyPublicKey(){
+    /**
+     * Getter method to get the API user's Public Key
+     *
+     * @return Public Key  of the API user
+     */
+    public static EdDSAPublicKey getMyPublicKey() {
         return blockController.getOwnUser().getPublicKey();
     }
 
-    private static EdDSAPrivateKey getMyPrivateKey()
-    {
-        return blockController.getOwnUser().getPrivateKey();
-    }
 
     /**
      * Method to add a contact to your chain
@@ -90,7 +106,7 @@ public final class API {
             throws HashException, BlockAlreadyExistsException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
 
         final byte[] message = acquaintance.getPublicKey().getEncoded();
-        final byte[] signature = ED25519.generateSignature(message, getMyPrivateKey());
+        final byte[] signature = ED25519.generateSignature(message, blockController.getOwnUser().getPrivateKey());
 
         //Adding his database into your database (so you can look up his contacts)
         blockController.addMultichain(acquaintance.getMultichain());

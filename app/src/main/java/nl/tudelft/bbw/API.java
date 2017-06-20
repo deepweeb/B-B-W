@@ -2,6 +2,12 @@ package nl.tudelft.bbw;
 
 import android.content.Context;
 
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.util.List;
 
 import nl.tudelft.bbw.blockchain.Acquaintance;
@@ -9,6 +15,7 @@ import nl.tudelft.bbw.blockchain.Block;
 import nl.tudelft.bbw.blockchain.User;
 import nl.tudelft.bbw.controller.BlockController;
 import nl.tudelft.bbw.controller.BlockVerificationController;
+import nl.tudelft.bbw.controller.ED25519;
 import nl.tudelft.bbw.controller.TrustController;
 import nl.tudelft.bbw.database.read.DatabaseToMultichainQuery;
 import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
@@ -34,27 +41,56 @@ public final class API {
      * can only be done once per user
      * TODO: Remove this function
      *
-     * @param owner   the User
+     * @param Name of the API user
+     * @param Iban of the API user
      * @param context The state of the program
      * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
-    public static void initializeAPI(User owner, Context context) throws HashException, BlockAlreadyExistsException {
+    public static User initializeAPI(String Name, String Iban, Context context) throws HashException, BlockAlreadyExistsException {
+
+        User owner;
+        EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
+        owner = new User(Name, Iban, ED25519.getPublicKey(privateKey));
+        owner.setPrivateKey(privateKey);
         blockController = new BlockController(owner, context);
         blockVerificationController = new BlockVerificationController(context);
         blockController.createGenesis(owner);
+        return owner;
+    }
+
+    public static List<Block> getMyContacts() {
+        return blockController.getBlocks(blockController.getOwnUser());
+    }
+
+    public static String getMyName(){
+        return blockController.getOwnUser().getName();
+    }
+
+    public static String getMyIban(){
+        return blockController.getOwnUser().getIban();
+    }
+
+    public static EdDSAPublicKey getMyPublicKey(){
+        return blockController.getOwnUser().getPublicKey();
+    }
+
+    private static EdDSAPrivateKey getMyPrivateKey()
+    {
+        return blockController.getOwnUser().getPrivateKey();
     }
 
     /**
      * Method to add a contact to your chain
      *
-     * @param signature byte array containing the signature
-     * @param message   byte array containing the message
      * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
-    public static void addAcquaintanceToChain(Acquaintance acquaintance, byte[] signature, byte[] message)
-            throws HashException, BlockAlreadyExistsException {
+    public static void addAcquaintanceToChain(Acquaintance acquaintance)
+            throws HashException, BlockAlreadyExistsException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+
+        final byte[] message = acquaintance.getPublicKey().getEncoded();
+        final byte[] signature = ED25519.generateSignature(message, getMyPrivateKey());
 
         //Adding his database into your database (so you can look up his contacts)
         blockController.addMultichain(acquaintance.getMultichain());

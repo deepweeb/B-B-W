@@ -36,7 +36,6 @@ public class APITest {
     /**
      * Attributes which are used more than once
      */
-    private Acquaintance owner;
     private Acquaintance newUser;
     private List<Block> list;
 
@@ -48,22 +47,20 @@ public class APITest {
      */
     @Before
     public final void setUp() throws HashException, BlockAlreadyExistsException {
-        EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
-        owner = new Acquaintance("Jeff", "iban", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
-        owner.setPrivateKey(privateKey);
-        API.initializeAPI(owner, RuntimeEnvironment.application);
-        list = API.getContactsOf(owner);
 
-        privateKey = ED25519.generatePrivateKey();
+        API.initializeAPI("Jeff", "iban", RuntimeEnvironment.application);
+
+        list = API.getMyContacts();
+
+
+        EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
         newUser = new Acquaintance("Nick", "iban2", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
 
-        //set the multichain to contain the genesis of the new User
         ArrayList<List<Block>> newUserMultichain = new ArrayList<List<Block>>();
         ArrayList<Block> test = new ArrayList<Block>();
         test.add(new Block(newUser));
         newUserMultichain.add(test);
         newUser.setMultichain(newUserMultichain);
-
         newUser.setPrivateKey(privateKey);
     }
 
@@ -77,11 +74,10 @@ public class APITest {
     public final void addContactToChainTest() throws HashException, BlockAlreadyExistsException,
             NoSuchAlgorithmException, InvalidKeyException, SignatureException {
 
-        final byte[] message = newUser.getPublicKey().getEncoded();
-        final byte[] signature = ED25519.generateSignature(message, owner.getPrivateKey());
-        list = API.getContactsOf(owner);
-        API.addAcquaintanceToChain(newUser, signature, message);
-        assertNotEquals(API.getContactsOf(owner), list);
+        list = API.getMyContacts();
+        API.addAcquaintanceToChain(newUser);
+        assertNotEquals(API.getMyContacts(), list);
+
     }
 
     /**
@@ -92,10 +88,13 @@ public class APITest {
      */
     @Test
     public final void revokeContactFromChainTest()
-            throws HashException, BlockAlreadyExistsException {
-        List<Block> list = API.getContactsOf(owner);
-        API.revokeContactFromChain(owner);
-        assertNotEquals(API.getContactsOf(owner), list);
+            throws HashException, BlockAlreadyExistsException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+
+
+        API.addAcquaintanceToChain(newUser);
+        List<Block> list = API.getMyContacts();
+        API.revokeContactFromChain(newUser);
+        assertNotEquals(API.getMyContacts(), list);
     }
 
     /**
@@ -130,7 +129,7 @@ public class APITest {
     @Test
     public final void verifyIBANTest() {
         API.verifyIBAN(list.get(0));
-        API.getContactsOf(owner).get(0).getTrustValue();
+        API.getMyContacts().get(0).getTrustValue();
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
 
@@ -138,17 +137,13 @@ public class APITest {
     @Test
     public final void makeAcquaintanceTest() throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, BlockAlreadyExistsException, HashException {
 
-        //API.initializeAPI(newUser, RuntimeEnvironment.application);
 
-        final byte[] message = newUser.getPublicKey().getEncoded();
-        final byte[] signature = ED25519.generateSignature(message, owner.getPrivateKey());
-
-        API.addAcquaintanceToChain(newUser, signature, message);
-        list = API.getContactsOf(owner);
+        API.addAcquaintanceToChain(newUser);
+        list = API.getMyContacts();
         Acquaintance testAcquaintance = API.makeAcquintanceObject();
-        assertEquals(owner.getName(), testAcquaintance.getName());
-        assertEquals(owner.getIban(), testAcquaintance.getIban());
-        assertEquals(owner.getPublicKey(), testAcquaintance.getPublicKey());
+        assertEquals(API.getMyName(), testAcquaintance.getName());
+        assertEquals(API.getMyIban(), testAcquaintance.getIban());
+        assertEquals(API.getMyPublicKey(), testAcquaintance.getPublicKey());
         assertTrue(testAcquaintance.getMultichain().contains(list));
     }
 

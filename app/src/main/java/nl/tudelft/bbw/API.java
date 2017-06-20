@@ -6,6 +6,7 @@ import java.util.List;
 
 import nl.tudelft.bbw.blockchain.Acquaintance;
 import nl.tudelft.bbw.blockchain.Block;
+import nl.tudelft.bbw.blockchain.BlockType;
 import nl.tudelft.bbw.blockchain.User;
 import nl.tudelft.bbw.controller.BlockController;
 import nl.tudelft.bbw.controller.BlockVerificationController;
@@ -56,9 +57,6 @@ public final class API {
     public static void addAcquaintanceToChain(Acquaintance acquaintance, byte[] signature, byte[] message)
             throws HashException, BlockAlreadyExistsException {
 
-        //Adding the user into your own chain
-        blockController.addBlockToChain(acquaintance, signature, message);
-
         //Adding his database into your database (so you can look up his contacts)
         List<List<Block>> multichain = acquaintance.getMultichain();
         if(multichain.isEmpty())
@@ -69,7 +67,11 @@ public final class API {
         {
             for(Block block: chain)
             {
-                if(block.isRevoked())
+                if(block.getBlockType() == BlockType.GENESIS)
+                {
+                    blockController.createGenesis(block.getBlockOwner());
+                }
+                else if(block.isRevoked())
                 {
                     blockController.createRevokeBlock(block.getBlockOwner(), block.getContact());
                 }
@@ -79,6 +81,10 @@ public final class API {
                 }
             }
         }
+
+
+        //Adding the user into your own chain
+        blockController.addBlockToChain(acquaintance, signature, message);
     }
 
     /**

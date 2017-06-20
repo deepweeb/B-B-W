@@ -56,6 +56,14 @@ public class APITest {
 
         privateKey = ED25519.generatePrivateKey();
         newUser = new Acquaintance("Nick", "iban2", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
+
+        //set the multichain to contain the genesis of the new User
+        ArrayList<List<Block>> newUserMultichain = new ArrayList<List<Block>>();
+        ArrayList<Block> test = new  ArrayList<Block>();
+        test.add(new Block(newUser));
+        newUserMultichain.add(test);
+        newUser.setMultichain(newUserMultichain);
+
         newUser.setPrivateKey(privateKey);
     }
 
@@ -68,16 +76,12 @@ public class APITest {
     @Test
     public final void addContactToChainTest() throws HashException, BlockAlreadyExistsException,
             NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-        API.debug();
-        API.initializeAPI(newUser, RuntimeEnvironment.application);
 
-        API.debug();
-
-        final byte[] message = owner.getPublicKey().getEncoded();
-        final byte[] signature = ED25519.generateSignature(message, newUser.getPrivateKey());
-        list = API.getBlocks(newUser);
-        API.addAcquaintanceToChain(owner, signature, message);
-        assertNotEquals(API.getBlocks(newUser), list);
+        final byte[] message = newUser.getPublicKey().getEncoded();
+        final byte[] signature = ED25519.generateSignature(message, owner.getPrivateKey());
+        list = API.getBlocks(owner);
+        API.addAcquaintanceToChain(newUser, signature, message);
+        assertNotEquals(API.getBlocks(owner), list);
         API.debug();
     }
 
@@ -91,7 +95,7 @@ public class APITest {
     public final void revokeContactFromChainTest()
             throws HashException, BlockAlreadyExistsException {
         API.revokeContactFromChain(owner);
-        List<Block> listz = API.getBlocks(owner);
+        List<Block> list = API.getBlocks(owner);
         assertNotEquals(API.getBlocks(owner), list);
     }
 
@@ -136,17 +140,17 @@ public class APITest {
     @Test
     public final void makeAcquaintanceTest() throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, BlockAlreadyExistsException, HashException {
 
-        API.initializeAPI(newUser, RuntimeEnvironment.application);
+        //API.initializeAPI(newUser, RuntimeEnvironment.application);
 
-        final byte[] message = owner.getPublicKey().getEncoded();
-        final byte[] signature = ED25519.generateSignature(message, newUser.getPrivateKey());
-        API.addAcquaintanceToChain(owner, signature, message);
+        final byte[] message = newUser.getPublicKey().getEncoded();
+        final byte[] signature = ED25519.generateSignature(message, owner.getPrivateKey());
 
-        list = API.getBlocks(newUser);
+        API.addAcquaintanceToChain(newUser, signature, message);
+        list = API.getBlocks(owner);
         Acquaintance testAcquaintance = API.makeAcquintanceObject();
-        assertEquals(newUser.getName(), testAcquaintance.getName());
-        assertEquals(newUser.getIban(), testAcquaintance.getIban());
-        assertEquals(newUser.getPublicKey(), testAcquaintance.getPublicKey());
+        assertEquals(owner.getName(), testAcquaintance.getName());
+        assertEquals(owner.getIban(), testAcquaintance.getIban());
+        assertEquals(owner.getPublicKey(), testAcquaintance.getPublicKey());
         assertTrue(testAcquaintance.getMultichain().contains(list));
     }
 

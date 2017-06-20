@@ -74,8 +74,7 @@ public class APITest {
     public final void addContactToChainTest() throws HashException, BlockAlreadyExistsException,
             NoSuchAlgorithmException, InvalidKeyException, SignatureException {
 
-        list = API.getMyContacts();
-        API.addAcquaintanceToChain(newUser);
+        API.addAcquaintance(newUser);
         assertNotEquals(API.getMyContacts(), list);
 
     }
@@ -91,9 +90,9 @@ public class APITest {
             throws HashException, BlockAlreadyExistsException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
 
 
-        API.addAcquaintanceToChain(newUser);
+        API.addAcquaintance(newUser);
         List<Block> list = API.getMyContacts();
-        API.revokeContactFromChain(newUser);
+        API.revokeContact(newUser);
         assertNotEquals(API.getMyContacts(), list);
     }
 
@@ -138,9 +137,9 @@ public class APITest {
     public final void makeAcquaintanceTest() throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, BlockAlreadyExistsException, HashException {
 
 
-        API.addAcquaintanceToChain(newUser);
+        API.addAcquaintance(newUser);
         list = API.getMyContacts();
-        Acquaintance testAcquaintance = API.makeAcquintanceObject();
+        Acquaintance testAcquaintance = API.makeAcquaintanceObject();
         assertEquals(API.getMyName(), testAcquaintance.getName());
         assertEquals(API.getMyIban(), testAcquaintance.getIban());
         assertEquals(API.getMyPublicKey(), testAcquaintance.getPublicKey());

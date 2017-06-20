@@ -102,7 +102,7 @@ public final class API {
      * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
-    public static void addAcquaintanceToChain(Acquaintance acquaintance)
+    public static void addAcquaintance(Acquaintance acquaintance)
             throws HashException, BlockAlreadyExistsException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
 
         final byte[] message = acquaintance.getPublicKey().getEncoded();
@@ -123,7 +123,7 @@ public final class API {
      * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
-    public static void revokeContactFromChain(User contact)
+    public static void revokeContact(User contact)
             throws HashException, BlockAlreadyExistsException {
         //Revoke a block in own chain (adding a revoke block to the chain)
         Block revokedBlock = blockController.revokeBlockFromChain(contact);
@@ -187,7 +187,7 @@ public final class API {
      *
      * @return a new acquintance object
      */
-    public static Acquaintance makeAcquintanceObject() {
+    public static Acquaintance makeAcquaintanceObject() {
         DatabaseToMultichainQuery query = new DatabaseToMultichainQuery(
                 blockController.getDatabase());
         blockController.getDatabase().read(query);

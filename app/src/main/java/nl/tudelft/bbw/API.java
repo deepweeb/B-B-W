@@ -58,21 +58,7 @@ public final class API {
             throws HashException, BlockAlreadyExistsException {
 
         //Adding his database into your database (so you can look up his contacts)
-        List<List<Block>> multichain = acquaintance.getMultichain();
-        if (multichain.isEmpty()) {
-            return;
-        }
-        for (List<Block> chain : multichain) {
-            for (Block block : chain) {
-                if (block.getBlockType() == BlockType.GENESIS) {
-                    blockController.createGenesis(block.getBlockOwner());
-                } else if (block.isRevoked()) {
-                    blockController.createRevokeBlock(block.getBlockOwner(), block.getContact());
-                } else {
-                    blockController.createKeyBlock(block.getBlockOwner(), block.getContact());
-                }
-            }
-        }
+        blockController.addMultichain(acquaintance.getMultichain());
 
 
         //Adding the user into your own chain

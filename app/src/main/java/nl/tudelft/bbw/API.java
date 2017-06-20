@@ -50,7 +50,7 @@ public final class API {
      * Method to add a contact to your chain
      *
      * @param signature byte array containing the signature
-     * @param message byte array containing the message
+     * @param message   byte array containing the message
      * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
@@ -59,24 +59,16 @@ public final class API {
 
         //Adding his database into your database (so you can look up his contacts)
         List<List<Block>> multichain = acquaintance.getMultichain();
-        if(multichain.isEmpty())
-        {
+        if (multichain.isEmpty()) {
             return;
         }
-        for(List<Block> chain: multichain)
-        {
-            for(Block block: chain)
-            {
-                if(block.getBlockType() == BlockType.GENESIS)
-                {
+        for (List<Block> chain : multichain) {
+            for (Block block : chain) {
+                if (block.getBlockType() == BlockType.GENESIS) {
                     blockController.createGenesis(block.getBlockOwner());
-                }
-                else if(block.isRevoked())
-                {
+                } else if (block.isRevoked()) {
                     blockController.createRevokeBlock(block.getBlockOwner(), block.getContact());
-                }
-                else
-                {
+                } else {
                     blockController.createKeyBlock(block.getBlockOwner(), block.getContact());
                 }
             }
@@ -126,7 +118,7 @@ public final class API {
     /**
      * Method to update the trustValue of a block after successful transaction
      *
-     * @param block   the specific block
+     * @param block the specific block
      */
     public static void successfulTransaction(Block block) {
         Block updatedBlock = TrustController.successfulTransaction(block);
@@ -136,7 +128,7 @@ public final class API {
     /**
      * Method to update the trustValue of a block after failed transaction
      *
-     * @param block   the specific block
+     * @param block the specific block
      */
     public static void failedTransaction(Block block) {
         Block updatedBlock = TrustController.failedTransaction(block);
@@ -146,7 +138,7 @@ public final class API {
     /**
      * Method to update the trustValue of a block after successful verification
      *
-     * @param block   the specific block
+     * @param block the specific block
      */
     public static void verifyIBAN(Block block) {
         Block updatedBlock = TrustController.verifiedIBAN(block);
@@ -155,6 +147,7 @@ public final class API {
 
     /**
      * Create an acquintance object that you can send over the network
+     *
      * @return a new acquintance object
      */
     public static Acquaintance makeAcquintanceObject() {
@@ -166,9 +159,5 @@ public final class API {
                 query.getMultichain());
     }
 
-    //For debugging purpose
-    public static void debug()
-    {
-        blockController.getDatabase().debugDisplayDatabase();
-    }
+
 }

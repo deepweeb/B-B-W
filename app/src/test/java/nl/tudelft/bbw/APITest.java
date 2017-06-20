@@ -59,7 +59,7 @@ public class APITest {
 
         //set the multichain to contain the genesis of the new User
         ArrayList<List<Block>> newUserMultichain = new ArrayList<List<Block>>();
-        ArrayList<Block> test = new  ArrayList<Block>();
+        ArrayList<Block> test = new ArrayList<Block>();
         test.add(new Block(newUser));
         newUserMultichain.add(test);
         newUser.setMultichain(newUserMultichain);
@@ -82,7 +82,6 @@ public class APITest {
         list = API.getBlocks(owner);
         API.addAcquaintanceToChain(newUser, signature, message);
         assertNotEquals(API.getBlocks(owner), list);
-        API.debug();
     }
 
     /**
@@ -94,8 +93,8 @@ public class APITest {
     @Test
     public final void revokeContactFromChainTest()
             throws HashException, BlockAlreadyExistsException {
-        API.revokeContactFromChain(owner);
         List<Block> list = API.getBlocks(owner);
+        API.revokeContactFromChain(owner);
         assertNotEquals(API.getBlocks(owner), list);
     }
 
@@ -134,7 +133,6 @@ public class APITest {
         API.getBlocks(owner).get(0).getTrustValue();
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
-
 
 
     @Test

@@ -23,7 +23,9 @@ import nl.tudelft.bbw.controller.ED25519;
 import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
 import nl.tudelft.bbw.exception.HashException;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertNotEquals;
 
 
@@ -66,7 +68,10 @@ public class APITest {
     @Test
     public final void addContactToChainTest() throws HashException, BlockAlreadyExistsException,
             NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+        API.debug();
         API.initializeAPI(newUser, RuntimeEnvironment.application);
+
+        API.debug();
 
         final byte[] message = owner.getPublicKey().getEncoded();
         final byte[] signature = ED25519.generateSignature(message, newUser.getPrivateKey());
@@ -124,6 +129,25 @@ public class APITest {
         API.verifyIBAN(list.get(0));
         API.getBlocks(owner).get(0).getTrustValue();
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
+    }
+
+
+
+    @Test
+    public final void makeAcquaintanceTest() throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, BlockAlreadyExistsException, HashException {
+
+        API.initializeAPI(newUser, RuntimeEnvironment.application);
+
+        final byte[] message = owner.getPublicKey().getEncoded();
+        final byte[] signature = ED25519.generateSignature(message, newUser.getPrivateKey());
+        API.addAcquaintanceToChain(owner, signature, message);
+
+        list = API.getBlocks(newUser);
+        Acquaintance testAcquaintance = API.makeAcquintanceObject();
+        assertEquals(newUser.getName(), testAcquaintance.getName());
+        assertEquals(newUser.getIban(), testAcquaintance.getIban());
+        assertEquals(newUser.getPublicKey(), testAcquaintance.getPublicKey());
+        assertTrue(testAcquaintance.getMultichain().contains(list));
     }
 
 }

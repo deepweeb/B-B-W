@@ -52,7 +52,7 @@ public class APITest {
         owner = new Acquaintance("Jeff", "iban", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
         owner.setPrivateKey(privateKey);
         API.initializeAPI(owner, RuntimeEnvironment.application);
-        list = API.getBlocks(owner);
+        list = API.getContactsOf(owner);
 
         privateKey = ED25519.generatePrivateKey();
         newUser = new Acquaintance("Nick", "iban2", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
@@ -79,9 +79,9 @@ public class APITest {
 
         final byte[] message = newUser.getPublicKey().getEncoded();
         final byte[] signature = ED25519.generateSignature(message, owner.getPrivateKey());
-        list = API.getBlocks(owner);
+        list = API.getContactsOf(owner);
         API.addAcquaintanceToChain(newUser, signature, message);
-        assertNotEquals(API.getBlocks(owner), list);
+        assertNotEquals(API.getContactsOf(owner), list);
     }
 
     /**
@@ -93,9 +93,9 @@ public class APITest {
     @Test
     public final void revokeContactFromChainTest()
             throws HashException, BlockAlreadyExistsException {
-        List<Block> list = API.getBlocks(owner);
+        List<Block> list = API.getContactsOf(owner);
         API.revokeContactFromChain(owner);
-        assertNotEquals(API.getBlocks(owner), list);
+        assertNotEquals(API.getContactsOf(owner), list);
     }
 
     /**
@@ -130,7 +130,7 @@ public class APITest {
     @Test
     public final void verifyIBANTest() {
         API.verifyIBAN(list.get(0));
-        API.getBlocks(owner).get(0).getTrustValue();
+        API.getContactsOf(owner).get(0).getTrustValue();
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
 
@@ -144,7 +144,7 @@ public class APITest {
         final byte[] signature = ED25519.generateSignature(message, owner.getPrivateKey());
 
         API.addAcquaintanceToChain(newUser, signature, message);
-        list = API.getBlocks(owner);
+        list = API.getContactsOf(owner);
         Acquaintance testAcquaintance = API.makeAcquintanceObject();
         assertEquals(owner.getName(), testAcquaintance.getName());
         assertEquals(owner.getIban(), testAcquaintance.getIban());

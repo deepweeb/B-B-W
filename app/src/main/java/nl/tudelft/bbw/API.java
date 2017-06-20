@@ -6,7 +6,6 @@ import java.util.List;
 
 import nl.tudelft.bbw.blockchain.Acquaintance;
 import nl.tudelft.bbw.blockchain.Block;
-import nl.tudelft.bbw.blockchain.BlockType;
 import nl.tudelft.bbw.blockchain.User;
 import nl.tudelft.bbw.controller.BlockController;
 import nl.tudelft.bbw.controller.BlockVerificationController;
@@ -88,7 +87,7 @@ public final class API {
      *
      * @return the chain of the user
      */
-    public static List<Block> getBlocks(User owner) {
+    public static List<Block> getContactsOf(User owner) {
         return blockController.getBlocks(owner);
     }
 

@@ -284,6 +284,24 @@ public class Block {
     }
 
     /**
+     * ToString method designed for Interaction Design Module
+     */
+    public String toString2() {
+        if(this.getBlockType().equals(BlockType.GENESIS))
+        {
+            return "Block#" + getSequenceNumber() + " contact="
+                    + contact.getName() + ", iban="
+                    + contact.getIban() + (isRevoked() ? ",REVOKE" : "") + "} (My Own Block)";
+        }
+        else {
+            return "Block#" + getSequenceNumber() + " contact="
+                    + contact.getName() + ", iban="
+                    + contact.getIban() + (isRevoked() ? ",REVOKE" : "") + "}";
+        }
+    }
+
+
+    /**
      * {@inheritDoc}
      */
     @Override

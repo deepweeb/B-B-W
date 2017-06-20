@@ -46,6 +46,7 @@ dependencies {
     androidTestCompile 'org.mockito:mockito-android:2.7.22'
     compile 'com.jjoe64:graphview:4.2.1'
     compile 'net.i2p.crypto:eddsa:0.2.0'
+    compile 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
 }
 
 

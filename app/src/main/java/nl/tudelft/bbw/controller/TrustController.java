@@ -35,7 +35,7 @@ public final class TrustController {
     }
 
     /**
-     * failedTransaction
+     * failedTransactionUpdate
      * Calculates the new trust value given a failed transaction
      *
      * @param block the given block
@@ -50,7 +50,8 @@ public final class TrustController {
 
     /**
      * verifiedIBAN
-     * Calculates the new trust value given the IBAN is verfied
+     * Calculates the new trust value given the IBAN is verfied initially,
+     * before any transactions can happen
      *
      * @param block the given block
      * @return the block with the new trust value

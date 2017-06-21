@@ -156,7 +156,7 @@ public final class API {
      *
      * @param block the specific block
      */
-    public static void successfulTransaction(Block block) {
+    public static void successfulTransactionUpdate(Block block) {
         Block updatedBlock = TrustController.successfulTransaction(block);
         blockController.updateTrustOfBlock(updatedBlock);
     }
@@ -166,7 +166,7 @@ public final class API {
      *
      * @param block the specific block
      */
-    public static void failedTransaction(Block block) {
+    public static void failedTransactionUpdate(Block block) {
         Block updatedBlock = TrustController.failedTransaction(block);
         blockController.updateTrustOfBlock(updatedBlock);
     }
@@ -176,7 +176,7 @@ public final class API {
      *
      * @param block the specific block
      */
-    public static void verifyIBAN(Block block) {
+    public static void verifyIBANUpdate(Block block) {
         Block updatedBlock = TrustController.verifiedIBAN(block);
         blockController.updateTrustOfBlock(updatedBlock);
     }

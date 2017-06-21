@@ -23,9 +23,9 @@ android:
     - tools # Update tools from revision 24.4.1 to 25.2.5
 
 env:
-  global:
     - TEST_SUITE=units
     - TEST_SUITE=integration
+  global:
     - API=25 # Android API level 25 by default
     - TAG=google_apis # Google APIs by default, alternatively use default but not always available
     - ABI=armeabi-v7a # ARM ABI v7a by default

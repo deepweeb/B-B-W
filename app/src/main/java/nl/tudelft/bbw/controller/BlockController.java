@@ -308,7 +308,7 @@ public class BlockController {
 r    * @return a new acquaintance object
      */
     public Acquaintance makeAcquaintanceObject() {
-        DatabaseToMultichainQuery query = new DatabaseToMultichainQuery( database);
+        DatabaseToMultichainQuery query = new DatabaseToMultichainQuery(database);
         database.read(query);
         User owner = getOwnUser();
         return new Acquaintance(owner.getName(), owner.getIban(), owner.getPublicKey(),

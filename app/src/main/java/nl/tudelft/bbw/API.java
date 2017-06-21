@@ -182,9 +182,9 @@ public final class API {
     }
 
     /**
-     * Create an acquintance object that you can send over the network
+     * Create an acquaintance object that you can send over the network
      *
-     * @return a new acquintance object
+     * @return a new acquaintance object
      */
     public static Acquaintance makeAcquaintanceObject() {
         return blockController.makeAcquaintanceObject();

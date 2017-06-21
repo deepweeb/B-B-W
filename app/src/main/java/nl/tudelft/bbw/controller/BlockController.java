@@ -70,7 +70,6 @@ public class BlockController {
      */
     public final Block addBlockToChain(User user, byte[] signature, byte[] message)
             throws HashException, BlockAlreadyExistsException {
-
         UserExistQuery query = new UserExistQuery(user);
         database.read(query);
         if (!query.doesExist()) {

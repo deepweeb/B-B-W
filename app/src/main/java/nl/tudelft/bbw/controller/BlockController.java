@@ -290,7 +290,7 @@ public class BlockController {
      * @throws DatabaseException when queries could not be processed
      */
     private void createBlock(Block block)  throws BlockAlreadyExistsException, HashException,
-            DatabaseException {{
+            DatabaseException {
         if (block.getBlockType() == BlockType.GENESIS) {
             this.createGenesis(block.getBlockOwner());
         } else if (block.isRevoked()) {

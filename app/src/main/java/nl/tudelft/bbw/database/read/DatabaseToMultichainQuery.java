@@ -50,23 +50,7 @@ public class DatabaseToMultichainQuery extends ReadQuery {
         List<Block> currentBlocks = new ArrayList<Block>();
         User previousUser = null;
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            // extract block from the cursor
-            Block block = toBlock(database, cursor);
-
-            // initialize previous block owner
-            if (previousUser == null) {
-                previousUser = block.getBlockOwner();
-            }
-
-            // if encountering a new user, add current blocks to multichain and initialize
-            // a new block array. Also set the previous user.
-            else if (!block.getBlockOwner().equals(previousUser)) {
-                multichain.add(currentBlocks);
-                currentBlocks = new ArrayList<Block>();
-                previousUser = block.getBlockOwner();
-            }
-
-            currentBlocks.add(block);
+            previousUser = handleBlock(toBlock(database, cursor), currentBlocks, previousUser);
         }
 
         // add the final block list since no new user is to be found in the end while the blocks
@@ -74,6 +58,32 @@ public class DatabaseToMultichainQuery extends ReadQuery {
         if (previousUser != null) {
             multichain.add(currentBlocks);
         }
+    }
+
+    /**
+     * Handle a block retrieved from the database and add it to this query's multichain
+     * @param block the block to add
+     * @param currentBlocks blocks of the current user
+     * @param previousUser the owner of the last block handled
+     * @return the owner of this block
+     */
+    private User handleBlock(Block block, List<Block> currentBlocks, User previousUser) {
+        // initialize previous block owner
+        if (previousUser == null) {
+            previousUser = block.getBlockOwner();
+        }
+
+        // if encountering a new user, add current blocks to multichain and initialize
+        // a new block array. Also set the previous user.
+        else if (!block.getBlockOwner().equals(previousUser)) {
+            multichain.add(currentBlocks);
+            currentBlocks = new ArrayList<Block>();
+            previousUser = block.getBlockOwner();
+        }
+
+        currentBlocks.add(block);
+
+        return previousUser;
     }
 
     /**

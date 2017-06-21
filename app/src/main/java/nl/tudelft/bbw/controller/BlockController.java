@@ -8,6 +8,7 @@ import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.tudelft.bbw.blockchain.Acquaintance;
 import nl.tudelft.bbw.blockchain.Block;
 import nl.tudelft.bbw.blockchain.BlockData;
 import nl.tudelft.bbw.blockchain.BlockType;
@@ -16,6 +17,7 @@ import nl.tudelft.bbw.blockchain.TrustValues;
 import nl.tudelft.bbw.blockchain.User;
 import nl.tudelft.bbw.database.Database;
 import nl.tudelft.bbw.database.read.BlockExistQuery;
+import nl.tudelft.bbw.database.read.DatabaseToMultichainQuery;
 import nl.tudelft.bbw.database.read.GetChainQuery;
 import nl.tudelft.bbw.database.read.LatestBlockQuery;
 import nl.tudelft.bbw.database.read.UserExistQuery;
@@ -312,4 +314,16 @@ public class BlockController {
         }
     }
 
+    /**
+     * Create an acquintance object that you can send over the network
+r    * @return a new acquaintance object
+     */
+    public Acquaintance makeAcquaintanceObject() {
+        DatabaseToMultichainQuery query = new DatabaseToMultichainQuery(
+                getDatabase());
+        getDatabase().read(query);
+        User owner = getOwnUser();
+        return new Acquaintance(owner.getName(), owner.getIban(), owner.getPublicKey(),
+                query.getMultichain());
+    }
 }

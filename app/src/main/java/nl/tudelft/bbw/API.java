@@ -17,7 +17,6 @@ import nl.tudelft.bbw.controller.BlockController;
 import nl.tudelft.bbw.controller.BlockVerificationController;
 import nl.tudelft.bbw.controller.ED25519;
 import nl.tudelft.bbw.controller.TrustController;
-import nl.tudelft.bbw.database.read.DatabaseToMultichainQuery;
 import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
 import nl.tudelft.bbw.exception.HashException;
 
@@ -188,12 +187,7 @@ public final class API {
      * @return a new acquintance object
      */
     public static Acquaintance makeAcquaintanceObject() {
-        DatabaseToMultichainQuery query = new DatabaseToMultichainQuery(
-                blockController.getDatabase());
-        blockController.getDatabase().read(query);
-        User owner = blockController.getOwnUser();
-        return new Acquaintance(owner.getName(), owner.getIban(), owner.getPublicKey(),
-                query.getMultichain());
+        return blockController.makeAcquaintanceObject();
     }
 
 

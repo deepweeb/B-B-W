@@ -7,7 +7,7 @@ import java.io.IOException;
 /**
  * Class to read the crawled database
  */
-public class DatabaseReader {
+final class DatabaseReader {
 
     /**
      * Class attributes
@@ -30,7 +30,7 @@ public class DatabaseReader {
      * @return the interpreted string
      * @throws IOException when the file cannot be read
      */
-    public static String readDatabase() throws IOException {
+    static String readDatabase() throws IOException {
         String result = "";
         String line = "";
         BufferedReader bufferedReader = new BufferedReader(new FileReader(PATH + FILE_NAME));

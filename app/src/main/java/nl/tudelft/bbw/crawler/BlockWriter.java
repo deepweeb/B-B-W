@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Class to write a block to a file
  */
-public class BlockWriter {
+final class BlockWriter {
 
     /**
      * Class attributes
@@ -33,7 +33,7 @@ public class BlockWriter {
      * @param mapper
      * @throws IOException
      */
-    public static void writeToJson(Map mapper) throws IOException {
+    static void writeToJson(Map mapper) throws IOException {
         Writer writer = new FileWriter(OUTPUT_PATH);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         gson.toJson(mapper, writer);

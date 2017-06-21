@@ -48,15 +48,7 @@ public class BlockController {
         this.chainOwner = chainOwner;
         this.database = new Database(context);
     }
-
-    /**
-     *Method to return the own chain
-     * @return the list of block forming the own chain of the user
-     */
-    public final List<Block> returnOwnChain()
-    {
-        return this.getBlocks(chainOwner);
-    }
+    
 
     /**
      * Method for adding a user to our blockchain.
@@ -130,14 +122,6 @@ public class BlockController {
     public final void updateTrustOfBlock(Block block) {
         UpdateTrustQuery query = new UpdateTrustQuery(block);
         database.write(query);
-    }
-
-    /**
-     * Retrieve the owner of this app
-     * @return the owner of this app
-     */
-    public User getOwnUser() {
-        return chainOwner;
     }
 
     /**
@@ -310,7 +294,7 @@ r    * @return a new acquaintance object
     public Acquaintance makeAcquaintanceObject() {
         DatabaseToMultichainQuery query = new DatabaseToMultichainQuery(database);
         database.read(query);
-        User owner = getOwnUser();
+        User owner = chainOwner;
         return new Acquaintance(owner.getName(), owner.getIban(), owner.getPublicKey(),
                 query.getMultichain());
     }

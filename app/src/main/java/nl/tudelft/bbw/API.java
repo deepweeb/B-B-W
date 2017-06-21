@@ -27,6 +27,7 @@ public final class API {
 
     private static BlockController blockController;
     private static BlockVerificationController blockVerificationController;
+    private static User owner;
 
     /**
      * Private constructor to make sure that the class cannot be initialized
@@ -46,16 +47,13 @@ public final class API {
      * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
-    public static User initializeAPI(String Name, String Iban, Context context) throws HashException, BlockAlreadyExistsException {
-
-        User owner;
+    public static void initializeAPI(String Name, String Iban, Context context) throws HashException, BlockAlreadyExistsException {
         EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
         owner = new User(Name, Iban, ED25519.getPublicKey(privateKey));
         owner.setPrivateKey(privateKey);
         blockController = new BlockController(owner, context);
         blockVerificationController = new BlockVerificationController(context);
         blockController.createGenesis(owner);
-        return owner;
     }
 
     /**
@@ -64,7 +62,7 @@ public final class API {
      * @return List of blocks forming this user contact list.
      */
     public static List<Block> getMyContacts() {
-        return blockController.getBlocks(blockController.getOwnUser());
+        return blockController.getBlocks(owner);
     }
 
     /**
@@ -73,7 +71,7 @@ public final class API {
      * @return name of the API user
      */
     public static String getMyName() {
-        return blockController.getOwnUser().getName();
+        return owner.getName();
     }
 
     /**
@@ -82,7 +80,7 @@ public final class API {
      * @return Iban number of the API user
      */
     public static String getMyIban() {
-        return blockController.getOwnUser().getIban();
+        return owner.getIban();
     }
 
     /**
@@ -91,7 +89,7 @@ public final class API {
      * @return Public Key  of the API user
      */
     public static EdDSAPublicKey getMyPublicKey() {
-        return blockController.getOwnUser().getPublicKey();
+        return owner.getPublicKey();
     }
 
 
@@ -105,7 +103,7 @@ public final class API {
             throws HashException, BlockAlreadyExistsException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
 
         final byte[] message = acquaintance.getPublicKey().getEncoded();
-        final byte[] signature = ED25519.generateSignature(message, blockController.getOwnUser().getPrivateKey());
+        final byte[] signature = ED25519.generateSignature(message, owner.getPrivateKey());
 
         //Adding his database into your database (so you can look up his contacts)
         blockController.addMultichain(acquaintance.getMultichain());

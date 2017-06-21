@@ -16,6 +16,7 @@ import nl.tudelft.bbw.blockchain.Hash;
 import nl.tudelft.bbw.blockchain.TrustValues;
 import nl.tudelft.bbw.blockchain.User;
 import nl.tudelft.bbw.database.Database;
+import nl.tudelft.bbw.database.DatabaseException;
 import nl.tudelft.bbw.database.read.BlockExistQuery;
 import nl.tudelft.bbw.database.read.DatabaseToMultichainQuery;
 import nl.tudelft.bbw.database.read.GetChainQuery;
@@ -48,7 +49,7 @@ public class BlockController {
         this.chainOwner = chainOwner;
         this.database = new Database(context);
     }
-    
+
 
     /**
      * Method for adding a user to our blockchain.
@@ -183,7 +184,7 @@ public class BlockController {
      * @return the freshly created block
      * @throws HashException when the key hashing method does not work
      */
-    public Block createGenesis(User owner) throws HashException, BlockAlreadyExistsException {
+    public Block createGenesis(User owner) throws HashException, BlockAlreadyExistsException, DatabaseException {
         Block genesisBlock = new Block(owner);
         UserAddQuery query = new UserAddQuery(owner);
         database.write(query);
@@ -270,18 +271,17 @@ public class BlockController {
      * @throws BlockAlreadyExistsException
      * @throws HashException
      */
-    public void addMultichain(List<List<Block>> multichain) throws BlockAlreadyExistsException, HashException {
-        if (multichain.isEmpty()) {
-            return;
-        }
-        for (List<Block> chain : multichain) {
-            for (Block block : chain) {
-                if (block.getBlockType() == BlockType.GENESIS) {
-                   this.createGenesis(block.getBlockOwner());
-                } else if (block.isRevoked()) {
-                   this.createRevokeBlock(block.getBlockOwner(), block.getContact());
-                } else {
-                    this.createKeyBlock(block.getBlockOwner(), block.getContact());
+    public void addMultichain(List<List<Block>> multichain) throws BlockAlreadyExistsException, HashException, DatabaseException {
+        if (!multichain.isEmpty()) {
+            for (List<Block> chain : multichain) {
+                for (Block block : chain) {
+                    if (block.getBlockType() == BlockType.GENESIS) {
+                        this.createGenesis(block.getBlockOwner());
+                    } else if (block.isRevoked()) {
+                        this.createRevokeBlock(block.getBlockOwner(), block.getContact());
+                    } else {
+                        this.createKeyBlock(block.getBlockOwner(), block.getContact());
+                    }
                 }
             }
         }

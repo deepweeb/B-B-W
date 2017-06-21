@@ -17,6 +17,7 @@ import nl.tudelft.bbw.controller.BlockController;
 import nl.tudelft.bbw.controller.BlockVerificationController;
 import nl.tudelft.bbw.controller.ED25519;
 import nl.tudelft.bbw.controller.TrustController;
+import nl.tudelft.bbw.database.DatabaseException;
 import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
 import nl.tudelft.bbw.exception.HashException;
 
@@ -105,12 +106,17 @@ public final class API {
         final byte[] message = acquaintance.getPublicKey().getEncoded();
         final byte[] signature = ED25519.generateSignature(message, owner.getPrivateKey());
 
-        //Adding his database into your database (so you can look up his contacts)
-        blockController.addMultichain(acquaintance.getMultichain());
+        try{
+            //Adding his database into your database (so you can look up his contacts)
+            blockController.addMultichain(acquaintance.getMultichain());
 
+            //Adding the user into your own chain
+            blockController.addBlockToChain(acquaintance, signature, message);
+        } catch(DatabaseException e)
+        {
+            return;
+        }
 
-        //Adding the user into your own chain
-        blockController.addBlockToChain(acquaintance, signature, message);
     }
 
     /**

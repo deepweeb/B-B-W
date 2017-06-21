@@ -102,6 +102,9 @@ public class InteractionDesignAPI {
         API.addAcquaintance(pairedPerson);
         print(API.getMyContacts());
 
+        API.addAcquaintance(pairedPerson);
+        print(API.getMyContacts());
+
         assertNotEquals(API.getMyContacts(), list);
     }
 

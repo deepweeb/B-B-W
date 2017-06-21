@@ -280,25 +280,23 @@ public class Block {
     @Override
     public String toString() {
         return "Block#" + getSequenceNumber() + "{owner=" + owner.getName() + ",contact="
-                + contact.getName() + (isRevoked()?",REVOKE":"") + "}";
+                + contact.getName() + (isRevoked() ? ",REVOKE" : "") + "}";
     }
 
     /**
      * ToString method designed for Interaction Design Module
      */
     public String toString2() {
-        if(this.getBlockType().equals(BlockType.GENESIS))
-        {
+        if (this.getBlockType().equals(BlockType.GENESIS)) {
             return "Block#" + getSequenceNumber() + " {contact="
                     + getContactName() + ", iban="
                     + getContactIban() + (isRevoked() ? ",REVOKE" : "") + ", Trust="
-                    + getTrustValue()  +"} (My Own Block)";
-        }
-        else {
+                    + getTrustValue() + "} (My Own Block)";
+        } else {
             return "Block#" + getSequenceNumber() + " {contact="
                     + getContactName() + ", iban="
                     + getContactIban() + (isRevoked() ? ",REVOKE" : "") + ", Trust="
-                    + getTrustValue()  +"}";
+                    + getTrustValue() + "}";
         }
     }
 
@@ -311,8 +309,7 @@ public class Block {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Block))
-        {
+        if (!(o instanceof Block)) {
             return false;
         }
 

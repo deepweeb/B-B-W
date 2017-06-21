@@ -41,17 +41,18 @@ public class InteractionDesignAPI {
     /**
      * Add your name and iban number
      */
-    final String yourName = "Max";
-    final String yourIban = "NL78ING37423872387";
+    final String yourName = "Pietje Puck";
+    final String yourIban = "NL45RABO94754726";
 
     /**
      * Add you friend name and iban number so you can pair and add him to the contact list later on
      */
-    final String yourFriendName = "Ruben";
-    final String yourFriendIban = "NL29INGB283787";
+    final String yourFriendName = "Johan de Boer";
+    final String yourFriendIban = "NL26INGB934875943";
+
 
     /**
-     * Initialize the API with the test values.
+     * Make the API ready to do transactions.
      * @throws HashException
      * @throws BlockAlreadyExistsException
      */
@@ -60,8 +61,9 @@ public class InteractionDesignAPI {
         API.initializeAPI(yourName, yourIban, RuntimeEnvironment.application);
     }
 
+
     /**
-     * Test whether the returned name is equal to the name the API is initialized with.
+     * Get my name
      */
     @Test
     public final void getMyNameTest()
@@ -70,7 +72,7 @@ public class InteractionDesignAPI {
     }
 
     /**
-     * Test whether the returned IBAN is equal to the IBAN the API is initialized with.
+     * Get my iban number
      */
     @Test
     public final void getMyIbanTest()
@@ -79,7 +81,7 @@ public class InteractionDesignAPI {
     }
 
     /**
-     * Test whether a new acquitance is added when addAcquitance is added.
+     * Add a new person to the database.
      * @throws HashException
      * @throws BlockAlreadyExistsException
      * @throws NoSuchAlgorithmException
@@ -106,7 +108,7 @@ public class InteractionDesignAPI {
     }
 
     /**
-     * Test whether a Acquitance is removed after revokeContact is called.
+     * Remove a contact from the database.
      * @throws HashException
      * @throws BlockAlreadyExistsException
      * @throws NoSuchAlgorithmException
@@ -129,8 +131,9 @@ public class InteractionDesignAPI {
         assertNotEquals(API.getMyContacts(), list);
     }
 
+
     /**
-     * Check whether the isDatabaseEmpty returns the correct value.
+     * Check if the database is not empty.
      */
     @Test
     public final void databaseEmptyTest() {
@@ -139,7 +142,7 @@ public class InteractionDesignAPI {
     }
 
     /**
-     * Test whether the trust level of an acquitance is updated after their IBAN is verified.
+     * Verify if trust level increases after transaction.
      * @throws SignatureException
      * @throws HashException
      * @throws NoSuchAlgorithmException
@@ -164,7 +167,7 @@ public class InteractionDesignAPI {
     }
 
     /**
-     * Test whether the trust level of an acquitance is increased if a succesful transaction is done.
+     * Test if a transaction was succesfull
      * @throws SignatureException
      * @throws HashException
      * @throws NoSuchAlgorithmException
@@ -189,7 +192,7 @@ public class InteractionDesignAPI {
     }
 
     /**
-     * Test whether the trust level of an acquitance is changed after a unsuccesful transaction is done.
+     * Verify if if a transaction failed the trust is downgraded.
      * @throws SignatureException
      * @throws HashException
      * @throws NoSuchAlgorithmException
@@ -215,7 +218,7 @@ public class InteractionDesignAPI {
     }
 
     /**
-     * Test whether an acquaitance object is created correctly.
+     * Verify if the acquaintance object is setup correctly.
      * @throws NoSuchAlgorithmException
      * @throws InvalidKeyException
      * @throws SignatureException
@@ -246,11 +249,6 @@ public class InteractionDesignAPI {
     /**
      * FINISH
      */
-
-
-
-
-
 
 
 

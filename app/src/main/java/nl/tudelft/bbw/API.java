@@ -106,14 +106,13 @@ public final class API {
         final byte[] message = acquaintance.getPublicKey().getEncoded();
         final byte[] signature = ED25519.generateSignature(message, owner.getPrivateKey());
 
-        try{
+        try {
             //Adding his database into your database (so you can look up his contacts)
             blockController.addMultichain(acquaintance.getMultichain());
 
             //Adding the user into your own chain
             blockController.addBlockToChain(acquaintance, signature, message);
-        } catch(DatabaseException e)
-        {
+        } catch (DatabaseException e) {
             return;
         }
 

@@ -30,6 +30,7 @@ public class DatabaseToMultichainQuery extends ReadQuery {
 
     /**
      * Construct a new DatabaseToMultichainQuery
+     *
      * @param database the database to construct the blocks from
      */
     public DatabaseToMultichainQuery(Database database) {
@@ -40,6 +41,7 @@ public class DatabaseToMultichainQuery extends ReadQuery {
      * Convert all blocks to a list of list of blocks.
      * This works by looping all blocks, adding them to the current block list, and when
      * encountering a new user add the block list to the multichain and then reset it.
+     *
      * @param cursor the cursor resulting from the query
      */
     @Override
@@ -76,6 +78,7 @@ public class DatabaseToMultichainQuery extends ReadQuery {
 
     /**
      * We operate on the blocks table when retrieving blocks
+     *
      * @return the block table name
      */
     @Override
@@ -85,6 +88,7 @@ public class DatabaseToMultichainQuery extends ReadQuery {
 
     /**
      * We need all columns to construct the blocks
+     *
      * @return all block columns
      */
     @Override
@@ -94,6 +98,7 @@ public class DatabaseToMultichainQuery extends ReadQuery {
 
     /**
      * We need every block, so no filter
+     *
      * @return null
      */
     @Override
@@ -103,6 +108,7 @@ public class DatabaseToMultichainQuery extends ReadQuery {
 
     /**
      * No arguments either
+     *
      * @return an empty array
      */
     @Override
@@ -112,6 +118,7 @@ public class DatabaseToMultichainQuery extends ReadQuery {
 
     /**
      * Sort by owner and sequence number to add them easily to a multichain later
+     *
      * @return the sequence number column
      */
     @Override
@@ -121,6 +128,7 @@ public class DatabaseToMultichainQuery extends ReadQuery {
 
     /**
      * Retrieve the queried multichain
+     *
      * @return the multichain resulting from the query
      */
     public List<List<Block>> getMultichain() {

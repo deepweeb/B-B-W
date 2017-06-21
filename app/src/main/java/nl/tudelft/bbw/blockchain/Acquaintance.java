@@ -36,8 +36,7 @@ public class Acquaintance extends User {
         return this.multichain;
     }
 
-    public void setMultichain(List<List<Block>> multichain)
-    {
+    public void setMultichain(List<List<Block>> multichain) {
         this.multichain = multichain;
     }
 

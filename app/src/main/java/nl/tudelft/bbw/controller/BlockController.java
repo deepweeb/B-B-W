@@ -54,9 +54,9 @@ public class BlockController {
     /**
      * Method for adding a user to our blockchain.
      *
-     * @param user the user we want to add
+     * @param user      the user we want to add
      * @param signature byte array containing the signature
-     * @param message byte array containing the message
+     * @param message   byte array containing the message
      * @return the created block
      * @throws HashException               When there is an error calculating the hash
      * @throws BlockAlreadyExistsException When there already exists a block in the database
@@ -253,7 +253,7 @@ public class BlockController {
      * Verifies the signature given a signature and message byte array
      *
      * @param signature given signature to use
-     * @param message given message to verify
+     * @param message   given message to verify
      * @return boolean if the signature of the block is verified
      */
     private boolean verifySignature(byte[] signature, byte[] message) {
@@ -289,6 +289,7 @@ public class BlockController {
 
     /**
      * Create an acquintance object that you can send over the network
+     *
      * @return a new acquaintance object
      */
     public Acquaintance makeAcquaintanceObject() {

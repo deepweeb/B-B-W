@@ -24,6 +24,7 @@ public class UserExistQuery extends ReadQuery {
 
     /**
      * Construct query to check if a user exists
+     *
      * @param user the user to check
      */
     public UserExistQuery(User user) {
@@ -32,6 +33,7 @@ public class UserExistQuery extends ReadQuery {
 
     /**
      * The user exists if the query result has content
+     *
      * @param cursor the cursor resulting from the query
      */
     @Override
@@ -41,6 +43,7 @@ public class UserExistQuery extends ReadQuery {
 
     /**
      * The user exist query operates on the user table
+     *
      * @return the user table name
      */
     @Override
@@ -50,15 +53,17 @@ public class UserExistQuery extends ReadQuery {
 
     /**
      * To determine if a user exists, we only need one column, the public key
+     *
      * @return the public key column name
      */
     @Override
     protected String[] getSelectedColumns() {
-        return new String[] {KEY_PUBLICKEY};
+        return new String[]{KEY_PUBLICKEY};
     }
 
     /**
      * Since each user can be identified by its public key we only need to filter on that
+     *
      * @return
      */
     @Override
@@ -68,17 +73,19 @@ public class UserExistQuery extends ReadQuery {
 
     /**
      * The where argument is the user public key
+     *
      * @return user key
      */
     @Override
     protected String[] getWhereVariables() {
-        return new String[] {
+        return new String[]{
                 KeyWriter.publicKeyToString(user.getPublicKey())
         };
     }
 
     /**
      * Retrieve our result
+     *
      * @return whether the user existed
      */
     public boolean doesExist() {

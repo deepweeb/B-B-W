@@ -35,6 +35,7 @@ public class BlockAddQuery extends WriteQuery {
 
     /**
      * Put all our block attributes in the content values
+     *
      * @return
      */
     @Override
@@ -53,6 +54,7 @@ public class BlockAddQuery extends WriteQuery {
 
     /**
      * This query operates on the blocks table
+     *
      * @return the block table name
      */
     @Override

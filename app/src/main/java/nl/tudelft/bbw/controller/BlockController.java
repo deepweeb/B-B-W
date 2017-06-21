@@ -281,16 +281,6 @@ public class BlockController {
     }
 
     /**
-     * Retrieve the corresponding database on which block controller operates
-     * @return the database used by the block controller
-     */
-    public Database getDatabase()
-    {
-        return database;
-    }
-
-
-    /**
      * Method to add the multichain (the pairing person database) into your database
      *
      * @param multichain given the multichain of the pairing partner
@@ -319,9 +309,8 @@ public class BlockController {
 r    * @return a new acquaintance object
      */
     public Acquaintance makeAcquaintanceObject() {
-        DatabaseToMultichainQuery query = new DatabaseToMultichainQuery(
-                getDatabase());
-        getDatabase().read(query);
+        DatabaseToMultichainQuery query = new DatabaseToMultichainQuery( database);
+        database.read(query);
         User owner = getOwnUser();
         return new Acquaintance(owner.getName(), owner.getIban(), owner.getPublicKey(),
                 query.getMultichain());

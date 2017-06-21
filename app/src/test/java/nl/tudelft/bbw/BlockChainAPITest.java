@@ -31,7 +31,7 @@ import static org.junit.Assert.assertNotEquals;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml")
-public class APITest {
+public class BlockChainAPITest {
 
     /**
      * Attributes which are used more than once
@@ -40,15 +40,15 @@ public class APITest {
     private List<Block> list;
 
     /**
-     * Initialize API before every test
+     * Initialize BlockChainAPI before every test
      *
      * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
     @Before
     public final void setUp() throws HashException, BlockAlreadyExistsException {
-        API.initializeAPI("Jeff", "iban", RuntimeEnvironment.application);
-        list = API.getMyContacts();
+        BlockChainAPI.initializeAPI("Jeff", "iban", RuntimeEnvironment.application);
+        list = BlockChainAPI.getMyContacts();
 
         EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
         newUser = new Acquaintance("Nick", "iban2", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
@@ -70,8 +70,8 @@ public class APITest {
     @Test
     public final void addContactToChainTest() throws HashException, BlockAlreadyExistsException,
             NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-        API.addAcquaintance(newUser);
-        assertNotEquals(API.getMyContacts(), list);
+        BlockChainAPI.addAcquaintance(newUser);
+        assertNotEquals(BlockChainAPI.getMyContacts(), list);
     }
 
     /**
@@ -83,10 +83,10 @@ public class APITest {
     @Test
     public final void revokeContactFromChainTest()
             throws HashException, BlockAlreadyExistsException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-        API.addAcquaintance(newUser);
-        List<Block> list = API.getMyContacts();
-        API.revokeContact(newUser);
-        assertNotEquals(API.getMyContacts(), list);
+        BlockChainAPI.addAcquaintance(newUser);
+        List<Block> list = BlockChainAPI.getMyContacts();
+        BlockChainAPI.revokeContact(newUser);
+        assertNotEquals(BlockChainAPI.getMyContacts(), list);
     }
 
     /**
@@ -94,7 +94,7 @@ public class APITest {
      */
     @Test
     public final void databaseEmptyTest() {
-        assertFalse(API.isDatabaseEmpty());
+        assertFalse(BlockChainAPI.isDatabaseEmpty());
     }
 
     /**
@@ -102,7 +102,7 @@ public class APITest {
      */
     @Test
     public final void succesfulTransactionTest() {
-        API.successfulTransactionUpdate(list.get(0));
+        BlockChainAPI.successfulTransactionTrustUpdate(list.get(0));
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
 
@@ -111,7 +111,7 @@ public class APITest {
      */
     @Test
     public final void failedTransactionTest() {
-        API.failedTransactionUpdate(list.get(0));
+        BlockChainAPI.failedTransactionTrustUpdate(list.get(0));
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
 
@@ -120,8 +120,8 @@ public class APITest {
      */
     @Test
     public final void verifyIBANTest() {
-        API.verifyIBANUpdate(list.get(0));
-        API.getMyContacts().get(0).getTrustValue();
+        BlockChainAPI.verifyIBANTrustUpdate(list.get(0));
+        BlockChainAPI.getMyContacts().get(0).getTrustValue();
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
 
@@ -131,12 +131,12 @@ public class APITest {
      */
     @Test
     public final void makeAcquaintanceTest() throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, BlockAlreadyExistsException, HashException {
-        API.addAcquaintance(newUser);
-        list = API.getMyContacts();
-        Acquaintance testAcquaintance = API.makeAcquaintanceObject();
-        assertEquals(API.getMyName(), testAcquaintance.getName());
-        assertEquals(API.getMyIban(), testAcquaintance.getIban());
-        assertEquals(API.getMyPublicKey(), testAcquaintance.getPublicKey());
+        BlockChainAPI.addAcquaintance(newUser);
+        list = BlockChainAPI.getMyContacts();
+        Acquaintance testAcquaintance = BlockChainAPI.makeAcquaintanceObject();
+        assertEquals(BlockChainAPI.getMyName(), testAcquaintance.getName());
+        assertEquals(BlockChainAPI.getMyIban(), testAcquaintance.getIban());
+        assertEquals(BlockChainAPI.getMyPublicKey(), testAcquaintance.getPublicKey());
         assertTrue(testAcquaintance.getMultichain().contains(list));
     }
 

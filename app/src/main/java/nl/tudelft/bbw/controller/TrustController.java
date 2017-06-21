@@ -36,7 +36,7 @@ public final class TrustController {
     }
 
     /**
-     * failedTransactionUpdate
+     * failedTransactionTrustUpdate
      * Calculates the new trust value given a failed transaction
      *
      * @param block the given block
@@ -65,13 +65,13 @@ public final class TrustController {
     }
 
     /**
-     * revokeBlockTrust
+     * revokeBlock
      * Sets the block value to the revoked trust value
      *
      * @param block given block to revoke
      * @return block with the new trust value
      */
-    public static Block revokeBlockTrust(Block block) {
+    public static Block revokeBlock(Block block) {
         block.setTrustValue(TrustValues.REVOKED.getValue());
         return block;
     }

@@ -24,7 +24,7 @@ import nl.tudelft.bbw.exception.HashException;
 /**
  * Performs the actions on the blockchain
  */
-public final class API {
+public final class BlockChainAPI {
 
     private static BlockController blockController;
     private static BlockVerificationController blockVerificationController;
@@ -33,17 +33,17 @@ public final class API {
     /**
      * Private constructor to make sure that the class cannot be initialized
      */
-    private API() {
+    private BlockChainAPI() {
 
     }
 
     /**
-     * Intitialising the API, the genesis block is here created since this
+     * Intitialising the BlockChainAPI, the genesis block is here created since this
      * can only be done once per user
      * TODO: Remove this function
      *
-     * @param Name    of the API user
-     * @param Iban    of the API user
+     * @param Name    of the BlockChainAPI user
+     * @param Iban    of the BlockChainAPI user
      * @param context The state of the program
      * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
@@ -58,7 +58,7 @@ public final class API {
     }
 
     /**
-     * Getter method to get the API user's contact list
+     * Getter method to get the BlockChainAPI user's contact list
      *
      * @return List of blocks forming this user contact list.
      */
@@ -67,27 +67,27 @@ public final class API {
     }
 
     /**
-     * Getter method to get the API user's name
+     * Getter method to get the BlockChainAPI user's name
      *
-     * @return name of the API user
+     * @return name of the BlockChainAPI user
      */
     public static String getMyName() {
         return owner.getName();
     }
 
     /**
-     * Getter method to get the API user's Iban
+     * Getter method to get the BlockChainAPI user's Iban
      *
-     * @return Iban number of the API user
+     * @return Iban number of the BlockChainAPI user
      */
     public static String getMyIban() {
         return owner.getIban();
     }
 
     /**
-     * Getter method to get the API user's Public Key
+     * Getter method to get the BlockChainAPI user's Public Key
      *
-     * @return Public Key  of the API user
+     * @return Public Key  of the BlockChainAPI user
      */
     public static EdDSAPublicKey getMyPublicKey() {
         return owner.getPublicKey();
@@ -131,7 +131,7 @@ public final class API {
         Block revokedBlock = blockController.revokeBlockFromChain(contact);
 
         //update the trustValue of a block after revoking
-        Block updatedBlock = TrustController.revokeBlockTrust(revokedBlock);
+        Block updatedBlock = TrustController.revokeBlock(revokedBlock);
         blockController.updateTrustOfBlock(updatedBlock);
     }
 
@@ -159,7 +159,7 @@ public final class API {
      *
      * @param block the specific block
      */
-    public static void successfulTransactionUpdate(Block block) {
+    public static void successfulTransactionTrustUpdate(Block block) {
         Block updatedBlock = TrustController.successfulTransaction(block);
         blockController.updateTrustOfBlock(updatedBlock);
     }
@@ -169,7 +169,7 @@ public final class API {
      *
      * @param block the specific block
      */
-    public static void failedTransactionUpdate(Block block) {
+    public static void failedTransactionTrustUpdate(Block block) {
         Block updatedBlock = TrustController.failedTransaction(block);
         blockController.updateTrustOfBlock(updatedBlock);
     }
@@ -179,7 +179,7 @@ public final class API {
      *
      * @param block the specific block
      */
-    public static void verifyIBANUpdate(Block block) {
+    public static void verifyIBANTrustUpdate(Block block) {
         Block updatedBlock = TrustController.verifiedIBAN(block);
         blockController.updateTrustOfBlock(updatedBlock);
     }

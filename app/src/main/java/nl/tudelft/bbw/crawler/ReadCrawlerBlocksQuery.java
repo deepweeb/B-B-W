@@ -1,12 +1,5 @@
 package nl.tudelft.bbw.crawler;
 
-import static nl.tudelft.bbw.crawler.BlockDatabase.BLOCKS_TABLE_NAME;
-import static nl.tudelft.bbw.crawler.BlockDatabase.CHAIN_PUBLIC_KEY;
-import static nl.tudelft.bbw.crawler.BlockDatabase.MEMBER_PUBLIC_KEY;
-import static nl.tudelft.bbw.crawler.BlockDatabase.USER_TABLE_NAME;
-import static nl.tudelft.bbw.crawler.BlockDatabase.columnsChain;
-import static nl.tudelft.bbw.crawler.BlockDatabase.columnsMember;
-
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -70,10 +63,11 @@ public class ReadCrawlerBlocksQuery {
      * @inheritDoc
      */
     public void execute(SQLiteDatabase database) {
-        final String QUERY =
-                "SELECT " + columnsMember + "," + columnsChain + " FROM " + USER_TABLE_NAME
-                        + " JOIN " + BLOCKS_TABLE_NAME + " ON " + MEMBER_PUBLIC_KEY + " = "
-                        + CHAIN_PUBLIC_KEY + ";";
+//        final String QUERY =
+//                "SELECT " + columnsMember + ", " + columnsChain + " FROM " + USER_TABLE_NAME
+//                        + " JOIN " + BLOCKS_TABLE_NAME + " ON " + USER_TABLE_NAME + "." + MEMBER_PUBLIC_KEY + " = "
+//                        + BLOCKS_TABLE_NAME + "." + CHAIN_PUBLIC_KEY + ";";
+        final String QUERY = "SELECT member.identity, member.public_key, multi_chain.block_hash, multi_chain.link_public_key, multi_chain.previous_hash, multi_chain.sequence_number FROM member JOIN multi_chain ON member.public_key = multi_chain.public_key;";
         Cursor cursor = database.rawQuery(QUERY, new String[]{});
         parse(cursor);
         cursor.close();

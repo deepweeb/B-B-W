@@ -35,7 +35,7 @@ public final class TrustController {
     }
 
     /**
-     * failedTransaction
+     * failedTransactionUpdate
      * Calculates the new trust value given a failed transaction
      *
      * @param block the given block

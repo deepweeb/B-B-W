@@ -109,7 +109,7 @@ public class APITest {
      */
     @Test
     public final void succesfulTransactionTest() {
-        API.successfulTransaction(list.get(0));
+        API.successfulTransactionUpdate(list.get(0));
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
 
@@ -118,7 +118,7 @@ public class APITest {
      */
     @Test
     public final void failedTransactionTest() {
-        API.failedTransaction(list.get(0));
+        API.failedTransactionUpdate(list.get(0));
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
 
@@ -127,7 +127,7 @@ public class APITest {
      */
     @Test
     public final void verifyIBANTest() {
-        API.verifyIBAN(list.get(0));
+        API.verifyIBANUpdate(list.get(0));
         API.getMyContacts().get(0).getTrustValue();
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }

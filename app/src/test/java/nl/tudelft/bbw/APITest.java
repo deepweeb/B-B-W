@@ -72,7 +72,6 @@ public class APITest {
             NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         API.addAcquaintance(newUser);
         assertNotEquals(API.getMyContacts(), list);
-
     }
 
     /**
@@ -127,6 +126,9 @@ public class APITest {
     }
 
 
+    /**
+     * Test to verify if the Acquaintance object is generated correctly.
+     */
     @Test
     public final void makeAcquaintanceTest() throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, BlockAlreadyExistsException, HashException {
         API.addAcquaintance(newUser);

@@ -2,6 +2,12 @@ package nl.tudelft.bbw;
 
 import android.content.Context;
 
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.util.List;
 
 import nl.tudelft.bbw.blockchain.Acquaintance;
@@ -9,6 +15,7 @@ import nl.tudelft.bbw.blockchain.Block;
 import nl.tudelft.bbw.blockchain.User;
 import nl.tudelft.bbw.controller.BlockController;
 import nl.tudelft.bbw.controller.BlockVerificationController;
+import nl.tudelft.bbw.controller.ED25519;
 import nl.tudelft.bbw.controller.TrustController;
 import nl.tudelft.bbw.database.read.DatabaseToMultichainQuery;
 import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
@@ -34,51 +41,79 @@ public final class API {
      * can only be done once per user
      * TODO: Remove this function
      *
-     * @param owner   the User
+     * @param Name    of the API user
+     * @param Iban    of the API user
      * @param context The state of the program
      * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
-    public static void initializeAPI(User owner, Context context) throws HashException, BlockAlreadyExistsException {
+    public static User initializeAPI(String Name, String Iban, Context context) throws HashException, BlockAlreadyExistsException {
+
+        User owner;
+        EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
+        owner = new User(Name, Iban, ED25519.getPublicKey(privateKey));
+        owner.setPrivateKey(privateKey);
         blockController = new BlockController(owner, context);
         blockVerificationController = new BlockVerificationController(context);
         blockController.createGenesis(owner);
+        return owner;
     }
+
+    /**
+     * Getter method to get the API user's contact list
+     *
+     * @return List of blocks forming this user contact list.
+     */
+    public static List<Block> getMyContacts() {
+        return blockController.getBlocks(blockController.getOwnUser());
+    }
+
+    /**
+     * Getter method to get the API user's name
+     *
+     * @return name of the API user
+     */
+    public static String getMyName() {
+        return blockController.getOwnUser().getName();
+    }
+
+    /**
+     * Getter method to get the API user's Iban
+     *
+     * @return Iban number of the API user
+     */
+    public static String getMyIban() {
+        return blockController.getOwnUser().getIban();
+    }
+
+    /**
+     * Getter method to get the API user's Public Key
+     *
+     * @return Public Key  of the API user
+     */
+    public static EdDSAPublicKey getMyPublicKey() {
+        return blockController.getOwnUser().getPublicKey();
+    }
+
 
     /**
      * Method to add a contact to your chain
      *
-     * @param signature byte array containing the signature
-     * @param message byte array containing the message
      * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
-    public static void addAcquaintanceToChain(Acquaintance acquaintance, byte[] signature, byte[] message)
-            throws HashException, BlockAlreadyExistsException {
+    public static void addAcquaintance(Acquaintance acquaintance)
+            throws HashException, BlockAlreadyExistsException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+
+        final byte[] message = acquaintance.getPublicKey().getEncoded();
+        final byte[] signature = ED25519.generateSignature(message, blockController.getOwnUser().getPrivateKey());
+
+        //Adding his database into your database (so you can look up his contacts)
+        blockController.addMultichain(acquaintance.getMultichain());
+
 
         //Adding the user into your own chain
         blockController.addBlockToChain(acquaintance, signature, message);
-
-        //Adding his database into your database (so you can look up his contacts)
-        List<List<Block>> multichain = acquaintance.getMultichain();
-        if(multichain.isEmpty())
-        {
-            return;
-        }
-        for(List<Block> chain: multichain)
-        {
-            for(Block block: chain)
-            {
-                if(block.isRevoked())
-                {
-                    blockController.createRevokeBlock(block.getBlockOwner(), block.getContact());
-                }
-                else
-                {
-                    blockController.createKeyBlock(block.getBlockOwner(), block.getContact());
-                }
-            }
-        }
     }
 
     /**
@@ -88,7 +123,7 @@ public final class API {
      * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
-    public static void revokeContactFromChain(User contact)
+    public static void revokeContact(User contact)
             throws HashException, BlockAlreadyExistsException {
         //Revoke a block in own chain (adding a revoke block to the chain)
         Block revokedBlock = blockController.revokeBlockFromChain(contact);
@@ -104,7 +139,7 @@ public final class API {
      *
      * @return the chain of the user
      */
-    public static List<Block> getBlocks(User owner) {
+    public static List<Block> getContactsOf(User owner) {
         return blockController.getBlocks(owner);
     }
 
@@ -120,7 +155,7 @@ public final class API {
     /**
      * Method to update the trustValue of a block after successful transaction
      *
-     * @param block   the specific block
+     * @param block the specific block
      */
     public static void successfulTransaction(Block block) {
         Block updatedBlock = TrustController.successfulTransaction(block);
@@ -130,7 +165,7 @@ public final class API {
     /**
      * Method to update the trustValue of a block after failed transaction
      *
-     * @param block   the specific block
+     * @param block the specific block
      */
     public static void failedTransaction(Block block) {
         Block updatedBlock = TrustController.failedTransaction(block);
@@ -140,7 +175,7 @@ public final class API {
     /**
      * Method to update the trustValue of a block after successful verification
      *
-     * @param block   the specific block
+     * @param block the specific block
      */
     public static void verifyIBAN(Block block) {
         Block updatedBlock = TrustController.verifiedIBAN(block);
@@ -149,9 +184,10 @@ public final class API {
 
     /**
      * Create an acquintance object that you can send over the network
+     *
      * @return a new acquintance object
      */
-    public static Acquaintance makeAcquintanceObject() {
+    public static Acquaintance makeAcquaintanceObject() {
         DatabaseToMultichainQuery query = new DatabaseToMultichainQuery(
                 blockController.getDatabase());
         blockController.getDatabase().read(query);
@@ -160,9 +196,5 @@ public final class API {
                 query.getMultichain());
     }
 
-    //For debugging purpose
-    public static void debug()
-    {
-        blockController.getDatabase().debugDisplayDatabase();
-    }
+
 }

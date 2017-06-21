@@ -287,4 +287,29 @@ public class BlockController {
         return database;
     }
 
+
+    /**
+     * Method to add the multichain (the pairing person database) into your database
+     *
+     * @param multichain given the multichain of the pairing partner
+     * @throws BlockAlreadyExistsException
+     * @throws HashException
+     */
+    public void addMultichain(List<List<Block>> multichain) throws BlockAlreadyExistsException, HashException {
+        if (multichain.isEmpty()) {
+            return;
+        }
+        for (List<Block> chain : multichain) {
+            for (Block block : chain) {
+                if (block.getBlockType() == BlockType.GENESIS) {
+                   this.createGenesis(block.getBlockOwner());
+                } else if (block.isRevoked()) {
+                   this.createRevokeBlock(block.getBlockOwner(), block.getContact());
+                } else {
+                    this.createKeyBlock(block.getBlockOwner(), block.getContact());
+                }
+            }
+        }
+    }
+
 }

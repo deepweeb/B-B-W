@@ -23,7 +23,9 @@ import nl.tudelft.bbw.controller.ED25519;
 import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
 import nl.tudelft.bbw.exception.HashException;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertNotEquals;
 
 
@@ -34,7 +36,6 @@ public class APITest {
     /**
      * Attributes which are used more than once
      */
-    private Acquaintance owner;
     private Acquaintance newUser;
     private List<Block> list;
 
@@ -46,14 +47,20 @@ public class APITest {
      */
     @Before
     public final void setUp() throws HashException, BlockAlreadyExistsException {
-        EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
-        owner = new Acquaintance("Jeff", "iban", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
-        owner.setPrivateKey(privateKey);
-        API.initializeAPI(owner, RuntimeEnvironment.application);
-        list = API.getBlocks(owner);
 
-        privateKey = ED25519.generatePrivateKey();
+        API.initializeAPI("Jeff", "iban", RuntimeEnvironment.application);
+
+        list = API.getMyContacts();
+
+
+        EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
         newUser = new Acquaintance("Nick", "iban2", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
+
+        ArrayList<List<Block>> newUserMultichain = new ArrayList<List<Block>>();
+        ArrayList<Block> test = new ArrayList<Block>();
+        test.add(new Block(newUser));
+        newUserMultichain.add(test);
+        newUser.setMultichain(newUserMultichain);
         newUser.setPrivateKey(privateKey);
     }
 
@@ -66,14 +73,10 @@ public class APITest {
     @Test
     public final void addContactToChainTest() throws HashException, BlockAlreadyExistsException,
             NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-        API.initializeAPI(newUser, RuntimeEnvironment.application);
 
-        final byte[] message = owner.getPublicKey().getEncoded();
-        final byte[] signature = ED25519.generateSignature(message, newUser.getPrivateKey());
-        list = API.getBlocks(newUser);
-        API.addAcquaintanceToChain(owner, signature, message);
-        assertNotEquals(API.getBlocks(newUser), list);
-        API.debug();
+        API.addAcquaintance(newUser);
+        assertNotEquals(API.getMyContacts(), list);
+
     }
 
     /**
@@ -84,10 +87,13 @@ public class APITest {
      */
     @Test
     public final void revokeContactFromChainTest()
-            throws HashException, BlockAlreadyExistsException {
-        API.revokeContactFromChain(owner);
-        List<Block> listz = API.getBlocks(owner);
-        assertNotEquals(API.getBlocks(owner), list);
+            throws HashException, BlockAlreadyExistsException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+
+
+        API.addAcquaintance(newUser);
+        List<Block> list = API.getMyContacts();
+        API.revokeContact(newUser);
+        assertNotEquals(API.getMyContacts(), list);
     }
 
     /**
@@ -122,8 +128,22 @@ public class APITest {
     @Test
     public final void verifyIBANTest() {
         API.verifyIBAN(list.get(0));
-        API.getBlocks(owner).get(0).getTrustValue();
+        API.getMyContacts().get(0).getTrustValue();
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
+    }
+
+
+    @Test
+    public final void makeAcquaintanceTest() throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, BlockAlreadyExistsException, HashException {
+
+
+        API.addAcquaintance(newUser);
+        list = API.getMyContacts();
+        Acquaintance testAcquaintance = API.makeAcquaintanceObject();
+        assertEquals(API.getMyName(), testAcquaintance.getName());
+        assertEquals(API.getMyIban(), testAcquaintance.getIban());
+        assertEquals(API.getMyPublicKey(), testAcquaintance.getPublicKey());
+        assertTrue(testAcquaintance.getMultichain().contains(list));
     }
 
 }

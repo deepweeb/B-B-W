@@ -47,17 +47,14 @@ public class APITest {
      */
     @Before
     public final void setUp() throws HashException, BlockAlreadyExistsException {
-
         API.initializeAPI("Jeff", "iban", RuntimeEnvironment.application);
-
         list = API.getMyContacts();
-
 
         EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
         newUser = new Acquaintance("Nick", "iban2", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
 
-        ArrayList<List<Block>> newUserMultichain = new ArrayList<List<Block>>();
-        ArrayList<Block> test = new ArrayList<Block>();
+        List<List<Block>> newUserMultichain = new ArrayList<List<Block>>();
+        List<Block> test = new ArrayList<Block>();
         test.add(new Block(newUser));
         newUserMultichain.add(test);
         newUser.setMultichain(newUserMultichain);
@@ -73,7 +70,6 @@ public class APITest {
     @Test
     public final void addContactToChainTest() throws HashException, BlockAlreadyExistsException,
             NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-
         API.addAcquaintance(newUser);
         assertNotEquals(API.getMyContacts(), list);
 
@@ -88,8 +84,6 @@ public class APITest {
     @Test
     public final void revokeContactFromChainTest()
             throws HashException, BlockAlreadyExistsException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-
-
         API.addAcquaintance(newUser);
         List<Block> list = API.getMyContacts();
         API.revokeContact(newUser);
@@ -135,8 +129,6 @@ public class APITest {
 
     @Test
     public final void makeAcquaintanceTest() throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, BlockAlreadyExistsException, HashException {
-
-
         API.addAcquaintance(newUser);
         list = API.getMyContacts();
         Acquaintance testAcquaintance = API.makeAcquaintanceObject();

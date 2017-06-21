@@ -2,7 +2,6 @@ package nl.tudelft.bbw.blockchain;
 
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,7 +36,7 @@ public class Acquaintance extends User {
         return this.multichain;
     }
 
-    public void setMultichain(ArrayList<List<Block>> multichain)
+    public void setMultichain(List<List<Block>> multichain)
     {
         this.multichain = multichain;
     }

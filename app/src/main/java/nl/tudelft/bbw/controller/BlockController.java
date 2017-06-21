@@ -289,7 +289,7 @@ public class BlockController {
 
     /**
      * Create an acquintance object that you can send over the network
-r    * @return a new acquaintance object
+     * @return a new acquaintance object
      */
     public Acquaintance makeAcquaintanceObject() {
         DatabaseToMultichainQuery query = new DatabaseToMultichainQuery(database);

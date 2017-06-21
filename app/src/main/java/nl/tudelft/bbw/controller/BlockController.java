@@ -278,7 +278,10 @@ public class BlockController {
         }
     }
 
-    //For debugging purpose
+    /**
+     * Retrieve the corresponding database on which block controller operates
+     * @return the database used by the block controller
+     */
     public Database getDatabase()
     {
         return database;

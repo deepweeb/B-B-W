@@ -31,13 +31,14 @@ final class DatabaseReader {
      * @throws IOException when the file cannot be read
      */
     static String readDatabase() throws IOException {
-        String result = "";
+        StringBuilder stringBuilder = new StringBuilder();
         String line = "";
         BufferedReader bufferedReader = new BufferedReader(new FileReader(PATH + FILE_NAME));
         while ((line = bufferedReader.readLine()) != null) {
-            result += line + '\n';
+            stringBuilder.append(line);
+            stringBuilder.append('\n');
         }
-        return result;
+        return stringBuilder.toString();
     }
 
 }

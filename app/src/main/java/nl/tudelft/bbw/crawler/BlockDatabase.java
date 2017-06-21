@@ -15,7 +15,7 @@ public class BlockDatabase extends SQLiteAssetHelper {
     /**
      * Class attributes
      */
-    static final String DATABASE_NAME = "BlockDataBase.db";
+    static final String DATABASE_NAME = "blockdatabase.db";
     static final int DATABASE_VERSION = 1;
     static final String BLOCKS_TABLE_NAME = "multi_chain";
     static final String USER_TABLE_NAME = "member";
@@ -48,11 +48,12 @@ public class BlockDatabase extends SQLiteAssetHelper {
     public BlockDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
+        context.openOrCreateDatabase(DATABASE_NAME, context.MODE_PRIVATE, null);
     }
 
     public void read(ReadCrawlerBlocksQuery query) {
-
-        SQLiteDatabase database = this.getWritableDatabase();
+        SQLiteDatabase database = getReadableDatabase();
+        
         query.execute(database);
         database.close();
     }

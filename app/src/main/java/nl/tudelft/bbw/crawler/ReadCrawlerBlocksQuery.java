@@ -95,4 +95,5 @@ public class ReadCrawlerBlocksQuery {
                 TrustValues.INITIALIZED.getValue());
         chain.put(contactKey, blockData);
     }
+
 }

@@ -271,19 +271,32 @@ public class BlockController {
      * @throws BlockAlreadyExistsException
      * @throws HashException
      */
-    public void addMultichain(List<List<Block>> multichain) throws BlockAlreadyExistsException, HashException, DatabaseException {
+    public void addMultichain(List<List<Block>> multichain) throws BlockAlreadyExistsException,
+            HashException, DatabaseException {
         if (!multichain.isEmpty()) {
             for (List<Block> chain : multichain) {
                 for (Block block : chain) {
-                    if (block.getBlockType() == BlockType.GENESIS) {
-                        this.createGenesis(block.getBlockOwner());
-                    } else if (block.isRevoked()) {
-                        this.createRevokeBlock(block.getBlockOwner(), block.getContact());
-                    } else {
-                        this.createKeyBlock(block.getBlockOwner(), block.getContact());
-                    }
+                    createBlock(block);
                 }
             }
+        }
+    }
+
+    /**
+     * Create the provided block.
+     * @param block the block to create
+     * @throws BlockAlreadyExistsException when the block already exists
+     * @throws HashException when the calculated hash does not match the true hash
+     * @throws DatabaseException when queries could not be processed
+     */
+    private void createBlock(Block block)  throws BlockAlreadyExistsException, HashException,
+            DatabaseException {{
+        if (block.getBlockType() == BlockType.GENESIS) {
+            this.createGenesis(block.getBlockOwner());
+        } else if (block.isRevoked()) {
+            this.createRevokeBlock(block.getBlockOwner(), block.getContact());
+        } else {
+            this.createKeyBlock(block.getBlockOwner(), block.getContact());
         }
     }
 

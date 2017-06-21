@@ -24,8 +24,6 @@ android:
 
 env:
   global:
-    - TEST_SUITE=units
-    - TEST_SUITE=integration
     - API=25 # Android API level 25 by default
     - TAG=google_apis # Google APIs by default, alternatively use default but not always available
     - ABI=armeabi-v7a # ARM ABI v7a by default
@@ -98,7 +96,7 @@ before_script:
   - adb shell input keyevent 82 &
   - sleep 15
 
-script: bundle exec rake test:$TEST_SUITE
+script:
   # Build and run all device checks
   - travis_wait 60 ./gradlew build connectedCheck check lint test
 

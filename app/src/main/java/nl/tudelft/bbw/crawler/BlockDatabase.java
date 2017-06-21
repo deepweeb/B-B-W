@@ -6,6 +6,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.io.IOException;
+
 /**
  * Database handler for the block database implementation of the crawler
  * https://github.com/YourDaddyIsHere/even-cleaner-neighbor-discovery/blob/master
@@ -48,8 +50,6 @@ public class BlockDatabase extends SQLiteOpenHelper {
      */
     public BlockDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        this.context = context;
-        context.openOrCreateDatabase(DATABASE_NAME, context.MODE_PRIVATE, null);
     }
 
     public void read(ReadCrawlerBlocksQuery query) {
@@ -61,8 +61,12 @@ public class BlockDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE member( identity TEXT, public_key TEXT )");
-        db.execSQL("CREATE TABLE multi_chain( up INTEGER NOT NULL, down INTEGER NOT NULL, total_up UNSIGNED BIG INT NOT NULL, total_down UNSIGNED BIG INT NOT NULL, public_key TEXT NOT NULL, sequence_number INTEGER NOT NULL, link_public_key TEXT NOT NULL, link_sequence_number INTEGER NOT NULL, previous_hash TEXT NOT NULL, signature TEXT NOT NULL, insert_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, block_hash TEXT NOT NULL, PRIMARY KEY (public_key, sequence_number) )");
+        try {
+            System.out.println("DatabaseReader.readDatabase() = " + DatabaseReader.readDatabase());
+            db.execSQL(DatabaseReader.readDatabase());
+        } catch (IOException e) {
+            System.out.println("e = " + e);
+        }
     }
 
     @Override
@@ -73,5 +77,6 @@ public class BlockDatabase extends SQLiteOpenHelper {
         // TODO: check if the db version is lower than the latest
 
         db.execSQL(upgradeScript);
+        onCreate(db);
     }
 }

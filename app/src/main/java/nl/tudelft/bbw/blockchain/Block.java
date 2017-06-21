@@ -289,14 +289,16 @@ public class Block {
     public String toString2() {
         if(this.getBlockType().equals(BlockType.GENESIS))
         {
-            return "Block#" + getSequenceNumber() + " contact="
-                    + contact.getName() + ", iban="
-                    + contact.getIban() + (isRevoked() ? ",REVOKE" : "") + "} (My Own Block)";
+            return "Block#" + getSequenceNumber() + " {contact="
+                    + getContactName() + ", iban="
+                    + getContactIban() + (isRevoked() ? ",REVOKE" : "") + ", Trust="
+                    + getTrustValue()  +"} (My Own Block)";
         }
         else {
-            return "Block#" + getSequenceNumber() + " contact="
-                    + contact.getName() + ", iban="
-                    + contact.getIban() + (isRevoked() ? ",REVOKE" : "") + "}";
+            return "Block#" + getSequenceNumber() + " {contact="
+                    + getContactName() + ", iban="
+                    + getContactIban() + (isRevoked() ? ",REVOKE" : "") + ", Trust="
+                    + getTrustValue()  +"}";
         }
     }
 

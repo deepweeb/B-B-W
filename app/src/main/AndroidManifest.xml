@@ -9,27 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="nl.tudelft.bbw.view.MainActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="nl.tudelft.bbw.view.FriendsPageActivity"
-            android:label="@string/title_activity_friends_page" />
-        <activity
-            android:name="nl.tudelft.bbw.view.PairActivity"
-            android:label="@string/title_activity_pair" />
-        <activity
-            android:name="nl.tudelft.bbw.view.TransactionActivity"
-            android:label="TransactionActivity" />
-        <activity
-            android:name="nl.tudelft.bbw.view.ContactsActivity"
-            android:label="ContactsActivity"></activity>
-        <activity
-            android:name="nl.tudelft.bbw.view.DisplayContactFriendListActivity"
-            android:label="DisplayContactFriendListActivity" />
     </application>
+
 </manifest>

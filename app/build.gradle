@@ -37,6 +37,8 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'org.encryptor4j:encryptor4j:0.1.1'
+    compile 'com.jjoe64:graphview:4.2.1'
+    compile 'net.i2p.crypto:eddsa:0.2.0'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.8.9'
     testCompile 'org.robolectric:robolectric:3.0'
@@ -44,8 +46,6 @@ dependencies {
     androidTestCompile 'info.cukes:cucumber-android:1.2.2@jar'
     androidTestCompile 'info.cukes:cucumber-picocontainer:1.2.2'
     androidTestCompile 'org.mockito:mockito-android:2.7.22'
-    compile 'com.jjoe64:graphview:4.2.1'
-    compile 'net.i2p.crypto:eddsa:0.2.0'
 }
 
 
@@ -103,7 +103,7 @@ task findbugs(type: FindBugs) {
 task pmd(type: Pmd) {
     ruleSetFiles = files("${project.rootDir}/config/pmd/pmd-ruleset.xml")
     ignoreFailures = true
-    ruleSets = [ "java-basic", "java-strings", "java-braces" ]
+    ruleSets = ["java-basic", "java-strings", "java-braces"]
 
     source 'src'
     include '**/*.java'

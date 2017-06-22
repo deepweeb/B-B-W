@@ -31,6 +31,7 @@ import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
 import nl.tudelft.bbw.exception.HashException;
 
 public class MainActivity extends Activity {
+    final Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +77,6 @@ public class MainActivity extends Activity {
 
         TreeNode contacts = new TreeNode("> My Contacts");
         TreeNode pairing = new TreeNode("> Bluetooth Pairing");
-
-        final Context context = this;
 
         for (final Block block : BlockChainAPI.getMyContacts()) {
             if (!block.getContactIban().equals(BlockChainAPI.getMyIban())) {
@@ -145,15 +144,37 @@ public class MainActivity extends Activity {
         }
         TreeNode hisContacts = new TreeNode(addSpace(layerCount) + "> Contacts");
 
-        for (Block hisBlock : hisBlockList) {
+        for (final Block hisBlock : hisBlockList) {
             if (!hisBlock.getContactIban().equals(contact.getIban())) {
                 TreeNode contactName = new TreeNode(addSpace(layerCount + 1) + "> " + hisBlock.getContactName());
                 TreeNode iban = new TreeNode(addSpace(layerCount + 1) + "IBAN: " + hisBlock.getContactIban());
                 TreeNode trust = new TreeNode(addSpace(layerCount + 1) + "Trust Value: " + hisBlock.getTrustValue());
                 TreeNode publicKey = new TreeNode(addSpace(layerCount + 1) + "Public Key: " + hisBlock.getContactPublicKey());
+                TreeNode addToContactList = new TreeNode((addSpace(layerCount + 1) +"Add to your contact list"));
+                addToContactList.setClickListener(new TreeNode.TreeNodeClickListener() {
+                    @Override
+                    public void onClick(TreeNode node, Object value) {
+                        Toast.makeText(context, "Transaction Succeeded, Trust Value upgraded!", Toast.LENGTH_SHORT).show();
+                        try {
+                            BlockChainAPI.addContact(hisBlock.getContact());
+                        } catch (HashException e) {
+                            e.printStackTrace();
+                        } catch (BlockAlreadyExistsException e) {
+                            e.printStackTrace();
+                        } catch (NoSuchAlgorithmException e) {
+                            e.printStackTrace();
+                        } catch (InvalidKeyException e) {
+                            e.printStackTrace();
+                        } catch (SignatureException e) {
+                            e.printStackTrace();
+                        }
+
+                        updateView();
+                    }
+                });
                 TreeNode contactl = displayContact(hisBlock.getContact(), BlockChainAPI.getContactsOf(hisBlock.getContact()), layerCount + 1);
 
-                contactName.addChildren(iban, trust, publicKey, contactl);
+                contactName.addChildren(iban, trust, publicKey, addToContactList, contactl);
                 hisContacts.addChild(contactName);
             }
         }

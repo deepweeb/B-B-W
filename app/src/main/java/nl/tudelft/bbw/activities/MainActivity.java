@@ -78,10 +78,10 @@ public class MainActivity extends Activity {
         for (Block block : BlockChainAPI.getMyContacts()) {
             if(!block.getContactIban().equals(BlockChainAPI.getMyIban())) {
                 TreeNode contactName = new TreeNode("\t> " + block.getContactName());
-                TreeNode iban = new TreeNode("\t\t\t\t IBAN: " + block.getContactIban());
-                TreeNode trust = new TreeNode("\t\t\t\t Trust Value: " + block.getTrustValue());
-                TreeNode publicKey = new TreeNode("\t\t\t\t Public Key: " + block.getContactPublicKey());
-                TreeNode transaction = new TreeNode("\t\t\t\t> Send money");
+                TreeNode iban = new TreeNode("\t\t\t\tIBAN: " + block.getContactIban());
+                TreeNode trust = new TreeNode("\t\t\t\tTrust Value: " + block.getTrustValue());
+                TreeNode publicKey = new TreeNode("\t\t\t\tPublic Key: " + block.getContactPublicKey());
+                TreeNode transaction = new TreeNode("\t\t\t\t>Send money");
                 TreeNode succesfulTransaction = new TreeNode("\t\t\t\t\t\t\tSuccesful transaction");
                 succesfulTransaction.setClickListener(new TreeNode.TreeNodeClickListener() {
                     @Override
@@ -101,7 +101,7 @@ public class MainActivity extends Activity {
                 transaction.addChildren(succesfulTransaction, failedTransaction);
 
 
-                TreeNode hisContacts = displayContact(block.getContact() ,BlockChainAPI.getContactsOf(block.getContact()));
+                TreeNode hisContacts = displayContact(block.getContact() ,BlockChainAPI.getContactsOf(block.getContact()), 1);
 
                 contactName.addChildren(iban, trust, publicKey, transaction, hisContacts);
 
@@ -130,20 +130,20 @@ public class MainActivity extends Activity {
         ((ConstraintLayout) findViewById(R.id.container)).addView(tView.getView());
     }
 
-    public TreeNode displayContact(User contact, List<Block> hisBlockList){
+    public TreeNode displayContact(User contact, List<Block> hisBlockList, int layerCount){
         if(hisBlockList.size() == 1)
         {
-            return new TreeNode("\t\t\t\t> Contacts (No Contact Available)");
+            return new TreeNode(addSpace(layerCount) +"> Contacts (No Contact Available)");
         }
-        TreeNode hisContacts = new TreeNode("\t\t\t\t> Contacts");
+        TreeNode hisContacts = new TreeNode(addSpace(layerCount) +"> Contacts");
 
         for (Block hisBlock : hisBlockList) {
             if(!hisBlock.getContactIban().equals(contact.getIban())) {
-                TreeNode contactName = new TreeNode("\t> " + hisBlock.getContactName());
-                TreeNode iban = new TreeNode("\t\t\t\t IBAN: " + hisBlock.getContactIban());
-                TreeNode trust = new TreeNode("\t\t\t\t Trust Value: " + hisBlock.getTrustValue());
-                TreeNode publicKey = new TreeNode("\t\t\t\t Public Key: " + hisBlock.getContactPublicKey());
-                TreeNode contactl = displayContact(hisBlock.getContact(), BlockChainAPI.getContactsOf(hisBlock.getContact()));
+                TreeNode contactName = new TreeNode(addSpace(layerCount)+ "> " + hisBlock.getContactName());
+                TreeNode iban = new TreeNode(addSpace(layerCount) +"IBAN: " + hisBlock.getContactIban());
+                TreeNode trust = new TreeNode(addSpace(layerCount) +"Trust Value: " + hisBlock.getTrustValue());
+                TreeNode publicKey = new TreeNode(addSpace(layerCount) +"Public Key: " + hisBlock.getContactPublicKey());
+                TreeNode contactl = displayContact(hisBlock.getContact(), BlockChainAPI.getContactsOf(hisBlock.getContact()), layerCount+1);
 
                 contactName.addChildren(iban, trust, publicKey, contactl);
                 hisContacts.addChild(contactName);
@@ -151,6 +151,15 @@ public class MainActivity extends Activity {
         }
 
         return hisContacts;
+    }
+
+    public String addSpace(int layerCount) {
+        String space = "\t\t\t\t";
+        for (int j=1; j < layerCount;  j++){
+            space = space + space;
+            return space;
+        }
+        return space;
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////

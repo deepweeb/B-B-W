@@ -114,9 +114,11 @@ public class MainActivity extends Activity {
         TreeNode ibanAq1 = new TreeNode("\t\t\t\t IBAN: NL Aq1 111111111111");
         TreeNode trustAq1 = new TreeNode("\t\t\t\t Trust Value: 25");
         TreeNode pubKeyAq1 = new TreeNode("\t\t\t\t Public Key: dj83uf9hf389h");
-        TreeNode contactsAq1 = new TreeNode("\t\t\t\t < Contacts");
-        acquaintance1.addChildren(ibanAq1, trustAq1, pubKeyAq1);
+        TreeNode contactsAq1 = new TreeNode("\t\t\t\t > Contacts");
+        TreeNode addToContactList = new TreeNode("\t\t\t\t Add to your contact list");
+        acquaintance1.addChildren(ibanAq1, trustAq1, pubKeyAq1, contactsAq1, addToContactList);
 
+        pairing.addChild(acquaintance1);
 
         root.addChild(contacts);
         root.addChild(pairing);

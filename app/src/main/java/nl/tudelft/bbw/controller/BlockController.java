@@ -274,12 +274,23 @@ public class BlockController {
     public void addMultichain(List<List<Block>> multichain) throws BlockAlreadyExistsException,
             HashException, DatabaseException {
         if (!multichain.isEmpty()) {
+            //add genesis blocks first
+            for (List<Block> chain : multichain) {
+                createBlock(chain.get(0));
+            }
+
+
             for (List<Block> chain : multichain) {
                 for (Block block : chain) {
+                    if(!block.equals(chain.get(0)))
                     createBlock(block);
                 }
             }
         }
+
+
+
+
     }
 
     /**
@@ -312,4 +323,6 @@ public class BlockController {
         return new Acquaintance(owner.getName(), owner.getIban(), owner.getPublicKey(),
                 query.getMultichain());
     }
+    
 }
+

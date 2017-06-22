@@ -6,16 +6,12 @@
     android:layout_height="wrap_content"
     tools:context="nl.tudelft.bbw.activities.MainActivity3">
 
-    <ExpandableListView
-        android:id="@+id/expanded_menu"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </ExpandableListView>
-
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="8dp">
 
         <TextView
             android:id="@+id/parentPanel"
@@ -32,4 +28,12 @@
             android:paddingBottom="10dp"
             />
     </LinearLayout>
-    </android.support.constraint.ConstraintLayout>
+
+    <ExpandableListView
+        android:layout_width="0dp"
+        android:layout_height="57dp"
+        android:layout_marginBottom="-2dp"
+        android:entries="a,b,c"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="16dp" />
+</android.support.constraint.ConstraintLayout>

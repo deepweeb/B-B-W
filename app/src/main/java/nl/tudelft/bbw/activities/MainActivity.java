@@ -33,6 +33,7 @@ import nl.tudelft.bbw.exception.HashException;
 
 public class MainActivity extends Activity {
     final Context context = this;
+    List<Acquaintance> acquaintancesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +50,20 @@ public class MainActivity extends Activity {
 
         //TODO: remove after testing
         try {
+
+
             addContactForTesting();
             addContactForTesting2();
+
+
+            Acquaintance testAcquaintance = generateAcquaintanceForTest();
+            Acquaintance testAcquaintance2 = generateAcquaintanceForTest2();
+
+            BlockChainAPI.addAcquaintanceMultichain(testAcquaintance);
+            BlockChainAPI.addAcquaintanceMultichain(testAcquaintance2);
+            acquaintancesList.add(testAcquaintance);
+            acquaintancesList.add(testAcquaintance2);
+
         } catch (BlockAlreadyExistsException e) {
             e.printStackTrace();
         } catch (HashException e) {
@@ -62,6 +75,15 @@ public class MainActivity extends Activity {
         } catch (SignatureException e) {
             e.printStackTrace();
         }
+
+
+
+
+
+
+
+
+
 
 
         updateView();
@@ -267,6 +289,65 @@ public class MainActivity extends Activity {
 
         //Add contact userB to userA (yourself)
         Block blockB = BlockChainAPI.addContact(userB);
+    }
+
+
+    public Acquaintance generateAcquaintanceForTest() throws BlockAlreadyExistsException, HashException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+        EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
+        Acquaintance userB = new Acquaintance("Yusuf", "NLABN23423523523424", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
+        Block userBGenesis = new Block(userB);
+
+        //Initializing userC.
+        EdDSAPrivateKey privateKey2 = ED25519.generatePrivateKey();
+        User userC = new User("Mohammed", "NLEFR232423423423234", ED25519.getPublicKey(privateKey2));
+        Block userCGenesis = new Block(userC);
+        userC.setPrivateKey(privateKey2);
+
+        //Add userC to the chain of userB
+        Block keyblock = createKeyBlock(userBGenesis, userCGenesis, BlockType.ADD_KEY);
+        List<List<Block>> multichain = new ArrayList<List<Block>>();
+        List<Block> test = new ArrayList<Block>();
+        test.add(userBGenesis);
+        test.add(keyblock);
+        multichain.add(test);
+
+        //Add genesis of userC into multichain of userB
+        List<Block> test2 = new ArrayList<Block>();
+        test2.add(userCGenesis);
+        multichain.add(test2);
+        userB.setMultichain(multichain);
+
+        userB.setPrivateKey(privateKey);
+        return userB;
+    }
+
+    public Acquaintance generateAcquaintanceForTest2() throws BlockAlreadyExistsException, HashException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+        EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
+        Acquaintance userB = new Acquaintance("Karina", "NLEW23423423423", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
+        Block userBGenesis = new Block(userB);
+
+        //Initializing userC.
+        EdDSAPrivateKey privateKey2 = ED25519.generatePrivateKey();
+        User userC = new User("Fatima", "NLER2342342342", ED25519.getPublicKey(privateKey2));
+        Block userCGenesis = new Block(userC);
+        userC.setPrivateKey(privateKey2);
+
+        //Add userC to the chain of userB
+        Block keyblock = createKeyBlock(userBGenesis, userCGenesis, BlockType.ADD_KEY);
+        List<List<Block>> multichain = new ArrayList<List<Block>>();
+        List<Block> test = new ArrayList<Block>();
+        test.add(userBGenesis);
+        test.add(keyblock);
+        multichain.add(test);
+
+        //Add genesis of userC into multichain of userB
+        List<Block> test2 = new ArrayList<Block>();
+        test2.add(userCGenesis);
+        multichain.add(test2);
+        userB.setMultichain(multichain);
+
+        userB.setPrivateKey(privateKey);
+        return userB;
     }
 
     /**

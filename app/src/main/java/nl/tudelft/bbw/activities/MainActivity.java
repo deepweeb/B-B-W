@@ -7,11 +7,24 @@ import android.support.constraint.ConstraintLayout;
 import com.unnamed.b.atv.model.TreeNode;
 import com.unnamed.b.atv.view.AndroidTreeView;
 
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
+import java.util.ArrayList;
 import java.util.List;
 
 import nl.tudelft.bbw.BlockChainAPI;
 import nl.tudelft.bbw.R;
+import nl.tudelft.bbw.blockchain.Acquaintance;
 import nl.tudelft.bbw.blockchain.Block;
+import nl.tudelft.bbw.blockchain.BlockData;
+import nl.tudelft.bbw.blockchain.BlockType;
+import nl.tudelft.bbw.blockchain.Hash;
+import nl.tudelft.bbw.blockchain.TrustValues;
+import nl.tudelft.bbw.blockchain.User;
+import nl.tudelft.bbw.controller.ED25519;
 import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
 import nl.tudelft.bbw.exception.HashException;
 
@@ -29,50 +42,28 @@ public class MainActivity extends Activity {
             e.printStackTrace();
         }
 
-        addContactForTesting();
+
+//        //TODO: remove after testing
+//        try {
+//            addContactForTesting();
+//        } catch (BlockAlreadyExistsException e) {
+//            e.printStackTrace();
+//        } catch (HashException e) {
+//            e.printStackTrace();
+//        } catch (NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//        } catch (InvalidKeyException e) {
+//            e.printStackTrace();
+//        } catch (SignatureException e) {
+//            e.printStackTrace();
+//        }
 
 
         updateView();
 
-        /*ListView tree = (ListView) findViewById(R.id.listTree);
-
-        final ArrayNodes root = new ArrayNodes(
-                new String[] { "Contacts", "Pairing" },
-                new INodes[] { null, null }
-        );
-
-        tree.setAdapter(new BaseAdapter() {
-            @Override
-            public int getCount() {
-                return root.getLength();
-            }
-
-            @Override
-            public Object getItem(int position) {
-                return "Test";
-            }
-
-            @Override
-            public long getItemId(int position) {
-                return 0;
-            }
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-                TextView view = (TextView) inflater.inflate(R.layout.node, null);
-                view.setText(root.getName(position));
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                    }
-                });
-                return view;
-            }
-        });*/
     }
 
-    public void updateView(){
+    public void updateView() {
 
 
         TreeNode root = TreeNode.root();
@@ -83,12 +74,12 @@ public class MainActivity extends Activity {
 
         List<Block> myContacts = BlockChainAPI.getMyContacts();
 
-        for(Block block : myContacts){
+        for (Block block : myContacts) {
             TreeNode contactName = new TreeNode("\t> " + block.getContactName());
 
             TreeNode iban = new TreeNode("\t\t\t\t IBAN: " + block.getContactIban());
             TreeNode trust = new TreeNode("\t\t\t\t Trust Value: " + block.getTrustValue());
-            TreeNode publicKey = new TreeNode("\t\t\t\t Public Key: " +block.getContactPublicKey());
+            TreeNode publicKey = new TreeNode("\t\t\t\t Public Key: " + block.getContactPublicKey());
             contactName.addChildren(iban, trust, publicKey);
 
             TreeNode hisContacts = new TreeNode("\t\t\t\t> Contacts");
@@ -101,14 +92,13 @@ public class MainActivity extends Activity {
             contactName.addChild(transaction);
 
 
-
             contacts.addChild(contactName);
 
 
         }
         TreeNode child0 = new TreeNode("ChildNode0");
         TreeNode child1 = new TreeNode("ChildNode1");
-       // parent.addChildren(child0, child1);
+        // parent.addChildren(child0, child1);
         root.addChild(contacts);
         root.addChild(pairing);
 
@@ -118,12 +108,66 @@ public class MainActivity extends Activity {
     }
 
 
-    public void addContactForTesting()
-    {
+    /////////////////////////////////////////////////////////////////////////////////////////////
 
+
+    public void addContactForTesting() throws BlockAlreadyExistsException, HashException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+        EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
+        Acquaintance userB = new Acquaintance("Luat", "NL623423423423", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
+        Block userBGenesis = new Block(userB);
+
+        //Initializing C.
+        User userC = new User("Ymte", "NLe1242343424", ED25519.getPublicKey(privateKey));
+        Block userCGenesis = new Block(userC);
+
+
+        //Add C to the chain of B
+        Block keyblock = createKeyBlock(userBGenesis, userCGenesis, BlockType.ADD_KEY);
+        List<List<Block>> multichain = new ArrayList<List<Block>>();
+        List<Block> test = new ArrayList<Block>();
+        test.add(userBGenesis);
+        test.add(keyblock);
+        multichain.add(test);
+
+        //Add genesis of C into multichain of B
+        List<Block> test2 = new ArrayList<Block>();
+        test2.add(userCGenesis);
+        multichain.add(test2);
+        userB.setMultichain(multichain);
+
+        userB.setPrivateKey(privateKey);
+
+        //Add multichain of B into your database right after pairing
+        BlockChainAPI.addAcquaintanceMultichain(userB);
+
+        //Add contact B to A (yourself)
+        Block blockB = BlockChainAPI.addContact(userB);
+    }
+
+    /**
+     * Method to return a key block to add to a chain
+     * This method is made  to create test blocks for the tests
+     *
+     * @param contact
+     * @param blockType
+     * @return
+     * @throws HashException
+     * @throws BlockAlreadyExistsException
+     */
+    public Block createKeyBlock(Block latest, Block contact,
+                                BlockType blockType) throws HashException, BlockAlreadyExistsException {
+        Hash previousBlockHash = latest.getOwnHash();
+        // always link to genesis of contact blocks
+        Hash contactBlockHash;
+        contactBlockHash = contact.getOwnHash();
+        int seqNumber = latest.getSequenceNumber() + 1;
+
+        BlockData blockData = new BlockData(blockType, seqNumber, previousBlockHash,
+                contactBlockHash, TrustValues.INITIALIZED.getValue()
+        );
+        final Block block = new Block(latest.getBlockOwner(), contact.getBlockOwner(), blockData);
+        return block;
     }
 
 
-
-
-    }
+}

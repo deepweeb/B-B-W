@@ -6,18 +6,23 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
+
 import java.io.IOException;
+
+import nl.tudelft.bbw.database.Database;
 
 /**
  * Database handler for the block database implementation of the crawler
  * https://github.com/YourDaddyIsHere/even-cleaner-neighbor-discovery/blob/master
  * /HalfBlockDatabase.py
  */
-public class BlockDatabase extends SQLiteOpenHelper {
+public class BlockDatabase extends SQLiteAssetHelper {
 
     /**
      * Class attributes
      */
+    static final String PATH = "app/src/main/assets/databases/";
     static final String DATABASE_NAME = "blockdatabase.db";
     static final int DATABASE_VERSION = 1;
     static final String BLOCKS_TABLE_NAME = "multi_chain";
@@ -49,34 +54,14 @@ public class BlockDatabase extends SQLiteOpenHelper {
      * @param context given context
      */
     public BlockDatabase(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, DATABASE_NAME, PATH, null, DATABASE_VERSION);
     }
 
     public void read(ReadCrawlerBlocksQuery query) {
-        SQLiteDatabase database = getReadableDatabase();
+        SQLiteDatabase database = getWritableDatabase();
         
         query.execute(database);
         database.close();
     }
 
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        try {
-            System.out.println("DatabaseReader.readDatabase() = " + DatabaseReader.readDatabase());
-            db.execSQL(DatabaseReader.readDatabase());
-        } catch (IOException e) {
-            System.out.println("e = " + e);
-        }
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        final String upgradeScript = "DROP TABLE IF EXISTS " + BLOCK_TABLE_NAME + ";"
-                + "DROP TABLE IF EXISTS option;";
-
-        // TODO: check if the db version is lower than the latest
-
-        db.execSQL(upgradeScript);
-        onCreate(db);
-    }
 }

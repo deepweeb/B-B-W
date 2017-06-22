@@ -1,10 +1,10 @@
 package nl.tudelft.bbw.crawler;
 
-import static nl.tudelft.bbw.crawler.BlockDatabase.BLOCKS_TABLE_NAME;
-import static nl.tudelft.bbw.crawler.BlockDatabase.USER_TABLE_NAME;
-import static nl.tudelft.bbw.crawler.BlockDatabase.COLUMNS_CHAIN;
-import static nl.tudelft.bbw.crawler.BlockDatabase.COLUMNS_MEMBER;
-import static nl.tudelft.bbw.crawler.BlockDatabase.JOIN_TABLES;
+import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.BLOCKS_TABLE_NAME;
+import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.USER_TABLE_NAME;
+import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.COLUMNS_CHAIN;
+import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.COLUMNS_MEMBER;
+import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.JOIN_TABLES;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -27,7 +27,10 @@ import nl.tudelft.bbw.blockchain.User;
  */
 public class ReadCrawlerBlocksQuery {
 
-    private static final String NA = "N/A";
+    /**
+     * String which is used when a attribute is unknown
+     */
+    private static final String unknown = "N/A";
     /**
      * Column indices for blocks
      */
@@ -65,7 +68,7 @@ public class ReadCrawlerBlocksQuery {
         if (cursor.getCount() == 0) {
             chain = null;
         } else {
-            chain = new HashMap<>((int) (cursor.getCount() * 1.33));
+            chain = new HashMap<>();
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
                 makeBlock(cursor);
             }
@@ -99,13 +102,13 @@ public class ReadCrawlerBlocksQuery {
         BlockType type = BlockType.ADD_KEY;
 
         Hash previousHashChain = new Hash(getStringOfCursor(cursor, INDEX_PREV_HASH_CHAIN));
-        Hash previousHashSender = new Hash(getStringOfCursor(cursor, INDEX_PREV_PUB));
+        Hash previousPKSender = new Hash(getStringOfCursor(cursor, INDEX_PREV_PUB));
         String contactKey = getStringOfCursor(cursor, INDEX_PUB_KEY);
 
         User user = new User(getStringOfCursor(cursor, INDEX_ID), contactKey);
-        User contact = new User(NA, getStringOfCursor(cursor, INDEX_PUB_KEY));
+        User contact = new User(unknown , getStringOfCursor(cursor, INDEX_PUB_KEY));
         BlockData blockData = new BlockData(type, cursor.getInt(INDEX_SEQ_NO), previousHashChain,
-                previousHashSender,
+                previousPKSender,
                 TrustValues.INITIALIZED.getValue());
         Block block = new Block(user, contact, blockData);
         List<Block> blocks = chain.get(contactKey);

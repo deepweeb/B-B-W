@@ -10,7 +10,7 @@ import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
  * https://github.com/YourDaddyIsHere/even-cleaner-neighbor-discovery/blob/master
  * /HalfBlockDatabase.py
  */
-public class BlockDatabase extends SQLiteAssetHelper {
+public class CrawledBlocksDatabase extends SQLiteAssetHelper {
 
     /**
      * Attributes for the member table
@@ -55,7 +55,7 @@ public class BlockDatabase extends SQLiteAssetHelper {
      *
      * @param context given context
      */
-    public BlockDatabase(Context context) {
+    public CrawledBlocksDatabase(Context context) {
         super(context, DATABASE_NAME, PATH, null, DATABASE_VERSION);
     }
 

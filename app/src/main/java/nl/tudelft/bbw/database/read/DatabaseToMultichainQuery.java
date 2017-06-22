@@ -29,6 +29,16 @@ public class DatabaseToMultichainQuery extends ReadQuery {
     private Database database;
 
     /**
+     * Blocks of the user we are currently reading
+     */
+    private List<Block> currentUserBlocks;
+
+    /**
+     * The user which blocks we read the previous block of
+     */
+    private User currentUser;
+
+    /**
      * Construct a new DatabaseToMultichainQuery
      *
      * @param database the database to construct the blocks from
@@ -47,43 +57,38 @@ public class DatabaseToMultichainQuery extends ReadQuery {
     @Override
     public void parse(Cursor cursor) {
         multichain = new ArrayList<List<Block>>();
-        List<Block> currentBlocks = new ArrayList<Block>();
-        User previousUser = null;
+        currentUserBlocks = new ArrayList<Block>();
+        currentUser = null;
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            previousUser = handleBlock(toBlock(database, cursor), currentBlocks, previousUser);
+            handleBlock(toBlock(database, cursor));
         }
 
         // add the final block list since no new user is to be found in the end while the blocks
         // still must be added
-        if (previousUser != null) {
-            multichain.add(currentBlocks);
+        if (currentUser != null) {
+            multichain.add(currentUserBlocks);
         }
     }
 
     /**
      * Handle a block retrieved from the database and add it to this query's multichain
      * @param block the block to add
-     * @param currentBlocks blocks of the current user
-     * @param previousUser the owner of the last block handled
-     * @return the owner of this block
      */
-    private User handleBlock(Block block, List<Block> currentBlocks, User previousUser) {
+    private void handleBlock(Block block) {
         // initialize previous block owner
-        if (previousUser == null) {
-            previousUser = block.getBlockOwner();
+        if (currentUser == null) {
+            currentUser = block.getBlockOwner();
         }
 
         // if encountering a new user, add current blocks to multichain and initialize
         // a new block array. Also set the previous user.
-        else if (!block.getBlockOwner().equals(previousUser)) {
-            multichain.add(currentBlocks);
-            currentBlocks = new ArrayList<Block>();
-            previousUser = block.getBlockOwner();
+        else if (!block.getBlockOwner().equals(currentUser)) {
+            multichain.add(currentUserBlocks);
+            currentUserBlocks = new ArrayList<Block>();
+            currentUser = block.getBlockOwner();
         }
 
-        currentBlocks.add(block);
-
-        return previousUser;
+        currentUserBlocks.add(block);
     }
 
     /**

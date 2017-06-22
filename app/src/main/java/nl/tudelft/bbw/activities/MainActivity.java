@@ -1,8 +1,10 @@
 package nl.tudelft.bbw.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.widget.Toast;
 
 import com.unnamed.b.atv.model.TreeNode;
 import com.unnamed.b.atv.view.AndroidTreeView;
@@ -43,20 +45,20 @@ public class MainActivity extends Activity {
         }
 
 
-//        //TODO: remove after testing
-//        try {
-//            addContactForTesting();
-//        } catch (BlockAlreadyExistsException e) {
-//            e.printStackTrace();
-//        } catch (HashException e) {
-//            e.printStackTrace();
-//        } catch (NoSuchAlgorithmException e) {
-//            e.printStackTrace();
-//        } catch (InvalidKeyException e) {
-//            e.printStackTrace();
-//        } catch (SignatureException e) {
-//            e.printStackTrace();
-//        }
+        //TODO: remove after testing
+        try {
+            addContactForTesting();
+        } catch (BlockAlreadyExistsException e) {
+            e.printStackTrace();
+        } catch (HashException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (SignatureException e) {
+            e.printStackTrace();
+        }
 
 
         updateView();
@@ -73,28 +75,36 @@ public class MainActivity extends Activity {
 
 
         List<Block> myContacts = BlockChainAPI.getMyContacts();
-
+        final Context context = this;
         for (Block block : myContacts) {
-            TreeNode contactName = new TreeNode("\t> " + block.getContactName());
+            if(!block.getContactIban().equals(BlockChainAPI.getMyIban())) {
+                TreeNode contactName = new TreeNode("\t> " + block.getContactName());
 
-            TreeNode iban = new TreeNode("\t\t\t\t IBAN: " + block.getContactIban());
-            TreeNode trust = new TreeNode("\t\t\t\t Trust Value: " + block.getTrustValue());
-            TreeNode publicKey = new TreeNode("\t\t\t\t Public Key: " + block.getContactPublicKey());
-            contactName.addChildren(iban, trust, publicKey);
+                TreeNode iban = new TreeNode("\t\t\t\t IBAN: " + block.getContactIban());
+                TreeNode trust = new TreeNode("\t\t\t\t Trust Value: " + block.getTrustValue());
+                TreeNode publicKey = new TreeNode("\t\t\t\t Public Key: " + block.getContactPublicKey());
+                contactName.addChildren(iban, trust, publicKey);
 
-            TreeNode hisContacts = new TreeNode("\t\t\t\t> Contacts");
-            contactName.addChild(hisContacts);
+                TreeNode hisContacts = new TreeNode("\t\t\t\t> Contacts");
+                contactName.addChild(hisContacts);
 
-            TreeNode transaction = new TreeNode("\t\t\t\t> Send money");
-            TreeNode succesfulTransaction = new TreeNode("\t\t\t\t\t\t\tSuccesful transaction");
-            TreeNode failedTransaction = new TreeNode("\t\t\t\t\t\t\tFailed transaction");
-            transaction.addChildren(succesfulTransaction, failedTransaction);
-            contactName.addChild(transaction);
+                TreeNode transaction = new TreeNode("\t\t\t\t> Send money");
+                TreeNode succesfulTransaction = new TreeNode("\t\t\t\t\t\t\tSuccesful transaction");
+                succesfulTransaction.setClickListener(new TreeNode.TreeNodeClickListener() {
+                    @Override
+                    public void onClick(TreeNode node, Object value) {
+                        Toast.makeText(context, "Hoi", Toast.LENGTH_LONG).show();
+                    }
+                });
+                TreeNode failedTransaction = new TreeNode("\t\t\t\t\t\t\tFailed transaction");
+                transaction.addChildren(succesfulTransaction, failedTransaction);
+                contactName.addChild(transaction);
 
+  //             failedTransaction.isExpanded();
+       //         failedTransaction.setExpanded(true);
+                contacts.addChild(contactName);
 
-            contacts.addChild(contactName);
-
-
+            }
         }
         TreeNode child0 = new TreeNode("ChildNode0");
         TreeNode child1 = new TreeNode("ChildNode1");
@@ -117,9 +127,10 @@ public class MainActivity extends Activity {
         Block userBGenesis = new Block(userB);
 
         //Initializing C.
-        User userC = new User("Ymte", "NLe1242343424", ED25519.getPublicKey(privateKey));
+        EdDSAPrivateKey privateKey2 = ED25519.generatePrivateKey();
+        User userC = new User("Ymte", "NLe1242343424", ED25519.getPublicKey(privateKey2));
         Block userCGenesis = new Block(userC);
-
+        userC.setPrivateKey(privateKey2);
 
         //Add C to the chain of B
         Block keyblock = createKeyBlock(userBGenesis, userCGenesis, BlockType.ADD_KEY);

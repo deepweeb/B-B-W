@@ -48,6 +48,7 @@ public class MainActivity extends Activity {
         //TODO: remove after testing
         try {
             addContactForTesting();
+            addContactForTesting2();
         } catch (BlockAlreadyExistsException e) {
             e.printStackTrace();
         } catch (HashException e) {
@@ -140,6 +141,40 @@ public class MainActivity extends Activity {
         //Initializing C.
         EdDSAPrivateKey privateKey2 = ED25519.generatePrivateKey();
         User userC = new User("Ymte", "NLe1242343424", ED25519.getPublicKey(privateKey2));
+        Block userCGenesis = new Block(userC);
+        userC.setPrivateKey(privateKey2);
+
+        //Add C to the chain of B
+        Block keyblock = createKeyBlock(userBGenesis, userCGenesis, BlockType.ADD_KEY);
+        List<List<Block>> multichain = new ArrayList<List<Block>>();
+        List<Block> test = new ArrayList<Block>();
+        test.add(userBGenesis);
+        test.add(keyblock);
+        multichain.add(test);
+
+        //Add genesis of C into multichain of B
+        List<Block> test2 = new ArrayList<Block>();
+        test2.add(userCGenesis);
+        multichain.add(test2);
+        userB.setMultichain(multichain);
+
+        userB.setPrivateKey(privateKey);
+
+        //Add multichain of B into your database right after pairing
+        BlockChainAPI.addAcquaintanceMultichain(userB);
+
+        //Add contact B to A (yourself)
+        Block blockB = BlockChainAPI.addContact(userB);
+    }
+
+    public void addContactForTesting2() throws BlockAlreadyExistsException, HashException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+        EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
+        Acquaintance userB = new Acquaintance("Jasper", "NL64544463423423423", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
+        Block userBGenesis = new Block(userB);
+
+        //Initializing C.
+        EdDSAPrivateKey privateKey2 = ED25519.generatePrivateKey();
+        User userC = new User("Ashay", "NL55332343424", ED25519.getPublicKey(privateKey2));
         Block userCGenesis = new Block(userC);
         userC.setPrivateKey(privateKey2);
 

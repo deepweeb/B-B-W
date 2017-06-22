@@ -2,10 +2,10 @@ package nl.tudelft.bbw.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.widget.ExpandableListView;
 
 import nl.tudelft.bbw.R;
+import nl.tudelft.bbw.TreeAdapter;
 
 public class MainActivity extends Activity {
 
@@ -14,11 +14,16 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        Spinner contactSpinner = (Spinner) findViewById(R.id.spinnerContact);
+        ExpandableListView tree = (ExpandableListView) findViewById(R.id.tree);
 
-        ArrayAdapter<String> contactAdapter = new ArrayAdapter<String>(MainActivity.this,
-                android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.contacts));
-        contactAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        contactSpinner.setAdapter(contactAdapter);
+        tree.setAdapter(new TreeAdapter(this.getBaseContext(),
+                new String[] {"Alice", "Bob", "Carol"},
+                new String[][]{
+                        new String[]{"A1", "A2"},
+                        new String[]{"B1", "B2"},
+                        new String[]{"C1", "C2"},
+                }
+        ));
+
     }
 }

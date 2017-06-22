@@ -39,7 +39,6 @@ dependencies {
     compile 'org.encryptor4j:encryptor4j:0.1.1'
     compile 'com.jjoe64:graphview:4.2.1'
     compile 'net.i2p.crypto:eddsa:0.2.0'
-    compile 'com.github.bmelnychuk:atv:1.2.+'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.8.9'
     testCompile 'org.robolectric:robolectric:3.0'

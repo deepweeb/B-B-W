@@ -30,6 +30,18 @@ public class User {
     }
 
     /**
+     * Constructor for user class
+     * User class used by crawler, iban in this user class is equal to the string representation of the read public key
+     *
+     * @param name given name
+     * @param iban given iban
+     */
+    public User(String name, String iban) {
+        this.name = name;
+        this.iban = iban;
+    }
+
+    /**
      * getName function
      *
      * @return name of this.user

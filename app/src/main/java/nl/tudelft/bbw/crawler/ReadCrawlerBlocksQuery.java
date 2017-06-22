@@ -9,24 +9,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import nl.tudelft.bbw.blockchain.Block;
 import nl.tudelft.bbw.blockchain.BlockData;
 import nl.tudelft.bbw.blockchain.BlockType;
 import nl.tudelft.bbw.blockchain.Hash;
 import nl.tudelft.bbw.blockchain.TrustValues;
+import nl.tudelft.bbw.blockchain.User;
 
 /**
  * Class which constructs a query to read the crawled database.
  */
 public class ReadCrawlerBlocksQuery {
 
+    private static final String NA = "N/A";
+
     /**
      * The blocks retrieved from the database
      */
-    private Map<String, List<BlockData>> chain;
+    private Map<String, List<Block>> chain;
 
     /**
      * Column indices for blocks
      */
+    private static final int INDEX_ID = 0;
     private static final int INDEX_PUB_KEY = 1;
     private static final int INDEX_SEQ_NO = 5;
     private static final int INDEX_PREV_PUB = 3;
@@ -39,7 +44,7 @@ public class ReadCrawlerBlocksQuery {
     public ReadCrawlerBlocksQuery() {
     }
 
-    public Map<String, List<BlockData>> getChain() {
+    public Map<String, List<Block>> getChain() {
         return chain;
     }
 
@@ -84,16 +89,19 @@ public class ReadCrawlerBlocksQuery {
 
         Hash previousHashChain = new Hash(getStringOfCursor(cursor, INDEX_PREV_HASH_CHAIN));
         Hash previousHashSender = new Hash(getStringOfCursor(cursor, INDEX_PREV_PUB));
-        String contactKey = getStringOfCursor(cursor, INDEX_PUB_KEY)
+        String contactKey = getStringOfCursor(cursor, INDEX_PUB_KEY);
 
+        User user = new User(getStringOfCursor(cursor, INDEX_ID), contactKey);
+        User contact = new User(NA, getStringOfCursor(cursor, INDEX_PUB_KEY));
         BlockData blockData = new BlockData(type, cursor.getInt(INDEX_SEQ_NO), previousHashChain, previousHashSender,
                 TrustValues.INITIALIZED.getValue());
-        List<BlockData> blockDatas = chain.get(contactKey);
-        if (blockDatas == null) {
-            blockDatas = new ArrayList<>();
+        Block block = new Block(user, contact, blockData);
+        List<Block> blocks = chain.get(contactKey);
+        if (blocks == null) {
+            blocks = new ArrayList<>();
         }
-        blockDatas.add(blockData);
-        chain.put(contactKey, blockDatas);
+        blocks.add(block);
+        chain.put(contactKey, blocks);
     }
 
     private String getStringOfCursor(Cursor cursor, int index) {

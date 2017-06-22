@@ -1,4 +1,5 @@
 package nl.tudelft.bbw.database;
+
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -27,6 +28,7 @@ import static nl.tudelft.bbw.database.Database.INDEX_TRUST_VALUE;
 public abstract class Query {
     /**
      * Execute this query on a database
+     *
      * @param database the database to perform the query on
      */
     public abstract void execute(SQLiteDatabase database);

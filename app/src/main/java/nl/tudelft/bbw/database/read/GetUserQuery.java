@@ -37,6 +37,7 @@ public class GetUserQuery extends ReadQuery {
 
     /**
      * Construct the get user query
+     *
      * @param publicKey the public key of the user
      */
     public GetUserQuery(EdDSAPublicKey publicKey) {
@@ -45,6 +46,7 @@ public class GetUserQuery extends ReadQuery {
 
     /**
      * Convert the item resulting from this query to a user, or null if there is no result
+     *
      * @param cursor the cursor resulting from the query
      */
     @Override
@@ -61,6 +63,7 @@ public class GetUserQuery extends ReadQuery {
 
     /**
      * We want all information to reconstruct the blocks accurately
+     *
      * @return
      */
     @Override
@@ -70,6 +73,7 @@ public class GetUserQuery extends ReadQuery {
 
     /**
      * We want to filter on owners
+     *
      * @return
      */
     @Override
@@ -79,15 +83,17 @@ public class GetUserQuery extends ReadQuery {
 
     /**
      * The only variable for this query is the owner name of the chain
+     *
      * @return
      */
     @Override
     protected String[] getWhereVariables() {
-        return new String[] {KeyWriter.publicKeyToString(publicKey)};
+        return new String[]{KeyWriter.publicKeyToString(publicKey)};
     }
 
     /**
      * Retrieves the output of this query: the user
+     *
      * @return a list of blocks
      */
     public User getUser() {
@@ -96,6 +102,7 @@ public class GetUserQuery extends ReadQuery {
 
     /**
      * Get Chain Query always operates on the block table
+     *
      * @return the block table name
      */
     @Override

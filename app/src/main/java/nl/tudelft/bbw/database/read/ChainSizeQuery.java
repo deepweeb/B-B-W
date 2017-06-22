@@ -25,6 +25,7 @@ public class ChainSizeQuery extends ReadQuery {
 
     /**
      * Construct a chain size query
+     *
      * @param owner the user that owns the chain
      */
     public ChainSizeQuery(User owner) {
@@ -33,6 +34,7 @@ public class ChainSizeQuery extends ReadQuery {
 
     /**
      * Getter for the chain size
+     *
      * @return the chain size resulting from the query
      */
     public int getSize() {
@@ -41,6 +43,7 @@ public class ChainSizeQuery extends ReadQuery {
 
     /**
      * This query returns only a single int, so
+     *
      * @param cursor the query result containing the maximum sequence number
      */
     @Override
@@ -51,6 +54,7 @@ public class ChainSizeQuery extends ReadQuery {
 
     /**
      * Chain size always operates on the block table
+     *
      * @return the block table name
      */
     @Override
@@ -60,15 +64,17 @@ public class ChainSizeQuery extends ReadQuery {
 
     /**
      * Select the max of the sequence number to get the chain size
+     *
      * @return array containing one SQL max command
      */
     @Override
     public String[] getSelectedColumns() {
-        return new String[] {"MAX(" + KEY_SEQ_NO + ")"};
+        return new String[]{"MAX(" + KEY_SEQ_NO + ")"};
     }
 
     /**
      * We only consider blocks of one owner
+     *
      * @return query for getting entries of one owner
      */
     @Override
@@ -78,10 +84,11 @@ public class ChainSizeQuery extends ReadQuery {
 
     /**
      * The only variable is the owner name
+     *
      * @return the owner name
      */
     @Override
     public String[] getWhereVariables() {
-        return new String[] {KeyWriter.publicKeyToString(owner.getPublicKey()) };
+        return new String[]{KeyWriter.publicKeyToString(owner.getPublicKey())};
     }
 }

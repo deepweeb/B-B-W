@@ -38,6 +38,7 @@ public class UpdateTrustQuery extends WriteQuery {
 
     /**
      * Put all our block attributes in the content values
+     *
      * @return
      */
     @Override
@@ -56,6 +57,7 @@ public class UpdateTrustQuery extends WriteQuery {
 
     /**
      * This query operates on the blocks table
+     *
      * @return the block table name
      */
     @Override
@@ -65,6 +67,7 @@ public class UpdateTrustQuery extends WriteQuery {
 
     /**
      * Instead of the default execute, we want to perform an update instead of an insert operation
+     *
      * @param database the database to perform the query on
      */
     @Override
@@ -72,7 +75,7 @@ public class UpdateTrustQuery extends WriteQuery {
         ContentValues values = getContentValues();
         try {
             database.update(getTableName(), values, KEY_HASH + "= ?",
-                    new String[] {block.getOwnHash().toString()});
+                    new String[]{block.getOwnHash().toString()});
         } catch (SQLiteException e) {
             throw new DatabaseException("block already exists");
         }

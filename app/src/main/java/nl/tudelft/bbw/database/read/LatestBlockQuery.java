@@ -39,8 +39,9 @@ public class LatestBlockQuery extends ReadQuery {
 
     /**
      * Construct a query to get the latest block of a chain
+     *
      * @param database the database, for the user toBlock function later
-     * @param owner the owner of the chain
+     * @param owner    the owner of the chain
      */
     public LatestBlockQuery(Database database, User owner) {
         this.database = database;
@@ -49,6 +50,7 @@ public class LatestBlockQuery extends ReadQuery {
 
     /**
      * Get our query result. Null when the user does not have any blocks.
+     *
      * @return the latest block of a chain
      */
     public Block getLatestBlock() {
@@ -57,6 +59,7 @@ public class LatestBlockQuery extends ReadQuery {
 
     /**
      * First execute the ChainSizeQuery so that we can get the right latest block
+     *
      * @param database the database to perform the query on
      */
     @Override
@@ -69,6 +72,7 @@ public class LatestBlockQuery extends ReadQuery {
 
     /**
      * Parse the query result by converting the result to a block. Null when no result.
+     *
      * @param cursor the cursor resulting from the query
      */
     @Override
@@ -83,6 +87,7 @@ public class LatestBlockQuery extends ReadQuery {
 
     /**
      * Query the block table
+     *
      * @return the block table name
      */
     @Override
@@ -92,6 +97,7 @@ public class LatestBlockQuery extends ReadQuery {
 
     /**
      * We want all block columns to create a block faithful to the original
+     *
      * @return all block columns
      */
     @Override
@@ -101,6 +107,7 @@ public class LatestBlockQuery extends ReadQuery {
 
     /**
      * Filter on chain owner and the latest sequence number
+     *
      * @return those two filters
      */
     @Override
@@ -110,11 +117,12 @@ public class LatestBlockQuery extends ReadQuery {
 
     /**
      * The arguments are the owner (identified by public key) and the latest sequence number
+     *
      * @return those two arguments
      */
     @Override
     protected String[] getWhereVariables() {
-        return new String[] { KeyWriter.publicKeyToString(owner.getPublicKey()),
-                Integer.toString(lastSeqNo) };
+        return new String[]{KeyWriter.publicKeyToString(owner.getPublicKey()),
+                Integer.toString(lastSeqNo)};
     }
 }

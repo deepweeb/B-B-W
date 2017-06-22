@@ -67,7 +67,7 @@ public class Database extends SQLiteOpenHelper {
     /**
      * All columns
      */
-    private static final String[] BLOCK_COLUMNS = new String[] {
+    private static final String[] BLOCK_COLUMNS = new String[]{
             KEY_SEQ_NO, KEY_OWNER, KEY_CONTACT, KEY_HASH, KEY_PREV_HASH_CHAIN, KEY_PREV_HASH_SENDER,
             KEY_REVOKE, KEY_TRUST_VALUE
     };
@@ -108,7 +108,7 @@ public class Database extends SQLiteOpenHelper {
     /**
      * Columns in the user table
      */
-    private static final String[] USER_COLUMNS = new String[] {
+    private static final String[] USER_COLUMNS = new String[]{
             KEY_NAME, KEY_IBAN, KEY_PUBLICKEY
     };
 
@@ -131,6 +131,7 @@ public class Database extends SQLiteOpenHelper {
 
     /**
      * Create a new connection to the database
+     *
      * @param context the specific context containing our database
      */
     public Database(Context context) {
@@ -181,8 +182,9 @@ public class Database extends SQLiteOpenHelper {
 
     /**
      * Perform a read query
+     *
      * @param query the query to execute
-     * TODO: think about if we need to open a new connection every time if it is too slow
+     *              TODO: think about if we need to open a new connection every time if it is too slow
      */
     public void read(Query query) {
         SQLiteDatabase database = getReadableDatabase();
@@ -192,12 +194,14 @@ public class Database extends SQLiteOpenHelper {
 
     /**
      * Perform an update query
+     *
      * @param query the query to execute
      */
-    public void write(Query query) {
+    public void write(Query query) throws DatabaseException {
         SQLiteDatabase database = getWritableDatabase();
         query.execute(database);
 
         database.close();
     }
+
 }

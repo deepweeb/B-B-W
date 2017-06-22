@@ -312,7 +312,7 @@ public class BlockController {
     }
 
     /**
-     * Create an acquintance object that you can send over the network
+     * Create an acquaintance object that you can send over the network
      *
      * @return a new acquaintance object
      */

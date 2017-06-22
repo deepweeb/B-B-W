@@ -79,26 +79,29 @@ public class MainActivity extends Activity {
         for (Block block : myContacts) {
             if(!block.getContactIban().equals(BlockChainAPI.getMyIban())) {
                 TreeNode contactName = new TreeNode("\t> " + block.getContactName());
-
                 TreeNode iban = new TreeNode("\t\t\t\t IBAN: " + block.getContactIban());
                 TreeNode trust = new TreeNode("\t\t\t\t Trust Value: " + block.getTrustValue());
                 TreeNode publicKey = new TreeNode("\t\t\t\t Public Key: " + block.getContactPublicKey());
-                contactName.addChildren(iban, trust, publicKey);
-
                 TreeNode hisContacts = new TreeNode("\t\t\t\t> Contacts");
-                contactName.addChild(hisContacts);
-
                 TreeNode transaction = new TreeNode("\t\t\t\t> Send money");
                 TreeNode succesfulTransaction = new TreeNode("\t\t\t\t\t\t\tSuccesful transaction");
                 succesfulTransaction.setClickListener(new TreeNode.TreeNodeClickListener() {
                     @Override
                     public void onClick(TreeNode node, Object value) {
-                        Toast.makeText(context, "Hoi", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Transaction Succeeded, Trust Value upgraded!", Toast.LENGTH_SHORT).show();
                     }
                 });
+
                 TreeNode failedTransaction = new TreeNode("\t\t\t\t\t\t\tFailed transaction");
+                failedTransaction.setClickListener(new TreeNode.TreeNodeClickListener() {
+                    @Override
+                    public void onClick(TreeNode node, Object value) {
+                        Toast.makeText(context, "Transaction Failed, Trust Value downgraded!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
                 transaction.addChildren(succesfulTransaction, failedTransaction);
-                contactName.addChild(transaction);
+                contactName.addChildren(iban, trust, publicKey, hisContacts, transaction);
 
   //             failedTransaction.isExpanded();
        //         failedTransaction.setExpanded(true);
@@ -106,9 +109,15 @@ public class MainActivity extends Activity {
 
             }
         }
-        TreeNode child0 = new TreeNode("ChildNode0");
-        TreeNode child1 = new TreeNode("ChildNode1");
-        // parent.addChildren(child0, child1);
+
+        TreeNode acquaintance1 = new TreeNode("\t>Acquaintance1");
+        TreeNode ibanAq1 = new TreeNode("\t\t\t\t IBAN: NL Aq1 111111111111");
+        TreeNode trustAq1 = new TreeNode("\t\t\t\t Trust Value: 25");
+        TreeNode pubKeyAq1 = new TreeNode("\t\t\t\t Public Key: dj83uf9hf389h");
+        TreeNode contactsAq1 = new TreeNode("\t\t\t\t < Contacts");
+        acquaintance1.addChildren(ibanAq1, trustAq1, pubKeyAq1);
+
+
         root.addChild(contacts);
         root.addChild(pairing);
 

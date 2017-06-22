@@ -282,25 +282,25 @@ public class BlockController {
 
             for (List<Block> chain : multichain) {
                 for (Block block : chain) {
-                    if(!block.equals(chain.get(0)))
-                    createBlock(block);
+                    if (!block.equals(chain.get(0))) {
+                        createBlock(block);
+                    }
                 }
             }
         }
-
-
 
 
     }
 
     /**
      * Create the provided block.
+     *
      * @param block the block to create
      * @throws BlockAlreadyExistsException when the block already exists
-     * @throws HashException when the calculated hash does not match the true hash
-     * @throws DatabaseException when queries could not be processed
+     * @throws HashException               when the calculated hash does not match the true hash
+     * @throws DatabaseException           when queries could not be processed
      */
-    private void createBlock(Block block)  throws BlockAlreadyExistsException, HashException,
+    private void createBlock(Block block) throws BlockAlreadyExistsException, HashException,
             DatabaseException {
         if (block.getBlockType() == BlockType.GENESIS) {
             this.createGenesis(block.getBlockOwner());
@@ -323,6 +323,5 @@ public class BlockController {
         return new Acquaintance(owner.getName(), owner.getIban(), owner.getPublicKey(),
                 query.getMultichain());
     }
-    
 }
 

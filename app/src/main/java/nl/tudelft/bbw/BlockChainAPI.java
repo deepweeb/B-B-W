@@ -95,11 +95,9 @@ public final class BlockChainAPI {
 
 
     public static void addAcquaintanceMultichain(Acquaintance acquaintance) throws BlockAlreadyExistsException, HashException {
-            //Adding his database into your database (so you can look up his contacts)
-            blockController.addMultichain(acquaintance.getMultichain());
+        //Adding his database into your database (so you can look up his contacts)
+        blockController.addMultichain(acquaintance.getMultichain());
     }
-
-
 
 
     /**

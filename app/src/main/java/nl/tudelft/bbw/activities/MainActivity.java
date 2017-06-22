@@ -70,12 +70,15 @@ public class MainActivity extends Activity {
 
 
         TreeNode root = TreeNode.root();
+        TreeNode myName = new TreeNode("        My Name: " + BlockChainAPI.getMyName());
+        TreeNode myIban = new TreeNode("        My Contacts: " + BlockChainAPI.getMyIban());
+       // TreeNode myPublicKey = new TreeNode("   My Public Key: " +  BlockChainAPI.getMyPublicKey());
 
         TreeNode contacts = new TreeNode("> My Contacts");
         TreeNode pairing = new TreeNode("> Bluetooth Pairing");
 
         final Context context = this;
-        for (Block block : BlockChainAPI.getMyContacts()) {
+        for (final Block block : BlockChainAPI.getMyContacts()) {
             if(!block.getContactIban().equals(BlockChainAPI.getMyIban())) {
                 TreeNode contactName = new TreeNode("\t> " + block.getContactName());
                 TreeNode iban = new TreeNode("\t\t\t\t IBAN: " + block.getContactIban());
@@ -87,6 +90,9 @@ public class MainActivity extends Activity {
                     @Override
                     public void onClick(TreeNode node, Object value) {
                         Toast.makeText(context, "Transaction Succeeded, Trust Value upgraded!", Toast.LENGTH_SHORT).show();
+                        BlockChainAPI.successfulTransactionTrustUpdate(block);
+                        
+                        updateView();
                     }
                 });
 
@@ -95,6 +101,8 @@ public class MainActivity extends Activity {
                     @Override
                     public void onClick(TreeNode node, Object value) {
                         Toast.makeText(context, "Transaction Failed, Trust Value downgraded!", Toast.LENGTH_SHORT).show();
+                        BlockChainAPI.failedTransactionTrustUpdate(block);
+                        updateView();
                     }
                 });
 
@@ -122,8 +130,7 @@ public class MainActivity extends Activity {
 
         pairing.addChild(acquaintance1);
 
-        root.addChild(contacts);
-        root.addChild(pairing);
+        root.addChildren(myName, myIban, contacts, pairing);
 
         AndroidTreeView tView = new AndroidTreeView(this, root);
 

@@ -197,14 +197,4 @@ public final class BlockChainAPI {
         return blockController.makeAcquaintanceObject();
     }
 
-
-
-
-
-    //For debugging purpose
-    public static void debug()
-    {
-        blockController.getDatabase().debugDisplayDatabase();
-    }
-
 }

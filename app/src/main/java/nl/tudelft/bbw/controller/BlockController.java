@@ -323,20 +323,6 @@ public class BlockController {
         return new Acquaintance(owner.getName(), owner.getIban(), owner.getPublicKey(),
                 query.getMultichain());
     }
-
-
-/**
- * for debug purpose
- */
-public Database getDatabase()
-{
-    return database;
-}
-
-
-
-
-
-
+    
 }
 

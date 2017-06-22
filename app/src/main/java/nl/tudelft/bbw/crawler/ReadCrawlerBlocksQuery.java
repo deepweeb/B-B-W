@@ -27,14 +27,11 @@ public class ReadCrawlerBlocksQuery {
     /**
      * Column indices for blocks
      */
-    static final int INDEX_PUB_KEY = 1;
-    static final int INDEX_SEQ_NO = 5;
-    static final int INDEX_PREV_PUB = 3;
-    static final int INDEX_PREV_HASH_CHAIN = 4;
+    private static final int INDEX_PUB_KEY = 1;
+    private static final int INDEX_SEQ_NO = 5;
+    private static final int INDEX_PREV_PUB = 3;
+    private static final int INDEX_PREV_HASH_CHAIN = 4;
 
-    Hash previousHashChain;
-    Hash previousHashSender;
-    String contactKey;
 
     /**
      * Constructs a query for the blocks
@@ -47,13 +44,14 @@ public class ReadCrawlerBlocksQuery {
     }
 
     /**
-     * @inheritDoc
+     * Method to go through all the rows of the database using the cursor,
+     * and make a block with the values, and eventually write it into a JSON file.
      */
-    public void parse(Cursor cursor) {
+    private void parse(Cursor cursor) {
         if (cursor.getCount() == 0) {
             chain = null;
         } else {
-            chain = new HashMap<String, List<BlockData>>();
+            chain = new HashMap<>((int) (cursor.getCount()*1.33));
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
                 makeBlock(cursor);
             }
@@ -66,7 +64,7 @@ public class ReadCrawlerBlocksQuery {
     }
 
     /**
-     * @inheritDoc
+     * The query to make the table we want.
      */
     public void execute(SQLiteDatabase database) {
         final String query = "SELECT member.identity, member.public_key, multi_chain.block_hash, multi_chain.link_public_key, multi_chain.previous_hash, multi_chain.sequence_number FROM member JOIN multi_chain ON member.public_key = multi_chain.public_key;";
@@ -84,32 +82,26 @@ public class ReadCrawlerBlocksQuery {
         // determine block type
         BlockType type = BlockType.ADD_KEY;
 
-        if (cursor.getType(INDEX_PREV_HASH_CHAIN) == Cursor.FIELD_TYPE_BLOB) {
-            previousHashChain = new Hash(new String(cursor.getBlob(INDEX_PREV_HASH_CHAIN)));
-        } else {
-            previousHashChain = new Hash(cursor.getString(INDEX_PREV_HASH_CHAIN));
-        }
-        if (cursor.getType(INDEX_PREV_PUB) == Cursor.FIELD_TYPE_BLOB) {
-            previousHashSender = new Hash(new String(cursor.getBlob(INDEX_PREV_PUB)));
-        } else {
-            previousHashSender = new Hash(cursor.getString(INDEX_PREV_PUB));
-        }
-        if (cursor.getType(INDEX_PUB_KEY) == Cursor.FIELD_TYPE_BLOB) {
-            contactKey = new String(cursor.getBlob(INDEX_PUB_KEY));
-        } else {
-            contactKey = cursor.getString(INDEX_PUB_KEY);
-        }
+        Hash previousHashChain = new Hash(getStringOfCursor(cursor, INDEX_PREV_HASH_CHAIN));
+        Hash previousHashSender = new Hash(getStringOfCursor(cursor, INDEX_PREV_PUB));
+        String contactKey = getStringOfCursor(cursor, INDEX_PUB_KEY)
 
         BlockData blockData = new BlockData(type, cursor.getInt(INDEX_SEQ_NO), previousHashChain, previousHashSender,
                 TrustValues.INITIALIZED.getValue());
         List<BlockData> blockDatas = chain.get(contactKey);
         if (blockDatas == null) {
             blockDatas = new ArrayList<>();
-            blockDatas.add(blockData);
-        } else {
-            blockDatas.add(blockData);
         }
+        blockDatas.add(blockData);
         chain.put(contactKey, blockDatas);
+    }
+
+    private String getStringOfCursor(Cursor cursor, int index) {
+        if (cursor.getType(index) == Cursor.FIELD_TYPE_BLOB) {
+            return new String(cursor.getBlob(index));
+        } else {
+            return cursor.getString(index);
+        }
     }
 
 }

@@ -34,7 +34,6 @@ public class BlockDatabase extends SQLiteAssetHelper {
     static final String columnsMember =
             USER_TABLE_NAME + "." + MEMBER_ID + ", " + USER_TABLE_NAME + "." + MEMBER_PUBLIC_KEY;
 
-    static final String CHAIN_PUBLIC_KEY = "public_key";
     static final String CHAIN_SEQ_NO = "sequence_number";
     static final String CHAIN_LINK_PUBLIC_KEY = "link_public_key";
     static final String CHAIN_PREV_HASH = "previous_hash";

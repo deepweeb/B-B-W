@@ -100,7 +100,7 @@ public final class BlockChainAPI {
      * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
-    public static void addAcquaintance(Acquaintance acquaintance)
+    public static Block addAcquaintance(Acquaintance acquaintance)
             throws HashException, BlockAlreadyExistsException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
 
         final byte[] message = acquaintance.getPublicKey().getEncoded();
@@ -111,9 +111,9 @@ public final class BlockChainAPI {
             blockController.addMultichain(acquaintance.getMultichain());
 
             //Adding the user into your own chain
-            blockController.addBlockToChain(acquaintance, signature, message);
+            return blockController.addBlockToChain(acquaintance, signature, message);
         } catch (DatabaseException e) {
-            return;
+            return null;
         }
 
     }

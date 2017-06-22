@@ -26,6 +26,7 @@ import nl.tudelft.bbw.exception.HashException;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
+import static nl.tudelft.bbw.BlockChainAPI.addAcquaintance;
 import static org.junit.Assert.assertNotEquals;
 
 
@@ -70,8 +71,9 @@ public class BlockChainAPITest {
     @Test
     public final void addContactToChainTest() throws HashException, BlockAlreadyExistsException,
             NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-        BlockChainAPI.addAcquaintance(newUser);
-        assertNotEquals(BlockChainAPI.getMyContacts(), list);
+        Block newBlock = BlockChainAPI.addAcquaintance(newUser);
+        list.add(newBlock);
+       assertEquals(BlockChainAPI.getMyContacts(), list);
     }
 
     /**
@@ -83,7 +85,7 @@ public class BlockChainAPITest {
     @Test
     public final void revokeContactFromChainTest()
             throws HashException, BlockAlreadyExistsException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-        BlockChainAPI.addAcquaintance(newUser);
+        addAcquaintance(newUser);
         List<Block> list = BlockChainAPI.getMyContacts();
         BlockChainAPI.revokeContact(newUser);
         assertNotEquals(BlockChainAPI.getMyContacts(), list);
@@ -131,7 +133,7 @@ public class BlockChainAPITest {
      */
     @Test
     public final void makeAcquaintanceTest() throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, BlockAlreadyExistsException, HashException {
-        BlockChainAPI.addAcquaintance(newUser);
+        addAcquaintance(newUser);
         list = BlockChainAPI.getMyContacts();
         Acquaintance testAcquaintance = BlockChainAPI.makeAcquaintanceObject();
         List<Block> list2 = testAcquaintance.getMultichain().get(0);

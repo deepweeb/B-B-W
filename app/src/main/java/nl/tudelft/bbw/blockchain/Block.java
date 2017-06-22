@@ -283,7 +283,7 @@ public class Block {
             return "Block#" + getSequenceNumber() + " {contact="
                     + getContactName() + ", iban="
                     + getContactIban() + (isRevoked() ? ",REVOKE" : "") + ", Trust="
-                    + getTrustValue() + "} (My Own Block)";
+                    + getTrustValue() + "} (Genesis Block)";
         } else {
             return "Block#" + getSequenceNumber() + " {contact="
                     + getContactName() + ", iban="

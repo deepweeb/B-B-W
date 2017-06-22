@@ -93,11 +93,7 @@ public class MainActivity extends Activity {
                     public void onClick(TreeNode node, Object value) {
                         Toast.makeText(context, "Transaction Succeeded, Trust Value upgraded!", Toast.LENGTH_SHORT).show();
                         BlockChainAPI.successfulTransactionTrustUpdate(block);
-                        ViewGroup vg = (ViewGroup) findViewById (R.id.container);
-                        vg.removeAllViews();
-                        vg.refreshDrawableState();
-                        updateView();
-
+                        refreshView();
                     }
                 });
 
@@ -107,7 +103,7 @@ public class MainActivity extends Activity {
                     public void onClick(TreeNode node, Object value) {
                         Toast.makeText(context, "Transaction Failed, Trust Value downgraded!", Toast.LENGTH_SHORT).show();
                         BlockChainAPI.failedTransactionTrustUpdate(block);
-                        updateView();
+                        refreshView();
                     }
                 });
 
@@ -158,7 +154,7 @@ public class MainActivity extends Activity {
                 addToContactList.setClickListener(new TreeNode.TreeNodeClickListener() {
                     @Override
                     public void onClick(TreeNode node, Object value) {
-                        Toast.makeText(context, "Transaction Succeeded, Trust Value upgraded!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Contact is now added into your list!", Toast.LENGTH_SHORT).show();
                         try {
                             BlockChainAPI.addContact(hisBlock.getContact());
                         } catch (HashException e) {
@@ -173,7 +169,7 @@ public class MainActivity extends Activity {
                             e.printStackTrace();
                         }
 
-                        updateView();
+                        refreshView();
                     }
                 });
                 TreeNode contactl = displayContact(hisBlock.getContact(), BlockChainAPI.getContactsOf(hisBlock.getContact()), layerCount + 1);
@@ -193,6 +189,13 @@ public class MainActivity extends Activity {
             return space;
         }
         return space;
+    }
+
+    public void refreshView(){
+        ViewGroup vg = (ViewGroup) findViewById (R.id.container);
+        vg.removeAllViews();
+        vg.refreshDrawableState();
+        updateView();
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////

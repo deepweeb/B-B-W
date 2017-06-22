@@ -279,14 +279,6 @@ public class Block {
      */
     @Override
     public String toString() {
-        return "Block#" + getSequenceNumber() + "{owner=" + owner.getName() + ",contact="
-                + contact.getName() + (isRevoked() ? ",REVOKE" : "") + "}";
-    }
-
-    /**
-     * ToString method designed for Interaction Design Module
-     */
-    public String toString2() {
         if (this.getBlockType().equals(BlockType.GENESIS)) {
             return "Block#" + getSequenceNumber() + " {contact="
                     + getContactName() + ", iban="

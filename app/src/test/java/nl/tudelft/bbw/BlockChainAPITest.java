@@ -134,6 +134,7 @@ public class BlockChainAPITest {
         BlockChainAPI.addAcquaintance(newUser);
         list = BlockChainAPI.getMyContacts();
         Acquaintance testAcquaintance = BlockChainAPI.makeAcquaintanceObject();
+        List<Block> list2 = testAcquaintance.getMultichain().get(0);
         assertEquals(BlockChainAPI.getMyName(), testAcquaintance.getName());
         assertEquals(BlockChainAPI.getMyIban(), testAcquaintance.getIban());
         assertEquals(BlockChainAPI.getMyPublicKey(), testAcquaintance.getPublicKey());

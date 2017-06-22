@@ -72,6 +72,7 @@ public class DatabaseToMultichainQuery extends ReadQuery {
 
     /**
      * Handle a block retrieved from the database and add it to this query's multichain
+     *
      * @param block the block to add
      */
     private void handleBlock(Block block) {

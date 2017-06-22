@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.unnamed.b.atv.model.TreeNode;
@@ -93,8 +94,11 @@ public class MainActivity extends Activity {
                     public void onClick(TreeNode node, Object value) {
                         Toast.makeText(context, "Transaction Succeeded, Trust Value upgraded!", Toast.LENGTH_SHORT).show();
                         BlockChainAPI.successfulTransactionTrustUpdate(block);
-                        
+                        ViewGroup vg = (ViewGroup) findViewById (R.id.container);
+                        vg.removeAllViews();
+                        vg.refreshDrawableState();
                         updateView();
+
                     }
                 });
 

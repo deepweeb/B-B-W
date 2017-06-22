@@ -4,7 +4,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import nl.tudelft.bbw.blockchain.BlockData;
@@ -20,7 +22,7 @@ public class ReadCrawlerBlocksQuery {
     /**
      * The blocks retrieved from the database
      */
-    private Map<String, BlockData> chain;
+    private Map<String, List<BlockData>> chain;
 
     /**
      * Column indices for blocks
@@ -30,13 +32,17 @@ public class ReadCrawlerBlocksQuery {
     static final int INDEX_PREV_PUB = 3;
     static final int INDEX_PREV_HASH_CHAIN = 4;
 
+    Hash previousHashChain;
+    Hash previousHashSender;
+    String contactKey;
+
     /**
      * Constructs a query for the blocks
      */
     public ReadCrawlerBlocksQuery() {
     }
 
-    public Map<String, BlockData> getChain() {
+    public Map<String, List<BlockData>> getChain() {
         return chain;
     }
 
@@ -47,7 +53,7 @@ public class ReadCrawlerBlocksQuery {
         if (cursor.getCount() == 0) {
             chain = null;
         } else {
-            chain = new HashMap<>();
+            chain = new HashMap<String, List<BlockData>>();
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
                 makeBlock(cursor);
             }
@@ -63,31 +69,47 @@ public class ReadCrawlerBlocksQuery {
      * @inheritDoc
      */
     public void execute(SQLiteDatabase database) {
-//        final String QUERY =
-//                "SELECT " + columnsMember + ", " + columnsChain + " FROM " + USER_TABLE_NAME
-//                        + " JOIN " + BLOCKS_TABLE_NAME + " ON " + USER_TABLE_NAME + "." + MEMBER_PUBLIC_KEY + " = "
-//                        + BLOCKS_TABLE_NAME + "." + CHAIN_PUBLIC_KEY + ";";
-        final String QUERY = "SELECT member.identity, member.public_key, multi_chain.block_hash, multi_chain.link_public_key, multi_chain.previous_hash, multi_chain.sequence_number FROM member JOIN multi_chain ON member.public_key = multi_chain.public_key;";
-        Cursor cursor = database.rawQuery(QUERY, new String[]{});
+        final String query = "SELECT member.identity, member.public_key, multi_chain.block_hash, multi_chain.link_public_key, multi_chain.previous_hash, multi_chain.sequence_number FROM member JOIN multi_chain ON member.public_key = multi_chain.public_key;";
+        Cursor cursor = database.rawQuery(query, new String[]{});
         parse(cursor);
         cursor.close();
     }
 
     /**
      * Helper to construct a block from the database cursor.
+     *
      * @param cursor the cursor to extract from
      */
     private void makeBlock(Cursor cursor) {
         // determine block type
         BlockType type = BlockType.ADD_KEY;
 
-        final Hash previousHashChain = new Hash(cursor.getString(INDEX_PREV_HASH_CHAIN));
-        final Hash previousHashSender = new Hash(cursor.getString(INDEX_PREV_PUB));
-        final String contactKey = cursor.getString(INDEX_PUB_KEY);
+        if (cursor.getType(INDEX_PREV_HASH_CHAIN) == Cursor.FIELD_TYPE_BLOB) {
+            previousHashChain = new Hash(new String(cursor.getBlob(INDEX_PREV_HASH_CHAIN)));
+        } else {
+            previousHashChain = new Hash(cursor.getString(INDEX_PREV_HASH_CHAIN));
+        }
+        if (cursor.getType(INDEX_PREV_PUB) == Cursor.FIELD_TYPE_BLOB) {
+            previousHashSender = new Hash(new String(cursor.getBlob(INDEX_PREV_PUB)));
+        } else {
+            previousHashSender = new Hash(cursor.getString(INDEX_PREV_PUB));
+        }
+        if (cursor.getType(INDEX_PUB_KEY) == Cursor.FIELD_TYPE_BLOB) {
+            contactKey = new String(cursor.getBlob(INDEX_PUB_KEY));
+        } else {
+            contactKey = cursor.getString(INDEX_PUB_KEY);
+        }
 
         BlockData blockData = new BlockData(type, cursor.getInt(INDEX_SEQ_NO), previousHashChain, previousHashSender,
                 TrustValues.INITIALIZED.getValue());
-        chain.put(contactKey, blockData);
+        List<BlockData> blockDatas = chain.get(contactKey);
+        if (blockDatas == null) {
+            blockDatas = new ArrayList<>();
+            blockDatas.add(blockData);
+        } else {
+            blockDatas.add(blockData);
+        }
+        chain.put(contactKey, blockDatas);
     }
 
 }

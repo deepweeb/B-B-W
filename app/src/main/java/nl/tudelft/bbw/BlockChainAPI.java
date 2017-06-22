@@ -94,24 +94,28 @@ public final class BlockChainAPI {
     }
 
 
+    public static void addAcquaintanceMultichain(Acquaintance acquaintance) throws BlockAlreadyExistsException, HashException {
+            //Adding his database into your database (so you can look up his contacts)
+            blockController.addMultichain(acquaintance.getMultichain());
+    }
+
+
+
+
     /**
      * Method to add a contact to your chain
      *
      * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
-    public static Block addAcquaintance(Acquaintance acquaintance)
+    public static Block addContact(User user)
             throws HashException, BlockAlreadyExistsException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
 
-        final byte[] message = acquaintance.getPublicKey().getEncoded();
-        final byte[] signature = ED25519.generateSignature(message, owner.getPrivateKey());
-
         try {
-            //Adding his database into your database (so you can look up his contacts)
-            blockController.addMultichain(acquaintance.getMultichain());
-
+            final byte[] message = user.getPublicKey().getEncoded();
+            final byte[] signature = ED25519.generateSignature(message, owner.getPrivateKey());
             //Adding the user into your own chain
-            return blockController.addBlockToChain(acquaintance, signature, message);
+            return blockController.addBlockToChain(user, signature, message);
         } catch (DatabaseException e) {
             return null;
         }
@@ -193,5 +197,14 @@ public final class BlockChainAPI {
         return blockController.makeAcquaintanceObject();
     }
 
+
+
+
+
+    //For debugging purpose
+    public static void debug()
+    {
+        blockController.getDatabase().debugDisplayDatabase();
+    }
 
 }

@@ -280,12 +280,12 @@ public class Block {
     @Override
     public String toString() {
         if (this.getBlockType().equals(BlockType.GENESIS)) {
-            return "Block#" + getSequenceNumber() + " {contact="
+            return "Block#" + getSequenceNumber() + "{blockOwner =" + getOwnerName() +" contact="
                     + getContactName() + ", iban="
                     + getContactIban() + (isRevoked() ? ",REVOKE" : "") + ", Trust="
                     + getTrustValue() + "} (Genesis Block)";
         } else {
-            return "Block#" + getSequenceNumber() + " {contact="
+            return "Block#" + getSequenceNumber() + "{blockOwner =" + getOwnerName() +" contact="
                     + getContactName() + ", iban="
                     + getContactIban() + (isRevoked() ? ",REVOKE" : "") + ", Trust="
                     + getTrustValue() + "}";

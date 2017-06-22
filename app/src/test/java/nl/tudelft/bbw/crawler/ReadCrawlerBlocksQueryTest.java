@@ -28,6 +28,9 @@ public class ReadCrawlerBlocksQueryTest {
         database = new BlockDatabase(RuntimeEnvironment.application);
     }
 
+    /**
+     * Check if the chain isn't empty after parsing the database
+     */
     @Test
     public void testEmpty() {
         ReadCrawlerBlocksQuery query = new ReadCrawlerBlocksQuery();

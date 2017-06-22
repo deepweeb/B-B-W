@@ -1,5 +1,11 @@
 package nl.tudelft.bbw.crawler;
 
+import static nl.tudelft.bbw.crawler.BlockDatabase.BLOCKS_TABLE_NAME;
+import static nl.tudelft.bbw.crawler.BlockDatabase.USER_TABLE_NAME;
+import static nl.tudelft.bbw.crawler.BlockDatabase.COLUMNS_CHAIN;
+import static nl.tudelft.bbw.crawler.BlockDatabase.COLUMNS_MEMBER;
+import static nl.tudelft.bbw.crawler.BlockDatabase.JOIN_TABLES;
+
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -22,12 +28,6 @@ import nl.tudelft.bbw.blockchain.User;
 public class ReadCrawlerBlocksQuery {
 
     private static final String NA = "N/A";
-
-    /**
-     * The blocks retrieved from the database
-     */
-    private Map<String, List<Block>> chain;
-
     /**
      * Column indices for blocks
      */
@@ -36,6 +36,10 @@ public class ReadCrawlerBlocksQuery {
     private static final int INDEX_SEQ_NO = 5;
     private static final int INDEX_PREV_PUB = 3;
     private static final int INDEX_PREV_HASH_CHAIN = 4;
+    /**
+     * The blocks retrieved from the database
+     */
+    private Map<String, List<Block>> chain;
 
 
     /**
@@ -44,6 +48,11 @@ public class ReadCrawlerBlocksQuery {
     public ReadCrawlerBlocksQuery() {
     }
 
+    /**
+     * Retrieve the chain which consists of the crawled blocks
+     *
+     * @return The list of blocks sorted on public key.
+     */
     public Map<String, List<Block>> getChain() {
         return chain;
     }
@@ -56,7 +65,7 @@ public class ReadCrawlerBlocksQuery {
         if (cursor.getCount() == 0) {
             chain = null;
         } else {
-            chain = new HashMap<>((int) (cursor.getCount()*1.33));
+            chain = new HashMap<>((int) (cursor.getCount() * 1.33));
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
                 makeBlock(cursor);
             }
@@ -72,7 +81,9 @@ public class ReadCrawlerBlocksQuery {
      * The query to make the table we want.
      */
     public void execute(SQLiteDatabase database) {
-        final String query = "SELECT member.identity, member.public_key, multi_chain.block_hash, multi_chain.link_public_key, multi_chain.previous_hash, multi_chain.sequence_number FROM member JOIN multi_chain ON member.public_key = multi_chain.public_key;";
+        final String query =
+                "SELECT " + COLUMNS_MEMBER + ", " + COLUMNS_CHAIN + " FROM " + USER_TABLE_NAME
+                        + " JOIN " + BLOCKS_TABLE_NAME + " ON " + JOIN_TABLES + ";";
         Cursor cursor = database.rawQuery(query, new String[]{});
         parse(cursor);
         cursor.close();
@@ -93,7 +104,8 @@ public class ReadCrawlerBlocksQuery {
 
         User user = new User(getStringOfCursor(cursor, INDEX_ID), contactKey);
         User contact = new User(NA, getStringOfCursor(cursor, INDEX_PUB_KEY));
-        BlockData blockData = new BlockData(type, cursor.getInt(INDEX_SEQ_NO), previousHashChain, previousHashSender,
+        BlockData blockData = new BlockData(type, cursor.getInt(INDEX_SEQ_NO), previousHashChain,
+                previousHashSender,
                 TrustValues.INITIALIZED.getValue());
         Block block = new Block(user, contact, blockData);
         List<Block> blocks = chain.get(contactKey);
@@ -104,6 +116,13 @@ public class ReadCrawlerBlocksQuery {
         chain.put(contactKey, blocks);
     }
 
+    /**
+     * Extracting the string of a column given a cursor, also transforms a BLOB into a string
+     *
+     * @param cursor Which row the program currently is at
+     * @param index  the index of the column
+     * @return The extracted string
+     */
     private String getStringOfCursor(Cursor cursor, int index) {
         if (cursor.getType(index) == Cursor.FIELD_TYPE_BLOB) {
             return new String(cursor.getBlob(index));

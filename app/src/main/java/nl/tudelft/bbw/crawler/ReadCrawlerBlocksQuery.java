@@ -28,9 +28,9 @@ import nl.tudelft.bbw.blockchain.User;
 public class ReadCrawlerBlocksQuery {
 
     /**
-     * String which is used when a attribute is unknown
+     * String which is used when the name is unknown
      */
-    private static final String unknown = "N/A";
+    private static final String UNKNOWN_NAME = "N/A";
     /**
      * Column indices for blocks
      */
@@ -106,7 +106,7 @@ public class ReadCrawlerBlocksQuery {
         String contactKey = getStringOfCursor(cursor, INDEX_PUB_KEY);
 
         User user = new User(getStringOfCursor(cursor, INDEX_ID), contactKey);
-        User contact = new User(unknown , getStringOfCursor(cursor, INDEX_PUB_KEY));
+        User contact = new User(UNKNOWN_NAME , getStringOfCursor(cursor, INDEX_PUB_KEY));
         BlockData blockData = new BlockData(type, cursor.getInt(INDEX_SEQ_NO), previousHashChain,
                 previousPKSender,
                 TrustValues.INITIALIZED.getValue());

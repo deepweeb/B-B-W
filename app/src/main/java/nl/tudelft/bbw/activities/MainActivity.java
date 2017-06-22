@@ -99,8 +99,6 @@ public class MainActivity extends Activity {
        // TreeNode myPublicKey = new TreeNode("   My Public Key: " +  BlockChainAPI.getMyPublicKey());
 
         TreeNode contacts = new TreeNode("> My Contacts");
-        TreeNode pairing = new TreeNode("> Bluetooth Pairing");
-
         for (final Block block : BlockChainAPI.getMyContacts()) {
             if (!block.getContactIban().equals(BlockChainAPI.getMyIban())) {
 
@@ -130,12 +128,8 @@ public class MainActivity extends Activity {
                 });
 
                 transaction.addChildren(succesfulTransaction, failedTransaction);
-
-
                 TreeNode hisContacts = displayContact(block.getContact(), BlockChainAPI.getContactsOf(block.getContact()), 1);
-
                 contactName.addChildren(iban, trust, publicKey, transaction, hisContacts);
-
                 //             failedTransaction.isExpanded();
                 //         failedTransaction.setExpanded(true);
                 contacts.addChild(contactName);
@@ -143,16 +137,42 @@ public class MainActivity extends Activity {
             }
         }
 
-        TreeNode acquaintance1 = new TreeNode("\t>Acquaintance1");
-        TreeNode ibanAq1 = new TreeNode("\t\t\t\t IBAN: NL Aq1 111111111111");
-        TreeNode trustAq1 = new TreeNode("\t\t\t\t Trust Value: 25");
-        TreeNode pubKeyAq1 = new TreeNode("\t\t\t\t Public Key: dj83uf9hf389h");
-        TreeNode contactsAq1 = new TreeNode("\t\t\t\t > Contacts");
-        TreeNode addToContactList = new TreeNode("\t\t\t\t Add to your contact list");
-        acquaintance1.addChildren(ibanAq1, trustAq1, pubKeyAq1, contactsAq1, addToContactList);
+        TreeNode pairing = new TreeNode("> Bluetooth Pairing");
+        for (final Acquaintance acquaintance : acquaintancesList)
+        {
+            TreeNode acquaintanceName = new TreeNode("\t> " + acquaintance.getName());
+            TreeNode iban = new TreeNode("\t\t\t\tIBAN: " +  acquaintance.getIban());
+         //   TreeNode trust = new TreeNode("\t\t\t\tTrust Value: " + acquaintance.get);
+            TreeNode publicKey = new TreeNode("\t\t\t\tPublic Key: " + acquaintance.getPublicKey());
+            TreeNode addToContactList = new TreeNode("\t\t\t\tAdd to your contact list");
+            addToContactList.setClickListener(new TreeNode.TreeNodeClickListener() {
+                @Override
+                public void onClick(TreeNode node, Object value) {
+                    Toast.makeText(context, "Contact is now added into your list!", Toast.LENGTH_SHORT).show();
+                    try {
+                        BlockChainAPI.addContact(acquaintance);
+                    } catch (HashException e) {
+                        e.printStackTrace();
+                    } catch (BlockAlreadyExistsException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                    } catch (InvalidKeyException e) {
+                        e.printStackTrace();
+                    } catch (SignatureException e) {
+                        e.printStackTrace();
+                    }
+                    acquaintancesList.remove(acquaintance);
+                    refreshView();
+                }
+            });
 
-        pairing.addChild(acquaintance1);
-
+            TreeNode hisContacts = displayContact(acquaintance, BlockChainAPI.getContactsOf(acquaintance), 1);
+            acquaintanceName.addChildren(iban, publicKey, addToContactList, hisContacts);
+            //             failedTransaction.isExpanded();
+            //         failedTransaction.setExpanded(true);
+            pairing.addChild(acquaintanceName);
+        }
         root.addChildren(myName, myIban, contacts, pairing);
 
         AndroidTreeView tView = new AndroidTreeView(this, root);

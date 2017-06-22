@@ -81,8 +81,6 @@ public class MainActivity extends Activity {
                 TreeNode iban = new TreeNode("\t\t\t\t IBAN: " + block.getContactIban());
                 TreeNode trust = new TreeNode("\t\t\t\t Trust Value: " + block.getTrustValue());
                 TreeNode publicKey = new TreeNode("\t\t\t\t Public Key: " + block.getContactPublicKey());
-                TreeNode hisContacts = displayContact(block.getContact() ,BlockChainAPI.getContactsOf(block.getContact()));
-
                 TreeNode transaction = new TreeNode("\t\t\t\t> Send money");
                 TreeNode succesfulTransaction = new TreeNode("\t\t\t\t\t\t\tSuccesful transaction");
                 succesfulTransaction.setClickListener(new TreeNode.TreeNodeClickListener() {
@@ -101,7 +99,11 @@ public class MainActivity extends Activity {
                 });
 
                 transaction.addChildren(succesfulTransaction, failedTransaction);
-                contactName.addChildren(iban, trust, publicKey, hisContacts, transaction);
+
+
+                TreeNode hisContacts = displayContact(block.getContact() ,BlockChainAPI.getContactsOf(block.getContact()));
+
+                contactName.addChildren(iban, trust, publicKey, transaction, hisContacts);
 
   //             failedTransaction.isExpanded();
        //         failedTransaction.setExpanded(true);
@@ -129,6 +131,10 @@ public class MainActivity extends Activity {
     }
 
     public TreeNode displayContact(User contact, List<Block> hisBlockList){
+        if(hisBlockList.size() == 1)
+        {
+            return new TreeNode("\t\t\t\t> Contacts (No Contact Available)");
+        }
         TreeNode hisContacts = new TreeNode("\t\t\t\t> Contacts");
 
         for (Block hisBlock : hisBlockList) {

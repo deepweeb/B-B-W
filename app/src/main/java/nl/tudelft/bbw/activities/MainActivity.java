@@ -74,16 +74,15 @@ public class MainActivity extends Activity {
         TreeNode contacts = new TreeNode("> My Contacts");
         TreeNode pairing = new TreeNode("> Bluetooth Pairing");
 
-
-        List<Block> myContacts = BlockChainAPI.getMyContacts();
         final Context context = this;
-        for (Block block : myContacts) {
+        for (Block block : BlockChainAPI.getMyContacts()) {
             if(!block.getContactIban().equals(BlockChainAPI.getMyIban())) {
                 TreeNode contactName = new TreeNode("\t> " + block.getContactName());
                 TreeNode iban = new TreeNode("\t\t\t\t IBAN: " + block.getContactIban());
                 TreeNode trust = new TreeNode("\t\t\t\t Trust Value: " + block.getTrustValue());
                 TreeNode publicKey = new TreeNode("\t\t\t\t Public Key: " + block.getContactPublicKey());
-                TreeNode hisContacts = new TreeNode("\t\t\t\t> Contacts");
+                TreeNode hisContacts = displayContact(block.getContact() ,BlockChainAPI.getContactsOf(block.getContact()));
+
                 TreeNode transaction = new TreeNode("\t\t\t\t> Send money");
                 TreeNode succesfulTransaction = new TreeNode("\t\t\t\t\t\t\tSuccesful transaction");
                 succesfulTransaction.setClickListener(new TreeNode.TreeNodeClickListener() {
@@ -129,6 +128,24 @@ public class MainActivity extends Activity {
         ((ConstraintLayout) findViewById(R.id.container)).addView(tView.getView());
     }
 
+    public TreeNode displayContact(User contact, List<Block> hisBlockList){
+        TreeNode hisContacts = new TreeNode("\t\t\t\t> Contacts");
+
+        for (Block hisBlock : hisBlockList) {
+            if(!hisBlock.getContactIban().equals(contact.getIban())) {
+                TreeNode contactName = new TreeNode("\t> " + hisBlock.getContactName());
+                TreeNode iban = new TreeNode("\t\t\t\t IBAN: " + hisBlock.getContactIban());
+                TreeNode trust = new TreeNode("\t\t\t\t Trust Value: " + hisBlock.getTrustValue());
+                TreeNode publicKey = new TreeNode("\t\t\t\t Public Key: " + hisBlock.getContactPublicKey());
+                TreeNode contactl = displayContact(hisBlock.getContact(), BlockChainAPI.getContactsOf(hisBlock.getContact()));
+
+                contactName.addChildren(iban, trust, publicKey, contactl);
+                hisContacts.addChild(contactName);
+            }
+        }
+
+        return hisContacts;
+    }
 
     /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -138,13 +155,13 @@ public class MainActivity extends Activity {
         Acquaintance userB = new Acquaintance("Luat", "NL623423423423", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
         Block userBGenesis = new Block(userB);
 
-        //Initializing C.
+        //Initializing userC.
         EdDSAPrivateKey privateKey2 = ED25519.generatePrivateKey();
         User userC = new User("Ymte", "NLe1242343424", ED25519.getPublicKey(privateKey2));
         Block userCGenesis = new Block(userC);
         userC.setPrivateKey(privateKey2);
 
-        //Add C to the chain of B
+        //Add userC to the chain of userB
         Block keyblock = createKeyBlock(userBGenesis, userCGenesis, BlockType.ADD_KEY);
         List<List<Block>> multichain = new ArrayList<List<Block>>();
         List<Block> test = new ArrayList<Block>();
@@ -152,7 +169,7 @@ public class MainActivity extends Activity {
         test.add(keyblock);
         multichain.add(test);
 
-        //Add genesis of C into multichain of B
+        //Add genesis of userC into multichain of userB
         List<Block> test2 = new ArrayList<Block>();
         test2.add(userCGenesis);
         multichain.add(test2);
@@ -160,10 +177,10 @@ public class MainActivity extends Activity {
 
         userB.setPrivateKey(privateKey);
 
-        //Add multichain of B into your database right after pairing
+        //Add multichain of userB into your database right after pairing
         BlockChainAPI.addAcquaintanceMultichain(userB);
 
-        //Add contact B to A (yourself)
+        //Add contact userB to userA (yourself)
         Block blockB = BlockChainAPI.addContact(userB);
     }
 
@@ -172,13 +189,13 @@ public class MainActivity extends Activity {
         Acquaintance userB = new Acquaintance("Jasper", "NL64544463423423423", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
         Block userBGenesis = new Block(userB);
 
-        //Initializing C.
+        //Initializing userC.
         EdDSAPrivateKey privateKey2 = ED25519.generatePrivateKey();
         User userC = new User("Ashay", "NL55332343424", ED25519.getPublicKey(privateKey2));
         Block userCGenesis = new Block(userC);
         userC.setPrivateKey(privateKey2);
 
-        //Add C to the chain of B
+        //Add userC to the chain of userB
         Block keyblock = createKeyBlock(userBGenesis, userCGenesis, BlockType.ADD_KEY);
         List<List<Block>> multichain = new ArrayList<List<Block>>();
         List<Block> test = new ArrayList<Block>();
@@ -186,7 +203,7 @@ public class MainActivity extends Activity {
         test.add(keyblock);
         multichain.add(test);
 
-        //Add genesis of C into multichain of B
+        //Add genesis of userC into multichain of userB
         List<Block> test2 = new ArrayList<Block>();
         test2.add(userCGenesis);
         multichain.add(test2);
@@ -194,10 +211,10 @@ public class MainActivity extends Activity {
 
         userB.setPrivateKey(privateKey);
 
-        //Add multichain of B into your database right after pairing
+        //Add multichain of userB into your database right after pairing
         BlockChainAPI.addAcquaintanceMultichain(userB);
 
-        //Add contact B to A (yourself)
+        //Add contact userB to userA (yourself)
         Block blockB = BlockChainAPI.addContact(userB);
     }
 

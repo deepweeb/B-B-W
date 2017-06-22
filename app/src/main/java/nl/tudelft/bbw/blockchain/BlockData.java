@@ -113,8 +113,7 @@ public class BlockData {
         if (blockType != blockData.blockType) {
             return false;
         }
-        if (previousHashChain != null ? !previousHashChain.equals(blockData.previousHashChain) : blockData.previousHashChain != null)
-        {
+        if (previousHashChain != null ? !previousHashChain.equals(blockData.previousHashChain) : blockData.previousHashChain != null) {
             return false;
         }
         return previousHashSender != null ? previousHashSender.equals(blockData.previousHashSender) : blockData.previousHashSender == null;

@@ -1,4 +1,5 @@
 package nl.tudelft.bbw.controller;
+
 import nl.tudelft.bbw.blockchain.Block;
 import nl.tudelft.bbw.blockchain.TrustValues;
 
@@ -35,7 +36,7 @@ public final class TrustController {
     }
 
     /**
-     * failedTransaction
+     * failedTransactionTrustUpdate
      * Calculates the new trust value given a failed transaction
      *
      * @param block the given block
@@ -50,7 +51,8 @@ public final class TrustController {
 
     /**
      * verifiedIBAN
-     * Calculates the new trust value given the IBAN is verfied
+     * Calculates the new trust value given the IBAN is verfied initially,
+     * before any transactions can happen
      *
      * @param block the given block
      * @return the block with the new trust value

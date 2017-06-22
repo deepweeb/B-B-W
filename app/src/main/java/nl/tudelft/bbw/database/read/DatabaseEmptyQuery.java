@@ -23,6 +23,7 @@ public class DatabaseEmptyQuery extends ReadQuery {
 
     /**
      * Retrieve whether the database is empty
+     *
      * @return whether the database is empty
      */
     public boolean isDatabaseEmpty() {
@@ -31,6 +32,7 @@ public class DatabaseEmptyQuery extends ReadQuery {
 
     /**
      * If the query returned any result, the database is not empty
+     *
      * @param cursor the cursor resulting from the query
      */
     @Override
@@ -40,6 +42,7 @@ public class DatabaseEmptyQuery extends ReadQuery {
 
     /**
      * We operate on the user table
+     *
      * @return the user table name
      */
     @Override
@@ -49,6 +52,7 @@ public class DatabaseEmptyQuery extends ReadQuery {
 
     /**
      * Simply select all columns
+     *
      * @return all user columns
      */
     @Override
@@ -58,6 +62,7 @@ public class DatabaseEmptyQuery extends ReadQuery {
 
     /**
      * There is no condition
+     *
      * @return empty string
      */
     @Override
@@ -67,6 +72,7 @@ public class DatabaseEmptyQuery extends ReadQuery {
 
     /**
      * No arguments either
+     *
      * @return empty array
      */
     @Override

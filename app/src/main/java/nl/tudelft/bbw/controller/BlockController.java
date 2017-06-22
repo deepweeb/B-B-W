@@ -8,6 +8,7 @@ import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.tudelft.bbw.blockchain.Acquaintance;
 import nl.tudelft.bbw.blockchain.Block;
 import nl.tudelft.bbw.blockchain.BlockData;
 import nl.tudelft.bbw.blockchain.BlockType;
@@ -15,7 +16,9 @@ import nl.tudelft.bbw.blockchain.Hash;
 import nl.tudelft.bbw.blockchain.TrustValues;
 import nl.tudelft.bbw.blockchain.User;
 import nl.tudelft.bbw.database.Database;
+import nl.tudelft.bbw.database.DatabaseException;
 import nl.tudelft.bbw.database.read.BlockExistQuery;
+import nl.tudelft.bbw.database.read.DatabaseToMultichainQuery;
 import nl.tudelft.bbw.database.read.GetChainQuery;
 import nl.tudelft.bbw.database.read.LatestBlockQuery;
 import nl.tudelft.bbw.database.read.UserExistQuery;
@@ -47,19 +50,19 @@ public class BlockController {
         this.database = new Database(context);
     }
 
+
     /**
      * Method for adding a user to our blockchain.
      *
-     * @param user the user we want to add
+     * @param user      the user we want to add
      * @param signature byte array containing the signature
-     * @param message byte array containing the message
+     * @param message   byte array containing the message
      * @return the created block
      * @throws HashException               When there is an error calculating the hash
      * @throws BlockAlreadyExistsException When there already exists a block in the database
      */
     public final Block addBlockToChain(User user, byte[] signature, byte[] message)
             throws HashException, BlockAlreadyExistsException {
-
         UserExistQuery query = new UserExistQuery(user);
         database.read(query);
         if (!query.doesExist()) {
@@ -181,7 +184,7 @@ public class BlockController {
      * @return the freshly created block
      * @throws HashException when the key hashing method does not work
      */
-    public Block createGenesis(User owner) throws HashException, BlockAlreadyExistsException {
+    public Block createGenesis(User owner) throws HashException, BlockAlreadyExistsException, DatabaseException {
         Block genesisBlock = new Block(owner);
         UserAddQuery query = new UserAddQuery(owner);
         database.write(query);
@@ -250,7 +253,7 @@ public class BlockController {
      * Verifies the signature given a signature and message byte array
      *
      * @param signature given signature to use
-     * @param message given message to verify
+     * @param message   given message to verify
      * @return boolean if the signature of the block is verified
      */
     private boolean verifySignature(byte[] signature, byte[] message) {
@@ -261,4 +264,64 @@ public class BlockController {
         }
     }
 
+    /**
+     * Method to add the multichain (the pairing person database) into your database
+     *
+     * @param multichain given the multichain of the pairing partner
+     * @throws BlockAlreadyExistsException
+     * @throws HashException
+     */
+    public void addMultichain(List<List<Block>> multichain) throws BlockAlreadyExistsException,
+            HashException, DatabaseException {
+        if (!multichain.isEmpty()) {
+            //add genesis blocks first
+            for (List<Block> chain : multichain) {
+                createBlock(chain.get(0));
+            }
+
+
+            for (List<Block> chain : multichain) {
+                for (Block block : chain) {
+                    if (!block.equals(chain.get(0))) {
+                        createBlock(block);
+                    }
+                }
+            }
+        }
+
+
+    }
+
+    /**
+     * Create the provided block.
+     *
+     * @param block the block to create
+     * @throws BlockAlreadyExistsException when the block already exists
+     * @throws HashException               when the calculated hash does not match the true hash
+     * @throws DatabaseException           when queries could not be processed
+     */
+    private void createBlock(Block block) throws BlockAlreadyExistsException, HashException,
+            DatabaseException {
+        if (block.getBlockType() == BlockType.GENESIS) {
+            this.createGenesis(block.getBlockOwner());
+        } else if (block.isRevoked()) {
+            this.createRevokeBlock(block.getBlockOwner(), block.getContact());
+        } else {
+            this.createKeyBlock(block.getBlockOwner(), block.getContact());
+        }
+    }
+
+    /**
+     * Create an acquintance object that you can send over the network
+     *
+     * @return a new acquaintance object
+     */
+    public Acquaintance makeAcquaintanceObject() {
+        DatabaseToMultichainQuery query = new DatabaseToMultichainQuery(database);
+        database.read(query);
+        User owner = chainOwner;
+        return new Acquaintance(owner.getName(), owner.getIban(), owner.getPublicKey(),
+                query.getMultichain());
+    }
 }
+

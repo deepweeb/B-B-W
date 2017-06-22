@@ -1,89 +1,55 @@
 package nl.tudelft.bbw;
 
 import android.content.Context;
-import android.view.LayoutInflater;
+import android.database.DataSetObserver;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ListAdapter;
 
-public class TreeAdapter extends BaseExpandableListAdapter {
-    private Context mContext;
-    private String[][] mContents;
-    private String[] mTitles;
+public class TreeAdapter implements ListAdapter {
+    private Context context;
+    private INodes nodes;
 
-    public TreeAdapter(Context context, String[] titles, String[][] contents) {
+    public TreeAdapter(Context context, INodes nodes) {
         super();
-        if(titles.length != contents.length) {
-            throw new IllegalArgumentException("Titles and Contents must be the same size.");
-        }
 
-        mContext = context;
-        mContents = contents;
-        mTitles = titles;
+        this.context = context;
+        this.nodes = nodes;
     }
+
     @Override
-    public String getChild(int groupPosition, int childPosition) {
-        return mContents[groupPosition][childPosition];
+    public boolean areAllItemsEnabled() {
+        return false;
     }
+
     @Override
-    public long getChildId(int groupPosition, int childPosition) {
+    public boolean isEnabled(int position) {
+        return false;
+    }
+
+    @Override
+    public void registerDataSetObserver(DataSetObserver observer) {
+
+    }
+
+    @Override
+    public void unregisterDataSetObserver(DataSetObserver observer) {
+
+    }
+
+    @Override
+    public int getCount() {
         return 0;
     }
+
     @Override
-    public View getChildView(int groupPosition, int childPosition,
-                             boolean isLastChild, View convertView, ViewGroup parent) {
-        if (true || groupPosition == 0 || childPosition == 0) {
-            try {
-                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                ExpandableListView child = (ExpandableListView) inflater.inflate(R.layout.tree, null);
-                child.setAdapter(new TreeAdapter(mContext,
-                        new String[] {"Sub", "Subber"},
-                        new String[][] {new String[] {"hoi", "hee"}, new String[] {"he"}}));
-                child.setPadding(150,0,0,0);
-                return child;
-            } catch (Exception e) {
-                Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        }
-        TextView row = (TextView)convertView;
-        if(row == null) {
-            row = new TextView(mContext);
-        }
-        row.setText(mContents[groupPosition][childPosition]);
-        row.setTextSize(30.0f);
-        return row;
+    public Object getItem(int position) {
+        return null;
     }
+
     @Override
-    public int getChildrenCount(int groupPosition) {
-        return mContents[groupPosition].length;
-    }
-    @Override
-    public String[] getGroup(int groupPosition) {
-        return mContents[groupPosition];
-    }
-    @Override
-    public int getGroupCount() {
-        return mContents.length;
-    }
-    @Override
-    public long getGroupId(int groupPosition) {
+    public long getItemId(int position) {
         return 0;
-    }
-    @Override
-    public View getGroupView(int groupPosition, boolean isExpanded,
-                             View convertView, ViewGroup parent) {
-        TextView row = (TextView)convertView;
-        if(row == null) {
-            row = new TextView(mContext);
-        }
-        //row.setTypeface(Typeface.DEFAULT_BOLD);
-        row.setText(mTitles[groupPosition]);
-        row.setPadding(150,0,0,0);
-        row.setTextSize(30.0f);
-        return row;
     }
 
     @Override
@@ -92,8 +58,22 @@ public class TreeAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return true;
+    public View getView(int position, View convertView, ViewGroup parent) {
+        return null;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return 0;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 0;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
 }

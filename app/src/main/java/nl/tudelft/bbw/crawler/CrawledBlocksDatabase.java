@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
+import java.io.IOException;
+
 /**
  * Database handler for the block database implementation of the crawler
  * https://github.com/YourDaddyIsHere/even-cleaner-neighbor-discovery/blob/master
@@ -64,7 +66,7 @@ public class CrawledBlocksDatabase extends SQLiteAssetHelper {
      *
      * @param query The query which you want to execute
      */
-    public void read(ReadCrawlerBlocksQuery query) {
+    public void read(ReadCrawlerBlocksQuery query) throws IOException {
         SQLiteDatabase database = getWritableDatabase();
         query.execute(database);
         database.close();

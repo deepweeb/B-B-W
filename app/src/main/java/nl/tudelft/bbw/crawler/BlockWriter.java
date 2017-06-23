@@ -30,8 +30,8 @@ final class BlockWriter {
      * writeToJson function
      * Writes the given mapper to the output file
      *
-     * @param mapper
-     * @throws IOException
+     * @param mapper given mapper
+     * @throws IOException when the file could not be written
      */
     static void writeToJson(Map mapper) throws IOException {
         Writer writer = new FileWriter(OUTPUT_PATH);

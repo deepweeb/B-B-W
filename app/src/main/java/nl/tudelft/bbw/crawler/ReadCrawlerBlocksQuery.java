@@ -64,7 +64,7 @@ public class ReadCrawlerBlocksQuery {
      * Method to go through all the rows of the database using the cursor,
      * and make a block with the values, and eventually write it into a JSON file.
      */
-    private void parse(Cursor cursor) {
+    private void parse(Cursor cursor) throws IOException {
         if (cursor.getCount() == 0) {
             chain = null;
         } else {
@@ -73,17 +73,13 @@ public class ReadCrawlerBlocksQuery {
                 makeBlock(cursor);
             }
         }
-        try {
-            BlockWriter.writeToJson(chain);
-        } catch (IOException e) {
-            System.out.println("IOException when writing blocks: " + e);
-        }
+        BlockWriter.writeToJson(chain);
     }
 
     /**
      * The query to make the table we want.
      */
-    public void execute(SQLiteDatabase database) {
+    public void execute(SQLiteDatabase database) throws IOException {
         final String query =
                 "SELECT " + COLUMNS_MEMBER + ", " + COLUMNS_CHAIN + " FROM " + USER_TABLE_NAME
                         + " JOIN " + BLOCKS_TABLE_NAME + " ON " + JOIN_TABLES + ";";

@@ -8,6 +8,8 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.io.IOException;
+
 import nl.tudelft.bbw.BuildConfig;
 
 @RunWith(RobolectricTestRunner.class)
@@ -18,7 +20,7 @@ public class ReadCrawlerBlocksQueryTest {
      * Check if the chain isn't empty after parsing the database
      */
     @Test
-    public void testEmpty() {
+    public void testEmpty() throws IOException {
         CrawledBlocksDatabase database = new CrawledBlocksDatabase(RuntimeEnvironment.application);
         ReadCrawlerBlocksQuery query = new ReadCrawlerBlocksQuery();
         database.read(query);

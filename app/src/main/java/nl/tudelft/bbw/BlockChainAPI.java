@@ -115,7 +115,8 @@ public final class BlockChainAPI {
             //Adding the user into your own chain
             return blockController.addBlockToChain(user, signature, message);
         } catch (DatabaseException e) {
-            return null;
+            e.printStackTrace();
+            throw e;
         }
 
     }

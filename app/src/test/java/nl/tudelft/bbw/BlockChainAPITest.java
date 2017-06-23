@@ -217,7 +217,7 @@ public class BlockChainAPITest {
      * @throws HashException
      * @throws BlockAlreadyExistsException
      */
-    private Block createKeyBlock(Block latest, Block contact,
+    public Block createKeyBlock(Block latest, Block contact,
                               BlockType blockType) throws HashException, BlockAlreadyExistsException {
         Hash previousBlockHash = latest.getOwnHash();
         // always link to genesis of contact blocks

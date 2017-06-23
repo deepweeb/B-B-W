@@ -277,6 +277,7 @@ public class BlockController {
             //add genesis blocks first
             for (List<Block> chain : multichain) {
                 createBlock(chain.get(0));
+                this.updateTrustOfBlock(chain.get(0));
             }
 
 
@@ -284,6 +285,7 @@ public class BlockController {
                 for (Block block : chain) {
                     if (!block.equals(chain.get(0))) {
                         createBlock(block);
+                        this.updateTrustOfBlock(block);
                     }
                 }
             }
@@ -300,19 +302,19 @@ public class BlockController {
      * @throws HashException               when the calculated hash does not match the true hash
      * @throws DatabaseException           when queries could not be processed
      */
-    private void createBlock(Block block) throws BlockAlreadyExistsException, HashException,
+    private Block createBlock(Block block) throws BlockAlreadyExistsException, HashException,
             DatabaseException {
         if (block.getBlockType() == BlockType.GENESIS) {
-            this.createGenesis(block.getBlockOwner());
+            return this.createGenesis(block.getBlockOwner());
         } else if (block.isRevoked()) {
-            this.createRevokeBlock(block.getBlockOwner(), block.getContact());
+            return this.createRevokeBlock(block.getBlockOwner(), block.getContact());
         } else {
-            this.createKeyBlock(block.getBlockOwner(), block.getContact());
+            return this.createKeyBlock(block.getBlockOwner(), block.getContact());
         }
     }
 
     /**
-     * Create an acquintance object that you can send over the network
+     * Create an acquaintance object that you can send over the network
      *
      * @return a new acquaintance object
      */

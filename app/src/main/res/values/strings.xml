@@ -2,4 +2,11 @@
     <string name="app_name">B-B-W</string>
     <string name="title_activity_friends_page">FriendsPageActivity</string>
     <string name="title_activity_pair">PairActivity</string>
+
+    <string-array name="contacts">
+        <item>Henk Jansen</item>
+        <item>Ingrid de Boer</item>
+        <item>Barbara de Jong</item>
+    </string-array>
+    <string name="title_activity_main3">MainActivity3</string>
 </resources>

@@ -3,7 +3,6 @@ package nl.tudelft.bbw;
 import android.content.Context;
 
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
-import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -48,50 +47,16 @@ public final class BlockChainAPI {
      * @throws HashException               When creating a block results in an error
      * @throws BlockAlreadyExistsException when adding a block results in an error
      */
-    public static void initializeAPI(String Name, String Iban, Context context) throws HashException, BlockAlreadyExistsException {
+    public static User initializeAPI(String Name, String Iban, Context context) throws HashException, BlockAlreadyExistsException {
         EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
         owner = new User(Name, Iban, ED25519.getPublicKey(privateKey));
         owner.setPrivateKey(privateKey);
         blockController = new BlockController(owner, context);
         blockVerificationController = new BlockVerificationController(context);
         blockController.createGenesis(owner);
+        return owner;
     }
 
-    /**
-     * Getter method to get the BlockChainAPI user's contact list
-     *
-     * @return List of blocks forming this user contact list.
-     */
-    public static List<Block> getMyContacts() {
-        return blockController.getBlocks(owner);
-    }
-
-    /**
-     * Getter method to get the BlockChainAPI user's name
-     *
-     * @return name of the BlockChainAPI user
-     */
-    public static String getMyName() {
-        return owner.getName();
-    }
-
-    /**
-     * Getter method to get the BlockChainAPI user's Iban
-     *
-     * @return Iban number of the BlockChainAPI user
-     */
-    public static String getMyIban() {
-        return owner.getIban();
-    }
-
-    /**
-     * Getter method to get the BlockChainAPI user's Public Key
-     *
-     * @return Public Key  of the BlockChainAPI user
-     */
-    public static EdDSAPublicKey getMyPublicKey() {
-        return owner.getPublicKey();
-    }
 
 
     public static void addAcquaintanceMultichain(Acquaintance acquaintance) throws BlockAlreadyExistsException, HashException {

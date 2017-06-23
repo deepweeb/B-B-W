@@ -41,7 +41,7 @@ public final class BlockChainAPI {
      * @param Iban    of the BlockChainAPI user
      * @param context The state of the program
      * @return User object of the BlockChainAPI user
-     * @throws HashException when the hash methods are not available
+     * @throws HashException               when the hash methods are not available
      * @throws BlockAlreadyExistsException when a block already exists
      */
     public static User initializeAPI(String Name, String Iban, Context context) throws

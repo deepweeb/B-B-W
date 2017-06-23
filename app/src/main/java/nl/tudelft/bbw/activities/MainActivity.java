@@ -27,13 +27,14 @@ import nl.tudelft.bbw.exception.HashException;
 public class MainActivity extends Activity {
     final Context context = this;
     List<Acquaintance> acquaintancesList = new ArrayList<Acquaintance>() ;
+    User APIUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         try {
-            BlockChainAPI.initializeAPI("Naqib", "Nl22RABO222231123", this);
+            APIUser = BlockChainAPI.initializeAPI("Naqib", "Nl22RABO222231123", this);
         } catch (HashException e) {
             e.printStackTrace();
         } catch (BlockAlreadyExistsException e) {
@@ -77,12 +78,12 @@ public class MainActivity extends Activity {
 
 
         TreeNode root = TreeNode.root();
-        TreeNode myName = new TreeNode("       My Name: " + BlockChainAPI.getMyName());
-        TreeNode myIban = new TreeNode("       My IBAN: " + BlockChainAPI.getMyIban());
-        TreeNode myPublicKey = new TreeNode("       My Public Key: " +  BlockChainAPI.getMyPublicKey().getEncoded());
+        TreeNode myName = new TreeNode("       My Name: " + APIUser.getName());
+        TreeNode myIban = new TreeNode("       My IBAN: " + APIUser.getIban());
+        TreeNode myPublicKey = new TreeNode("       My Public Key: " +  APIUser.getPublicKey().getEncoded());
         TreeNode contacts = new TreeNode("> My Contacts");
-        for (final Block block : BlockChainAPI.getMyContacts()) {
-            if (!block.getContactIban().equals(BlockChainAPI.getMyIban())) {
+        for (final Block block : BlockChainAPI.getContactsOf(APIUser)) {
+            if (!block.getContactIban().equals(APIUser.getIban())) {
 
                 TreeNode contactName = new TreeNode("\t> " + block.getContactName());
                 TreeNode iban = new TreeNode("\t\t\t\tIBAN: " + block.getContactIban());
@@ -166,7 +167,7 @@ public class MainActivity extends Activity {
                 public void onClick(TreeNode node, Object value) {
                     try {
                         BlockChainAPI.addContact(acquaintance);
-                        Toast.makeText(context, "Contact is now added into your list!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, acquaintance.getName()+ " is now added into your list!", Toast.LENGTH_SHORT).show();
                     } catch (HashException e) {
                         e.printStackTrace();
                     } catch (BlockAlreadyExistsException e) {
@@ -212,7 +213,7 @@ public class MainActivity extends Activity {
                     public void onClick(TreeNode node, Object value) {
                         try {
                             BlockChainAPI.addContact(hisBlock.getContact());
-                            Toast.makeText(context, "Contact is now added into your list!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, hisBlock.getContact().getName()+ " is now added into your list!", Toast.LENGTH_SHORT).show();
                         } catch (HashException e) {
                             e.printStackTrace();
                         } catch (BlockAlreadyExistsException e) {

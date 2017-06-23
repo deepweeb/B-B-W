@@ -40,6 +40,7 @@ public class BlockChainAPITest {
     /**
      * Attributes which are used more than once
      */
+    private User APIUser;
     private Acquaintance userB;
     private List<Block> list;
 
@@ -52,8 +53,8 @@ public class BlockChainAPITest {
     @Before
     public final void setUp() throws HashException, BlockAlreadyExistsException {
         // You are user with name A
-        BlockChainAPI.initializeAPI("A", "iban", RuntimeEnvironment.application);
-        list = BlockChainAPI.getMyContacts();
+        APIUser = BlockChainAPI.initializeAPI("A", "iban", RuntimeEnvironment.application);
+        list = BlockChainAPI.getContactsOf(APIUser);
 
         EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
         userB = new Acquaintance("B", "iban2", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
@@ -82,7 +83,7 @@ public class BlockChainAPITest {
         Block newBlock = BlockChainAPI.addContact(userB);
 
         list.add(newBlock);
-       assertEquals(BlockChainAPI.getMyContacts(), list);
+       assertEquals(BlockChainAPI.getContactsOf(APIUser), list);
     }
 
 
@@ -130,7 +131,7 @@ public class BlockChainAPITest {
         Block blockC = BlockChainAPI.addContact(contactOfcontact);
         list.add(blockC);
 
-        assertEquals(BlockChainAPI.getMyContacts(), list);
+        assertEquals(BlockChainAPI.getContactsOf(APIUser), list);
     }
 
     /**
@@ -146,9 +147,9 @@ public class BlockChainAPITest {
         BlockChainAPI.addAcquaintanceMultichain(userB);
         BlockChainAPI.addContact(userB);
 
-        List<Block> list = BlockChainAPI.getMyContacts();
+        List<Block> list = BlockChainAPI.getContactsOf(APIUser);
         BlockChainAPI.revokeContact(userB);
-        assertNotEquals(BlockChainAPI.getMyContacts(), list);
+        assertNotEquals(BlockChainAPI.getContactsOf(APIUser), list);
     }
 
     /**
@@ -183,7 +184,7 @@ public class BlockChainAPITest {
     @Test
     public final void verifyIBANTest() {
         BlockChainAPI.verifyIBANTrustUpdate(list.get(0));
-        BlockChainAPI.getMyContacts().get(0).getTrustValue();
+        BlockChainAPI.getContactsOf(APIUser).get(0).getTrustValue();
         assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
     }
 
@@ -197,12 +198,12 @@ public class BlockChainAPITest {
         BlockChainAPI.addAcquaintanceMultichain(userB);
         BlockChainAPI.addContact(userB);
 
-        list = BlockChainAPI.getMyContacts();
+        list = BlockChainAPI.getContactsOf(APIUser);
         Acquaintance testAcquaintance = BlockChainAPI.makeAcquaintanceObject();
         List<Block> list2 = testAcquaintance.getMultichain().get(0);
-        assertEquals(BlockChainAPI.getMyName(), testAcquaintance.getName());
-        assertEquals(BlockChainAPI.getMyIban(), testAcquaintance.getIban());
-        assertEquals(BlockChainAPI.getMyPublicKey(), testAcquaintance.getPublicKey());
+        assertEquals(APIUser.getName(), testAcquaintance.getName());
+        assertEquals(APIUser.getIban(), testAcquaintance.getIban());
+        assertEquals(APIUser.getPublicKey(), testAcquaintance.getPublicKey());
         assertTrue(testAcquaintance.getMultichain().contains(list));
     }
 

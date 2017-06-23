@@ -21,6 +21,7 @@ public class UserAddQuery extends WriteQuery {
 
     /**
      * Create a query to add a user
+     *
      * @param user the user to add
      */
     public UserAddQuery(User user) {
@@ -29,6 +30,7 @@ public class UserAddQuery extends WriteQuery {
 
     /**
      * Our content
+     *
      * @return the attributes of the new user
      */
     @Override
@@ -42,6 +44,7 @@ public class UserAddQuery extends WriteQuery {
 
     /**
      * We modify the user table
+     *
      * @return the user table name
      */
     @Override

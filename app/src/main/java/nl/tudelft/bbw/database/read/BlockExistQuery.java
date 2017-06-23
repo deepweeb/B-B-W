@@ -30,6 +30,7 @@ public class BlockExistQuery extends ReadQuery {
 
     /**
      * Construct a new BlockExistsQuery with a given block to look for
+     *
      * @param block the block to look for in the database
      */
     public BlockExistQuery(Block block) {
@@ -38,6 +39,7 @@ public class BlockExistQuery extends ReadQuery {
 
     /**
      * Get if the block exists
+     *
      * @return whether the block exists
      */
     public boolean blockExists() {
@@ -45,7 +47,6 @@ public class BlockExistQuery extends ReadQuery {
     }
 
     /**
-     *
      * @param cursor the cursor resulting from the query
      */
     @Override
@@ -55,6 +56,7 @@ public class BlockExistQuery extends ReadQuery {
 
     /**
      * We obviously operate on the block table
+     *
      * @return the block table name
      */
     @Override
@@ -64,6 +66,7 @@ public class BlockExistQuery extends ReadQuery {
 
     /**
      * Select all columns
+     *
      * @return all block columns
      */
     @Override
@@ -73,6 +76,7 @@ public class BlockExistQuery extends ReadQuery {
 
     /**
      * Filter on the owner and contact fields
+     *
      * @return
      */
     @Override
@@ -82,11 +86,12 @@ public class BlockExistQuery extends ReadQuery {
 
     /**
      * Our arguments are the public key of the owner and of the contact
+     *
      * @return the public key of the owner and of the contact
      */
     @Override
     protected String[] getWhereVariables() {
-        return new String[] {
+        return new String[]{
                 KeyWriter.publicKeyToString(block.getOwnerPublicKey()),
                 KeyWriter.publicKeyToString(block.getContactPublicKey()),
                 String.valueOf(block.getBlockType() == BlockType.REVOKE_KEY ? 1 : 0)

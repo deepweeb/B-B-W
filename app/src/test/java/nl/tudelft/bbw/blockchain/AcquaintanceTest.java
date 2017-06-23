@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import nl.tudelft.bbw.controller.ED25519;
 
@@ -22,7 +23,7 @@ public class AcquaintanceTest {
     private String name;
     private String iban;
     private EdDSAPublicKey publicKey;
-    private ArrayList<Chain> multiChain;
+    private List<List<Block>> multiChain;
 
     private Acquaintance acquaintance;
 
@@ -35,7 +36,7 @@ public class AcquaintanceTest {
         iban = "NL642335674446";
         publicKey = ED25519.getPublicKey(ED25519.generatePrivateKey());
 
-        multiChain = new ArrayList<Chain>();
+        multiChain = new ArrayList<List<Block>>();
         acquaintance = new Acquaintance(name, iban, publicKey, multiChain);
 
     }

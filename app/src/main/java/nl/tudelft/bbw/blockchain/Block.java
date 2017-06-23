@@ -279,9 +279,19 @@ public class Block {
      */
     @Override
     public String toString() {
-        return "Block#" + getSequenceNumber() + "{owner=" + owner.getName() + ",contact="
-                + contact.getName() + "}";
+        if (this.getBlockType().equals(BlockType.GENESIS)) {
+            return "Block#" + getSequenceNumber() + "{blockOwner =" + getOwnerName() + " contact="
+                    + getContactName() + ", iban="
+                    + getContactIban() + (isRevoked() ? ",REVOKE" : "") + ", Trust="
+                    + getTrustValue() + "} (Genesis Block)";
+        } else {
+            return "Block#" + getSequenceNumber() + "{blockOwner =" + getOwnerName() + " contact="
+                    + getContactName() + ", iban="
+                    + getContactIban() + (isRevoked() ? ",REVOKE" : "") + ", Trust="
+                    + getTrustValue() + "}";
+        }
     }
+
 
     /**
      * {@inheritDoc}
@@ -291,8 +301,7 @@ public class Block {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Block))
-        {
+        if (!(o instanceof Block)) {
             return false;
         }
 

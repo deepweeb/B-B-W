@@ -33,7 +33,7 @@ import nl.tudelft.bbw.exception.HashException;
 
 public class MainActivity extends Activity {
     final Context context = this;
-    List<Acquaintance> acquaintancesList;
+    List<Acquaintance> acquaintancesList = new ArrayList<Acquaintance>() ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,10 +94,9 @@ public class MainActivity extends Activity {
 
 
         TreeNode root = TreeNode.root();
-        TreeNode myName = new TreeNode("        My Name: " + BlockChainAPI.getMyName());
-        TreeNode myIban = new TreeNode("        My Contacts: " + BlockChainAPI.getMyIban());
-       // TreeNode myPublicKey = new TreeNode("   My Public Key: " +  BlockChainAPI.getMyPublicKey());
-
+        TreeNode myName = new TreeNode("       My Name: " + BlockChainAPI.getMyName());
+        TreeNode myIban = new TreeNode("       My IBAN: " + BlockChainAPI.getMyIban());
+        TreeNode myPublicKey = new TreeNode("       My Public Key: " +  BlockChainAPI.getMyPublicKey().getEncoded());
         TreeNode contacts = new TreeNode("> My Contacts");
         for (final Block block : BlockChainAPI.getMyContacts()) {
             if (!block.getContactIban().equals(BlockChainAPI.getMyIban())) {
@@ -105,8 +104,19 @@ public class MainActivity extends Activity {
                 TreeNode contactName = new TreeNode("\t> " + block.getContactName());
                 TreeNode iban = new TreeNode("\t\t\t\tIBAN: " + block.getContactIban());
                 TreeNode trust = new TreeNode("\t\t\t\tTrust Value: " + block.getTrustValue());
-                TreeNode publicKey = new TreeNode("\t\t\t\tPublic Key: " + block.getContactPublicKey());
-                TreeNode transaction = new TreeNode("\t\t\t\t>Send money");
+                TreeNode publicKey = new TreeNode("\t\t\t\tPublic Key: " + block.getContactPublicKey().getEncoded());
+                TreeNode transaction = new TreeNode("\t\t\t\t> Send money");
+
+                TreeNode ibanVerification = new TreeNode("\t\t\t\t\t\t\tVerified IBAN transaction");
+                ibanVerification.setClickListener(new TreeNode.TreeNodeClickListener() {
+                    @Override
+                    public void onClick(TreeNode node, Object value) {
+                        Toast.makeText(context, "IBAN verified, Trust Value upgraded!", Toast.LENGTH_SHORT).show();
+                        BlockChainAPI.verifyIBANTrustUpdate(block);
+                        refreshView();
+                    }
+                });
+
                 TreeNode succesfulTransaction = new TreeNode("\t\t\t\t\t\t\tSuccesful transaction");
                 succesfulTransaction.setClickListener(new TreeNode.TreeNodeClickListener() {
                     @Override
@@ -126,10 +136,24 @@ public class MainActivity extends Activity {
                         refreshView();
                     }
                 });
-
-                transaction.addChildren(succesfulTransaction, failedTransaction);
+                transaction.addChildren(ibanVerification, succesfulTransaction, failedTransaction);
+                TreeNode revoke = new TreeNode("\t\t\t\tRevoke this contact");
+                revoke.setClickListener(new TreeNode.TreeNodeClickListener() {
+                    @Override
+                    public void onClick(TreeNode node, Object value) {
+                        Toast.makeText(context, "Contact revoked from your chain!", Toast.LENGTH_SHORT).show();
+                        try {
+                            BlockChainAPI.revokeContact(block.getContact());
+                        } catch (HashException e) {
+                            e.printStackTrace();
+                        } catch (BlockAlreadyExistsException e) {
+                            e.printStackTrace();
+                        }
+                        refreshView();
+                    }
+                });
                 TreeNode hisContacts = displayContact(block.getContact(), BlockChainAPI.getContactsOf(block.getContact()), 1);
-                contactName.addChildren(iban, trust, publicKey, transaction, hisContacts);
+                contactName.addChildren(iban, trust, publicKey, transaction, revoke, hisContacts);
                 //             failedTransaction.isExpanded();
                 //         failedTransaction.setExpanded(true);
                 contacts.addChild(contactName);
@@ -137,13 +161,13 @@ public class MainActivity extends Activity {
             }
         }
 
-        TreeNode pairing = new TreeNode("> Bluetooth Pairing");
+        TreeNode pairing = new TreeNode("> Bluetooth Pairing (Simulation)");
         for (final Acquaintance acquaintance : acquaintancesList)
         {
             TreeNode acquaintanceName = new TreeNode("\t> " + acquaintance.getName());
             TreeNode iban = new TreeNode("\t\t\t\tIBAN: " +  acquaintance.getIban());
          //   TreeNode trust = new TreeNode("\t\t\t\tTrust Value: " + acquaintance.get);
-            TreeNode publicKey = new TreeNode("\t\t\t\tPublic Key: " + acquaintance.getPublicKey());
+            TreeNode publicKey = new TreeNode("\t\t\t\tPublic Key: " + acquaintance.getPublicKey().getEncoded());
             TreeNode addToContactList = new TreeNode("\t\t\t\tAdd to your contact list");
             addToContactList.setClickListener(new TreeNode.TreeNodeClickListener() {
                 @Override
@@ -159,6 +183,7 @@ public class MainActivity extends Activity {
                         e.printStackTrace();
                     } catch (InvalidKeyException e) {
                         e.printStackTrace();
+                        e.printStackTrace();
                     } catch (SignatureException e) {
                         e.printStackTrace();
                     }
@@ -173,7 +198,7 @@ public class MainActivity extends Activity {
             //         failedTransaction.setExpanded(true);
             pairing.addChild(acquaintanceName);
         }
-        root.addChildren(myName, myIban, contacts, pairing);
+        root.addChildren(myName, myIban, myPublicKey, contacts, pairing);
 
         AndroidTreeView tView = new AndroidTreeView(this, root);
 
@@ -184,14 +209,14 @@ public class MainActivity extends Activity {
         if (hisBlockList.size() == 1) {
             return new TreeNode(addSpace(layerCount) + "> Contacts (No Contact Available)");
         }
-        TreeNode hisContacts = new TreeNode(addSpace(layerCount) + "> Contacts");
+        TreeNode hisContacts = new TreeNode(addSpace(layerCount) + "> "+ contact.getName()+ "'s contacts");
 
         for (final Block hisBlock : hisBlockList) {
             if (!hisBlock.getContactIban().equals(contact.getIban())) {
                 TreeNode contactName = new TreeNode(addSpace(layerCount + 1) + "> " + hisBlock.getContactName());
                 TreeNode iban = new TreeNode(addSpace(layerCount + 1) + "IBAN: " + hisBlock.getContactIban());
                 TreeNode trust = new TreeNode(addSpace(layerCount + 1) + "Trust Value: " + hisBlock.getTrustValue());
-                TreeNode publicKey = new TreeNode(addSpace(layerCount + 1) + "Public Key: " + hisBlock.getContactPublicKey());
+                TreeNode publicKey = new TreeNode(addSpace(layerCount + 1) + "Public Key: " + hisBlock.getContactPublicKey().getEncoded());
                 TreeNode addToContactList = new TreeNode((addSpace(layerCount + 1) +"Add to your contact list"));
                 addToContactList.setClickListener(new TreeNode.TreeNodeClickListener() {
                     @Override
@@ -327,6 +352,7 @@ public class MainActivity extends Activity {
         Block keyblock = createKeyBlock(userBGenesis, userCGenesis, BlockType.ADD_KEY);
         List<List<Block>> multichain = new ArrayList<List<Block>>();
         List<Block> test = new ArrayList<Block>();
+        keyblock.setTrustValue(15);
         test.add(userBGenesis);
         test.add(keyblock);
         multichain.add(test);
@@ -357,6 +383,7 @@ public class MainActivity extends Activity {
         List<List<Block>> multichain = new ArrayList<List<Block>>();
         List<Block> test = new ArrayList<Block>();
         test.add(userBGenesis);
+        keyblock.setTrustValue(35);
         test.add(keyblock);
         multichain.add(test);
 

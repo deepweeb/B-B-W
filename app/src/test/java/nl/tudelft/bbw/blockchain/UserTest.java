@@ -9,6 +9,8 @@ import org.junit.Test;
 import nl.tudelft.bbw.controller.ED25519;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * This class tests the User object.
@@ -69,4 +71,45 @@ public class UserTest {
         assertEquals(privateKey, user.getPrivateKey());
     }
 
+    /**
+     * Test if different named users are not the same
+     */
+    @Test
+    public void testNotEqualsKey() {
+        User alice = new User("Alice", "ibanA", ED25519.getPublicKey(ED25519.generatePrivateKey()));
+        User bob = new User("Alice", "ibanA");
+
+        assertFalse(alice.equals(bob));
+    }
+
+    /**
+     * Test if different named users are not the same
+     */
+    @Test
+    public void testNotEqualsName() {
+        User alice = new User("Alice", "ibanA", ED25519.getPublicKey(ED25519.generatePrivateKey()));
+        User bob = new User("Bob", "ibanA", ED25519.getPublicKey(ED25519.generatePrivateKey()));
+
+        assertFalse(alice.equals(bob));
+    }
+
+    /**
+     * Test if different classed users are not the same
+     */
+    @Test
+    public void testNotEqualClass() {
+        User alice = new User("Alice", "ibanA", ED25519.getPublicKey(ED25519.generatePrivateKey()));
+        Object bob = "hallo";
+
+        assertFalse(alice.equals(bob));
+    }
+
+    /**
+     * Tests if users are the same
+     */
+    @Test
+    public void testEquals() {
+        User alice = new User("Alice", "ibanA", ED25519.getPublicKey(ED25519.generatePrivateKey()));
+        assertTrue(alice.equals(alice));
+    }
 }

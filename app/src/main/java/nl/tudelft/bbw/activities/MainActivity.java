@@ -48,7 +48,6 @@ public class MainActivity extends Activity {
             MainActivityTestSubjects.addContactForTesting();
             MainActivityTestSubjects.addContactForTesting2();
 
-
             Acquaintance testAcquaintance = MainActivityTestSubjects.generateAcquaintanceForTest();
             Acquaintance testAcquaintance2 = MainActivityTestSubjects.generateAcquaintanceForTest2();
 
@@ -145,6 +144,15 @@ public class MainActivity extends Activity {
             }
         }
 
+        TreeNode pairing = pairingSimutation(acquaintancesList);
+        root.addChildren(myName, myIban, myPublicKey, contacts, pairing);
+
+        AndroidTreeView tView = new AndroidTreeView(this, root);
+
+        ((ConstraintLayout) findViewById(R.id.container)).addView(tView.getView());
+    }
+
+    public TreeNode pairingSimutation(List<Acquaintance> acquaintanceList) {
         TreeNode pairing = new TreeNode("> Bluetooth Pairing (Simulation)");
         for (final Acquaintance acquaintance : acquaintancesList)
         {
@@ -182,11 +190,8 @@ public class MainActivity extends Activity {
             //         failedTransaction.setExpanded(true);
             pairing.addChild(acquaintanceName);
         }
-        root.addChildren(myName, myIban, myPublicKey, contacts, pairing);
 
-        AndroidTreeView tView = new AndroidTreeView(this, root);
-
-        ((ConstraintLayout) findViewById(R.id.container)).addView(tView.getView());
+        return pairing;
     }
 
     public TreeNode displayContact(User contact, List<Block> hisBlockList, int layerCount) {

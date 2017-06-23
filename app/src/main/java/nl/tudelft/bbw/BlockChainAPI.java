@@ -38,7 +38,7 @@ public final class BlockChainAPI {
      * Private constructor to make sure that the class cannot be initialized
      */
     private BlockChainAPI() {}
-    
+
     /**
      * Initializing the BlockChainAPI, the genesis block is here created since this
      * can only be done once per user
@@ -85,15 +85,10 @@ public final class BlockChainAPI {
      */
     public static Block addContact(User user)
             throws HashException, BlockAlreadyExistsException, NoSuchAlgorithmException,
-            InvalidKeyException, SignatureException {
-        try {
+            InvalidKeyException, SignatureException, DatabaseException {
             final byte[] message = user.getPublicKey().getEncoded();
             final byte[] signature = ED25519.generateSignature(message, owner.getPrivateKey());
             return blockController.addBlockToChain(user, signature, message);
-        } catch (DatabaseException e) {
-            e.printStackTrace();
-            throw e;
-        }
     }
 
     /**

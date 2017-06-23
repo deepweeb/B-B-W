@@ -30,7 +30,6 @@ import nl.tudelft.bbw.exception.HashException;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertNotEquals;
 
 
 @RunWith(RobolectricTestRunner.class)
@@ -38,122 +37,124 @@ import static org.junit.Assert.assertNotEquals;
 public class BlockChainAPITest {
 
     /**
-     * Attributes which are used more than once
+     * Testing attributes which are used more than once
      */
-    private User APIUser;
-    private Acquaintance userB;
+    private User apiUser;
+    private Acquaintance acquaintanceB;
     private List<Block> list;
 
     /**
-     * Initialize BlockChainAPI before every test
+     * Initialize BlockChainAPI before every Junit tests
      *
-     * @throws HashException               When creating a block results in an error
-     * @throws BlockAlreadyExistsException when adding a block results in an error
+     * @throws HashException               when the hash methods are not available
+     * @throws BlockAlreadyExistsException when a block already exists
      */
     @Before
     public final void setUp() throws HashException, BlockAlreadyExistsException {
-        // You are user with name A
-        APIUser = BlockChainAPI.initializeAPI("A", "iban", RuntimeEnvironment.application);
-        list = BlockChainAPI.getContactsOf(APIUser);
+        // You are apiUser user with name "A" and Iban number "IbanOfA"
+        apiUser = BlockChainAPI.initializeAPI("A", "ibanOfA", RuntimeEnvironment.application);
+        list = BlockChainAPI.getContactsOf(apiUser);
 
+        // Initialization of acquaintanceB
         EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
-        userB = new Acquaintance("B", "iban2", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
+        acquaintanceB = new Acquaintance("B", "IbanOfB", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
 
+        // Initialization of the multichain of acquaintanceB with B's genesis block
         List<List<Block>> newUserMultichain = new ArrayList<List<Block>>();
         List<Block> test = new ArrayList<Block>();
-        test.add(new Block(userB));
+        test.add(new Block(acquaintanceB));
         newUserMultichain.add(test);
-        userB.setMultichain(newUserMultichain);
-        userB.setPrivateKey(privateKey);
+        acquaintanceB.setMultichain(newUserMultichain);
+        acquaintanceB.setPrivateKey(privateKey);
     }
 
     /**
-     * Test if adding to chain yields a different chain
+     * Test if adding an contact function addContact() to the chain works correctly
      *
-     * @throws HashException               When creating a block results in an error
-     * @throws BlockAlreadyExistsException when adding a block results in an error
+     * @throws HashException               when the hash methods are not available
+     * @throws BlockAlreadyExistsException when a block already exists
      */
     @Test
-    public final void addContactToChainTest() throws HashException, BlockAlreadyExistsException,
+    public final void addContactTest() throws HashException, BlockAlreadyExistsException,
             NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         //add acquaintance multichain right after pairing
-        BlockChainAPI.addAcquaintanceMultichain(userB);
+        BlockChainAPI.addAcquaintanceMultichain(acquaintanceB);
 
         //add acquaintance right after you review and accept them
-        Block newBlock = BlockChainAPI.addContact(userB);
+        Block newBlock = BlockChainAPI.addContact(acquaintanceB);
 
         list.add(newBlock);
-       assertEquals(BlockChainAPI.getContactsOf(APIUser), list);
+        assertEquals(BlockChainAPI.getContactsOf(apiUser), list);
     }
 
 
     /**
-     * Test if adding the contact of your contact works properly
-     * You are A, you want to add a contact of B whose name is C
+     * Test if adding the contact(userC) of your contact (acquaintanceB) works properly
      *
-     * @throws HashException               When creating a block results in an error
-     * @throws BlockAlreadyExistsException when adding a block results in an error
+     * @throws HashException               when the hash methods are not available
+     * @throws BlockAlreadyExistsException when a block already exists
      */
     @Test
-    public final void addContactofContactToChainTest() throws HashException, BlockAlreadyExistsException,
+    public final void addContactofContactTest() throws HashException, BlockAlreadyExistsException,
             NoSuchAlgorithmException, InvalidKeyException, SignatureException {
 
-        //Initializing C.
+        //Initializing userC.
         EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
         User userC = new User("C", "iban3", ED25519.getPublicKey(privateKey));
         Block userCGenesis = new Block(userC);
 
 
-        //Add C to the chain of B
-        Block keyblock = createKeyBlock(userB.getMultichain().get(0).get(0), userCGenesis, BlockType.ADD_KEY);
+        //Add userC to the chain of acquaintanceB
+        Block keyblock = createKeyBlock(acquaintanceB.getMultichain().get(0).get(0), userCGenesis, BlockType.ADD_KEY);
         List<List<Block>> multichain = new ArrayList<List<Block>>();
         List<Block> test = new ArrayList<Block>();
-        test.add(userB.getMultichain().get(0).get(0));
+        test.add(acquaintanceB.getMultichain().get(0).get(0));
         test.add(keyblock);
         multichain.add(test);
 
-        //Add genesis of C into multichain of B
+        //Add genesis of userC into multichain of acquaintanceB
         List<Block> test2 = new ArrayList<Block>();
         test2.add(userCGenesis);
         multichain.add(test2);
-        userB.setMultichain(multichain);
+        acquaintanceB.setMultichain(multichain);
 
-        //Add multichain of B into your database right after pairing
-        BlockChainAPI.addAcquaintanceMultichain(userB);
-        //Add contact B to A (yourself)
-       Block blockB = BlockChainAPI.addContact(userB);
+        //Add multichain of acquaintanceB into your database right after pairing
+        BlockChainAPI.addAcquaintanceMultichain(acquaintanceB);
+        //Add  acquaintanceB to apiUser (yourself)
+        Block blockB = BlockChainAPI.addContact(acquaintanceB);
         list.add(blockB);
 
-        //query for User C as if you go through your contact list of B (C is not your contact yet)
-        User contactOfcontact = BlockChainAPI.getContactsOf(userB).get(1).getContact();
+        //query for userC as if you go through your contact list of acquaintanceB
+        // (userC is not your contact yet)
+        User contactOfcontact = BlockChainAPI.getContactsOf(acquaintanceB).get(1).getContact();
 
-        //add contact C
+        //add userC
         Block blockC = BlockChainAPI.addContact(contactOfcontact);
         list.add(blockC);
 
-        assertEquals(BlockChainAPI.getContactsOf(APIUser), list);
+        assertEquals(BlockChainAPI.getContactsOf(apiUser), list);
     }
 
     /**
-     * Test if revoking from chain yields a different chain
+     * Test if revoking a contact from your chain with RevokeContact() works properly
+     * that getContactsOf(apiUser) should not display acquaintanceB as a contact after revoking
      *
-     * @throws HashException               When creating a block results in an error
-     * @throws BlockAlreadyExistsException when adding a block results in an error
+     * @throws HashException               when the hash methods are not available
+     * @throws BlockAlreadyExistsException when a block already exists
      */
     @Test
-    public final void revokeContactFromChainTest()
-            throws HashException, BlockAlreadyExistsException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-        //Add user B into you chain
-        BlockChainAPI.addAcquaintanceMultichain(userB);
-        BlockChainAPI.addContact(userB);
-
-        List<Block> list = BlockChainAPI.getContactsOf(APIUser);
-        BlockChainAPI.revokeContact(userB);
-        assertNotEquals(BlockChainAPI.getContactsOf(APIUser), list);
+    public final void revokeContactFromChainTest() throws HashException, BlockAlreadyExistsException,
+            NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+        //Add acquaintanceB into you chain
+        BlockChainAPI.addAcquaintanceMultichain(acquaintanceB);
+        BlockChainAPI.addContact(acquaintanceB);
+        // Revoke acquaintanceB from your chain
+        BlockChainAPI.revokeContact(acquaintanceB);
+        assertEquals(BlockChainAPI.getContactsOf(apiUser), list);
     }
 
     /**
-     * Test if the database isn't empty
+     * Test if the method isDatabaseEmpty() works properly
      */
     @Test
     public final void databaseEmptyTest() {
@@ -161,71 +162,74 @@ public class BlockChainAPITest {
     }
 
     /**
-     * Test if trustValue of a block changes after transaction
+     * Test if Trust Value of a block is upgraded correctly after an successful transaction
      */
     @Test
-    public final void succesfulTransactionTest() {
+    public final void successfulTransactionTest() {
         BlockChainAPI.successfulTransactionTrustUpdate(list.get(0));
-        assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
+        assertTrue(list.get(0).getTrustValue() > TrustValues.INITIALIZED.getValue());
     }
 
     /**
-     * Test if trustValue of a block changes after transaction
+     * Test if Trust Value of a block is downgraded correctly after an successful transaction
      */
     @Test
     public final void failedTransactionTest() {
         BlockChainAPI.failedTransactionTrustUpdate(list.get(0));
-        assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
+        assertTrue(list.get(0).getTrustValue() < TrustValues.INITIALIZED.getValue());
     }
 
     /**
-     * Test if trustValue of a block changes after verification
+     * Test if Trust Value of a block is upgraded correctly after an successful Iban verification
      */
     @Test
     public final void verifyIBANTest() {
         BlockChainAPI.verifyIBANTrustUpdate(list.get(0));
-        BlockChainAPI.getContactsOf(APIUser).get(0).getTrustValue();
-        assertNotEquals(list.get(0).getTrustValue(), TrustValues.INITIALIZED);
+        assertTrue(list.get(0).getTrustValue() > TrustValues.INITIALIZED.getValue());
     }
 
-
     /**
-     * Test to verify if the Acquaintance object is generated correctly.
+     * Test to verify if the Acquaintance object of your self is generated correctly.
+     *
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeyException
+     * @throws SignatureException
+     * @throws HashException               when the hash methods are not available
+     * @throws BlockAlreadyExistsException when a block already exists
      */
     @Test
     public final void makeAcquaintanceTest() throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, BlockAlreadyExistsException, HashException {
         //Add user B into you chain
-        BlockChainAPI.addAcquaintanceMultichain(userB);
-        BlockChainAPI.addContact(userB);
+        BlockChainAPI.addAcquaintanceMultichain(acquaintanceB);
+        BlockChainAPI.addContact(acquaintanceB);
+        list = BlockChainAPI.getContactsOf(apiUser);
 
-        list = BlockChainAPI.getContactsOf(APIUser);
         Acquaintance testAcquaintance = BlockChainAPI.makeAcquaintanceObject();
-        List<Block> list2 = testAcquaintance.getMultichain().get(0);
-        assertEquals(APIUser.getName(), testAcquaintance.getName());
-        assertEquals(APIUser.getIban(), testAcquaintance.getIban());
-        assertEquals(APIUser.getPublicKey(), testAcquaintance.getPublicKey());
+        //assert if all the attributes are correctly formed into the Acquaintance object
+        assertEquals(apiUser.getName(), testAcquaintance.getName());
+        assertEquals(apiUser.getIban(), testAcquaintance.getIban());
+        assertEquals(apiUser.getPublicKey(), testAcquaintance.getPublicKey());
         assertTrue(testAcquaintance.getMultichain().contains(list));
     }
 
 
     /**
      * Method to return a key block to add to a chain
-     * This method is made  to create test blocks for the tests
+     * This method is made  to create test blocks for the Junit tests
      *
-     * @param contact
-     * @param blockType
-     * @return
+     * @param latest    The latest block of your chain
+     * @param contact   The genesis block of your contact who you want to add
+     * @param blockType The type of the keyblock. It is usually the ADD_KEY type
+     * @return the keyblock which represent your contact to put in your chain
      * @throws HashException
      * @throws BlockAlreadyExistsException
      */
-    public Block createKeyBlock(Block latest, Block contact,
-                              BlockType blockType) throws HashException, BlockAlreadyExistsException {
+    private Block createKeyBlock(Block latest, Block contact,
+                                 BlockType blockType) throws HashException, BlockAlreadyExistsException {
         Hash previousBlockHash = latest.getOwnHash();
-        // always link to genesis of contact blocks
         Hash contactBlockHash;
         contactBlockHash = contact.getOwnHash();
         int seqNumber = latest.getSequenceNumber() + 1;
-
         BlockData blockData = new BlockData(blockType, seqNumber, previousBlockHash,
                 contactBlockHash, TrustValues.INITIALIZED.getValue()
         );

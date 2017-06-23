@@ -102,7 +102,7 @@ public class ReadCrawlerBlocksQuery {
         String contactKey = getStringOfCursor(cursor, INDEX_PUB_KEY);
 
         User user = new User(getStringOfCursor(cursor, INDEX_ID), contactKey);
-        User contact = new User(UNKNOWN_NAME , getStringOfCursor(cursor, INDEX_PUB_KEY));
+        User contact = new User(UNKNOWN_NAME, getStringOfCursor(cursor, INDEX_PUB_KEY));
         BlockData blockData = new BlockData(type, cursor.getInt(INDEX_SEQ_NO), previousHashChain,
                 previousPKSender,
                 TrustValues.INITIALIZED.getValue());

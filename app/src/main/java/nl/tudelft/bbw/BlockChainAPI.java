@@ -33,6 +33,12 @@ public final class BlockChainAPI {
     private static BlockVerificationController blockVerificationController;
     private static User owner;
 
+
+    /**
+     * Private constructor to make sure that the class cannot be initialized
+     */
+    private BlockChainAPI() {}
+    
     /**
      * Initializing the BlockChainAPI, the genesis block is here created since this
      * can only be done once per user

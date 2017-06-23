@@ -3,7 +3,6 @@ package nl.tudelft.bbw;
 import android.content.Context;
 
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
-import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -22,133 +21,104 @@ import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
 import nl.tudelft.bbw.exception.HashException;
 
 /**
- * Performs the actions on the blockchain
+ * This class represents the API of the application
+ * Contains various methods which let the user access all functionality of the application
  */
 public final class BlockChainAPI {
 
+    /**
+     * All the global variables of the BlockChainAPI
+     */
     private static BlockController blockController;
     private static BlockVerificationController blockVerificationController;
     private static User owner;
 
+
     /**
      * Private constructor to make sure that the class cannot be initialized
      */
-    private BlockChainAPI() {
-
-    }
+    private BlockChainAPI() {}
 
     /**
-     * Intitialising the BlockChainAPI, the genesis block is here created since this
+     * Initializing the BlockChainAPI, the genesis block is here created since this
      * can only be done once per user
-     * TODO: Remove this function
      *
      * @param Name    of the BlockChainAPI user
      * @param Iban    of the BlockChainAPI user
      * @param context The state of the program
-     * @throws HashException               When creating a block results in an error
-     * @throws BlockAlreadyExistsException when adding a block results in an error
+     * @return User object of the BlockChainAPI user
+     * @throws HashException               when the hash methods are not available
+     * @throws BlockAlreadyExistsException when a block already exists
      */
-    public static void initializeAPI(String Name, String Iban, Context context) throws HashException, BlockAlreadyExistsException {
+    public static User initializeAPI(String Name, String Iban, Context context) throws
+            HashException, BlockAlreadyExistsException {
         EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
         owner = new User(Name, Iban, ED25519.getPublicKey(privateKey));
         owner.setPrivateKey(privateKey);
         blockController = new BlockController(owner, context);
         blockVerificationController = new BlockVerificationController(context);
         blockController.createGenesis(owner);
+        return owner;
     }
 
     /**
-     * Getter method to get the BlockChainAPI user's contact list
+     * Method to add the multichain (database) of the pairing partner right after the pairing process
+     * so you can look up his/her contact & find his/her genesis block
      *
-     * @return List of blocks forming this user contact list.
+     * @param acquaintance object of your pairing partner
+     * @throws BlockAlreadyExistsException when a block already exists
+     * @throws HashException               when the hash methods are not available
      */
-    public static List<Block> getMyContacts() {
-        return blockController.getBlocks(owner);
-    }
-
-    /**
-     * Getter method to get the BlockChainAPI user's name
-     *
-     * @return name of the BlockChainAPI user
-     */
-    public static String getMyName() {
-        return owner.getName();
-    }
-
-    /**
-     * Getter method to get the BlockChainAPI user's Iban
-     *
-     * @return Iban number of the BlockChainAPI user
-     */
-    public static String getMyIban() {
-        return owner.getIban();
-    }
-
-    /**
-     * Getter method to get the BlockChainAPI user's Public Key
-     *
-     * @return Public Key  of the BlockChainAPI user
-     */
-    public static EdDSAPublicKey getMyPublicKey() {
-        return owner.getPublicKey();
-    }
-
-
-    public static void addAcquaintanceMultichain(Acquaintance acquaintance) throws BlockAlreadyExistsException, HashException {
-        //Adding his database into your database (so you can look up his contacts)
+    public static void addAcquaintanceMultichain(Acquaintance acquaintance) throws
+            BlockAlreadyExistsException, HashException {
         blockController.addMultichain(acquaintance.getMultichain());
     }
 
-
     /**
-     * Method to add a contact to your chain
-     *
-     * @throws HashException               When creating a block results in an error
-     * @throws BlockAlreadyExistsException when adding a block results in an error
+     * @param user which you want to add to your contact list
+     * @return The block which represent the contact in your chain
+     * @throws HashException               when the hash methods are not available
+     * @throws BlockAlreadyExistsException when a block already exists
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeyException
+     * @throws SignatureException
      */
     public static Block addContact(User user)
-            throws HashException, BlockAlreadyExistsException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-
-        try {
+            throws HashException, BlockAlreadyExistsException, NoSuchAlgorithmException,
+            InvalidKeyException, SignatureException, DatabaseException {
             final byte[] message = user.getPublicKey().getEncoded();
             final byte[] signature = ED25519.generateSignature(message, owner.getPrivateKey());
-            //Adding the user into your own chain
             return blockController.addBlockToChain(user, signature, message);
-        } catch (DatabaseException e) {
-            return null;
-        }
-
     }
 
     /**
-     * Method to revoke a contact to your chain
+     * Method to revoke a contact from you contact list (your chain)
      *
-     * @param contact the contact
-     * @throws HashException               When creating a block results in an error
-     * @throws BlockAlreadyExistsException when adding a block results in an error
+     * @param contact the User object you want to revoke from your chain
+     * @throws HashException               when the hash methods are not available
+     * @throws BlockAlreadyExistsException when a block already exists
      */
     public static void revokeContact(User contact)
             throws HashException, BlockAlreadyExistsException {
         //Revoke a block in own chain (adding a revoke block to the chain)
         Block revokedBlock = blockController.revokeBlockFromChain(contact);
-
         //update the trustValue of a block after revoking
         Block updatedBlock = TrustController.revokeBlock(revokedBlock);
         blockController.updateTrustOfBlock(updatedBlock);
     }
 
-
     /**
      * Method to return the chain of a specific user
+     * This method can also be used on yourself
      *
-     * @return the chain of the user
+     * @return the chain of the user, including that user's genesis block
      */
     public static List<Block> getContactsOf(User owner) {
         return blockController.getBlocks(owner);
     }
 
     /**
-     * Method to check whether the database is empty or not
+     * Method to check whether the database, where the blocks are stored, is empty or not
      *
      * @return true if the database is empty, false otherwise
      */
@@ -157,9 +127,9 @@ public final class BlockChainAPI {
     }
 
     /**
-     * Method to update the trustValue of a block after successful transaction
+     * Method to update the Trust Value of a block after successful transaction
      *
-     * @param block the specific block
+     * @param block with the desired, updated value
      */
     public static void successfulTransactionTrustUpdate(Block block) {
         Block updatedBlock = TrustController.successfulTransaction(block);
@@ -167,9 +137,9 @@ public final class BlockChainAPI {
     }
 
     /**
-     * Method to update the trustValue of a block after failed transaction
+     * Method to update the Trust Value of a block after failed transaction
      *
-     * @param block the specific block
+     * @param block with the desired, updated value
      */
     public static void failedTransactionTrustUpdate(Block block) {
         Block updatedBlock = TrustController.failedTransaction(block);
@@ -177,9 +147,9 @@ public final class BlockChainAPI {
     }
 
     /**
-     * Method to update the trustValue of a block after successful verification
+     * Method to update the Trust Value of a block after successful Iban number verification
      *
-     * @param block the specific block
+     * @param block with the desired, updated value
      */
     public static void verifyIBANTrustUpdate(Block block) {
         Block updatedBlock = TrustController.verifiedIBAN(block);
@@ -187,12 +157,12 @@ public final class BlockChainAPI {
     }
 
     /**
-     * Create an acquaintance object that you can send over the network
+     * Create an acquaintance object so that you can send to the person you are pairing with
+     * so he/she can add you.
      *
-     * @return a new acquaintance object
+     * @return Acquaintance object which contains your information and your database
      */
     public static Acquaintance makeAcquaintanceObject() {
         return blockController.makeAcquaintanceObject();
     }
-
 }

@@ -39,7 +39,7 @@ public class BlockChainAPITest {
     /**
      * Testing attributes which are used more than once
      */
-    private User apiUser;
+    private User APIUser;
     private Acquaintance acquaintanceB;
     private List<Block> list;
 
@@ -51,9 +51,9 @@ public class BlockChainAPITest {
      */
     @Before
     public final void setUp() throws HashException, BlockAlreadyExistsException {
-        // You are apiUser user with name "A" and Iban number "IbanOfA"
-        apiUser = BlockChainAPI.initializeAPI("A", "ibanOfA", RuntimeEnvironment.application);
-        list = BlockChainAPI.getContactsOf(apiUser);
+        // You are APIUser user with name "A" and Iban number "IbanOfA"
+        APIUser = BlockChainAPI.initializeAPI("A", "ibanOfA", RuntimeEnvironment.application);
+        list = BlockChainAPI.getContactsOf(APIUser);
 
         // Initialization of acquaintanceB
         EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
@@ -84,7 +84,7 @@ public class BlockChainAPITest {
         Block newBlock = BlockChainAPI.addContact(acquaintanceB);
 
         list.add(newBlock);
-        assertEquals(BlockChainAPI.getContactsOf(apiUser), list);
+        assertEquals(BlockChainAPI.getContactsOf(APIUser), list);
     }
 
 
@@ -120,7 +120,7 @@ public class BlockChainAPITest {
 
         //Add multichain of acquaintanceB into your database right after pairing
         BlockChainAPI.addAcquaintanceMultichain(acquaintanceB);
-        //Add  acquaintanceB to apiUser (yourself)
+        //Add  acquaintanceB to APIUser (yourself)
         Block blockB = BlockChainAPI.addContact(acquaintanceB);
         list.add(blockB);
 
@@ -132,12 +132,12 @@ public class BlockChainAPITest {
         Block blockC = BlockChainAPI.addContact(contactOfcontact);
         list.add(blockC);
 
-        assertEquals(BlockChainAPI.getContactsOf(apiUser), list);
+        assertEquals(BlockChainAPI.getContactsOf(APIUser), list);
     }
 
     /**
      * Test if revoking a contact from your chain with RevokeContact() works properly
-     * that getContactsOf(apiUser) should not display acquaintanceB as a contact after revoking
+     * that getContactsOf(APIUser) should not display acquaintanceB as a contact after revoking
      *
      * @throws HashException               when the hash methods are not available
      * @throws BlockAlreadyExistsException when a block already exists
@@ -150,7 +150,7 @@ public class BlockChainAPITest {
         BlockChainAPI.addContact(acquaintanceB);
         // Revoke acquaintanceB from your chain
         BlockChainAPI.revokeContact(acquaintanceB);
-        assertEquals(BlockChainAPI.getContactsOf(apiUser), list);
+        assertEquals(BlockChainAPI.getContactsOf(APIUser), list);
     }
 
     /**
@@ -202,13 +202,13 @@ public class BlockChainAPITest {
         //Add user B into you chain
         BlockChainAPI.addAcquaintanceMultichain(acquaintanceB);
         BlockChainAPI.addContact(acquaintanceB);
-        list = BlockChainAPI.getContactsOf(apiUser);
+        list = BlockChainAPI.getContactsOf(APIUser);
 
         Acquaintance testAcquaintance = BlockChainAPI.makeAcquaintanceObject();
         //assert if all the attributes are correctly formed into the Acquaintance object
-        assertEquals(apiUser.getName(), testAcquaintance.getName());
-        assertEquals(apiUser.getIban(), testAcquaintance.getIban());
-        assertEquals(apiUser.getPublicKey(), testAcquaintance.getPublicKey());
+        assertEquals(APIUser.getName(), testAcquaintance.getName());
+        assertEquals(APIUser.getIban(), testAcquaintance.getIban());
+        assertEquals(APIUser.getPublicKey(), testAcquaintance.getPublicKey());
         assertTrue(testAcquaintance.getMultichain().contains(list));
     }
 

@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.unnamed.b.atv.model.TreeNode;
 import com.unnamed.b.atv.view.AndroidTreeView;
 
+import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
@@ -21,6 +22,8 @@ import nl.tudelft.bbw.R;
 import nl.tudelft.bbw.blockchain.Acquaintance;
 import nl.tudelft.bbw.blockchain.Block;
 import nl.tudelft.bbw.blockchain.User;
+import nl.tudelft.bbw.crawler.CrawledBlocksDatabase;
+import nl.tudelft.bbw.crawler.ReadCrawlerBlocksQuery;
 import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
 import nl.tudelft.bbw.exception.HashException;
 
@@ -34,7 +37,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         try {
-            APIUser = BlockChainAPI.initializeAPI("Naqib", "Nl22RABO222231123", this);
+            APIUser = BlockChainAPI.initializeAPI("Naqib", "Nl22RABO222231123", context);
         } catch (HashException e) {
             e.printStackTrace();
         } catch (BlockAlreadyExistsException e) {
@@ -57,6 +60,8 @@ public class MainActivity extends Activity {
             acquaintancesList.add(testAcquaintance);
             acquaintancesList.add(testAcquaintance2);
 
+
+            generateAcquaintanceFromCrawler(this);
         } catch (BlockAlreadyExistsException e) {
             e.printStackTrace();
         } catch (HashException e) {
@@ -67,13 +72,21 @@ public class MainActivity extends Activity {
             e.printStackTrace();
         } catch (SignatureException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
 
         updateView();
 
     }
-
+    public static void generateAcquaintanceFromCrawler(Context context) throws IOException {
+        CrawledBlocksDatabase database = new CrawledBlocksDatabase(context);
+        ReadCrawlerBlocksQuery query = new ReadCrawlerBlocksQuery();
+        database.read(query);
+        query.getChain();
+        return;
+    }
     public void updateView() {
 
 

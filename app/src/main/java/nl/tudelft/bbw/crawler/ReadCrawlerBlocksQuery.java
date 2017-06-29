@@ -1,11 +1,5 @@
 package nl.tudelft.bbw.crawler;
 
-import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.BLOCKS_TABLE_NAME;
-import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.USER_TABLE_NAME;
-import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.COLUMNS_CHAIN;
-import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.COLUMNS_MEMBER;
-import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.JOIN_TABLES;
-
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -21,6 +15,12 @@ import nl.tudelft.bbw.blockchain.BlockType;
 import nl.tudelft.bbw.blockchain.Hash;
 import nl.tudelft.bbw.blockchain.TrustValues;
 import nl.tudelft.bbw.blockchain.User;
+
+import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.BLOCKS_TABLE_NAME;
+import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.COLUMNS_CHAIN;
+import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.COLUMNS_MEMBER;
+import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.JOIN_TABLES;
+import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.USER_TABLE_NAME;
 
 /**
  * Class which constructs a query to read the crawled database.
@@ -42,7 +42,7 @@ public class ReadCrawlerBlocksQuery {
     /**
      * The blocks retrieved from the database
      */
-    private Map<String, List<Block>> chain;
+    private Map<String, List<Block>> multiChain;
 
 
     /**
@@ -52,12 +52,12 @@ public class ReadCrawlerBlocksQuery {
     }
 
     /**
-     * Retrieve the chain which consists of the crawled blocks
+     * Retrieve the multiChain which consists of the crawled blocks
      *
      * @return The list of blocks sorted on public key.
      */
-    public Map<String, List<Block>> getChain() {
-        return chain;
+    public Map<String, List<Block>> getMultiChain() {
+        return multiChain;
     }
 
     /**
@@ -66,14 +66,14 @@ public class ReadCrawlerBlocksQuery {
      */
     private void parse(Cursor cursor) throws IOException {
         if (cursor.getCount() == 0) {
-            chain = null;
+            multiChain = null;
         } else {
-            chain = new HashMap<>();
+            multiChain = new HashMap<>();
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
                 makeBlock(cursor);
             }
         }
-//        BlockWriter.writeToJson(chain);
+//        BlockWriter.writeToJson(multiChain);
     }
 
     /**
@@ -102,17 +102,17 @@ public class ReadCrawlerBlocksQuery {
         String contactKey = getStringOfCursor(cursor, INDEX_PUB_KEY);
 
         User user = new User(getStringOfCursor(cursor, INDEX_ID), contactKey);
-        User contact = new User(UNKNOWN_NAME, getStringOfCursor(cursor, INDEX_PUB_KEY));
+        User contact = new User(UNKNOWN_NAME, getStringOfCursor(cursor, INDEX_PREV_PUB));
         BlockData blockData = new BlockData(type, cursor.getInt(INDEX_SEQ_NO), previousHashChain,
                 previousPKSender,
                 TrustValues.INITIALIZED.getValue());
         Block block = new Block(user, contact, blockData);
-        List<Block> blocks = chain.get(contactKey);
+        List<Block> blocks = multiChain.get(contactKey);
         if (blocks == null) {
             blocks = new ArrayList<>();
         }
         blocks.add(block);
-        chain.put(contactKey, blocks);
+        multiChain.put(contactKey, blocks);
     }
 
     /**

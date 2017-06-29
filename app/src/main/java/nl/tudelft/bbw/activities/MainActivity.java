@@ -16,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import nl.tudelft.bbw.BlockChainAPI;
 import nl.tudelft.bbw.R;
@@ -30,6 +31,7 @@ import nl.tudelft.bbw.exception.HashException;
 public class MainActivity extends Activity {
     final Context context = this;
     List<Acquaintance> acquaintancesList = new ArrayList<Acquaintance>() ;
+    Map<String, List<Block>> crawlerList;
     User APIUser;
 
     @Override
@@ -61,7 +63,7 @@ public class MainActivity extends Activity {
             acquaintancesList.add(testAcquaintance2);
 
 
-            generateAcquaintanceFromCrawler(this);
+            getCrawlerBlocks(this);
         } catch (BlockAlreadyExistsException e) {
             e.printStackTrace();
         } catch (HashException e) {
@@ -80,12 +82,11 @@ public class MainActivity extends Activity {
         updateView();
 
     }
-    public static void generateAcquaintanceFromCrawler(Context context) throws IOException {
+    public void getCrawlerBlocks(Context context) throws IOException {
         CrawledBlocksDatabase database = new CrawledBlocksDatabase(context);
         ReadCrawlerBlocksQuery query = new ReadCrawlerBlocksQuery();
         database.read(query);
-        query.getChain();
-        return;
+        crawlerList = query.getMultiChain();
     }
     public void updateView() {
 
@@ -159,7 +160,31 @@ public class MainActivity extends Activity {
         }
 
         TreeNode pairing = pairingSimutation(acquaintancesList);
-        root.addChildren(myName, myIban, myPublicKey, contacts, pairing);
+
+        TreeNode crawler = new TreeNode("> My crawler blocks (Experimental)");
+        for (Map.Entry<String, List<Block>> entry : crawlerList.entrySet()) {
+            String chainOwnerPubKey = entry.getKey();
+            List<Block> chain = entry.getValue();
+            TreeNode chainOwner = new TreeNode("\t> public_key: " + chain.get(0).getOwnerName());
+
+            for(Block e: chain)
+            {
+                TreeNode block = new TreeNode("\t\t\t\t> link_public_key: " + e.getContactIban());
+                chainOwner.addChild(block);
+            }
+
+            crawler.addChild(chainOwner);
+        }
+
+
+
+
+
+
+
+
+
+        root.addChildren(myName, myIban, myPublicKey, contacts, pairing, crawler);
 
         AndroidTreeView tView = new AndroidTreeView(this, root);
 

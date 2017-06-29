@@ -26,7 +26,7 @@ public class MainActivityTestSubjects extends Activity {
 
     public static void addContactForTesting() throws BlockAlreadyExistsException, HashException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
-        Acquaintance userB = new Acquaintance("Luat", "NL623423423423", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
+        Acquaintance userB = new Acquaintance("Naqib", "NL623423423423", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
         Block userBGenesis = new Block(userB);
 
         //Initializing userC.
@@ -97,12 +97,12 @@ public class MainActivityTestSubjects extends Activity {
 
     public static Acquaintance generateAcquaintanceForTest() throws BlockAlreadyExistsException, HashException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
-        Acquaintance userB = new Acquaintance("Yusuf", "NLABN23423523523424", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
+        Acquaintance userB = new Acquaintance("Bob", "NLABN23423523523424", ED25519.getPublicKey(privateKey), new ArrayList<List<Block>>());
         Block userBGenesis = new Block(userB);
 
         //Initializing userC.
         EdDSAPrivateKey privateKey2 = ED25519.generatePrivateKey();
-        User userC = new User("Mohammed", "NLEFR232423423423234", ED25519.getPublicKey(privateKey2));
+        User userC = new User("Johan", "NLEFR232423423423234", ED25519.getPublicKey(privateKey2));
         Block userCGenesis = new Block(userC);
         userC.setPrivateKey(privateKey2);
 

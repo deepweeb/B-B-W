@@ -1,10 +1,14 @@
 package nl.tudelft.bbw.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.text.InputType;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.unnamed.b.atv.model.TreeNode;
@@ -30,267 +34,297 @@ import nl.tudelft.bbw.exception.HashException;
 
 public class MainActivity extends Activity {
     final Context context = this;
-    List<Acquaintance> acquaintancesList = new ArrayList<Acquaintance>() ;
+    List<Acquaintance> acquaintancesList = new ArrayList<Acquaintance>();
     Map<String, List<Block>> crawlerList;
     User APIUser;
+    static String name, iban;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-        try {
-            APIUser = BlockChainAPI.initializeAPI("Naqib", "Nl22RABO222231123", context);
-        } catch (HashException e) {
-            e.printStackTrace();
-        } catch (BlockAlreadyExistsException e) {
-            e.printStackTrace();
-        }
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("What is your name?");
 
-        //TODO: remove after testing
-        try {
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
 
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                name = input.getText().toString();
 
-            MainActivityTestSubjects.addContactForTesting();
-            MainActivityTestSubjects.addContactForTesting2();
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("And your bank number? ");
 
-            Acquaintance testAcquaintance = MainActivityTestSubjects.generateAcquaintanceForTest();
-            Acquaintance testAcquaintance2 = MainActivityTestSubjects.generateAcquaintanceForTest2();
+                final EditText input = new EditText(context);
+                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
+                builder.setView(input);
 
-            BlockChainAPI.addAcquaintanceMultichain(testAcquaintance);
-            BlockChainAPI.addAcquaintanceMultichain(testAcquaintance2);
-            acquaintancesList.add(testAcquaintance);
-            acquaintancesList.add(testAcquaintance2);
-
-
-            getCrawlerBlocks(this);
-        } catch (BlockAlreadyExistsException e) {
-            e.printStackTrace();
-        } catch (HashException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (SignatureException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        updateView();
-
-    }
-    public void getCrawlerBlocks(Context context) throws IOException {
-        CrawledBlocksDatabase database = new CrawledBlocksDatabase(context);
-        ReadCrawlerBlocksQuery query = new ReadCrawlerBlocksQuery();
-        database.read(query);
-        crawlerList = query.getMultiChain();
-    }
-    public void updateView() {
-
-
-        TreeNode root = TreeNode.root();
-        TreeNode myName = new TreeNode("       My Name: " + APIUser.getName());
-        TreeNode myIban = new TreeNode("       My IBAN: " + APIUser.getIban());
-        TreeNode myPublicKey = new TreeNode("       My Public Key: " +  APIUser.getPublicKey().getEncoded());
-        TreeNode contacts = new TreeNode("> My Contacts");
-        for (final Block block : BlockChainAPI.getContactsOf(APIUser)) {
-            if (!block.getContactIban().equals(APIUser.getIban())) {
-
-                TreeNode contactName = new TreeNode("\t> " + block.getContactName());
-                TreeNode iban = new TreeNode("\t\t\t\tIBAN: " + block.getContactIban());
-                TreeNode trust = new TreeNode("\t\t\t\tTrust Value: " + block.getTrustValue());
-                TreeNode publicKey = new TreeNode("\t\t\t\tPublic Key: " + block.getContactPublicKey().getEncoded());
-                TreeNode transaction = new TreeNode("\t\t\t\t> Send money");
-
-                TreeNode ibanVerification = new TreeNode("\t\t\t\t\t\t\tVerified IBAN transaction");
-                ibanVerification.setClickListener(new TreeNode.TreeNodeClickListener() {
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(TreeNode node, Object value) {
-                        Toast.makeText(context, "IBAN verified, Trust Value upgraded!", Toast.LENGTH_SHORT).show();
-                        BlockChainAPI.verifyIBANTrustUpdate(block);
-                        refreshView();
-                    }
-                });
+                    public void onClick(DialogInterface dialog, int which) {
+                        iban = input.getText().toString();
 
-                TreeNode succesfulTransaction = new TreeNode("\t\t\t\t\t\t\tSuccesful transaction");
-                succesfulTransaction.setClickListener(new TreeNode.TreeNodeClickListener() {
-                    @Override
-                    public void onClick(TreeNode node, Object value) {
-                        Toast.makeText(context, "Transaction Succeeded, Trust Value upgraded!", Toast.LENGTH_SHORT).show();
-                        BlockChainAPI.successfulTransactionTrustUpdate(block);
-                        refreshView();
-                    }
-                });
 
-                TreeNode failedTransaction = new TreeNode("\t\t\t\t\t\t\tFailed transaction");
-                failedTransaction.setClickListener(new TreeNode.TreeNodeClickListener() {
-                    @Override
-                    public void onClick(TreeNode node, Object value) {
-                        Toast.makeText(context, "Transaction Failed, Trust Value downgraded!", Toast.LENGTH_SHORT).show();
-                        BlockChainAPI.failedTransactionTrustUpdate(block);
-                        refreshView();
-                    }
-                });
-                transaction.addChildren(ibanVerification, succesfulTransaction, failedTransaction);
-                TreeNode revoke = new TreeNode("\t\t\t\tRevoke this contact");
-                revoke.setClickListener(new TreeNode.TreeNodeClickListener() {
-                    @Override
-                    public void onClick(TreeNode node, Object value) {
-                        Toast.makeText(context, "Contact revoked from your chain!", Toast.LENGTH_SHORT).show();
                         try {
-                            BlockChainAPI.revokeContact(block.getContact());
+                            APIUser = BlockChainAPI.initializeAPI(name, iban, context);
+
+
+                            //TODO: remove after testing
+                            try {
+
+
+                                MainActivityTestSubjects.addContactForTesting();
+                                MainActivityTestSubjects.addContactForTesting2();
+
+                                Acquaintance testAcquaintance = MainActivityTestSubjects.generateAcquaintanceForTest();
+                                Acquaintance testAcquaintance2 = MainActivityTestSubjects.generateAcquaintanceForTest2();
+
+                                BlockChainAPI.addAcquaintanceMultichain(testAcquaintance);
+                                BlockChainAPI.addAcquaintanceMultichain(testAcquaintance2);
+                                acquaintancesList.add(testAcquaintance);
+                                acquaintancesList.add(testAcquaintance2);
+
+
+                                getCrawlerBlocks(context);
+                            } catch (BlockAlreadyExistsException e) {
+                                e.printStackTrace();
+                            } catch (HashException e) {
+                                e.printStackTrace();
+                            } catch (NoSuchAlgorithmException e) {
+                                e.printStackTrace();
+                            } catch (InvalidKeyException e) {
+                                e.printStackTrace();
+                            } catch (SignatureException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+
+                            updateView();
+
+
                         } catch (HashException e) {
                             e.printStackTrace();
                         } catch (BlockAlreadyExistsException e) {
                             e.printStackTrace();
                         }
-                        refreshView();
                     }
                 });
-                TreeNode hisContacts = displayContact(block.getContact(), BlockChainAPI.getContactsOf(block.getContact()), 1);
-                contactName.addChildren(iban, trust, publicKey, transaction, revoke, hisContacts);
-                //             failedTransaction.isExpanded();
-                //         failedTransaction.setExpanded(true);
-                contacts.addChild(contactName);
+
+                builder.show();
 
             }
-        }
 
-        TreeNode pairing = pairingSimutation(acquaintancesList);
-
-        TreeNode crawler = new TreeNode("> My crawler blocks (Experimental)");
-        for (Map.Entry<String, List<Block>> entry : crawlerList.entrySet()) {
-            String chainOwnerPubKey = entry.getKey();
-            List<Block> chain = entry.getValue();
-            TreeNode chainOwner = new TreeNode("\t> public_key: " + chain.get(0).getOwnerName());
-
-            for(Block e: chain)
-            {
-                TreeNode block = new TreeNode("\t\t\t\t> link_public_key: " + e.getContactIban());
-                chainOwner.addChild(block);
+            public void getCrawlerBlocks(Context context) throws IOException {
+                CrawledBlocksDatabase database = new CrawledBlocksDatabase(context);
+                ReadCrawlerBlocksQuery query = new ReadCrawlerBlocksQuery();
+                database.read(query);
+                crawlerList = query.getMultiChain();
             }
 
-            crawler.addChild(chainOwner);
-        }
+            public void updateView() {
 
 
+                TreeNode root = TreeNode.root();
+                TreeNode myName = new TreeNode("       My Name: " + APIUser.getName());
+                TreeNode myIban = new TreeNode("       My IBAN: " + APIUser.getIban());
+                TreeNode myPublicKey = new TreeNode("       My Public Key: " + APIUser.getPublicKey().getEncoded());
+                TreeNode contacts = new TreeNode("> My Contacts");
+                for (final Block block : BlockChainAPI.getContactsOf(APIUser)) {
+                    if (!block.getContactIban().equals(APIUser.getIban())) {
 
+                        TreeNode contactName = new TreeNode("\t> " + block.getContactName());
+                        TreeNode iban = new TreeNode("\t\t\t\tIBAN: " + block.getContactIban());
+                        TreeNode trust = new TreeNode("\t\t\t\tTrust Value: " + block.getTrustValue());
+                        TreeNode publicKey = new TreeNode("\t\t\t\tPublic Key: " + block.getContactPublicKey().getEncoded());
+                        TreeNode transaction = new TreeNode("\t\t\t\t> Send money");
 
+                        TreeNode ibanVerification = new TreeNode("\t\t\t\t\t\t\tVerified IBAN transaction");
+                        ibanVerification.setClickListener(new TreeNode.TreeNodeClickListener() {
+                            @Override
+                            public void onClick(TreeNode node, Object value) {
+                                Toast.makeText(context, "IBAN verified, Trust Value upgraded!", Toast.LENGTH_SHORT).show();
+                                BlockChainAPI.verifyIBANTrustUpdate(block);
+                                refreshView();
+                            }
+                        });
 
+                        TreeNode succesfulTransaction = new TreeNode("\t\t\t\t\t\t\tSuccesful transaction");
+                        succesfulTransaction.setClickListener(new TreeNode.TreeNodeClickListener() {
+                            @Override
+                            public void onClick(TreeNode node, Object value) {
+                                Toast.makeText(context, "Transaction Succeeded, Trust Value upgraded!", Toast.LENGTH_SHORT).show();
+                                BlockChainAPI.successfulTransactionTrustUpdate(block);
+                                refreshView();
+                            }
+                        });
 
+                        TreeNode failedTransaction = new TreeNode("\t\t\t\t\t\t\tFailed transaction");
+                        failedTransaction.setClickListener(new TreeNode.TreeNodeClickListener() {
+                            @Override
+                            public void onClick(TreeNode node, Object value) {
+                                Toast.makeText(context, "Transaction Failed, Trust Value downgraded!", Toast.LENGTH_SHORT).show();
+                                BlockChainAPI.failedTransactionTrustUpdate(block);
+                                refreshView();
+                            }
+                        });
+                        transaction.addChildren(ibanVerification, succesfulTransaction, failedTransaction);
+                        TreeNode revoke = new TreeNode("\t\t\t\tRevoke this contact");
+                        revoke.setClickListener(new TreeNode.TreeNodeClickListener() {
+                            @Override
+                            public void onClick(TreeNode node, Object value) {
+                                Toast.makeText(context, "Contact revoked from your chain!", Toast.LENGTH_SHORT).show();
+                                try {
+                                    BlockChainAPI.revokeContact(block.getContact());
+                                } catch (HashException e) {
+                                    e.printStackTrace();
+                                } catch (BlockAlreadyExistsException e) {
+                                    e.printStackTrace();
+                                }
+                                refreshView();
+                            }
+                        });
+                        TreeNode hisContacts = displayContact(block.getContact(), BlockChainAPI.getContactsOf(block.getContact()), 1);
+                        contactName.addChildren(iban, trust, publicKey, transaction, revoke, hisContacts);
+                        //             failedTransaction.isExpanded();
+                        //         failedTransaction.setExpanded(true);
+                        contacts.addChild(contactName);
 
-
-
-        root.addChildren(myName, myIban, myPublicKey, contacts, pairing, crawler);
-
-        AndroidTreeView tView = new AndroidTreeView(this, root);
-
-        ((ConstraintLayout) findViewById(R.id.container)).addView(tView.getView());
-    }
-
-    public TreeNode pairingSimutation(List<Acquaintance> acquaintanceList) {
-        TreeNode pairing = new TreeNode("> Bluetooth Pairing (Simulation)");
-        for (final Acquaintance acquaintance : acquaintancesList)
-        {
-            TreeNode acquaintanceName = new TreeNode("\t> " + acquaintance.getName());
-            TreeNode iban = new TreeNode("\t\t\t\tIBAN: " +  acquaintance.getIban());
-            TreeNode trust = new TreeNode("\t\t\t\tTrust Value: " + BlockChainAPI.getContactsOf(acquaintance).get(0).getTrustValue());
-            TreeNode publicKey = new TreeNode("\t\t\t\tPublic Key: " + acquaintance.getPublicKey().getEncoded());
-            TreeNode addToContactList = new TreeNode("\t\t\t\tAdd to your contact list");
-            addToContactList.setClickListener(new TreeNode.TreeNodeClickListener() {
-                @Override
-                public void onClick(TreeNode node, Object value) {
-                    try {
-                        BlockChainAPI.addContact(acquaintance);
-                        Toast.makeText(context, acquaintance.getName()+ " is now added into your list!", Toast.LENGTH_SHORT).show();
-                    } catch (HashException e) {
-                        e.printStackTrace();
-                    } catch (BlockAlreadyExistsException e) {
-                        e.printStackTrace();
-                    } catch (NoSuchAlgorithmException e) {
-                        e.printStackTrace();
-                    } catch (InvalidKeyException e) {
-                        e.printStackTrace();
-                        e.printStackTrace();
-                    } catch (SignatureException e) {
-                        e.printStackTrace();
                     }
-                    acquaintancesList.remove(acquaintance);
-                    refreshView();
                 }
-            });
 
-            TreeNode hisContacts = displayContact(acquaintance, BlockChainAPI.getContactsOf(acquaintance), 1);
-            acquaintanceName.addChildren(iban, publicKey, trust, addToContactList, hisContacts);
-            //             failedTransaction.isExpanded();
-            //         failedTransaction.setExpanded(true);
-            pairing.addChild(acquaintanceName);
-        }
+                TreeNode pairing = pairingSimutation(acquaintancesList);
 
-        return pairing;
-    }
+                TreeNode crawler = new TreeNode("> My crawler blocks (Experimental)");
+                for (Map.Entry<String, List<Block>> entry : crawlerList.entrySet()) {
+                    String chainOwnerPubKey = entry.getKey();
+                    List<Block> chain = entry.getValue();
+                    TreeNode chainOwner = new TreeNode("\t> public_key: " + chain.get(0).getOwnerName());
 
-    public TreeNode displayContact(User contact, List<Block> hisBlockList, int layerCount) {
-        if (hisBlockList.size() == 1) {
-            return new TreeNode(addSpace(layerCount) + "> Contacts (No Contact Available)");
-        }
-        TreeNode hisContacts = new TreeNode(addSpace(layerCount) + "> "+ contact.getName()+ "'s contacts");
-
-        for (final Block hisBlock : hisBlockList) {
-            if (!hisBlock.getContactIban().equals(contact.getIban())) {
-                TreeNode contactName = new TreeNode(addSpace(layerCount + 1) + "> " + hisBlock.getContactName());
-                TreeNode iban = new TreeNode(addSpace(layerCount + 1) + "IBAN: " + hisBlock.getContactIban());
-                TreeNode trust = new TreeNode(addSpace(layerCount + 1) + "Trust Value: " + hisBlock.getTrustValue());
-                TreeNode publicKey = new TreeNode(addSpace(layerCount + 1) + "Public Key: " + hisBlock.getContactPublicKey().getEncoded());
-                TreeNode addToContactList = new TreeNode((addSpace(layerCount + 1) +"Add to your contact list"));
-                addToContactList.setClickListener(new TreeNode.TreeNodeClickListener() {
-                    @Override
-                    public void onClick(TreeNode node, Object value) {
-                        try {
-                            BlockChainAPI.addContact(hisBlock.getContact());
-                            Toast.makeText(context, hisBlock.getContact().getName()+ " is now added into your list!", Toast.LENGTH_SHORT).show();
-                        } catch (HashException e) {
-                            e.printStackTrace();
-                        } catch (BlockAlreadyExistsException e) {
-                            e.printStackTrace();
-                            Toast.makeText(context, "Block already existed in database!", Toast.LENGTH_SHORT).show();
-                        } catch (NoSuchAlgorithmException e) {
-                            e.printStackTrace();
-                        } catch (InvalidKeyException e) {
-                            e.printStackTrace();
-                        } catch (SignatureException e) {
-                            e.printStackTrace();
-                        }
-
-                        refreshView();
+                    for (Block e : chain) {
+                        TreeNode block = new TreeNode("\t\t\t\t> link_public_key: " + e.getContactIban());
+                        chainOwner.addChild(block);
                     }
-                });
-                TreeNode contactl = displayContact(hisBlock.getContact(), BlockChainAPI.getContactsOf(hisBlock.getContact()), layerCount + 1);
 
-                contactName.addChildren(iban, trust, publicKey, addToContactList, contactl);
-                hisContacts.addChild(contactName);
+                    crawler.addChild(chainOwner);
+                }
+
+
+                root.addChildren(myName, myIban, myPublicKey, contacts, pairing, crawler);
+
+                AndroidTreeView tView = new AndroidTreeView(context, root);
+
+                ((ConstraintLayout) findViewById(R.id.container)).addView(tView.getView());
             }
-        }
 
-        return hisContacts;
-    }
+            public TreeNode pairingSimutation(List<Acquaintance> acquaintanceList) {
+                TreeNode pairing = new TreeNode("> Bluetooth Pairing (Simulation)");
+                for (final Acquaintance acquaintance : acquaintancesList) {
+                    TreeNode acquaintanceName = new TreeNode("\t> " + acquaintance.getName());
+                    TreeNode iban = new TreeNode("\t\t\t\tIBAN: " + acquaintance.getIban());
+                    TreeNode trust = new TreeNode("\t\t\t\tTrust Value: " + BlockChainAPI.getContactsOf(acquaintance).get(0).getTrustValue());
+                    TreeNode publicKey = new TreeNode("\t\t\t\tPublic Key: " + acquaintance.getPublicKey().getEncoded());
+                    TreeNode addToContactList = new TreeNode("\t\t\t\tAdd to your contact list");
+                    addToContactList.setClickListener(new TreeNode.TreeNodeClickListener() {
+                        @Override
+                        public void onClick(TreeNode node, Object value) {
+                            try {
+                                BlockChainAPI.addContact(acquaintance);
+                                Toast.makeText(context, acquaintance.getName() + " is now added into your list!", Toast.LENGTH_SHORT).show();
+                            } catch (HashException e) {
+                                e.printStackTrace();
+                            } catch (BlockAlreadyExistsException e) {
+                                e.printStackTrace();
+                            } catch (NoSuchAlgorithmException e) {
+                                e.printStackTrace();
+                            } catch (InvalidKeyException e) {
+                                e.printStackTrace();
+                                e.printStackTrace();
+                            } catch (SignatureException e) {
+                                e.printStackTrace();
+                            }
+                            acquaintancesList.remove(acquaintance);
+                            refreshView();
+                        }
+                    });
 
-    public String addSpace(int layerCount) {
-        String space = "\t\t\t\t";
-        for (int j = 1; j < layerCount; j++) {
-            space = space + space;
-            return space;
-        }
-        return space;
-    }
+                    TreeNode hisContacts = displayContact(acquaintance, BlockChainAPI.getContactsOf(acquaintance), 1);
+                    acquaintanceName.addChildren(iban, publicKey, trust, addToContactList, hisContacts);
+                    //             failedTransaction.isExpanded();
+                    //         failedTransaction.setExpanded(true);
+                    pairing.addChild(acquaintanceName);
+                }
 
-    public void refreshView(){
-        ViewGroup vg = (ViewGroup) findViewById (R.id.container);
-        vg.removeAllViews();
-        vg.refreshDrawableState();
-        updateView();
+                return pairing;
+            }
+
+            public TreeNode displayContact(User contact, List<Block> hisBlockList, int layerCount) {
+                if (hisBlockList.size() == 1) {
+                    return new TreeNode(addSpace(layerCount) + "> Contacts (No Contact Available)");
+                }
+                TreeNode hisContacts = new TreeNode(addSpace(layerCount) + "> " + contact.getName() + "'s contacts");
+
+                for (final Block hisBlock : hisBlockList) {
+                    if (!hisBlock.getContactIban().equals(contact.getIban())) {
+                        TreeNode contactName = new TreeNode(addSpace(layerCount + 1) + "> " + hisBlock.getContactName());
+                        TreeNode iban = new TreeNode(addSpace(layerCount + 1) + "IBAN: " + hisBlock.getContactIban());
+                        TreeNode trust = new TreeNode(addSpace(layerCount + 1) + "Trust Value: " + hisBlock.getTrustValue());
+                        TreeNode publicKey = new TreeNode(addSpace(layerCount + 1) + "Public Key: " + hisBlock.getContactPublicKey().getEncoded());
+                        TreeNode addToContactList = new TreeNode((addSpace(layerCount + 1) + "Add to your contact list"));
+                        addToContactList.setClickListener(new TreeNode.TreeNodeClickListener() {
+                            @Override
+                            public void onClick(TreeNode node, Object value) {
+                                try {
+                                    BlockChainAPI.addContact(hisBlock.getContact());
+                                    Toast.makeText(context, hisBlock.getContact().getName() + " is now added into your list!", Toast.LENGTH_SHORT).show();
+                                } catch (HashException e) {
+                                    e.printStackTrace();
+                                } catch (BlockAlreadyExistsException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(context, "Block already existed in database!", Toast.LENGTH_SHORT).show();
+                                } catch (NoSuchAlgorithmException e) {
+                                    e.printStackTrace();
+                                } catch (InvalidKeyException e) {
+                                    e.printStackTrace();
+                                } catch (SignatureException e) {
+                                    e.printStackTrace();
+                                }
+
+                                refreshView();
+                            }
+                        });
+                        TreeNode contactl = displayContact(hisBlock.getContact(), BlockChainAPI.getContactsOf(hisBlock.getContact()), layerCount + 1);
+
+                        contactName.addChildren(iban, trust, publicKey, addToContactList, contactl);
+                        hisContacts.addChild(contactName);
+                    }
+                }
+
+                return hisContacts;
+            }
+
+            public String addSpace(int layerCount) {
+                String space = "\t\t\t\t";
+                for (int j = 1; j < layerCount; j++) {
+                    space = space + space;
+                    return space;
+                }
+                return space;
+            }
+
+            public void refreshView() {
+                ViewGroup vg = (ViewGroup) findViewById(R.id.container);
+                vg.removeAllViews();
+                vg.refreshDrawableState();
+                updateView();
+            }
+        });
+
+        builder.show();
     }
 }

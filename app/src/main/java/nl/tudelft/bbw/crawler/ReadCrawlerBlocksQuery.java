@@ -1,15 +1,12 @@
 package nl.tudelft.bbw.crawler;
 
-import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.BLOCKS_TABLE_NAME;
-import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.USER_TABLE_NAME;
-import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.COLUMNS_CHAIN;
-import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.COLUMNS_MEMBER;
-import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.JOIN_TABLES;
-
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+
 import java.io.IOException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +18,13 @@ import nl.tudelft.bbw.blockchain.BlockType;
 import nl.tudelft.bbw.blockchain.Hash;
 import nl.tudelft.bbw.blockchain.TrustValues;
 import nl.tudelft.bbw.blockchain.User;
+import nl.tudelft.bbw.controller.KeyReader;
+
+import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.BLOCKS_TABLE_NAME;
+import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.COLUMNS_CHAIN;
+import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.COLUMNS_MEMBER;
+import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.JOIN_TABLES;
+import static nl.tudelft.bbw.crawler.CrawledBlocksDatabase.USER_TABLE_NAME;
 
 /**
  * Class which constructs a query to read the crawled database.
@@ -42,7 +46,7 @@ public class ReadCrawlerBlocksQuery {
     /**
      * The blocks retrieved from the database
      */
-    private Map<String, List<Block>> chain;
+    private Map<EdDSAPublicKey, List<Block>> multiChain;
 
 
     /**
@@ -52,34 +56,34 @@ public class ReadCrawlerBlocksQuery {
     }
 
     /**
-     * Retrieve the chain which consists of the crawled blocks
+     * Retrieve the multiChain which consists of the crawled blocks
      *
      * @return The list of blocks sorted on public key.
      */
-    public Map<String, List<Block>> getChain() {
-        return chain;
+    public Map<EdDSAPublicKey, List<Block>> getMultiChain() {
+        return multiChain;
     }
 
     /**
      * Method to go through all the rows of the database using the cursor,
      * and make a block with the values, and eventually write it into a JSON file.
      */
-    private void parse(Cursor cursor) throws IOException {
+    private void parse(Cursor cursor) throws IOException, InvalidKeySpecException {
         if (cursor.getCount() == 0) {
-            chain = null;
+            multiChain = null;
         } else {
-            chain = new HashMap<>();
+            multiChain = new HashMap<>();
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
                 makeBlock(cursor);
             }
         }
-//        BlockWriter.writeToJson(chain);
+//        BlockWriter.writeToJson(multiChain);
     }
 
     /**
      * The query to make the table we want.
      */
-    public void execute(SQLiteDatabase database) throws IOException {
+    public void execute(SQLiteDatabase database) throws IOException, InvalidKeySpecException {
         final String query =
                 "SELECT " + COLUMNS_MEMBER + ", " + COLUMNS_CHAIN + " FROM " + USER_TABLE_NAME
                         + " JOIN " + BLOCKS_TABLE_NAME + " ON " + JOIN_TABLES + ";";
@@ -93,26 +97,35 @@ public class ReadCrawlerBlocksQuery {
      *
      * @param cursor the cursor to extract from
      */
-    private void makeBlock(Cursor cursor) {
+    private void makeBlock(Cursor cursor) throws InvalidKeySpecException {
         // determine block type
         BlockType type = BlockType.ADD_KEY;
 
+
         Hash previousHashChain = new Hash(getStringOfCursor(cursor, INDEX_PREV_HASH_CHAIN));
         Hash previousPKSender = new Hash(getStringOfCursor(cursor, INDEX_PREV_PUB));
-        String contactKey = getStringOfCursor(cursor, INDEX_PUB_KEY);
-
-        User user = new User(getStringOfCursor(cursor, INDEX_ID), contactKey);
-        User contact = new User(UNKNOWN_NAME, getStringOfCursor(cursor, INDEX_PUB_KEY));
+        String chainOwnerPubKey = getStringOfCursor(cursor, INDEX_PUB_KEY);
+        List<Block> blocks = multiChain.get(KeyReader.stringToPublicKey(chainOwnerPubKey));
+        if(blocks != null)
+        {
+            if(blocks.size() >15)
+            {
+                return;
+            }
+        }
+        User user = new User(getStringOfCursor(cursor, INDEX_ID), "N/A", KeyReader.stringToPublicKey(chainOwnerPubKey));
+        User contact = new User(UNKNOWN_NAME,"N/A", KeyReader.stringToPublicKey(getStringOfCursor(cursor, INDEX_PREV_PUB)));
         BlockData blockData = new BlockData(type, cursor.getInt(INDEX_SEQ_NO), previousHashChain,
                 previousPKSender,
                 TrustValues.INITIALIZED.getValue());
         Block block = new Block(user, contact, blockData);
-        List<Block> blocks = chain.get(contactKey);
+
         if (blocks == null) {
+            block = new Block(user);
             blocks = new ArrayList<>();
         }
         blocks.add(block);
-        chain.put(contactKey, blocks);
+        multiChain.put(KeyReader.stringToPublicKey(chainOwnerPubKey), blocks);
     }
 
     /**

@@ -3,6 +3,8 @@ package nl.tudelft.bbw.blockchain;
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
+import nl.tudelft.bbw.controller.ED25519;
+
 /**
  * Class for creating a user object
  */
@@ -39,6 +41,9 @@ public class User {
     public User(String name, String iban) {
         this.name = name;
         this.iban = iban;
+        EdDSAPrivateKey privateKey = ED25519.generatePrivateKey();
+        this.publicKey =ED25519.getPublicKey(privateKey);
+        this.setPrivateKey(privateKey);
     }
 
     /**

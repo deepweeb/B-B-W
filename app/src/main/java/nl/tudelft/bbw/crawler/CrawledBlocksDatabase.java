@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.io.IOException;
+import java.security.spec.InvalidKeySpecException;
 
 /**
  * Database handler for the block database implementation of the crawler
@@ -66,7 +67,7 @@ public class CrawledBlocksDatabase extends SQLiteAssetHelper {
      *
      * @param query The query which you want to execute
      */
-    public void read(ReadCrawlerBlocksQuery query) throws IOException {
+    public void read(ReadCrawlerBlocksQuery query) throws IOException, InvalidKeySpecException {
         SQLiteDatabase database = getWritableDatabase();
         query.execute(database);
         database.close();

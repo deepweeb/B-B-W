@@ -231,7 +231,7 @@ public class BlockController {
     private Block createBlock(User owner, User contact,
                               BlockType blockType) throws HashException, BlockAlreadyExistsException {
         Block latest = getLatestBlock(owner);
-        if (latest == null) {
+            if (latest == null) {
             throw new IllegalArgumentException("No genesis found for user " + owner);
         }
         Hash previousBlockHash = latest.getOwnHash();

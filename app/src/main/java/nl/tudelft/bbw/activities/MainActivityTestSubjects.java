@@ -1,14 +1,19 @@
 package nl.tudelft.bbw.activities;
 
 import android.app.Activity;
+import android.content.Context;
 
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
+import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import nl.tudelft.bbw.BlockChainAPI;
 import nl.tudelft.bbw.blockchain.Acquaintance;
@@ -19,6 +24,8 @@ import nl.tudelft.bbw.blockchain.Hash;
 import nl.tudelft.bbw.blockchain.TrustValues;
 import nl.tudelft.bbw.blockchain.User;
 import nl.tudelft.bbw.controller.ED25519;
+import nl.tudelft.bbw.crawler.CrawledBlocksDatabase;
+import nl.tudelft.bbw.crawler.ReadCrawlerBlocksQuery;
 import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
 import nl.tudelft.bbw.exception.HashException;
 
@@ -155,6 +162,35 @@ public class MainActivityTestSubjects extends Activity {
 
         userB.setPrivateKey(privateKey);
         return userB;
+    }
+
+    public static List<Acquaintance> generateAcquaintanceFromCrawler(Context context) throws IOException, InvalidKeySpecException {
+        List<Acquaintance> acquaintancesList = new ArrayList<Acquaintance>();
+        CrawledBlocksDatabase database = new CrawledBlocksDatabase(context);
+        ReadCrawlerBlocksQuery query = new ReadCrawlerBlocksQuery();
+        database.read(query);
+
+
+        for (Map.Entry<EdDSAPublicKey, List<Block>> entry : query.getMultiChain().entrySet()) {
+            List<List<Block>> multichain = new ArrayList<List<Block>>();
+
+            EdDSAPublicKey chainOwnerPubKey = entry.getKey();
+            List<Block> chain = entry.getValue();
+            multichain.add(chain);
+
+          /*  for(int i = 1; i<chain.size(); i++)
+            {
+                Block genesisBlock = new Block(chain.get(i).getContact());
+                List<Block> test = new ArrayList<Block>();
+                test.add(genesisBlock);
+                multichain.add(test);
+            }*/
+
+            Acquaintance acquaintance = new Acquaintance(chain.get(0).getOwnerName(), "N/A", chainOwnerPubKey, multichain);
+            acquaintancesList.add(acquaintance);
+        }
+
+        return acquaintancesList;
     }
 
     /**

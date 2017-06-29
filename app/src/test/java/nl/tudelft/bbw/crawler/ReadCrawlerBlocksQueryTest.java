@@ -24,7 +24,7 @@ public class ReadCrawlerBlocksQueryTest {
         CrawledBlocksDatabase database = new CrawledBlocksDatabase(RuntimeEnvironment.application);
         ReadCrawlerBlocksQuery query = new ReadCrawlerBlocksQuery();
         database.read(query);
-        query.getChain();
-        assertFalse(query.getChain().isEmpty());
+        query.getMultiChain();
+        assertFalse(query.getMultiChain().isEmpty());
     }
 }

@@ -38,7 +38,13 @@ public class UserAddQuery extends WriteQuery {
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, user.getName());
         values.put(KEY_IBAN, user.getIban());
-        values.put(KEY_PUBLICKEY, KeyWriter.publicKeyToString(user.getPublicKey()));
+        if(user.getPublicKey() == null)
+        {
+            values.put(KEY_PUBLICKEY, "N/A");
+        }
+        else {
+            values.put(KEY_PUBLICKEY, KeyWriter.publicKeyToString(user.getPublicKey()));
+        }
         return values;
     }
 

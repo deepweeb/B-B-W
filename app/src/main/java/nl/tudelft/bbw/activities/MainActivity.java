@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,10 +23,10 @@ import nl.tudelft.bbw.R;
 import nl.tudelft.bbw.blockchain.Acquaintance;
 import nl.tudelft.bbw.blockchain.Block;
 import nl.tudelft.bbw.blockchain.User;
-import nl.tudelft.bbw.crawler.CrawledBlocksDatabase;
-import nl.tudelft.bbw.crawler.ReadCrawlerBlocksQuery;
 import nl.tudelft.bbw.exception.BlockAlreadyExistsException;
 import nl.tudelft.bbw.exception.HashException;
+
+import static nl.tudelft.bbw.activities.MainActivityTestSubjects.generateAcquaintanceFromCrawler;
 
 public class MainActivity extends Activity {
     final Context context = this;
@@ -49,43 +50,42 @@ public class MainActivity extends Activity {
         try {
 
 
-            MainActivityTestSubjects.addContactForTesting();
-            MainActivityTestSubjects.addContactForTesting2();
+        /*    MainActivityTestSubjects.addContactForTesting();
+            MainActivityTestSubjects.addContactForTesting2();*/
 
-            Acquaintance testAcquaintance = MainActivityTestSubjects.generateAcquaintanceForTest();
+         /*   Acquaintance testAcquaintance = MainActivityTestSubjects.generateAcquaintanceForTest();
             Acquaintance testAcquaintance2 = MainActivityTestSubjects.generateAcquaintanceForTest2();
 
             BlockChainAPI.addAcquaintanceMultichain(testAcquaintance);
             BlockChainAPI.addAcquaintanceMultichain(testAcquaintance2);
             acquaintancesList.add(testAcquaintance);
-            acquaintancesList.add(testAcquaintance2);
+            acquaintancesList.add(testAcquaintance2);*/
 
 
-            generateAcquaintanceFromCrawler(this);
+            acquaintancesList =  generateAcquaintanceFromCrawler(this);
+            for(Acquaintance a: acquaintancesList)
+            {
+                BlockChainAPI.addAcquaintanceMultichain(a);
+            }
         } catch (BlockAlreadyExistsException e) {
             e.printStackTrace();
         } catch (HashException e) {
             e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
+    /*    } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (InvalidKeyException e) {
             e.printStackTrace();
         } catch (SignatureException e) {
-            e.printStackTrace();
+            e.printStackTrace();*/
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvalidKeySpecException e) {
             e.printStackTrace();
         }
 
 
         updateView();
 
-    }
-    public static void generateAcquaintanceFromCrawler(Context context) throws IOException {
-        CrawledBlocksDatabase database = new CrawledBlocksDatabase(context);
-        ReadCrawlerBlocksQuery query = new ReadCrawlerBlocksQuery();
-        database.read(query);
-        query.getChain();
-        return;
     }
     public void updateView() {
 
@@ -257,7 +257,6 @@ public class MainActivity extends Activity {
         String space = "\t\t\t\t";
         for (int j = 1; j < layerCount; j++) {
             space = space + space;
-            return space;
         }
         return space;
     }

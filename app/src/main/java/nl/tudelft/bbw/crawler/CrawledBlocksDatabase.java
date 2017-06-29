@@ -58,7 +58,7 @@ public class CrawledBlocksDatabase extends SQLiteAssetHelper {
      * @param context given context
      */
     public CrawledBlocksDatabase(Context context) {
-        super(context, DATABASE_NAME, PATH, null, DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     /**

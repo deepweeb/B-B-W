@@ -73,7 +73,7 @@ public class ReadCrawlerBlocksQuery {
                 makeBlock(cursor);
             }
         }
-        BlockWriter.writeToJson(chain);
+//        BlockWriter.writeToJson(chain);
     }
 
     /**
